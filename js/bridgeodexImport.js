@@ -465,6 +465,13 @@ export function importBridgeodexJson(input) {
   if (on(ot.fsf_1_rnd))   card_data.other_conventions.fourth_suit_forcing.one_round = true
   if (ot.jump_shift_resp) card_data.other_conventions.jump_shift_response = suits(ot.jump_shift_resp)
   if (ot.vs_str_open)     card_data.other_conventions.vs_strong_open = suits(ot.vs_str_open)
+  // Bridgeodex's "Other" section has two free-text rows. We preserve
+  // them as separate fields (notes_line_1 / notes_line_2) so PDF
+  // exporters can fill the two corresponding text fields on the ACBL
+  // New card, and also keep a joined `notes` field for the editor's
+  // single-textarea view.
+  if (ot.more1) card_data.other_conventions.notes_line_1 = suits(ot.more1)
+  if (ot.more2) card_data.other_conventions.notes_line_2 = suits(ot.more2)
   const otherNotes = [ot.more1, ot.more2].filter(Boolean).map(suits).join('\n')
   if (otherNotes) card_data.other_conventions.notes = otherNotes
 
@@ -640,15 +647,21 @@ function importLeadsBlock(src, target) {
   if (on(src.length_attitude)) target.length.attitude = true
   if (on(src.length_2nd_from_xxxx_plus)) target.length.second_from_4plus = true
   if (on(src.small_from_xx)) target.length.small_from_xx = true
-  // Numeric "circle which card to lead" indicators
+  // Numeric "circle which card to lead" indicators.
+  // Bridgeodex uses capitalized pattern names (`length_leads_Hxx`,
+  // `honor_leads_AKx`); we normalize to lowercase so downstream
+  // consumers can use a single canonical key per pattern.
   for (const key of Object.keys(src)) {
     if (key.startsWith('length_leads_') || key.startsWith('honor_leads_')) {
       const value = src[key]
       const n = num(value)
       if (n != null) {
+        const suffix = key.startsWith('length_leads_')
+          ? key.slice('length_leads_'.length).toLowerCase()
+          : key.slice('honor_leads_'.length).toLowerCase()
         const path = key.startsWith('length_leads_')
-          ? `length.lead_choice_${key.slice('length_leads_'.length)}`
-          : `honors.lead_choice_${key.slice('honor_leads_'.length)}`
+          ? `length.lead_choice_${suffix}`
+          : `honors.lead_choice_${suffix}`
         writePath(target, path, n)
       }
     }
