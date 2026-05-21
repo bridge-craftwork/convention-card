@@ -68,12 +68,12 @@
           class="btn"
           @click="onImportClick"
           :disabled="saving"
-          title="Import from bridgeodex.com JSON"
+          title="Import from bridgeodex.com JSON, or a PDF previously exported from this app"
         >Import</button>
         <input
           ref="importInput"
           type="file"
-          accept="application/json,.json"
+          accept="application/json,.json,application/pdf,.pdf"
           style="display:none"
           @change="onImportFile"
         />
@@ -89,10 +89,76 @@
           @click="onDelete"
           :disabled="saving"
         >Delete</button>
-        <button class="btn" disabled title="PDF / JSON export arrives in Phase 3">Export</button>
+        <button
+          class="btn"
+          :disabled="!currentCard || cardLoading"
+          title="Download as a fillable convention-card PDF. Alt+click: debug variants (field-name overlay)."
+          @click="onExportPdf"
+        >Export PDF</button>
+        <button
+          class="btn"
+          :disabled="!currentCard || cardLoading"
+          title="Export the card's structured data as JSON or XML"
+          @click="onExportContent"
+        >Export Content</button>
       </div>
     </div>
     <div v-if="saveError" class="save-error">{{ saveError }}</div>
+
+    <!-- Export PDF format picker -->
+    <div v-if="exportDialogOpen" class="modal-overlay" @click.self="exportDialogOpen = false">
+      <div class="modal-content export-dialog">
+        <h2>Export PDF</h2>
+        <p class="dialog-desc">
+          {{ exportDebug
+            ? 'Debug mode — every field will be filled with its own name (overrides card data). Useful for identifying which field is which when authoring or debugging a template.'
+            : 'Pick which fillable PDF format to generate.' }}
+        </p>
+        <div class="format-list">
+          <button
+            v-for="fmt in availableFormats"
+            :key="fmt.id"
+            class="format-row"
+            @click="doExport(fmt.id)"
+          >
+            <span class="format-name">{{ fmt.name }}</span>
+            <span class="format-desc">{{ fmt.desc }}</span>
+          </button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn btn-secondary" @click="exportDialogOpen = false">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Content (structured data) picker -->
+    <div v-if="contentDialogOpen" class="modal-overlay" @click.self="contentDialogOpen = false">
+      <div class="modal-content export-dialog">
+        <h2>Export Content</h2>
+        <p class="dialog-desc">
+          Download the card's structured data. Use this to share between apps or back up your card outside this site.
+        </p>
+        <div class="format-list">
+          <button
+            v-for="fmt in CONTENT_FORMATS"
+            :key="fmt.id"
+            class="format-row"
+            :class="{ disabled: !fmt.ready }"
+            :disabled="!fmt.ready"
+            @click="doContentExport(fmt.id)"
+          >
+            <span class="format-name">
+              {{ fmt.name }}
+              <span v-if="!fmt.ready" class="coming-soon">coming soon</span>
+            </span>
+            <span class="format-desc">{{ fmt.desc }}</span>
+          </button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn btn-secondary" @click="contentDialogOpen = false">Cancel</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Filter / overlay bar -->
     <div class="controls">
@@ -216,6 +282,123 @@ async function onSwitchCard(event) {
   }
 }
 
+const EXPORT_FORMATS = [
+  { id: 'classic', name: 'ACBL Classic', desc: 'The familiar SS1 Rev. 4-12 card — what most clubs use.' },
+  { id: 'new',     name: 'ACBL New',     desc: 'The redesigned ACBL card (released a few years ago).' }
+]
+
+const exportDialogOpen = ref(false)
+const exportDebug = ref(false)
+
+const availableFormats = computed(() => EXPORT_FORMATS)
+
+function onExportPdf(event) {
+  saveError.value = null
+  exportDebug.value = !!event?.altKey
+  exportDialogOpen.value = true
+}
+
+async function doExport(formatId) {
+  const debug = exportDebug.value
+  exportDialogOpen.value = false
+  try {
+    const mod = await import('../utils/acblClassicFillPdf.js')
+    if (debug) {
+      await mod.downloadAcblFieldDebugPdf(formatId)
+    } else {
+      await mod.downloadAcblPdf(currentCard.value, formatId)
+    }
+  } catch (err) {
+    console.error('PDF export failed:', err)
+    saveError.value = err.message || 'Failed to export PDF'
+  }
+}
+
+const CONTENT_FORMATS = [
+  {
+    id: 'bridge-classroom',
+    name: 'Bridge Classroom JSON',
+    desc: 'Our native schema. Round-trips cleanly with Import.',
+    ready: true,
+    ext: 'json',
+    mime: 'application/json'
+  },
+  {
+    id: 'bridgeodex',
+    name: 'Bridgeodex JSON',
+    desc: 'Compatible with bridgeodex.com. Useful for sharing with partners who use that site.',
+    ready: false,
+    ext: 'json',
+    mime: 'application/json'
+  },
+  {
+    id: 'swan',
+    name: 'Swan',
+    desc: 'The Swan convention-card text format.',
+    ready: false,
+    ext: 'swn',
+    mime: 'text/plain'
+  },
+  {
+    id: 'bbo-xml',
+    name: 'BBO XML',
+    desc: 'BBO’s convention-card XML, importable into Bridge Base Online.',
+    ready: false,
+    ext: 'xml',
+    mime: 'application/xml'
+  }
+]
+
+const contentDialogOpen = ref(false)
+
+function onExportContent() {
+  saveError.value = null
+  contentDialogOpen.value = true
+}
+
+function sanitizeFilename(name) {
+  return (name || 'convention-card').replace(/[^a-z0-9._-]+/gi, '_').slice(0, 80)
+}
+
+function downloadBlob(content, filename, mime) {
+  const blob = new Blob([content], { type: mime })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
+function doContentExport(formatId) {
+  const fmt = CONTENT_FORMATS.find(f => f.id === formatId)
+  if (!fmt || !fmt.ready) return
+  contentDialogOpen.value = false
+  const card = currentCard.value
+  if (!card) return
+  try {
+    let payload
+    if (formatId === 'bridge-classroom') {
+      payload = JSON.stringify({
+        schema: 'bridge-classroom/card_data@v1',
+        name: card.name || null,
+        description: card.description || null,
+        exportedAt: new Date().toISOString(),
+        card_data: card.card_data || {}
+      }, null, 2)
+    } else {
+      throw new Error(`No exporter wired up for "${fmt.name}" yet`)
+    }
+    const stem = sanitizeFilename(card.name)
+    downloadBlob(payload, `${stem}.${fmt.ext}`, fmt.mime)
+  } catch (err) {
+    console.error('Content export failed:', err)
+    saveError.value = err.message || 'Failed to export content'
+  }
+}
+
 async function onNewCard() {
   try {
     await cc.createCard({ name: 'My convention card', cardData: { metadata: { name: 'My convention card' } } })
@@ -236,10 +419,22 @@ async function onImportFile(event) {
   const file = event.target.files?.[0]
   event.target.value = ''  // allow re-importing the same filename later
   if (!file) return
+  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
   try {
-    const text = await file.text()
-    const json = JSON.parse(text)
-    const { name, description, card_data } = importBridgeodexJson(json)
+    let name, description, card_data
+    if (isPdf) {
+      const mod = await import('../utils/acblClassicFillPdf.js')
+      const bytes = await file.arrayBuffer()
+      const extracted = await mod.extractCardDataFromPdf(bytes)
+      if (!extracted) {
+        throw new Error('This PDF has no embedded Bridge Classroom card data. Only PDFs previously exported from this app can be re-imported.')
+      }
+      ;({ name, description, card_data } = extracted)
+    } else {
+      const text = await file.text()
+      const json = JSON.parse(text)
+      ;({ name, description, card_data } = importBridgeodexJson(json))
+    }
 
     // Duplicate-name check: a user often re-imports the same partnership
     // card after updating it on bridgeodex. Offer to overwrite the
@@ -260,8 +455,8 @@ async function onImportFile(event) {
 
     await cc.createCard({ name, description, cardData: card_data })
   } catch (err) {
-    console.error('Bridgeodex import failed:', err)
-    saveError.value = err.message || 'Bridgeodex import failed'
+    console.error('Import failed:', err)
+    saveError.value = err.message || 'Import failed'
   }
 }
 
@@ -530,5 +725,108 @@ watch(() => userStore.currentUser.value?.id, async (uid) => {
 
 @media (max-width: 720px) {
   .main-grid { grid-template-columns: 1fr; }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal-content.export-dialog {
+  background: white;
+  border-radius: var(--radius-card, 10px);
+  max-width: 460px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+.export-dialog h2 {
+  font-family: var(--font-heading, 'Source Serif 4', serif);
+  font-size: 22px;
+  color: var(--green-dark, #2d6a4f);
+  margin: 0 0 8px;
+}
+
+.dialog-desc {
+  color: var(--text-secondary, #6b7280);
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+
+.format-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.format-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 12px 14px;
+  background: white;
+  border: 1px solid var(--card-border, #e0ddd7);
+  border-radius: var(--radius-button, 6px);
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.format-row:hover:not(:disabled) {
+  border-color: var(--green-mid, #40916c);
+  background: var(--green-pale, #d8f3dc);
+}
+
+.format-row.disabled,
+.format-row:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.coming-soon {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted, #9ca3af);
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.format-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.format-desc {
+  font-size: 13px;
+  color: var(--text-secondary, #6b7280);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: var(--text-primary, #1a1a1a);
+  border: none;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
 }
 </style>
