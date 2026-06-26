@@ -1306,12 +1306,25 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
           for (const widget of field.acroField.getWidgets()) {
             const ac = widget.getOrCreateAppearanceCharacteristics()
             ac.setBorderColor([1, 1, 1]) // RGB white as components array
-            // Only TEXT fields get their cached /AP dropped so it
-            // regenerates borderless. Dropping a CHECKBOX's /AP throws
-            // away the template's "on"-state glyph — updateFieldAppearances
-            // can't reconstruct it and the checkmark vanishes (the
-            // original "all my conventions are missing" bug).
-            if (isText) widget.dict.delete(apName)
+            // Bake a white background into TEXT fields only. Interactive
+            // viewers tint un-backgrounded form fields with their
+            // form-field highlight colour (the light-blue wash the user
+            // sees); an explicit white /BG makes the big text fields
+            // render white while staying editable. We do NOT do this for
+            // checkboxes: their widget rects are wider than the printed □
+            // and overlap the neighbouring label, so a white fill erases
+            // the label's adjacent characters (e.g. "Transfer Resp" →
+            // "ransfer Resp"). Their highlight wash is tiny anyway.
+            //
+            // Text fields also get their cached /AP dropped so it
+            // regenerates borderless and with the white background.
+            // (Dropping a CHECKBOX's /AP would throw away the template's
+            // "on"-state glyph and the checkmark would vanish — the
+            // original "all my conventions are missing" bug.)
+            if (isText) {
+              ac.setBackgroundColor([1, 1, 1])
+              widget.dict.delete(apName)
+            }
           }
         } catch { /* ignore — some widgets may not have a writable MK dict */ }
       }

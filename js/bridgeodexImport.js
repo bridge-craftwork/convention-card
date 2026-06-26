@@ -110,8 +110,10 @@ export function importBridgeodexJson(input) {
   if (on(ov.forcing_1c)) card_data.general.forcing_opening_1c = true
   if (on(ov.forcing_2c)) card_data.general.forcing_opening_2c = true
   if (ov.forcing_other)  card_data.general.forcing_opening_other = suits(ov.forcing_other)
-  if (on(ov['1nt_open_str']))      card_data.general.nt_open_style = 'strong'
-  if (on(ov['1nt_open_wk']))       card_data.general.nt_open_style = 'weak'
+  // Bridgeodex spells these `1nt_open_strong` / `1nt_open_weak`; accept the
+  // abbreviated forms too in case other exports differ.
+  if (on(ov['1nt_open_strong']) || on(ov['1nt_open_str'])) card_data.general.nt_open_style = 'strong'
+  if (on(ov['1nt_open_weak'])   || on(ov['1nt_open_wk']))  card_data.general.nt_open_style = 'weak'
   if (on(ov['1nt_open_variable'])) card_data.general.nt_open_style = 'variable'
   if (ov.bids_prep) card_data.general.bids_requiring_prep = suits(ov.bids_prep)
 
@@ -254,11 +256,17 @@ export function importBridgeodexJson(input) {
   if (on(mn['1c_jump_raise_overcall_weak']))  card_data.minor_openings.one_club.jump_raise_after_overcall.weak = true
   if (on(mn['1c_jump_raise_overcall_mixed'])) card_data.minor_openings.one_club.jump_raise_after_overcall.mixed = true
   if (on(mn['1c_jump_raise_overcall_inv']))   card_data.minor_openings.one_club.jump_raise_after_overcall.inv = true
-  if (mn['1c_1d']) card_data.minor_openings.notes = suits(mn['1c_1d'])
+  // Bridgeodex puts the minor-opening free-text under `1c_more`; older
+  // exports used `1c_1d`. Accept either.
+  const minorMore = mn['1c_more'] || mn['1c_1d']
+  if (minorMore) card_data.minor_openings.notes = suits(minorMore)
 
   // ─── Two-level openings ───────────────────────────────────────
   const tl = s.two_level || {}
   if (tl['2c_min'])   card_data.two_level.two_clubs.min_hcp_str = tl['2c_min']
+  // 2♣ max is a free-text HCP slot like the min — keep the raw string so
+  // qualifiers like "24+" survive (num() would turn "24+" into null).
+  if (tl['2c_max'])   card_data.two_level.two_clubs.max_hcp = String(tl['2c_max']).trim()
   // 4 mutually exclusive meanings on the ACBL card. Order matters
   // (later wins) — the most-distinctive option should be last so a
   // card with both "very_str" and "str" ends up at "very_strong".
@@ -384,7 +392,7 @@ export function importBridgeodexJson(input) {
 
   // ─── Vs takeout double ────────────────────────────────────────
   const vd = s.vs_to_double || {}
-  if (on(vd.new_suit_forcing_2_level)) card_data.vs_to_double.new_suit_forcing_2lvl = true
+  if (on(vd.new_suit_forcing_2_level) || on(vd['new_suit_forcing_2_lvl'])) card_data.vs_to_double.new_suit_forcing_2lvl = true
   if (on(vd.new_suit_forcing_trf))     card_data.vs_to_double.new_suit_forcing_tfr = true
   if (on(vd.jump_shift_weak)) card_data.vs_to_double.jump_shift = 'weak'
   if (on(vd.jump_shift_inv))  card_data.vs_to_double.jump_shift = 'inv'
@@ -534,7 +542,8 @@ function populateNotesFromBridgeodex(s, notes, topLevelNotes) {
   // ── Minor openings ────────────────────────────────────────
   const mn = s.minors || {}
   const minorLines = []
-  if (mn['1c_1d'])  minorLines.push(`1♣/1♦ responses: ${suits(mn['1c_1d'])}`)
+  const minorMore = mn['1c_more'] || mn['1c_1d']
+  if (minorMore)  minorLines.push(`1♣ responses: ${suits(minorMore)}`)
   if (mn['1c'])     minorLines.push(`1♣: ${suits(mn['1c'])}`)
   if (mn['1d'])     minorLines.push(`1♦: ${suits(mn['1d'])}`)
   if (minorLines.length) notes.minor_notes = minorLines.join('\n')
@@ -647,24 +656,26 @@ function importLeadsBlock(src, target) {
   if (on(src.length_attitude)) target.length.attitude = true
   if (on(src.length_2nd_from_xxxx_plus)) target.length.second_from_4plus = true
   if (on(src.small_from_xx)) target.length.small_from_xx = true
-  // Numeric "circle which card to lead" indicators.
-  // Bridgeodex uses capitalized pattern names (`length_leads_Hxx`,
-  // `honor_leads_AKx`); we normalize to lowercase so downstream
-  // consumers can use a single canonical key per pattern.
+  // Numeric "circle which card to lead" indicators. Bridgeodex uses
+  // capitalized pattern names with one of three prefixes:
+  //   length_leads_<Pat>      → length.lead_choice_<pat>
+  //   honor_leads_<Pat>       → honors.lead_choice_<pat>
+  //   honor_interior_seq_<Pat>→ honors.lead_choice_<pat>  (interior
+  //       sequences like AJTx / KT9x — same honor circle group)
+  // We normalize the suffix to lowercase so downstream consumers use a
+  // single canonical key per pattern.
+  const LEAD_PREFIXES = [
+    { prefix: 'length_leads_',      group: 'length' },
+    { prefix: 'honor_leads_',       group: 'honors' },
+    { prefix: 'honor_interior_seq_', group: 'honors' }
+  ]
   for (const key of Object.keys(src)) {
-    if (key.startsWith('length_leads_') || key.startsWith('honor_leads_')) {
-      const value = src[key]
-      const n = num(value)
-      if (n != null) {
-        const suffix = key.startsWith('length_leads_')
-          ? key.slice('length_leads_'.length).toLowerCase()
-          : key.slice('honor_leads_'.length).toLowerCase()
-        const path = key.startsWith('length_leads_')
-          ? `length.lead_choice_${suffix}`
-          : `honors.lead_choice_${suffix}`
-        writePath(target, path, n)
-      }
-    }
+    const match = LEAD_PREFIXES.find(p => key.startsWith(p.prefix))
+    if (!match) continue
+    const n = num(src[key])
+    if (n == null) continue
+    const suffix = key.slice(match.prefix.length).toLowerCase()
+    writePath(target, `${match.group}.lead_choice_${suffix}`, n)
   }
   if (src.after_first_trick) target.after_first_trick = suits(src.after_first_trick)
   if (src.exceptions) target.exceptions = suits(src.exceptions)
