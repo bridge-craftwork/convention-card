@@ -455,13 +455,19 @@ const FIELD_MAP_NEW = [
   { pdf: '1NT.t.5',  card: 'notrump.one_nt.sys_on_vs', kind: 'text' },
   { pdf: '1NT.c.6',  card: 'notrump.stayman.forcing',  kind: 'check' },
   { pdf: '1NT.c.7',  card: 'notrump.stayman.puppet',   kind: 'check' },
-  { pdf: '1NT.c.9',  card: 'notrump.transfers.jacoby', kind: 'check' },
+  // Each "N: Nat ☐ Tfr ☐" row has the Natural box FIRST (lower x) and the
+  // Transfer box SECOND. The transfer flags must target the second box
+  // (.c.10/.13/.16/.19); the first box (.c.9/.12/.15/.18) is "Natural"
+  // and is intentionally left unmapped so it stays unchecked for a
+  // transfer-playing pair. (Mapping transfers to the first box checked
+  // "Nat" instead of "Tfr" — a silent mismap, since the field exists.)
+  { pdf: '1NT.c.10', card: 'notrump.transfers.jacoby', kind: 'check' },
   { pdf: '1NT.t.11', card: 'notrump.responses.2d_other', kind: 'text' },
-  { pdf: '1NT.c.12', card: 'notrump.transfers.jacoby', kind: 'check' },
+  { pdf: '1NT.c.13', card: 'notrump.transfers.jacoby', kind: 'check' },
   { pdf: '1NT.t.14', card: 'notrump.responses.2h_other', kind: 'text' },
-  { pdf: '1NT.c.15', card: 'notrump.transfers.spades_relay', kind: 'check' },
+  { pdf: '1NT.c.16', card: 'notrump.transfers.spades_relay', kind: 'check' },
   { pdf: '1NT.t.17', card: 'notrump.responses.2s_other', kind: 'text' },
-  { pdf: '1NT.c.18', card: 'notrump.transfers.two_nt', kind: 'check' },
+  { pdf: '1NT.c.19', card: 'notrump.transfers.two_nt', kind: 'check' },
   { pdf: '1NT.t.20', card: 'notrump.responses.2nt_other', kind: 'text' },
   { pdf: '1NT.c.21', card: 'notrump.smolen.play',      kind: 'check' },
   { pdf: '1NT.c.22', card: 'notrump.transfers.texas_4c', kind: 'check' },
@@ -863,12 +869,21 @@ const CLASSIC_DIAG_LINES = [
   { x: 346, y: 10, maxWidth: 218 }
 ]
 
+// The New card's two bottom "Other" write-in lines (O.t.8 / O.t.9 — the
+// OTHER CONVENTIONS section). These hold the imported notes_line_1/2 if
+// present; in practice they're usually empty, and the diagnostic only
+// fires when a value was dropped, so an overlap is rare and acceptable.
+const NEW_DIAG_LINES = [
+  { x: 305, y: 18, maxWidth: 262 },
+  { x: 305, y: 6,  maxWidth: 262 }
+]
+
 /**
  * Draw a visible "these values didn't make it onto the card" note on the
  * exported PDF, so the user can spot mapping gaps without opening the
- * console. On the Classic template it lands on the two blank ruled lines
- * at the bottom of the OTHER CONV. CALLS box; on the New template (which
- * has no spare mapped lines) it goes in the bottom-left margin.
+ * console. On both templates it lands on the two bottom "Other
+ * conventions" write-in lines (Classic: OTHER CONV. CALLS box; New:
+ * the OTHER section's O.t.8/O.t.9 lines).
  *
  * Paths shown are card_data paths (e.g. `notrump.one_nt.range_max`)
  * rather than raw PDF field names, since the card path names the
@@ -882,12 +897,8 @@ async function drawDiagnosticFooter(pdf, templateName, droppedPaths) {
     const size = 6
     // "!" not "⚠" — the Helvetica standard font can't encode the glyph.
     const text = sanitizeForWinAnsi(`! ${droppedPaths.length} not exported: ${droppedPaths.join(', ')}`)
-    if (templateName === 'classic') {
-      drawWrappedAcrossLines(page, font, size, color, text, CLASSIC_DIAG_LINES)
-    } else {
-      page.drawText(truncateToWidth(font, size, text, page.getWidth() - 40),
-        { x: 20, y: 14, size, font, color })
-    }
+    const lines = templateName === 'classic' ? CLASSIC_DIAG_LINES : NEW_DIAG_LINES
+    drawWrappedAcrossLines(page, font, size, color, text, lines)
   } catch (err) {
     console.warn('Failed to draw diagnostic footer:', err)
   }
