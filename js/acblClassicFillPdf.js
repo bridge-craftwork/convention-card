@@ -16,7 +16,7 @@
  * user clicks Export (no impact on initial page load).
  */
 
-import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFHexString, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import { readPath } from './conventionCatalog.js'
 
 // Custom Info-dict key under which we embed the source card_data as
@@ -96,9 +96,9 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Neg Double',         card: 'notrump.dbl.negative',            kind: 'check' },
   // Text fields inside the NT opening box (responses)
   { pdf: 'to_4',                              card: 'notrump.one_nt.range_min',     kind: 'text' },
-  { pdf: 'to_1_2',                            card: 'notrump.one_nt.range_max',     kind: 'text' },
+  { pdf: '1_2',                               card: 'notrump.one_nt.range_max',     kind: 'text' },
   { pdf: 'to_6',                              card: 'notrump.one_nt_alt.range_min', kind: 'text' },
-  { pdf: 'to_2_2',                            card: 'notrump.one_nt_alt.range_max', kind: 'text' },
+  { pdf: '2_2',                               card: 'notrump.one_nt_alt.range_max', kind: 'text' },
   { pdf: '2s',                                card: 'notrump.responses.2s_other',   kind: 'text' },
   { pdf: '2NT_2',                             card: 'notrump.responses.2nt_other',  kind: 'text' },
   { pdf: 'NOTRUMP OPENING BIDS',              card: 'notrump.responses.3c',         kind: 'text' },
@@ -134,7 +134,7 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Inv_5',              card: 'major_openings.jump_raise_after_overcall.inv',  kind: 'check' },
   { pdf: 'Weak_4',             card: 'major_openings.jump_raise_after_overcall.weak', kind: 'check' },
   { pdf: 'Conv Raise 2NT',    card: 'major_openings.jacoby_2nt.play', kind: 'check' },
-  { pdf: 'Conv Raise 3NT',    card: 'major_openings.three_nt_raise.play', kind: 'check' },
+  { pdf: '3NT_2',             card: 'major_openings.three_nt_raise.play', kind: 'check' },
   { pdf: 'Splinter',          card: 'major_openings.splinters.play',  kind: 'check' },
   { pdf: 'Other_5',           card: 'major_openings.art_raises_other', kind: 'text' },
   { pdf: '1NT  Forcing',      card: 'major_openings.one_nt_response.forcing',      kind: 'check' },
@@ -815,6 +815,7 @@ export async function buildAcblPdf(card, templateName = 'classic') {
   const fieldMap = templateName === 'new' ? FIELD_MAP_NEW : FIELD_MAP_CLASSIC
 
   const missingFields = []
+  const droppedPaths = []
   for (const entry of fieldMap) {
     const cardValue = readPath(card?.card_data, entry.card)
     try {
@@ -824,13 +825,113 @@ export async function buildAcblPdf(card, templateName = 'classic') {
       // pdf-lib parsing quirk). Collect for one summary log instead of
       // spamming the console per entry.
       missingFields.push(entry.pdf)
+      // If the entry actually carried data, the value just fell on the
+      // floor — record its card path so we can print it on the card as
+      // a visible "this didn't export" diagnostic.
+      if (entryHasMeaningfulValue(entry, cardValue)) droppedPaths.push(entry.card)
     }
   }
   if (missingFields.length) {
     console.warn(`ACBL fill (${templateName}): ${missingFields.length} field(s) not found in template`, missingFields)
   }
+  if (droppedPaths.length) {
+    console.warn(`ACBL fill (${templateName}): ${droppedPaths.length} value(s) had no destination field`, droppedPaths)
+    await drawDiagnosticFooter(pdf, templateName, droppedPaths)
+  }
   embedCardDataInPdf(pdf, card)
   return pdf
+}
+
+/**
+ * Does this field-map entry carry a value worth reporting if it can't
+ * be written? Text entries count when non-blank; checkbox entries count
+ * only when they'd actually be checked (an unchecked box hitting a
+ * nonexistent field is a no-op, not a data loss).
+ */
+function entryHasMeaningfulValue(entry, cardValue) {
+  if (entry.kind === 'text') return cardValue != null && String(cardValue).trim() !== ''
+  if (entry.kind === 'check') return isCheckOn(entry, cardValue)
+  return false
+}
+
+// The two blank write-in lines at the bottom of the Classic card's
+// OTHER CONV. CALLS box (PDF points, bottom-left origin). Measured from
+// the template's field geometry — the box's last mapped field
+// (undefined_19) sits at y≈32, and these two ruled lines follow below it.
+const CLASSIC_DIAG_LINES = [
+  { x: 346, y: 23, maxWidth: 218 },
+  { x: 346, y: 10, maxWidth: 218 }
+]
+
+/**
+ * Draw a visible "these values didn't make it onto the card" note on the
+ * exported PDF, so the user can spot mapping gaps without opening the
+ * console. On the Classic template it lands on the two blank ruled lines
+ * at the bottom of the OTHER CONV. CALLS box; on the New template (which
+ * has no spare mapped lines) it goes in the bottom-left margin.
+ *
+ * Paths shown are card_data paths (e.g. `notrump.one_nt.range_max`)
+ * rather than raw PDF field names, since the card path names the
+ * convention that was lost — far more actionable than `to_1_2`.
+ */
+async function drawDiagnosticFooter(pdf, templateName, droppedPaths) {
+  try {
+    const page = pdf.getPages()[0]
+    const font = await pdf.embedFont(StandardFonts.Helvetica)
+    const color = rgb(0.0, 0.25, 0.75) // blue — clearly an app annotation, not card ink
+    const size = 6
+    // "!" not "⚠" — the Helvetica standard font can't encode the glyph.
+    const text = sanitizeForWinAnsi(`! ${droppedPaths.length} not exported: ${droppedPaths.join(', ')}`)
+    if (templateName === 'classic') {
+      drawWrappedAcrossLines(page, font, size, color, text, CLASSIC_DIAG_LINES)
+    } else {
+      page.drawText(truncateToWidth(font, size, text, page.getWidth() - 40),
+        { x: 20, y: 14, size, font, color })
+    }
+  } catch (err) {
+    console.warn('Failed to draw diagnostic footer:', err)
+  }
+}
+
+/** Trim a string with a trailing ellipsis until it fits `maxWidth`. */
+function truncateToWidth(font, size, text, maxWidth) {
+  if (font.widthOfTextAtSize(text, size) <= maxWidth) return text
+  let t = text
+  while (t.length > 1 && font.widthOfTextAtSize(t + '…', size) > maxWidth) t = t.slice(0, -1)
+  return t + '…'
+}
+
+/**
+ * Greedy word-wrap `text` across a fixed set of `lines` (each with its
+ * own x/y/maxWidth). Anything that doesn't fit in the last line is
+ * truncated with an ellipsis so the note never overruns the box.
+ */
+function drawWrappedAcrossLines(page, font, size, color, text, lines) {
+  const words = text.split(' ')
+  let idx = 0
+  for (let li = 0; li < lines.length; li++) {
+    const { x, y, maxWidth } = lines[li]
+    const isLast = li === lines.length - 1
+    let line = ''
+    while (idx < words.length) {
+      const trial = line ? `${line} ${words[idx]}` : words[idx]
+      if (font.widthOfTextAtSize(trial, size) > maxWidth) break
+      line = trial
+      idx++
+    }
+    // A single word too wide for an empty line — hard-place it truncated.
+    if (!line && idx < words.length) {
+      line = truncateToWidth(font, size, words[idx], maxWidth)
+      idx++
+    }
+    // Out of lines with text remaining — mark the overflow.
+    if (isLast && idx < words.length) {
+      line = truncateToWidth(font, size, `${line} …`, maxWidth)
+      idx = words.length
+    }
+    if (line) page.drawText(line, { x, y, size, font, color })
+    if (idx >= words.length) break
+  }
 }
 
 /** Backwards-compatible alias — defaults to the Classic template. */
@@ -953,13 +1054,17 @@ function isCheckOn(entry, value) {
 
 /**
  * Build the PDF and trigger a browser download. Filename derives from
- * partner names + card name + today's date. The form is flattened
- * before save so the field-highlight overlays viewers apply to live
- * form fields don't appear in the output.
+ * partner names + card name + today's date.
+ *
+ * The form is left INTERACTIVE (fillable) so the user can fine-tune the
+ * exported card in any PDF editor. We strip the Classic template's
+ * text-field hairline borders without flattening — see finalizeForm.
+ * Pass `{ flatten: true }` to bake everything into static page art
+ * instead (no longer editable).
  */
-export async function downloadAcblPdf(card, templateName = 'classic') {
+export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false } = {}) {
   const pdf = await buildAcblPdf(card, templateName)
-  flattenForm(pdf, templateName)
+  finalizeForm(pdf, templateName, { flatten })
   // Draw red ellipses around the user's chosen lead cards for the New
   // template. The Classic template represents leads via form-field
   // checkboxes (4th/3rd5/3rdLow) rather than circle-the-card markings,
@@ -1133,17 +1238,40 @@ function drawLeadCircles(pdf, card) {
  * art when we flatten. Stripping it first keeps the output looking
  * like the printed card.
  */
-function flattenForm(pdf, templateName = 'classic') {
+/**
+ * Final pass over the filled form before save.
+ *
+ * Default (`flatten: false`) keeps the form INTERACTIVE so the exported
+ * card stays editable: we strip the Classic template's text-field
+ * hairline borders, regenerate appearance streams, and set
+ * NeedAppearances=false so viewers trust those streams instead of
+ * re-rendering (which would re-introduce the borders). Checkbox
+ * appearances are left untouched — see the warning below.
+ *
+ * `flatten: true` additionally bakes every field into static page
+ * content (no longer editable) — kept as an option for callers that
+ * want a locked, non-editable card.
+ */
+function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
   try {
     const form = pdf.getForm()
     const apName = PDFName.of('AP')
 
-    // The Classic template ships fields with cached appearance streams
-    // that include a hairline border. When flattened those hairlines
-    // become visible static line art. We work around it by zeroing the
-    // border width, painting the border color white, and dropping the
-    // cached AP so updateFieldAppearances regenerates from the borderless
-    // properties.
+    // The Classic template ships text fields with cached appearance
+    // streams that include a hairline border. When flattened those
+    // hairlines become visible static line art. We work around it by
+    // zeroing the border width, painting the border color white, and
+    // dropping the cached AP so updateFieldAppearances regenerates from
+    // the borderless properties.
+    //
+    // CRITICAL: this treatment must be applied to TEXT FIELDS ONLY.
+    // Deleting a checkbox widget's cached /AP throws away the template's
+    // "on"-state appearance glyph; updateFieldAppearances() can't
+    // faithfully reconstruct it, so every checked box flattens to a
+    // blank square (the user sees "all my conventions are missing").
+    // Checkboxes have no visible border to clean up anyway — the printed
+    // □ is part of the static page art, not a field border — so we leave
+    // their appearance streams untouched.
     //
     // The New template's fields don't have visible borders to begin with —
     // and crucially, the field rectangles are sized tightly around the
@@ -1155,6 +1283,11 @@ function flattenForm(pdf, templateName = 'classic') {
     // and let its native appearance shine through.
     if (templateName === 'classic') {
       for (const field of form.getFields()) {
+        const isText = field instanceof PDFTextField
+        // Zero the border on EVERY field: this kills both the template's
+        // hairline box around text fields and the faint outline viewers
+        // draw around live checkbox widgets (which double-boxes the
+        // printed □). Setting width 0 is safe for checkboxes.
         try {
           if (typeof field.setBorderWidth === 'function') field.setBorderWidth(0)
         } catch { /* not every field type has setBorderWidth — ignore */ }
@@ -1162,15 +1295,30 @@ function flattenForm(pdf, templateName = 'classic') {
           for (const widget of field.acroField.getWidgets()) {
             const ac = widget.getOrCreateAppearanceCharacteristics()
             ac.setBorderColor([1, 1, 1]) // RGB white as components array
-            widget.dict.delete(apName)   // force appearance regeneration
+            // Only TEXT fields get their cached /AP dropped so it
+            // regenerates borderless. Dropping a CHECKBOX's /AP throws
+            // away the template's "on"-state glyph — updateFieldAppearances
+            // can't reconstruct it and the checkmark vanishes (the
+            // original "all my conventions are missing" bug).
+            if (isText) widget.dict.delete(apName)
           }
         } catch { /* ignore — some widgets may not have a writable MK dict */ }
       }
     }
     form.updateFieldAppearances()
-    form.flatten()
+    if (flatten) {
+      form.flatten()
+      return
+    }
+    // Fillable path: keep the fields live but tell viewers to render the
+    // appearance streams we just generated rather than regenerating
+    // their own. Without this, Acrobat re-adds the hairline borders we
+    // just stripped (and can re-render checkboxes from scratch).
+    try {
+      form.acroForm.dict.set(PDFName.of('NeedAppearances'), PDFBool.False)
+    } catch { /* template without a writable AcroForm dict — ignore */ }
   } catch (err) {
-    console.warn('Form flatten failed (saving with live form fields):', err)
+    console.warn('Form finalize failed (saving as-is):', err)
   }
 }
 
