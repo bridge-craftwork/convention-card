@@ -134,6 +134,76 @@ describe('importBboJson', () => {
     expect(card_data.vs_preempts.takeout_double_thru).toBe('4♥')
   })
 
+  it('prefers fields.names for the partnership name', () => {
+    const fx = bboFixture()
+    fx.cards[0].fields.names = 'Rick and Art'
+    expect(importBboJson(fx).card_data.metadata.partner_names).toBe('Rick and Art')
+  })
+
+  it('applies convention checkboxes from the conventions object', () => {
+    const fx = bboFixture({})
+    fx.cards[0].conventions = {
+      '1NStayman': 'y',
+      '1N2DTrans': 'y',
+      '1NTexas': 'y',
+      'major2NTRaise': 'y',
+      'majorSplinter': 'y',
+      '1430': 'y',
+      '2CStrong': 'y',
+      'NMF': 'y'
+    }
+    const { card_data: c } = importBboJson(fx)
+    expect(c.notrump.stayman.forcing).toBe(true)
+    expect(c.notrump.transfers.jacoby).toBe(true)
+    expect(c.notrump.transfers.texas).toBe(true)
+    expect(c.major_openings.jacoby_2nt.play).toBe(true)
+    expect(c.major_openings.splinters.play).toBe(true)
+    expect(c.other_conventions.blackwood.rkcb_1430).toBe(true)
+    expect(c.two_level.two_clubs.meaning).toBe('strong')
+    expect(c.other_conventions.new_minor_forcing.play).toBe(true)
+  })
+
+  it('expands Drury and min-length convention keys', () => {
+    const fx = bboFixture({})
+    fx.cards[0].conventions = { druryRev: 'y', 'major12-5': 'y', minorC3: 'y', minorD3: 'y' }
+    const { card_data: c } = importBboJson(fx)
+    expect(c.major_openings.drury.play).toBe(true)
+    expect(c.major_openings.drury.reverse).toBe(true)
+    expect(c.major_openings.min_length_1st_2nd).toBe(5)
+    expect(c.minor_openings.one_club.min_length).toBe(3)
+    expect(c.minor_openings.one_diamond.min_length).toBe(3)
+  })
+
+  it('maps lead-circle choices to lead_choice_* positions', () => {
+    const fx = bboFixture({})
+    fx.cards[0].leads = { 'ls-akx-a': 'y', 'ln-xxxx-3': 'y' }
+    const { card_data: c } = importBboJson(fx)
+    expect(c.leads.vs_suits.honors.lead_choice_akx).toBe(1)   // 'a' is 1st in "akx"
+    expect(c.leads.vs_nt.length.lead_choice_xxxx).toBe(3)     // bare digit position
+  })
+
+  it('routes the OTHER-section text slots to their distinct lines', () => {
+    const { card_data: c } = importBboJson(bboFixture({
+      other2: '1m,2M conv',
+      other4: 'Kokish game tries, western cue',
+      other5: 'xyz, spiral'
+    }))
+    expect(c.other_conventions.weak_jump_shifts_notes).toBe('1m,2M conv')
+    expect(c.other_conventions.notes_line_1).toBe('Kokish game tries, western cue')
+    expect(c.other_conventions.notes_line_2).toBe('xyz, spiral')
+  })
+
+  it('maps the weak-1NT column of the defense-vs-1NT table', () => {
+    const { card_data: c } = importBboJson(bboFixture({
+      vs1NTHead1: 'Strong 1NT',
+      vs1NTHead2: 'Weak 1NT',
+      vs1NT2C2: 'Same'
+    }))
+    expect(c.competitive.vs_1nt_strong.system).toBe('Strong 1NT')
+    expect(c.competitive.vs_1nt_weak.system).toBe('Weak 1NT')
+    expect(c.competitive.vs_1nt_weak['2c']).toBe('Same')
+  })
+
   it('preserves the raw blob and prunes empty sections', () => {
     const { card_data } = importBboJson(bboFixture({ '1NTMin1': '15' }))
     expect(card_data._bbo_raw).toBeTruthy()

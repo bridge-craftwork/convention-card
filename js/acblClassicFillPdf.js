@@ -1059,9 +1059,14 @@ function sanitizeForWinAnsi(str) {
 function isCheckOn(entry, value) {
   // Plain boolean checkbox
   if (entry.value === undefined) return !!value
-  // Enum match — checkbox is on when cardValue equals (or is in) entry.value
-  if (Array.isArray(entry.value)) return entry.value.includes(value)
-  return value === entry.value
+  if (value == null) return false
+  // Enum match — checkbox is on when cardValue equals (or is in) entry.value.
+  // Compare as strings: map values are strings ('3'/'4'/'5', 'strong', …)
+  // but importers store some as numbers (min_length = 3), so a strict ===
+  // would miss them.
+  const v = String(value)
+  if (Array.isArray(entry.value)) return entry.value.some(e => String(e) === v)
+  return v === String(entry.value)
 }
 
 /**
