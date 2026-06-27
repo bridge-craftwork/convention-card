@@ -353,7 +353,7 @@ const FIELD_MAP_CLASSIC = [
 
   // ─── VS Opening Preempts ───
   { pdf: 'Takeout',                  card: 'vs_preempts.takeout_double',           kind: 'check' },
-  { pdf: 'VS Opening Pre',           card: 'vs_preempts.takeout_double_thru',      kind: 'text' },
+  { pdf: 'VS Opening Preempts Double Is', card: 'vs_preempts.takeout_double_thru', kind: 'text' },
   { pdf: 'Penalty',                  card: 'vs_preempts.takeout_double_penalty',   kind: 'check' },
   { pdf: 'thru_4',                   card: 'vs_preempts.conv_takeout',             kind: 'text' },
   { pdf: 'Lebensohl  2NT  Response', card: 'vs_preempts.lebensohl_response',       kind: 'check' },
