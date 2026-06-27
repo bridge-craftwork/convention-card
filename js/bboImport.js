@@ -305,11 +305,25 @@ export function importBboJson(input) {
   // separate lines instead of cramming everything onto one; a 3rd
   // RESPONSES value spills into the free 2nd DESCRIBE line.
   distributeTwoClubsNotes(card_data.two_level.two_clubs, f)
-  setNotes(card_data.slam, 'notes', [f.slamOther1, f.slamOther2])
+  // Slam: the two free-text lines below the SLAM CONVENTIONS header are the
+  // control_bids / vs_interference fields (Classic 1_4 / 2_4; New SL.t.9 /
+  // SL.t.10). slamLevel is the "Level:" field, handled above.
+  if (f.slamOther1) card_data.slam.control_bids = suits(f.slamOther1)
+  if (f.slamOther2) card_data.slam.vs_interference = suits(f.slamOther2)
+  // NT-overcall Conv. lines: Direct (Other1) and Balance (Other2) have
+  // their own Conv. fields on the Classic card; the New card has a single
+  // conv line, so also keep a combined note for it.
+  if (f['1NOcallOther1']) card_data.nt_overcalls.direct.conv_text = suits(f['1NOcallOther1'])
+  if (f['1NOcallOther2']) card_data.nt_overcalls.balance.conv_text = suits(f['1NOcallOther2'])
   setNotes(card_data.nt_overcalls, 'notes', [f['1NOcallOther1'], f['1NOcallOther2']])
   setNotes(card_data.overcalls, 'notes', [f.ocallOther])
   setNotes(card_data.competitive, 'notes', [f.vs1NTOther1, f.vs1NTOther2])
-  setNotes(card_data.doubles, 'notes', [f.dblOther2, f.dblOther3, f.dblOther4, f.dblOther5])
+  // Special doubles: dblOther2/3/4 are the "thru" levels for the negative /
+  // responsive / support doubles; dblOther5+ are free-text notes.
+  if (f.dblOther2) card_data.doubles.negative.through = suits(f.dblOther2)
+  if (f.dblOther3) card_data.doubles.responsive.through = suits(f.dblOther3)
+  if (f.dblOther4) card_data.doubles.support.through = suits(f.dblOther4)
+  setNotes(card_data.doubles, 'notes', [f.dblOther5, f.dblOther6])
   setNotes(card_data.direct_cuebids, 'description', [f.cueOther])
   setNotes(card_data.vs_to_double, 'notes', [f.vsTOOther])
   setNotes(card_data.carding, 'notes', [f.discardOther])

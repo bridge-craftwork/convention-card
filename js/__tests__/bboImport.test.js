@@ -143,6 +143,22 @@ describe('importBboJson', () => {
     expect(card_data.notes.notrump_notes).toBe('xfer on over 2 level\nStolen bid')
   })
 
+  it('maps special-doubles "thru" levels and slam/NT-overcall conv lines', () => {
+    const { card_data: c } = importBboJson(bboFixture({
+      dblOther2: '4!H', dblOther3: '3!S', dblOther4: '2!H', dblOther5: 'snapdragon',
+      '1NOcallOther1': 'direct conv', '1NOcallOther2': '19-21 in balancing seat',
+      slamOther1: 'RKC 1430', slamOther2: 'Std Gerber'
+    }))
+    expect(c.doubles.negative.through).toBe('4♥')
+    expect(c.doubles.responsive.through).toBe('3♠')
+    expect(c.doubles.support.through).toBe('2♥')
+    expect(c.doubles.notes).toBe('snapdragon')
+    expect(c.nt_overcalls.direct.conv_text).toBe('direct conv')
+    expect(c.nt_overcalls.balance.conv_text).toBe('19-21 in balancing seat')
+    expect(c.slam.control_bids).toBe('RKC 1430')
+    expect(c.slam.vs_interference).toBe('Std Gerber')
+  })
+
   it('normalizes suit shorthand in free text (vsPreTOThru "4H" -> "4♥")', () => {
     const { card_data } = importBboJson(bboFixture({ vsPreTOThru: '4H' }))
     expect(card_data.vs_preempts.takeout_double_thru).toBe('4♥')
