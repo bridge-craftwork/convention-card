@@ -241,6 +241,9 @@ const FIELD_MAP_CLASSIC = [
   { pdf: '4th  Suit  Forcing  1 Rd',            card: 'other_conventions.fourth_suit_forcing.one_round', kind: 'check' },
   { pdf: 'Game',                                card: 'other_conventions.fourth_suit_forcing.game_force', kind: 'check' },
   { pdf: 'undefined_19',                        card: 'other_conventions.fourth_suit_forcing.notes', kind: 'text' },
+  // The two bottom write-in lines of the OTHER CONV. CALLS box.
+  { pdf: '1_5',                                 card: 'other_conventions.notes_line_1', kind: 'text' },
+  { pdf: '2_5',                                 card: 'other_conventions.notes_line_2', kind: 'text' },
 
   // ─── SPECIAL DOUBLES ───
   { pdf: 'After Overcall Penalty', card: 'doubles.after_overcall_penalty', kind: 'check' },
@@ -843,7 +846,7 @@ export async function buildAcblPdf(card, templateName = 'classic') {
   }
   if (droppedPaths.length) {
     console.warn(`ACBL fill (${templateName}): ${droppedPaths.length} value(s) had no destination field`, droppedPaths)
-    await drawDiagnosticFooter(pdf, templateName, droppedPaths)
+    await drawDiagnosticFooter(pdf, templateName, droppedPaths, card)
   }
   embedCardDataInPdf(pdf, card)
   return pdf
@@ -890,8 +893,14 @@ const NEW_DIAG_LINES = [
  * rather than raw PDF field names, since the card path names the
  * convention that was lost — far more actionable than `to_1_2`.
  */
-async function drawDiagnosticFooter(pdf, templateName, droppedPaths) {
+async function drawDiagnosticFooter(pdf, templateName, droppedPaths, card) {
   try {
+    // These footer lines double as the OTHER-section overflow-note lines.
+    // When the card actually has those notes, they win — the diagnostic
+    // would overwrite real content. The drops are still logged to console.
+    const oc = card?.card_data?.other_conventions || {}
+    if ((oc.notes_line_1 && String(oc.notes_line_1).trim()) ||
+        (oc.notes_line_2 && String(oc.notes_line_2).trim())) return
     const page = pdf.getPages()[0]
     const font = await pdf.embedFont(StandardFonts.Helvetica)
     const color = rgb(0.0, 0.25, 0.75) // blue — clearly an app annotation, not card ink
