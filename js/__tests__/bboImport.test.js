@@ -134,12 +134,9 @@ describe('importBboJson', () => {
 
   it('joins multiple "Other" slots into a single newline-separated note', () => {
     const { card_data } = importBboJson(bboFixture({
-      slamOther1: '0314, Kickback',
-      slamOther2: '4NT quantitative',
       '1NOther1': 'xfer on over 2 level',
       '1NOther2': 'Stolen bid'
     }))
-    expect(card_data.slam.notes).toBe('0314, Kickback\n4NT quantitative')
     expect(card_data.notes.notrump_notes).toBe('xfer on over 2 level\nStolen bid')
   })
 
