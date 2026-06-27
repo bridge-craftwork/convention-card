@@ -592,6 +592,7 @@ const FIELD_MAP_NEW = [
   { pdf: '2C.c.9',  card: 'two_level.two_clubs.meaning', kind: 'check', value: 'strong' },
   { pdf: '2C.c.10', card: 'two_level.two_clubs.meaning', kind: 'check', value: 'natural' },
   { pdf: '2C.c.11', card: 'two_level.two_clubs.meaning', kind: 'check', value: 'conventional' },
+  { pdf: '2C.t.12', card: 'two_level.two_clubs.continuation_response', kind: 'text' },
   { pdf: '2C.t.13', card: 'two_level.two_clubs.notes', kind: 'text' },
 
   // ─── 2♦ / 2♥ / 2♠ weak twos ───

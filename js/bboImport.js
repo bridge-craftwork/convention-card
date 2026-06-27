@@ -298,8 +298,13 @@ export function importBboJson(input) {
   setNotes(card_data.notes, 'notrump_notes', [f['1NOther1'], f['1NOther2'], f['1NOther3'], f['2NOther'], f.CNTOther1])
   setNotes(card_data.notes, 'major_notes', [f.majorOther1, f.majorOther2])
   setNotes(card_data.notes, 'minor_notes', [f.minorOther1, f.minorOther2])
-  setNotes(card_data.two_level.two_clubs, 'notes',
-    [f['2COther1'], f['2COther4'], f['2COther5'], f['2COther6']])
+  // 2♣ box: the ACBL card gives DESCRIBE and RESPONSES/REBIDS two
+  // write-in lines each (description / continuation_describe and notes /
+  // continuation_response). BBO splits them as 2COther1-3 (DESCRIBE) and
+  // 2COther4-6 (RESPONSES). Pack each column from the top so we use the
+  // separate lines instead of cramming everything onto one; a 3rd
+  // RESPONSES value spills into the free 2nd DESCRIBE line.
+  distributeTwoClubsNotes(card_data.two_level.two_clubs, f)
   setNotes(card_data.slam, 'notes', [f.slamOther1, f.slamOther2])
   setNotes(card_data.nt_overcalls, 'notes', [f['1NOcallOther1'], f['1NOcallOther2']])
   setNotes(card_data.overcalls, 'notes', [f.ocallOther])
@@ -367,6 +372,26 @@ function applyLeads(leads, card_data) {
 
 function setIf(obj, key, value) {
   if (value != null) obj[key] = value
+}
+
+/**
+ * Spread BBO's 2♣ "Other" slots across the card's 4 write-in lines
+ * (DESCRIBE ×2 + RESPONSES/REBIDS ×2) instead of cramming them onto one.
+ *   description / continuation_describe ← DESCRIBE column (2COther1-3)
+ *   notes       / continuation_response ← RESPONSES column (2COther4-6)
+ * A 3rd RESPONSES value spills onto the otherwise-free 2nd DESCRIBE line.
+ */
+function distributeTwoClubsNotes(tc, f) {
+  const clean = v => (v != null && String(v).trim() !== '') ? suits(v) : null
+  const describe = [f['2COther1'], f['2COther2'], f['2COther3']].map(clean).filter(Boolean)
+  const respond = [f['2COther4'], f['2COther5'], f['2COther6']].map(clean).filter(Boolean)
+  if (describe[0]) tc.description = describe[0]
+  if (respond[0]) tc.notes = respond[0]
+  if (respond[1]) tc.continuation_response = respond[1]
+  // Leftovers (a 2nd/3rd describe value, or a 3rd response value) go on
+  // the free 2nd DESCRIBE line, joined if there's more than one.
+  const spill = [describe[1], describe[2], respond[2]].filter(Boolean)
+  if (spill.length) tc.continuation_describe = spill.join('; ')
 }
 
 /** Set a dotted path, creating intermediate objects. */

@@ -118,6 +118,20 @@ describe('importBboJson', () => {
     expect(card_data.competitive.vs_1nt_strong.dbl).toBe('Penalty')
   })
 
+  it('spreads the 2C describe/response Other slots across separate lines', () => {
+    const { card_data: c } = importBboJson(bboFixture({
+      '2COther1': 'Or 9+ tricks',
+      '2COther4': '2H bust',
+      '2COther5': 'Kokish Relay',
+      '2COther6': 'Parrish Relay'
+    }))
+    const tc = c.two_level.two_clubs
+    expect(tc.description).toBe('Or 9+ tricks')          // DESCRIBE line 1
+    expect(tc.notes).toMatch(/bust/)                     // RESPONSES line 1
+    expect(tc.continuation_response).toBe('Kokish Relay') // RESPONSES line 2
+    expect(tc.continuation_describe).toBe('Parrish Relay') // spills to DESCRIBE line 2
+  })
+
   it('joins multiple "Other" slots into a single newline-separated note', () => {
     const { card_data } = importBboJson(bboFixture({
       slamOther1: '0314, Kickback',
