@@ -219,6 +219,7 @@ import { computed, onMounted, watch, ref } from 'vue'
 import { useUserStore } from '../composables/useUserStore.js'
 import { useConventionCard } from '../composables/useConventionCard.js'
 import { importBridgeodexJson } from '../utils/bridgeodexImport.js'
+import { importBboJson, isBboCard } from '../utils/bboImport.js'
 import SkillPills from '../components/conventionCard/SkillPills.vue'
 import OverlayLegend from '../components/conventionCard/OverlayLegend.vue'
 import CardTree from '../components/conventionCard/CardTree.vue'
@@ -433,7 +434,14 @@ async function onImportFile(event) {
     } else {
       const text = await file.text()
       const json = JSON.parse(text)
-      ;({ name, description, card_data } = importBridgeodexJson(json))
+      // Two JSON shapes are supported: BBO's ACBL export (`source:
+      // "bbo-acbl"`, a `cards[]` array) and bridgeodex's (`settings`
+      // block). Route by detecting the BBO shape first.
+      if (isBboCard(json)) {
+        ;({ name, description, card_data } = importBboJson(json))
+      } else {
+        ;({ name, description, card_data } = importBridgeodexJson(json))
+      }
     }
 
     // Duplicate-name check: a user often re-imports the same partnership
