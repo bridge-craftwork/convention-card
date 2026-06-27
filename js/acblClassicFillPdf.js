@@ -467,6 +467,7 @@ const FIELD_MAP_NEW = [
   { pdf: '1NT.t.14', card: 'notrump.responses.2h_other', kind: 'text' },
   { pdf: '1NT.c.16', card: 'notrump.transfers.spades_relay', kind: 'check' },
   { pdf: '1NT.t.17', card: 'notrump.responses.2s_other', kind: 'text' },
+  { pdf: '1NT.c.18', card: 'notrump.two_nt_natural', kind: 'check' },
   { pdf: '1NT.c.19', card: 'notrump.transfers.two_nt', kind: 'check' },
   { pdf: '1NT.t.20', card: 'notrump.responses.2nt_other', kind: 'text' },
   { pdf: '1NT.c.21', card: 'notrump.smolen.play',      kind: 'check' },
@@ -1287,11 +1288,33 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
     // The New template's fields don't have visible borders to begin with —
     // and crucially, the field rectangles are sized tightly around the
     // text area without room for descenders. Applying the same
-    // white-stroke treatment there draws a 1-device-pixel white line at
-    // each field's bottom edge, which clips the descenders of any text
-    // that runs through that y-coordinate (commonly the row of text
-    // immediately below). So we skip the treatment for the New form
-    // and let its native appearance shine through.
+    // white-stroke (border) treatment there draws a 1-device-pixel white
+    // line at each field's bottom edge, which clips the descenders of any
+    // text that runs through that y-coordinate (commonly the row of text
+    // immediately below). So we skip the BORDER treatment for the New
+    // form — but we still give its text fields a white background below
+    // (a fill bounded to the rect, no edge stroke) so viewers don't tint
+    // them with the form-field highlight wash.
+    if (templateName === 'new') {
+      for (const field of form.getFields()) {
+        if (!(field instanceof PDFTextField)) continue
+        try {
+          if (typeof field.setBorderWidth === 'function') field.setBorderWidth(0)
+        } catch { /* not every field type has setBorderWidth — ignore */ }
+        try {
+          for (const widget of field.acroField.getWidgets()) {
+            const ac = widget.getOrCreateAppearanceCharacteristics()
+            ac.setBorderColor([1, 1, 1])
+            ac.setBackgroundColor([1, 1, 1])
+            // Drop the cached AP so it regenerates borderless with the
+            // white background (matching the classic text-field path);
+            // without this the regenerated appearance draws the field's
+            // native border as a black box around the value.
+            widget.dict.delete(apName)
+          }
+        } catch { /* widget without a writable MK dict — ignore */ }
+      }
+    }
     if (templateName === 'classic') {
       for (const field of form.getFields()) {
         const isText = field instanceof PDFTextField

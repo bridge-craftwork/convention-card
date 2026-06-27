@@ -140,6 +140,7 @@ export function importBridgeodexJson(input) {
   if (on(nt['2h_tfr']))             card_data.notrump.transfers.jacoby = true
   if (on(nt['2s_tfr']))             card_data.notrump.transfers.spades_relay = true
   if (on(nt['2nt_tfr']))            card_data.notrump.transfers.two_nt = true
+  if (on(nt['2nt_nat']))            card_data.notrump.two_nt_natural = true
   // Texas transfers — bridgeodex has per-suit flags. We mirror them
   // 1:1 (so the per-suit checkboxes light up in the editor) and also
   // keep an umbrella `texas` boolean so the "Texas transfers" catalog
@@ -402,8 +403,11 @@ export function importBridgeodexJson(input) {
   if (on(vd.redouble_conv))      card_data.vs_to_double.redouble.conv = true
   if (on(vd.redouble_denies_fit)) card_data.vs_to_double.redouble.denies_fit = true
   if (vd.redouble_conv_desc)     card_data.vs_to_double.redouble.conv_desc = suits(vd.redouble_conv_desc)
-  if (on(vd['2nt_over_minors_raise'])) card_data.vs_to_double.two_nt_raise_minors.play = true
-  if (on(vd['2nt_over_majors_raise'])) card_data.vs_to_double.two_nt_raise_majors.play = true
+  // Bridgeodex marks 2NT-over-their-double as either a raise (`_raise`)
+  // or natural showing the two suits (`_nat`); either way the card's
+  // "2NT Over" box is in use, so light up the play flag.
+  if (on(vd['2nt_over_minors_raise']) || on(vd['2nt_over_minors_nat'])) card_data.vs_to_double.two_nt_raise_minors.play = true
+  if (on(vd['2nt_over_majors_raise']) || on(vd['2nt_over_majors_nat'])) card_data.vs_to_double.two_nt_raise_majors.play = true
   card_data.vs_to_double.two_nt_raise_minors.range_min = parseRange(vd['2nt_over_minors_min']).n
   card_data.vs_to_double.two_nt_raise_minors.range_max = parseRange(vd['2nt_over_minors_max']).n
   card_data.vs_to_double.two_nt_raise_majors.range_min = parseRange(vd['2nt_over_majors_min']).n
