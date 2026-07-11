@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { API_URL } from '@/utils/apiUrl.js'
+import { apiFetch } from '@/utils/apiFetch.js'
 import { useUserStore } from './useUserStore.js'
 import { useBoardStatus } from './useBoardStatus.js'
 import {
@@ -13,8 +14,6 @@ import {
   writePath
 } from '../utils/conventionCatalog.js'
 import { getTaxonomyEntry, getSubfolderForSkill } from '../utils/bakerBridgeTaxonomy.js'
-
-const API_KEY = import.meta.env.VITE_API_KEY || ''
 
 // ─── Singleton state ────────────────────────────────────────────
 const currentCard = ref(null)        // { id, name, description, owner_id, card_data, ... }
@@ -43,9 +42,7 @@ function tierToProf(tier) {
 
 // ─── Card loading ───────────────────────────────────────────────
 async function fetchPublicSystemCard() {
-  const res = await fetch(`${API_URL}/cards?visibility=public`, {
-    headers: { 'x-api-key': API_KEY }
-  })
+  const res = await apiFetch(`${API_URL}/cards?visibility=public`)
   if (!res.ok) throw new Error(`Failed to list public cards: ${res.status}`)
   const data = await res.json()
   const list = data.cards || data || []
@@ -60,7 +57,7 @@ async function fetchCardById(cardId) {
   const url = viewerId
     ? `${API_URL}/cards/${encodeURIComponent(cardId)}?viewer_id=${encodeURIComponent(viewerId)}`
     : `${API_URL}/cards/${encodeURIComponent(cardId)}`
-  const res = await fetch(url, { headers: { 'x-api-key': API_KEY } })
+  const res = await apiFetch(url)
   if (!res.ok) throw new Error(`Failed to load card ${cardId}: ${res.status}`)
   const data = await res.json()
   const card = data.card || data
@@ -71,9 +68,7 @@ async function fetchCardById(cardId) {
 }
 
 async function fetchUsersPrimaryCard(userId) {
-  const res = await fetch(`${API_URL}/users/${encodeURIComponent(userId)}/cards`, {
-    headers: { 'x-api-key': API_KEY }
-  })
+  const res = await apiFetch(`${API_URL}/users/${encodeURIComponent(userId)}/cards`)
   if (!res.ok) return null
   const data = await res.json()
   const list = data.cards || data || []
@@ -120,9 +115,7 @@ async function loadCardForCurrentUser() {
 }
 
 async function loadUserCardLinks(userId) {
-  const res = await fetch(`${API_URL}/users/${encodeURIComponent(userId)}/cards`, {
-    headers: { 'x-api-key': API_KEY }
-  })
+  const res = await apiFetch(`${API_URL}/users/${encodeURIComponent(userId)}/cards`)
   if (!res.ok) {
     userCardLinks.value = []
     return
@@ -298,9 +291,9 @@ async function saveCard() {
   saving.value = true
   saveError.value = null
   try {
-    const res = await fetch(`${API_URL}/cards/${encodeURIComponent(card.id)}`, {
+    const res = await apiFetch(`${API_URL}/cards/${encodeURIComponent(card.id)}`, {
       method: 'PUT',
-      headers: { 'x-api-key': API_KEY, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         acting_user_id: user.id,
         card_data: editedCardData.value
@@ -346,9 +339,9 @@ async function overwriteCard(cardId, { name, description, cardData }) {
   const userStore = useUserStore()
   const user = userStore.currentUser.value
   if (!user) throw new Error('Must be signed in')
-  const res = await fetch(`${API_URL}/cards/${encodeURIComponent(cardId)}`, {
+  const res = await apiFetch(`${API_URL}/cards/${encodeURIComponent(cardId)}`, {
     method: 'PUT',
-    headers: { 'x-api-key': API_KEY, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       acting_user_id: user.id,
       name: name ?? undefined,
@@ -368,9 +361,9 @@ async function createCard({ name, description = null, cardData = {}, visibility 
   const userStore = useUserStore()
   const user = userStore.currentUser.value
   if (!user) throw new Error('Must be signed in to create a card')
-  const res = await fetch(`${API_URL}/cards`, {
+  const res = await apiFetch(`${API_URL}/cards`, {
     method: 'POST',
-    headers: { 'x-api-key': API_KEY, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       acting_user_id: user.id,
       name: name || 'My convention card',
@@ -385,9 +378,9 @@ async function createCard({ name, description = null, cardData = {}, visibility 
   }
   const { card_id } = await res.json()
   // Link as primary, then switch to it
-  await fetch(`${API_URL}/users/${encodeURIComponent(user.id)}/cards`, {
+  await apiFetch(`${API_URL}/users/${encodeURIComponent(user.id)}/cards`, {
     method: 'POST',
-    headers: { 'x-api-key': API_KEY, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       card_id,
       is_primary: true,
@@ -417,9 +410,8 @@ async function deleteCurrentCard() {
   const user = userStore.currentUser.value
   if (!card || !user || !canEdit.value) return false
   const url = `${API_URL}/cards/${encodeURIComponent(card.id)}?acting_user_id=${encodeURIComponent(user.id)}`
-  const res = await fetch(url, {
-    method: 'DELETE',
-    headers: { 'x-api-key': API_KEY }
+  const res = await apiFetch(url, {
+    method: 'DELETE'
   })
   if (!res.ok) {
     const text = await res.text()
