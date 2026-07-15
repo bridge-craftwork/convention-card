@@ -740,8 +740,9 @@ watch(() => userStore.currentUser.value?.id, async (uid) => {
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
   z-index: 2000;
   padding: 20px;
 }
@@ -751,6 +752,9 @@ watch(() => userStore.currentUser.value?.id, async (uid) => {
   border-radius: var(--radius-card, 10px);
   max-width: 460px;
   width: 100%;
+  margin: auto;
+  max-height: 90dvh;
+  overflow-y: auto;
   padding: 28px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
 }
