@@ -19,7 +19,11 @@ fn bbsa_fixtures() -> Vec<PathBuf> {
 }
 
 fn layout_of(text: &str) -> Vec<String> {
-    bbsa::parse(text).unwrap().into_iter().map(|(k, _)| k).collect()
+    bbsa::parse(text)
+        .unwrap()
+        .into_iter()
+        .map(|(k, _)| k)
+        .collect()
 }
 
 #[test]
@@ -40,11 +44,19 @@ fn every_bbsa_fixture_round_trips() {
             // lacked are written as 0, so they come back as explicit "off".
             let (again, _) = bbsa::import(&exported, Some(name)).unwrap();
             for (path, value) in card.values() {
-                assert_eq!(again.get(path), Some(value), "{name}: {path} changed on re-import");
+                assert_eq!(
+                    again.get(path),
+                    Some(value),
+                    "{name}: {path} changed on re-import"
+                );
             }
             for (path, value) in again.values() {
                 if card.get(path).is_none() {
-                    assert_eq!(value, &Value::Bool(false), "{name}: {path} appeared on re-import");
+                    assert_eq!(
+                        value,
+                        &Value::Bool(false),
+                        "{name}: {path} appeared on re-import"
+                    );
                 }
             }
         }
@@ -63,7 +75,10 @@ fn default_card_imports_expected_settings() {
     )
     .unwrap();
     let (card, report) = bbsa::import(&text, None).unwrap();
-    assert_eq!(card.get("general.system_category"), Some(&Value::Text("two_over_one".into())));
+    assert_eq!(
+        card.get("general.system_category"),
+        Some(&Value::Text("two_over_one".into()))
+    );
     assert_eq!(card.get("notrump.one_nt.range_min"), Some(&Value::Int(15)));
     assert!(card.is_on("notrump.smolen.play"));
     assert!(card.is_on("slam.blackwood.rkcb_1430"));
@@ -81,7 +96,10 @@ fn precision_card_selects_precision() {
     )
     .unwrap();
     let (card, _) = bbsa::import(&text, None).unwrap();
-    assert_eq!(card.get("general.system_category"), Some(&Value::Text("precision".into())));
+    assert_eq!(
+        card.get("general.system_category"),
+        Some(&Value::Text("precision".into()))
+    );
 }
 
 #[test]

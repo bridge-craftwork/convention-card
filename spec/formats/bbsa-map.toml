@@ -16,6 +16,9 @@
 # get a card field; see `rbb card import-bbsa` output.
 #
 # "Not defined" lines are layout padding and are ignored.
+#
+# [implied] lists settings every BBA card has although no .bbsa key names
+# them: BBA always plays these. Import sets them; export has nothing to write.
 
 "System type" = { index = "general.system_category", values = ["two_over_one", "sayc", "polish_club", "precision", "acol"] }
 
@@ -184,3 +187,7 @@
 "TWNMF by passed hand"      = "other_conventions.two_way_nmf_by_passed_hand"
 "Checkback"                 = "other_conventions.checkback.play"
 "Roudi"                     = "other_conventions.roudi.play"
+
+[implied]
+"notrump.stayman.play"     = true
+"notrump.transfers.jacoby" = true

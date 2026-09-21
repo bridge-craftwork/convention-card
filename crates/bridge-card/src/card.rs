@@ -86,7 +86,9 @@ impl Card {
         let field = registry()
             .get(path)
             .ok_or_else(|| Error::new(format!("unknown card field {path}")))?;
-        let value = field.normalize(value).map_err(|e| Error::new(format!("{path}: {e}")))?;
+        let value = field
+            .normalize(value)
+            .map_err(|e| Error::new(format!("{path}: {e}")))?;
         self.values.insert(field.path.clone(), value);
         Ok(())
     }
@@ -222,9 +224,12 @@ mod tests {
     #[test]
     fn set_validates_and_resolves_aliases() {
         let mut card = Card::new();
-        card.set("other_conventions.blackwood.rkcb_1430", Value::Bool(true)).unwrap();
+        card.set("other_conventions.blackwood.rkcb_1430", Value::Bool(true))
+            .unwrap();
         assert!(card.is_on("slam.blackwood.rkcb_1430"));
-        assert!(card.set("notrump.one_nt.range_min", Value::Text("x".into())).is_err());
+        assert!(card
+            .set("notrump.one_nt.range_min", Value::Text("x".into()))
+            .is_err());
         assert!(card.set("no.such.field", Value::Bool(true)).is_err());
     }
 
@@ -232,7 +237,10 @@ mod tests {
     fn effective_falls_back_to_default() {
         let card = Card::new();
         assert_eq!(card.get("notrump.one_nt.range_max"), None);
-        assert_eq!(card.effective("notrump.one_nt.range_max"), Some(&Value::Int(17)));
+        assert_eq!(
+            card.effective("notrump.one_nt.range_max"),
+            Some(&Value::Int(17))
+        );
     }
 
     #[test]

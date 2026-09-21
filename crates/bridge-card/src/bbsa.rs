@@ -26,21 +26,49 @@ pub enum Mapping {
     Index { path: String, values: Vec<String> },
 }
 
-/// The built-in mapping from `data/bbsa-map.toml`, by `.bbsa` key.
-pub fn mapping() -> &'static HashMap<String, Mapping> {
-    static MAP: OnceLock<HashMap<String, Mapping>> = OnceLock::new();
+struct Map {
+    keys: HashMap<String, Mapping>,
+    implied: Vec<(String, Value)>,
+}
+
+fn map() -> &'static Map {
+    static MAP: OnceLock<Map> = OnceLock::new();
     MAP.get_or_init(|| parse_mapping(MAP_TOML).expect("data/bbsa-map.toml is invalid"))
 }
 
-fn parse_mapping(text: &str) -> Result<HashMap<String, Mapping>, Error> {
-    let table: toml::Table = text.parse().map_err(|e| Error::new(format!("bbsa-map.toml: {e}")))?;
+/// The built-in mapping from `data/bbsa-map.toml`, by `.bbsa` key.
+pub fn mapping() -> &'static HashMap<String, Mapping> {
+    &map().keys
+}
+
+/// Settings every imported card gets: conventions BBA always plays, which
+/// have no `.bbsa` key.
+pub fn implied() -> &'static [(String, Value)] {
+    &map().implied
+}
+
+fn parse_mapping(text: &str) -> Result<Map, Error> {
+    let mut table: toml::Table = text
+        .parse()
+        .map_err(|e| Error::new(format!("bbsa-map.toml: {e}")))?;
+    let mut implied = Vec::new();
+    if let Some(toml::Value::Table(t)) = table.remove("implied") {
+        for (path, v) in t {
+            let v = Value::from_toml(&v)
+                .ok_or_else(|| Error::new(format!("[implied] {path}: unsupported value")))?;
+            validate(&path, &Mapping::Set(vec![(path.clone(), v.clone())]))?;
+            implied.push((path, v));
+        }
+    }
     let mut out = HashMap::new();
     for (key, spec) in table {
         let bad = |msg: &str| Error::new(format!("bbsa-map.toml, {key:?}: {msg}"));
         let mapping = match &spec {
             toml::Value::String(path) => Mapping::Toggle(path.clone()),
             toml::Value::Table(t) if t.contains_key("set") => {
-                let set = t["set"].as_table().ok_or_else(|| bad("`set` must be a table"))?;
+                let set = t["set"]
+                    .as_table()
+                    .ok_or_else(|| bad("`set` must be a table"))?;
                 let mut pairs = Vec::new();
                 for (path, v) in set {
                     let v = Value::from_toml(v).ok_or_else(|| bad("unsupported value"))?;
@@ -49,22 +77,31 @@ fn parse_mapping(text: &str) -> Result<HashMap<String, Mapping>, Error> {
                 Mapping::Set(pairs)
             }
             toml::Value::Table(t) if t.contains_key("index") => {
-                let path = t["index"].as_str().ok_or_else(|| bad("`index` must be a path"))?;
+                let path = t["index"]
+                    .as_str()
+                    .ok_or_else(|| bad("`index` must be a path"))?;
                 let values = t
                     .get("values")
                     .and_then(|v| v.as_array())
                     .ok_or_else(|| bad("`values` must be a list"))?
                     .iter()
-                    .map(|v| v.as_str().map(str::to_string).ok_or_else(|| bad("values must be strings")))
+                    .map(|v| {
+                        v.as_str()
+                            .map(str::to_string)
+                            .ok_or_else(|| bad("values must be strings"))
+                    })
                     .collect::<Result<_, _>>()?;
-                Mapping::Index { path: path.to_string(), values }
+                Mapping::Index {
+                    path: path.to_string(),
+                    values,
+                }
             }
             _ => return Err(bad("expected a path, {set = ...} or {index = ...}")),
         };
         validate(&key, &mapping)?;
         out.insert(key, mapping);
     }
-    Ok(out)
+    Ok(Map { keys: out, implied })
 }
 
 /// Every mapped path must exist and every value must fit its field.
@@ -81,9 +118,9 @@ fn validate(key: &str, mapping: &Mapping) -> Result<(), Error> {
     match mapping {
         Mapping::Toggle(path) => check(path, Value::Bool(true)),
         Mapping::Set(pairs) => pairs.iter().try_for_each(|(p, v)| check(p, v.clone())),
-        Mapping::Index { path, values } => {
-            values.iter().try_for_each(|v| check(path, Value::Text(v.clone())))
-        }
+        Mapping::Index { path, values } => values
+            .iter()
+            .try_for_each(|v| check(path, Value::Text(v.clone()))),
     }
 }
 
@@ -98,10 +135,13 @@ pub fn parse(text: &str) -> Result<Vec<(String, i64)>, Error> {
         let (key, value) = line
             .rsplit_once('=')
             .ok_or_else(|| Error::new(format!("line {}: expected `Key = value`", n + 1)))?;
-        let value = value
-            .trim()
-            .parse()
-            .map_err(|_| Error::new(format!("line {}: {:?} is not an integer", n + 1, value.trim())))?;
+        let value = value.trim().parse().map_err(|_| {
+            Error::new(format!(
+                "line {}: {:?} is not an integer",
+                n + 1,
+                value.trim()
+            ))
+        })?;
         entries.push((key.trim().to_string(), value));
     }
     Ok(entries)
@@ -122,6 +162,9 @@ pub struct ImportReport {
 pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Error> {
     let mut card = Card::new();
     card.metadata.name = name.map(str::to_string);
+    for (path, v) in implied() {
+        card.set(path, v.clone())?;
+    }
     let mut report = ImportReport::default();
     for (key, value) in parse(text)? {
         if key == PADDING {
@@ -136,7 +179,9 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
         match mapping {
             Mapping::Toggle(path) => {
                 if value != 0 && value != 1 {
-                    report.warnings.push(format!("{key} = {value}: expected 0 or 1"));
+                    report
+                        .warnings
+                        .push(format!("{key} = {value}: expected 0 or 1"));
                 }
                 card.set(path, Value::Bool(value != 0))?;
             }
@@ -146,7 +191,9 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
                 }
                 for (path, v) in pairs {
                     if let Some(old) = card.get(path).filter(|old| *old != v) {
-                        report.warnings.push(format!("{key} overrides {path} = {old}"));
+                        report
+                            .warnings
+                            .push(format!("{key} overrides {path} = {old}"));
                     }
                     card.set(path, v.clone())?;
                 }
@@ -154,7 +201,9 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
             Mapping::Index { path, values } => {
                 match usize::try_from(value).ok().and_then(|i| values.get(i)) {
                     Some(v) => card.set(path, Value::Text(v.clone()))?,
-                    None => report.warnings.push(format!("{key} = {value}: no such option")),
+                    None => report
+                        .warnings
+                        .push(format!("{key} = {value}: no such option")),
                 }
             }
         }
@@ -219,7 +268,10 @@ mod tests {
         // through passthrough. This guards against typos in the map file.
         let layout: Vec<&str> = LAYOUT.lines().collect();
         for key in mapping().keys() {
-            assert!(layout.contains(&key.as_str()), "mapped key {key:?} is not in the layout");
+            assert!(
+                layout.contains(&key.as_str()),
+                "mapped key {key:?} is not in the layout"
+            );
         }
     }
 

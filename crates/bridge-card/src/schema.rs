@@ -17,7 +17,10 @@ pub fn json_schema() -> Json {
         Json::Object(m) => m,
         _ => unreachable!(),
     };
-    properties.insert("schema_version".into(), json!({ "const": crate::card::SCHEMA_VERSION }));
+    properties.insert(
+        "schema_version".into(),
+        json!({ "const": crate::card::SCHEMA_VERSION }),
+    );
     properties.insert("format".into(), json!({ "const": "bridge_classroom" }));
     properties.insert(
         "metadata".into(),

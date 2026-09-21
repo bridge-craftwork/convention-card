@@ -135,8 +135,9 @@ pub fn registry() -> &'static Registry {
 impl Registry {
     /// Parse a registry in the `data/fields.toml` format.
     pub fn parse(text: &str) -> Result<Registry, Error> {
-        let table: toml::Table =
-            text.parse().map_err(|e| Error::new(format!("fields.toml: {e}")))?;
+        let table: toml::Table = text
+            .parse()
+            .map_err(|e| Error::new(format!("fields.toml: {e}")))?;
         let mut fields = Vec::new();
         let mut index = HashMap::new();
         for (section, entries) in table {
@@ -152,7 +153,9 @@ impl Registry {
                 field.path = path.clone();
                 if let Some(d) = field.default.take() {
                     field.default = Some(
-                        field.normalize(d).map_err(|e| Error::new(format!("{path} default: {e}")))?,
+                        field
+                            .normalize(d)
+                            .map_err(|e| Error::new(format!("{path} default: {e}")))?,
                     );
                 }
                 if field.kind == FieldKind::Enum && field.options.is_empty() {
@@ -195,7 +198,9 @@ mod tests {
 
     #[test]
     fn aliases_resolve_to_canonical_field() {
-        let f = registry().get("other_conventions.blackwood.rkcb_1430").unwrap();
+        let f = registry()
+            .get("other_conventions.blackwood.rkcb_1430")
+            .unwrap();
         assert_eq!(f.path, "slam.blackwood.rkcb_1430");
     }
 
