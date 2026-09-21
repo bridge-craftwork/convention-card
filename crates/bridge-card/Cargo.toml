@@ -1,0 +1,10 @@
+[package]
+name = "bridge-card"
+description = "Bridge convention card schema and .bbsa import"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+# Part of the convention layer: must not depend on the engine.
+[dependencies]
