@@ -49,6 +49,7 @@
 "1N-3M splinter"            = "notrump.three_major_splinter"
 "Texas"                     = "notrump.transfers.texas"
 "Super acceptance after NT" = "notrump.transfers.super_accept"
+"Extended acceptance after NT" = "notrump.transfers.super_accept_doubleton"
 "Transfers if RHO doubles"  = "notrump.transfers.vs_double"
 "Transfers if RHO bids clubs" = "notrump.transfers.vs_2c"
 "Lebensohl after 1NT"       = "notrump.lebensohl.over_interference"

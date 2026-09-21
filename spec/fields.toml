@@ -72,6 +72,7 @@
 "transfers.two_nt_diamonds" = { kind = "bool", label = "1NT–2NT transfer to diamonds" }
 "transfers.three_c_diamonds" = { kind = "bool", label = "1NT–3♣ transfer to diamonds" }
 "transfers.super_accept"   = { kind = "bool", label = "Super-acceptance of transfers" }
+"transfers.super_accept_doubleton" = { kind = "bool", label = "Super-accept by bidding a doubleton", desc = "With 4+ trumps and a maximum, bid the doubleton suit (or 2NT when it cannot be shown below it). BBA: Extended acceptance after NT" }
 "transfers.vs_double"      = { kind = "bool", label = "Transfers on if RHO doubles" }
 "transfers.vs_2c"          = { kind = "bool", label = "Transfers on if RHO bids clubs" }
 "three_d_response"         = { kind = "enum", label = "1NT–3♦ response", options = ["natural", "majors", "minors", "splinter"] }
