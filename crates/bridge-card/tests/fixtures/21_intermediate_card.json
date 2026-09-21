@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "format": "bridge_classroom",
+
+  "metadata": {
+    "name": "2/1 Intermediate",
+    "description": "Standard 2/1 Game Force system with common conventions for intermediate players",
+    "tags": ["2/1", "intermediate", "system-card"]
+  },
+
+  "general": {
+    "system": "2/1 Game Force",
+    "system_category": "two_over_one",
+    "min_hcp_open": 12,
+    "min_hcp_respond": 6,
+    "third_fourth_light": true,
+    "forcing_opening_2c": true,
+    "nt_open_style": "strong"
+  },
+
+  "notrump": {
+    "one_nt": {
+      "range_min": 15,
+      "range_max": 17,
+      "five_card_major": "sometimes",
+      "skill_path": "basic_bidding/notrump_openings"
+    },
+    "two_nt": {
+      "range_min": 20,
+      "range_max": 21,
+      "skill_path": "basic_bidding/notrump_openings"
+    },
+    "stayman": {
+      "play": true,
+      "forcing": true,
+      "skill_path": "bidding_conventions/stayman"
+    },
+    "transfers": {
+      "jacoby": true,
+      "texas": true,
+      "texas_4d": true,
+      "texas_4h": true,
+      "skill_path": "bidding_conventions/jacoby_transfers"
+    }
+  },
+
+  "major_openings": {
+    "five_card_majors": true,
+    "one_nt_response": {
+      "forcing": false,
+      "semi_forcing": true
+    },
+    "two_over_one": {
+      "game_force": true,
+      "skill_path": "bidding_conventions/two_over_one"
+    },
+    "jacoby_2nt": {
+      "play": true,
+      "skill_path": "bidding_conventions/jacoby_2nt_splinters"
+    },
+    "splinters": {
+      "play": true,
+      "by_responder": true,
+      "by_opener": true,
+      "skill_path": "bidding_conventions/jacoby_2nt_splinters"
+    },
+    "drury": {
+      "play": true,
+      "reverse": true,
+      "skill_path": "bidding_conventions/reverse_drury"
+    }
+  },
+
+  "two_level": {
+    "two_clubs": {
+      "meaning": "strong",
+      "min_hcp": 22,
+      "skill_path": "bidding_conventions/strong_2c"
+    },
+    "two_hearts": {
+      "meaning": "weak",
+      "min_hcp": 5,
+      "max_hcp": 10,
+      "min_length": 6,
+      "rebid_2nt": "ogust",
+      "skill_path": "bidding_conventions/weak_2s"
+    },
+    "two_spades": {
+      "meaning": "weak",
+      "min_hcp": 5,
+      "max_hcp": 10,
+      "min_length": 6,
+      "rebid_2nt": "ogust",
+      "skill_path": "bidding_conventions/weak_2s"
+    },
+    "ogust": {
+      "play": true,
+      "skill_path": "bidding_conventions/ogust"
+    }
+  },
+
+  "other_conventions": {
+    "new_minor_forcing": {
+      "play": true,
+      "skill_path": "bidding_conventions/new_minor_forcing"
+    },
+    "fourth_suit_forcing": {
+      "play": true,
+      "game_forcing": true,
+      "skill_path": "bidding_conventions/fourth_suit_forcing"
+    },
+    "help_suit_game_tries": {
+      "play": true,
+      "skill_path": "bidding_conventions/help_suit_game_try"
+    },
+    "reverse_bids": {
+      "forcing": true,
+      "skill_path": "bidding_conventions/reverse_bids"
+    }
+  },
+
+  "slam": {
+    "blackwood": {
+      "rkcb_1430": true,
+      "queen_ask": true,
+      "skill_path": "bidding_conventions/roman_keycard"
+    },
+    "gerber": {
+      "play": true,
+      "over": "1nt_2nt_only",
+      "skill_path": "bidding_conventions/blackwood"
+    }
+  },
+
+  "competitive": {
+    "takeout_doubles": {
+      "style": "moderate",
+      "skill_path": "competitive_bidding/takeout_doubles"
+    },
+    "negative_doubles": {
+      "through": "3S",
+      "skill_path": "competitive_bidding/negative_doubles"
+    },
+    "michaels": {
+      "play": true,
+      "strength": "weak_or_strong",
+      "skill_path": "competitive_bidding/michaels_unusual"
+    },
+    "unusual_2nt": {
+      "play": true,
+      "shows": "two_lower_unbid",
+      "skill_path": "competitive_bidding/michaels_unusual"
+    },
+    "defense_vs_strong_nt": {
+      "convention": "meckwell",
+      "skill_path": null
+    },
+    "cue_bid_raise": {
+      "play": true,
+      "skill_path": "competitive_bidding/support_cuebids"
+    },
+    "lead_directing_double": {
+      "play": true,
+      "skill_path": null
+    }
+  },
+
+  "conventions_list": [
+    "gerber",
+    "cue_bid_raise",
+    "fourth_suit_forcing",
+    "help_suit_game_try",
+    "jacoby_transfer",
+    "texas_transfer",
+    "meckwell",
+    "lead_directing_double",
+    "michaels",
+    "unusual_2nt",
+    "negative_doubles",
+    "new_minor_forcing",
+    "ogust",
+    "reverse_drury",
+    "reverse",
+    "rkcb_1430",
+    "splinter",
+    "takeout_double",
+    "strong_2c",
+    "weak_2"
+  ]
+}

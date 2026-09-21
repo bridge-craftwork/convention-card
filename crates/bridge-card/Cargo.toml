@@ -8,3 +8,6 @@ repository.workspace = true
 
 # Part of the convention layer: must not depend on the engine.
 [dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+toml = { version = "0.9", features = ["preserve_order"] }

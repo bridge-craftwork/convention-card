@@ -1,0 +1,181 @@
+# Mapping from BBA `.bbsa` keys to convention card fields.
+#
+# Forms:
+#   "Key" = "path"
+#       On/off toggle for a bool field: 1 => true, 0 => false.
+#       Export writes 1 when the field is true.
+#   "Key" = { set = { "path" = value, ... } }
+#       One member of a one-of group: when the key is 1, set these values;
+#       when 0, set nothing. Export writes 1 when all the values hold.
+#   "Key" = { index = "path", values = [...] }
+#       Integer key selecting an enum value by position.
+#
+# Keys not listed here are kept verbatim in the card (`bba_passthrough`) and
+# written back unchanged on export, so a .bbsa round trip is lossless. They
+# are listed there because their meaning needs a bridge decision before they
+# get a card field; see `rbb card import-bbsa` output.
+#
+# "Not defined" lines are layout padding and are ignored.
+
+"System type" = { index = "general.system_category", values = ["two_over_one", "sayc", "polish_club", "precision", "acol"] }
+
+# ── Notrump openings ───────────────────────────────────────────────
+"1NT opening range 12-14" = { set = { "notrump.one_nt.range_min" = 12, "notrump.one_nt.range_max" = 14 } }
+"1NT opening range 13-15" = { set = { "notrump.one_nt.range_min" = 13, "notrump.one_nt.range_max" = 15 } }
+"1NT opening range 14-16" = { set = { "notrump.one_nt.range_min" = 14, "notrump.one_nt.range_max" = 16 } }
+"1NT opening range 15-17" = { set = { "notrump.one_nt.range_min" = 15, "notrump.one_nt.range_max" = 17 } }
+"1NT opening shape 4441"   = "notrump.one_nt.allow_4441"
+"1NT opening shape 5422"   = "notrump.one_nt.allow_5422"
+"1NT opening shape 6 minor" = "notrump.one_nt.allow_6_minor"
+"1NT opening shape 5 major" = { set = { "notrump.one_nt.five_card_major" = "sometimes" } }
+
+# ── Responses to 1NT / 2NT ─────────────────────────────────────────
+"Garbage Stayman"           = "notrump.stayman.garbage"
+"SMOLEN"                    = "notrump.smolen.play"
+"1N-2S Minor Suit Stayman"  = "notrump.minor_suit_stayman.play"
+"1N-2S transfer to clubs"   = "notrump.transfers.two_s_clubs"
+"1N-2N transfer to clubs"   = "notrump.transfers.two_nt_clubs"
+"1N-2N transfer to diamonds" = "notrump.transfers.two_nt_diamonds"
+"1N-3C transfer to diamonds" = "notrump.transfers.three_c_diamonds"
+"1N-3C Puppet Stayman"      = "notrump.stayman.puppet_1nt"
+"1N-3D natural"             = { set = { "notrump.three_d_response" = "natural" } }
+"1N-3D majors"              = { set = { "notrump.three_d_response" = "majors" } }
+"1N-3D minors"              = { set = { "notrump.three_d_response" = "minors" } }
+"1N-3D splinter"            = { set = { "notrump.three_d_response" = "splinter" } }
+"1N-3M splinter"            = "notrump.three_major_splinter"
+"Texas"                     = "notrump.transfers.texas"
+"Super acceptance after NT" = "notrump.transfers.super_accept"
+"Transfers if RHO doubles"  = "notrump.transfers.vs_double"
+"Transfers if RHO bids clubs" = "notrump.transfers.vs_2c"
+"Lebensohl after 1NT"       = "notrump.lebensohl.over_interference"
+"Rubensohl after 1NT"       = "notrump.rubensohl.over_interference"
+"2N-3C Puppet Stayman"      = "notrump.stayman.puppet"
+"2N-3S transfer to clubs"   = "notrump.two_nt.transfer_3s_clubs"
+"2N-4C transfer to diamonds" = "notrump.two_nt.transfer_4c_diamonds"
+"Minor Suit Slam Try after 2NT"  = "notrump.two_nt.minor_slam_try"
+"Minor Suit Stayman after 2NT"   = "notrump.two_nt.minor_stayman"
+"Minor Suit Transfers after 2NT" = "notrump.two_nt.minor_transfers"
+"Gambling"                  = "notrump.three_nt.one_suit"
+
+# ── General / jump shifts ──────────────────────────────────────────
+"Strong jump shifts 2"      = "general.jump_shifts.strong_2"
+"Strong jump shifts 3"      = "general.jump_shifts.strong_3"
+"Weak Jump Shifts 2"        = "general.jump_shifts.weak_2"
+"Weak Jump Shifts 3"        = "general.jump_shifts.weak_3"
+"Inviting Jump Shifts"      = "general.jump_shifts.invitational"
+"Soloway Jump Shifts"       = "general.jump_shifts.soloway"
+"Soloway Jump Shifts Extended" = "general.jump_shifts.soloway_extended"
+
+# ── Major openings ─────────────────────────────────────────────────
+"Forcing 1NT"               = "major_openings.one_nt_response.forcing"
+"Semi forcing 1NT"          = "major_openings.one_nt_response.semi_forcing"
+"1M-3M blocking"            = "major_openings.jump_raise.weak"
+"1M-3M inviting"            = "major_openings.jump_raise.inv"
+"Mixed raise"               = "major_openings.jump_raise.mixed"
+"Jacoby 2NT"                = "major_openings.jacoby_2nt.play"
+"Bergen"                    = "major_openings.bergen_raises.play"
+"Reverse Bergen"            = "major_openings.bergen_raises.reverse"
+"Splinter"                  = "major_openings.splinters.play"
+"Mini Splinter"             = "major_openings.mini_splinters.play"
+"Drury"                     = "major_openings.drury.play"
+"Reverse drury"             = "major_openings.drury.reverse"
+"Gazzilli"                  = "major_openings.gazzilli.play"
+
+# ── Minor openings ─────────────────────────────────────────────────
+"1D opening with 4 cards"   = { set = { "minor_openings.one_diamond.min_length" = "4" } }
+"1D opening with 5 cards"   = { set = { "minor_openings.one_diamond.min_length" = "5" } }
+"Inverted minors"           = "minor_openings.inverted_minors.play"
+"Walsh style"               = "minor_openings.walsh.play"
+
+# ── Two-level openings ─────────────────────────────────────────────
+"Weak natural 2D"           = { set = { "two_level.two_diamonds.meaning" = "weak" } }
+"Strong natural 2D"         = { set = { "two_level.two_diamonds.meaning" = "strong" } }
+"Weak natural 2M"           = { set = { "two_level.two_hearts.meaning" = "weak", "two_level.two_spades.meaning" = "weak" } }
+"Strong natural 2M"         = { set = { "two_level.two_hearts.meaning" = "strong", "two_level.two_spades.meaning" = "strong" } }
+"Multi"                     = "two_level.two_diamonds.multi"
+"Flannery"                  = "two_level.flannery.play"
+"Reverse Flannery 2H"       = "two_level.reverse_flannery.two_h"
+"Reverse Flannery 2S"       = "two_level.reverse_flannery.two_s"
+"Benjamin 2D"               = "two_level.benjamin.play"
+"French 2D"                 = "two_level.french_2d.play"
+"Precision 2D"              = "two_level.precision_2d.play"
+"Polish two suiters"        = "two_level.polish_two_suiters.play"
+"Wilkosz"                   = "two_level.wilkosz.play"
+"Ogust"                     = "two_level.ogust.play"
+"Kokish Relay"              = "two_level.two_clubs.kokish"
+
+# ── Preempts ───────────────────────────────────────────────────────
+"Namyats"                   = "preempts.namyats.play"
+
+# ── Slam ───────────────────────────────────────────────────────────
+"Blackwood 1430"            = "slam.blackwood.rkcb_1430"
+"Blackwood 0314"            = "slam.blackwood.rkcb_0314"
+"Kickback 1430"             = "slam.kickback.rkcb_1430"
+"Kickback 0314"             = "slam.kickback.rkcb_0314"
+"King ask by 5NT"           = "slam.king_ask.five_nt"
+"King ask by available bid" = "slam.king_ask.next_step"
+"Quantitative 4NT"          = "slam.quantitative_4nt.play"
+"4NT opening"               = "slam.four_nt_opening.play"
+"5NT pick a slam"           = "slam.pick_a_slam_5nt.play"
+"Exclusion"                 = "slam.exclusion_blackwood.play"
+"Gerber"                    = "slam.gerber.play"
+"Gerber only for NT openings" = "slam.gerber.only_over_nt_openings"
+"DOPI"                      = "slam.dopi"
+"DEPO"                      = "slam.depo"
+"ROPI"                      = "slam.ropi"
+
+# ── Doubles ────────────────────────────────────────────────────────
+"Responsive double"         = "doubles.responsive.play"
+"Support double redouble"   = { set = { "doubles.support.play" = true, "doubles.support.rdbl" = true } }
+"Maximal Doubles"           = "doubles.maximal"
+
+# ── Competitive ────────────────────────────────────────────────────
+"Michaels Cuebid"           = "competitive.michaels.play"
+"Leaping Michaels"          = "competitive.leaping_michaels.play"
+"Non-Leaping Michaels"      = "competitive.non_leaping_michaels.play"
+"Unusual 1NT"               = "competitive.unusual_1nt.play"
+"Unusual 2NT"               = "competitive.unusual_2nt.play"
+"Unusual 3NT"               = "competitive.unusual_3nt.play"
+"Unusual 4NT"               = "competitive.unusual_4nt.play"
+"Unusual vs. Unusual"       = "competitive.unusual_vs_unusual.play"
+"Cappelletti"               = { set = { "competitive.defense_vs_strong_nt.convention" = "cappelletti" } }
+"Landy"                     = { set = { "competitive.defense_vs_strong_nt.convention" = "landy" } }
+"Multi-Landy"               = { set = { "competitive.defense_vs_strong_nt.convention" = "multi_landy" } }
+"Lebensohl after double"    = "competitive.lebensohl_weak_twos.play"
+"Rubensohl after double"    = "competitive.rubensohl_after_double.play"
+"Snapdragon Double"         = "competitive.snapdragon.play"
+"BROMAD"                    = "competitive.bromad.play"
+"Ghestem"                   = "competitive.ghestem.play"
+"Raptor 1NT"                = "competitive.raptor_1nt.play"
+"Scrambling 2NT"            = "competitive.scrambling_2nt.play"
+"Fit showing jumps"         = "competitive.fit_showing_jumps.play"
+"Jordan Truscott 2NT"       = "competitive.jordan_2nt.play"
+"1X-(Y)-2Z forcing"         = "competitive.new_suit_after_overcall_forcing"
+"1X-(1Y)-2Z weak"           = { set = { "competitive.jump_shift_after_overcall" = "weak" } }
+"1X-(1Y)-2Z strong"         = { set = { "competitive.jump_shift_after_overcall" = "strong" } }
+"Major Direct Jump Cuebid Gambling" = { set = { "competitive.direct_jump_cuebid_major" = "gambling" } }
+"Major Direct Jump Cuebid Minor"    = { set = { "competitive.direct_jump_cuebid_major" = "minor" } }
+"Major Direct Jump Cuebid Strong"   = { set = { "competitive.direct_jump_cuebid_major" = "strong" } }
+"Minor Direct Jump Cuebid Gambling" = { set = { "competitive.direct_jump_cuebid_minor" = "gambling" } }
+"Minor Direct Jump Cuebid Majors"   = { set = { "competitive.direct_jump_cuebid_minor" = "majors" } }
+"Minor Direct Jump Cuebid Preempt"  = { set = { "competitive.direct_jump_cuebid_minor" = "preempt" } }
+
+# ── Carding ────────────────────────────────────────────────────────
+"Inverted count signals"    = "carding.inverted_count"
+"Smith Echo"                = "carding.smith_echo"
+"Lavinthal from void"       = "carding.lavinthal.from_void"
+"Lavinthal on ace"          = "carding.lavinthal.on_ace"
+"Lavinthal on trump"        = "carding.lavinthal.on_trump"
+"Lavinthal to void"         = "carding.lavinthal.to_void"
+
+# ── Other ──────────────────────────────────────────────────────────
+"Fourth suit"               = "other_conventions.fourth_suit_forcing.one_round"
+"Fourth suit game force"    = "other_conventions.fourth_suit_forcing.game_force"
+"Two way game tries"        = "other_conventions.two_way_game_tries.play"
+"New Minor Forcing"         = "other_conventions.new_minor_forcing.play"
+"NMF after 2NT rebid"       = "other_conventions.new_minor_forcing.after_2nt_rebid"
+"NMF by passed hand"        = "other_conventions.new_minor_forcing.by_passed_hand"
+"Two Way New Minor Forcing" = "other_conventions.two_way_nmf"
+"TWNMF by passed hand"      = "other_conventions.two_way_nmf_by_passed_hand"
+"Checkback"                 = "other_conventions.checkback.play"
+"Roudi"                     = "other_conventions.roudi.play"

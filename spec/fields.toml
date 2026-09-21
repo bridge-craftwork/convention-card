@@ -1,0 +1,354 @@
+# Convention card field registry.
+#
+# Every setting a card can hold is declared here, once. A card is a set of
+# `path = value` pairs; the path is `<section>.<key>` as written below
+# (for example `notrump.one_nt.range_min`).
+#
+# Field attributes:
+#   kind     bool | int | enum | text
+#   label    display name
+#   options  enum values (kind = "enum")
+#   min/max  bounds (kind = "int")
+#   default  value the engine assumes when a card leaves the field unset
+#   aliases  older paths that load into this field (Bridge-Classroom's seed
+#            card and editor catalog disagree in places; both still load)
+#   desc     one-line description
+#
+# Adding a convention: add its field here, then a `.bid` module whose `card`
+# line names the path.
+
+[general]
+"system"                   = { kind = "text", label = "System" }
+"system_category"          = { kind = "enum", label = "System category", options = ["two_over_one", "sayc", "polish_club", "precision", "acol"], default = "two_over_one" }
+"min_hcp_open"             = { kind = "int", label = "Min HCP to open", min = 0, max = 20, default = 12 }
+"min_hcp_respond"          = { kind = "int", label = "Min HCP to respond", min = 0, max = 20, default = 6 }
+"third_fourth_light"       = { kind = "bool", label = "Light openings in 3rd/4th seat" }
+"nt_open_style"            = { kind = "enum", label = "1NT opening style", options = ["strong", "weak", "variable"], default = "strong" }
+"forcing_opening_1c"       = { kind = "bool", label = "Forcing 1♣ opening" }
+"forcing_opening_2c"       = { kind = "bool", label = "Forcing 2♣ opening" }
+"forcing_opening_other"    = { kind = "text", label = "Forcing opening (other)" }
+"bids_requiring_prep"      = { kind = "text", label = "Bids that may require preparation" }
+"jump_shifts.strong_2"     = { kind = "bool", label = "Strong jump shifts (2-level)" }
+"jump_shifts.strong_3"     = { kind = "bool", label = "Strong jump shifts (3-level)" }
+"jump_shifts.weak_2"       = { kind = "bool", label = "Weak jump shifts (2-level)" }
+"jump_shifts.weak_3"       = { kind = "bool", label = "Weak jump shifts (3-level)" }
+"jump_shifts.invitational" = { kind = "bool", label = "Invitational jump shifts" }
+"jump_shifts.soloway"      = { kind = "bool", label = "Soloway jump shifts" }
+"jump_shifts.soloway_extended" = { kind = "bool", label = "Soloway jump shifts (extended)" }
+
+[notrump]
+"one_nt.range_min"         = { kind = "int", label = "1NT range: minimum", min = 8, max = 25, default = 15 }
+"one_nt.range_max"         = { kind = "int", label = "1NT range: maximum", min = 8, max = 25, default = 17 }
+"one_nt.five_card_major"   = { kind = "enum", label = "1NT may contain a 5-card major", options = ["never", "sometimes", "always"], default = "sometimes" }
+"one_nt.allow_4441"        = { kind = "bool", label = "1NT may be 4-4-4-1" }
+"one_nt.allow_5422"        = { kind = "bool", label = "1NT may be 5-4-2-2" }
+"one_nt.allow_6_minor"     = { kind = "bool", label = "1NT may contain a 6-card minor" }
+"one_nt.seat_vul"          = { kind = "text", label = "1NT seat / vulnerability" }
+"one_nt.sys_on_vs"         = { kind = "text", label = "Systems on vs" }
+"one_nt_alt.range_min"     = { kind = "int", label = "Alternate 1NT range: minimum", min = 8, max = 25 }
+"one_nt_alt.range_max"     = { kind = "int", label = "Alternate 1NT range: maximum", min = 8, max = 25 }
+"one_nt_alt.seat_vul"      = { kind = "text", label = "Alternate 1NT seat / vulnerability" }
+"one_nt_alt.same_responses" = { kind = "bool", label = "Alternate 1NT uses same responses" }
+"dbl.negative"             = { kind = "bool", label = "Double of 1NT interference: negative" }
+"dbl.penalty"              = { kind = "bool", label = "Double of 1NT interference: penalty" }
+"dbl.negative_desc"        = { kind = "text", label = "Negative double notes" }
+"dbl.other"                = { kind = "text", label = "Other double notes" }
+"stayman.play"             = { kind = "bool", label = "Stayman" }
+"stayman.forcing"          = { kind = "bool", label = "Stayman is forcing" }
+"stayman.garbage"          = { kind = "bool", label = "Garbage Stayman" }
+"stayman.puppet"           = { kind = "bool", label = "Puppet Stayman over 2NT" }
+"stayman.puppet_1nt"       = { kind = "bool", label = "Puppet Stayman over 1NT (3♣)" }
+"smolen.play"              = { kind = "bool", label = "Smolen" }
+"minor_suit_stayman.play"  = { kind = "bool", label = "Minor Suit Stayman (1NT–2♠)" }
+"transfers.jacoby"         = { kind = "bool", label = "Jacoby transfers" }
+"transfers.texas"          = { kind = "bool", label = "Texas transfers" }
+"transfers.texas_4c"       = { kind = "bool", label = "Texas 4♣" }
+"transfers.texas_4d"       = { kind = "bool", label = "Texas 4♦" }
+"transfers.texas_4h"       = { kind = "bool", label = "Texas 4♥" }
+"transfers.texas_4s"       = { kind = "bool", label = "Texas 4♠" }
+"transfers.two_s_clubs"    = { kind = "bool", label = "1NT–2♠ transfer to clubs" }
+"transfers.two_nt_clubs"   = { kind = "bool", label = "1NT–2NT transfer to clubs" }
+"transfers.two_nt_diamonds" = { kind = "bool", label = "1NT–2NT transfer to diamonds" }
+"transfers.three_c_diamonds" = { kind = "bool", label = "1NT–3♣ transfer to diamonds" }
+"transfers.super_accept"   = { kind = "bool", label = "Super-acceptance of transfers" }
+"transfers.vs_double"      = { kind = "bool", label = "Transfers on if RHO doubles" }
+"transfers.vs_2c"          = { kind = "bool", label = "Transfers on if RHO bids clubs" }
+"three_d_response"         = { kind = "enum", label = "1NT–3♦ response", options = ["natural", "majors", "minors", "splinter"] }
+"three_major_splinter"     = { kind = "bool", label = "1NT–3♥/3♠ splinter" }
+"lebensohl.over_interference" = { kind = "bool", label = "Lebensohl over interference to 1NT" }
+"lebensohl.description"    = { kind = "text", label = "Lebensohl notes" }
+"rubensohl.over_interference" = { kind = "bool", label = "Rubensohl over interference to 1NT" }
+"two_nt.range_min"         = { kind = "int", label = "2NT range: minimum", min = 15, max = 30, default = 20 }
+"two_nt.range_max"         = { kind = "int", label = "2NT range: maximum", min = 15, max = 30, default = 21 }
+"two_nt.puppet"            = { kind = "bool", label = "2NT: Puppet", aliases = [] }
+"two_nt.three_s"           = { kind = "bool", label = "2NT: 3♠ relay" }
+"two_nt.three_s_desc"      = { kind = "text", label = "2NT 3♠ relay notes" }
+"two_nt.transfers_3level"  = { kind = "bool", label = "2NT: transfers at 3-level" }
+"two_nt.transfers_4level"  = { kind = "bool", label = "2NT: transfers at 4-level" }
+"two_nt.neg_dbl"           = { kind = "bool", label = "2NT: negative double" }
+"two_nt.transfer_3s_clubs" = { kind = "bool", label = "2NT–3♠ transfer to clubs" }
+"two_nt.transfer_4c_diamonds" = { kind = "bool", label = "2NT–4♣ transfer to diamonds" }
+"two_nt.minor_slam_try"    = { kind = "bool", label = "Minor suit slam try after 2NT" }
+"two_nt.minor_stayman"     = { kind = "bool", label = "Minor Suit Stayman after 2NT" }
+"two_nt.minor_transfers"   = { kind = "bool", label = "Minor suit transfers after 2NT" }
+"three_nt.range_min"       = { kind = "int", label = "3NT range: minimum", min = 15, max = 30, aliases = ["three_nt.range_min"] }
+"three_nt.range_max"       = { kind = "int", label = "3NT range: maximum", min = 15, max = 30, aliases = ["three_nt.range_max"] }
+"three_nt.one_suit"        = { kind = "bool", label = "Gambling 3NT", aliases = ["three_nt.one_suit"] }
+"three_nt.one_suit_desc"   = { kind = "text", label = "Gambling 3NT notes", aliases = ["three_nt.one_suit_desc"] }
+"responses.2d_other"       = { kind = "text", label = "2♦ response" }
+"responses.2h_other"       = { kind = "text", label = "2♥ response" }
+"responses.2s_other"       = { kind = "text", label = "2♠ response" }
+"responses.2nt_other"      = { kind = "text", label = "2NT response" }
+"responses.3c"             = { kind = "text", label = "3♣ response" }
+"responses.3d"             = { kind = "text", label = "3♦ response" }
+"responses.3h"             = { kind = "text", label = "3♥ response" }
+"responses.3s"             = { kind = "text", label = "3♠ response" }
+
+[major_openings]
+"five_card_majors"         = { kind = "bool", label = "Five-card majors", default = true }
+"min_length_1st_2nd"       = { kind = "enum", label = "Min length 1st/2nd seat", options = ["4", "5"], default = "5" }
+"min_length_3rd_4th"       = { kind = "enum", label = "Min length 3rd/4th seat", options = ["4", "5"], default = "5" }
+"one_nt_response.forcing"  = { kind = "bool", label = "Forcing 1NT response" }
+"one_nt_response.semi_forcing" = { kind = "bool", label = "Semi-forcing 1NT response" }
+"one_nt_response.bypass_1s" = { kind = "bool", label = "1NT may bypass 1♠ over 1♥" }
+"two_over_one.game_force"  = { kind = "bool", label = "2/1 game force" }
+"three_nt_raise.play"      = { kind = "bool", label = "3NT artificial raise (4-3-3-3)" }
+"art_raises_other"         = { kind = "text", label = "Other artificial raises" }
+"jump_raise.weak"          = { kind = "bool", label = "Jump raise: weak" }
+"jump_raise.mixed"         = { kind = "bool", label = "Jump raise: mixed" }
+"jump_raise.inv"           = { kind = "bool", label = "Jump raise: invitational" }
+"jump_raise_after_overcall.weak"  = { kind = "bool", label = "Jump raise after overcall: weak" }
+"jump_raise_after_overcall.mixed" = { kind = "bool", label = "Jump raise after overcall: mixed" }
+"jump_raise_after_overcall.inv"   = { kind = "bool", label = "Jump raise after overcall: invitational" }
+"jacoby_2nt.play"          = { kind = "bool", label = "Jacoby 2NT" }
+"jacoby_2nt.modified"      = { kind = "bool", label = "Modified Jacoby 2NT" }
+"bergen_raises.play"       = { kind = "bool", label = "Bergen raises" }
+"bergen_raises.reverse"    = { kind = "bool", label = "Reverse Bergen raises" }
+"splinters.play"           = { kind = "bool", label = "Splinters" }
+"splinters.by_responder"   = { kind = "bool", label = "Splinters by responder" }
+"splinters.by_opener"      = { kind = "bool", label = "Splinters by opener" }
+"mini_splinters.play"      = { kind = "bool", label = "Mini splinters" }
+"drury.play"               = { kind = "bool", label = "Drury" }
+"drury.reverse"            = { kind = "bool", label = "Reverse Drury" }
+"drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)" }
+"drury.in_comp"            = { kind = "bool", label = "Drury in competition" }
+"gazzilli.play"            = { kind = "bool", label = "Gazzilli" }
+
+[minor_openings]
+"one_club.min_length"      = { kind = "enum", label = "1♣ min length", options = ["2", "3", "4", "5"], default = "3" }
+"one_club.unbalanced"      = { kind = "bool", label = "1♣ unbalanced" }
+"one_club.nf2"             = { kind = "bool", label = "1♣ NF2" }
+"one_club.nf1"             = { kind = "bool", label = "1♣ NF1" }
+"one_club.nf0"             = { kind = "bool", label = "1♣ NF0" }
+"one_club.art_forcing"     = { kind = "bool", label = "1♣ artificial forcing" }
+"one_club.transfer_resp"   = { kind = "bool", label = "Transfer responses to 1♣" }
+"one_club.one_nt_range_min" = { kind = "int", label = "1♣–1NT range: minimum", min = 0, max = 20 }
+"one_club.one_nt_range_max" = { kind = "int", label = "1♣–1NT range: maximum", min = 0, max = 20 }
+"one_club.two_nt_range_min" = { kind = "int", label = "1♣–2NT range: minimum", min = 0, max = 20 }
+"one_club.two_nt_range_max" = { kind = "int", label = "1♣–2NT range: maximum", min = 0, max = 20 }
+"one_club.single_raise.nf" = { kind = "bool", label = "1♣ single raise: non-forcing" }
+"one_club.single_raise.inv" = { kind = "bool", label = "1♣ single raise: invitational+" }
+"one_club.single_raise.gf" = { kind = "bool", label = "1♣ single raise: game forcing" }
+"one_club.jump_raise.weak" = { kind = "bool", label = "1♣ jump raise: weak" }
+"one_club.jump_raise.mixed" = { kind = "bool", label = "1♣ jump raise: mixed" }
+"one_club.jump_raise.inv"  = { kind = "bool", label = "1♣ jump raise: invitational" }
+"one_club.jump_raise_after_overcall.weak"  = { kind = "bool", label = "1♣ jump raise after overcall: weak" }
+"one_club.jump_raise_after_overcall.mixed" = { kind = "bool", label = "1♣ jump raise after overcall: mixed" }
+"one_club.jump_raise_after_overcall.inv"   = { kind = "bool", label = "1♣ jump raise after overcall: invitational" }
+"one_diamond.min_length"   = { kind = "enum", label = "1♦ min length", options = ["2", "3", "4", "5"], default = "3" }
+"one_diamond.unbalanced"   = { kind = "bool", label = "1♦ unbalanced" }
+"one_diamond.nf2_4432_only" = { kind = "bool", label = "1♦ NF2 (4-4-3-2 only)" }
+"one_diamond.same_as_1c"   = { kind = "bool", label = "1♦ responses same as over 1♣" }
+"bypass_5_plus"            = { kind = "bool", label = "Bypass 5+ ♦ to bid 1♥/1♠" }
+"inverted_minors.play"     = { kind = "bool", label = "Inverted minors" }
+"walsh.play"               = { kind = "bool", label = "Walsh responses" }
+
+[two_level]
+"two_clubs.meaning"        = { kind = "enum", label = "2♣ meaning", options = ["very_strong", "strong", "natural", "conventional"], default = "strong" }
+"two_clubs.min_hcp"        = { kind = "int", label = "2♣ minimum HCP", min = 0, max = 30 }
+"two_clubs.min_hcp_str"    = { kind = "text", label = "2♣ minimum (text)" }
+"two_clubs.2d_response"    = { kind = "enum", label = "2♣–2♦ response", options = ["negative", "waiting", "steps"] }
+"two_clubs.2h_response"    = { kind = "enum", label = "2♣–2♥ response", options = ["negative", "steps"] }
+"two_clubs.kokish"         = { kind = "bool", label = "Kokish relay" }
+"two_clubs.parrish_bust"   = { kind = "bool", label = "Parrish 2♥ bust" }
+"two_diamonds.meaning"     = { kind = "enum", label = "2♦ meaning", options = ["weak", "intermediate", "strong", "conventional"] }
+"two_diamonds.min_hcp"     = { kind = "int", label = "2♦ range: minimum", min = 0, max = 30 }
+"two_diamonds.max_hcp"     = { kind = "int", label = "2♦ range: maximum", min = 0, max = 30 }
+"two_diamonds.min_length"  = { kind = "int", label = "2♦ minimum length", min = 4, max = 8 }
+"two_diamonds.two_suited"  = { kind = "bool", label = "2♦ two-suited" }
+"two_diamonds.new_suit_nf" = { kind = "bool", label = "2♦: new suit non-forcing" }
+"two_diamonds.rebids_2nt"  = { kind = "text", label = "2♦: 2NT response", aliases = ["two_level.two_diamonds.rebid_2nt"] }
+"two_diamonds.multi"       = { kind = "bool", label = "Multi 2♦" }
+"two_diamonds.mini_roman"  = { kind = "bool", label = "Mini-Roman 2♦" }
+"two_diamonds.reverse_flannery" = { kind = "bool", label = "Reverse Flannery 2♦" }
+"two_hearts.meaning"       = { kind = "enum", label = "2♥ meaning", options = ["weak", "intermediate", "strong", "conventional"] }
+"two_hearts.min_hcp"       = { kind = "int", label = "2♥ range: minimum", min = 0, max = 30 }
+"two_hearts.max_hcp"       = { kind = "int", label = "2♥ range: maximum", min = 0, max = 30 }
+"two_hearts.min_length"    = { kind = "int", label = "2♥ minimum length", min = 4, max = 8 }
+"two_hearts.two_suited"    = { kind = "bool", label = "2♥ two-suited" }
+"two_hearts.new_suit_nf"   = { kind = "bool", label = "2♥: new suit non-forcing" }
+"two_hearts.rebids_2nt"    = { kind = "text", label = "2♥: 2NT response", aliases = ["two_level.two_hearts.rebid_2nt"] }
+"two_spades.meaning"       = { kind = "enum", label = "2♠ meaning", options = ["weak", "intermediate", "strong", "conventional"] }
+"two_spades.min_hcp"       = { kind = "int", label = "2♠ range: minimum", min = 0, max = 30 }
+"two_spades.max_hcp"       = { kind = "int", label = "2♠ range: maximum", min = 0, max = 30 }
+"two_spades.min_length"    = { kind = "int", label = "2♠ minimum length", min = 4, max = 8 }
+"two_spades.two_suited"    = { kind = "bool", label = "2♠ two-suited" }
+"two_spades.new_suit_nf"   = { kind = "bool", label = "2♠: new suit non-forcing" }
+"two_spades.rebids_2nt"    = { kind = "text", label = "2♠: 2NT response", aliases = ["two_level.two_spades.rebid_2nt"] }
+"ogust.play"               = { kind = "bool", label = "Ogust" }
+"mccabe.play"              = { kind = "bool", label = "McCabe adjunct" }
+"flannery.play"            = { kind = "bool", label = "Flannery 2♦" }
+"reverse_flannery.two_h"   = { kind = "bool", label = "Reverse Flannery 2♥" }
+"reverse_flannery.two_s"   = { kind = "bool", label = "Reverse Flannery 2♠" }
+"benjamin.play"            = { kind = "bool", label = "Benjamin 2♦" }
+"french_2d.play"           = { kind = "bool", label = "French 2♦" }
+"precision_2d.play"        = { kind = "bool", label = "Precision 2♦" }
+"polish_two_suiters.play"  = { kind = "bool", label = "Polish two-suiters" }
+"wilkosz.play"             = { kind = "bool", label = "Wilkosz 2♦" }
+
+[preempts]
+"three_level_style"        = { kind = "text", label = "3-level style" }
+"three_level_response"     = { kind = "text", label = "3-level responses" }
+"four_level_style"         = { kind = "text", label = "4-level style" }
+"four_level_response"      = { kind = "text", label = "4-level responses" }
+"transfer_4_minor"         = { kind = "bool", label = "4♣/4♦ transfer to major" }
+"namyats.play"             = { kind = "bool", label = "Namyats" }
+
+[slam]
+"blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"] }
+"blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"] }
+"blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"] }
+"blackwood.queen_ask"      = { kind = "bool", label = "Queen ask", aliases = ["other_conventions.blackwood.queen_ask"] }
+"blackwood.notes"          = { kind = "text", label = "4NT notes", aliases = ["other_conventions.blackwood.notes"] }
+"king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT" }
+"king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid" }
+"quantitative_4nt.play"    = { kind = "bool", label = "Quantitative 4NT" }
+"four_nt_opening.play"     = { kind = "bool", label = "4NT opening (specific aces)" }
+"gerber.play"              = { kind = "bool", label = "Gerber", aliases = ["other_conventions.gerber.play"] }
+"gerber.over"              = { kind = "text", label = "Gerber applies over" }
+"gerber.only_over_nt_openings" = { kind = "bool", label = "Gerber only over NT openings" }
+"gerber.directly_over_nt"  = { kind = "bool", label = "Gerber directly over NT", aliases = ["other_conventions.gerber.directly_over_nt"] }
+"gerber.over_nt_seq"       = { kind = "bool", label = "Gerber over NT sequence", aliases = ["other_conventions.gerber.over_nt_seq"] }
+"gerber.non_nt_seq"        = { kind = "bool", label = "Gerber in non-NT sequence", aliases = ["other_conventions.gerber.non_nt_seq"] }
+"kickback.play"            = { kind = "bool", label = "Kickback", aliases = ["other_conventions.kickback.play"] }
+"kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430" }
+"kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314" }
+"minorwood.play"           = { kind = "bool", label = "Minorwood" }
+"exclusion_blackwood.play" = { kind = "bool", label = "Exclusion Blackwood" }
+"pick_a_slam_5nt.play"     = { kind = "bool", label = "Pick-a-slam 5NT" }
+"western_cuebid.play"      = { kind = "bool", label = "Western cuebid" }
+"spiral_cuebids.play"      = { kind = "bool", label = "Spiral cuebids" }
+"non_serious_3nt.play"     = { kind = "bool", label = "Non-serious 3NT" }
+"dopi"                     = { kind = "bool", label = "DOPI" }
+"depo"                     = { kind = "bool", label = "DEPO" }
+"ropi"                     = { kind = "bool", label = "ROPI" }
+"control_bids"             = { kind = "text", label = "Control bids" }
+"vs_interference"          = { kind = "text", label = "Vs interference" }
+"trump_level"              = { kind = "text", label = "Trump-level cutover" }
+
+[overcalls]
+"one_level_min"            = { kind = "int", label = "1-level overcall: minimum", min = 0, max = 20 }
+"one_level_max"            = { kind = "int", label = "1-level overcall: maximum", min = 0, max = 25 }
+"two_level_min"            = { kind = "int", label = "2-level overcall: minimum", min = 0, max = 20 }
+"two_level_max"            = { kind = "int", label = "2-level overcall: maximum", min = 0, max = 25 }
+"often_4_cards"            = { kind = "bool", label = "Often 4-card suits at 1-level" }
+"jump"                     = { kind = "enum", label = "Jump overcalls", options = ["weak", "intermediate", "strong"] }
+"conv_text"                = { kind = "text", label = "Conventional overcalls" }
+"responses.new_suit"       = { kind = "enum", label = "New-suit response", options = ["forcing", "nf_constructive", "nf", "transfer"] }
+"responses.jump_raise"     = { kind = "enum", label = "Jump-raise response", options = ["weak", "mixed", "invitational"] }
+"responses.cuebids_text"   = { kind = "text", label = "Cuebid response" }
+"responses.support_cuebid" = { kind = "bool", label = "Support cuebid" }
+
+[nt_overcalls]
+"direct.range_min"         = { kind = "int", label = "Direct 1NT: minimum", min = 0, max = 25 }
+"direct.range_max"         = { kind = "int", label = "Direct 1NT: maximum", min = 0, max = 25 }
+"direct.systems_on"        = { kind = "bool", label = "Direct 1NT: systems on" }
+"balance.range_min"        = { kind = "int", label = "Balancing 1NT: minimum", min = 0, max = 25 }
+"balance.range_max"        = { kind = "int", label = "Balancing 1NT: maximum", min = 0, max = 25 }
+"balance.systems_on"       = { kind = "bool", label = "Balancing 1NT: systems on" }
+"jump_2nt_lowest_unbid"    = { kind = "bool", label = "Jump 2NT = two lowest unbid" }
+"conv_text"                = { kind = "text", label = "Other treatments" }
+
+[doubles]
+"takeout_style"            = { kind = "text", label = "Takeout double style", aliases = ["competitive.takeout_doubles.style"] }
+"negative.play"            = { kind = "bool", label = "Negative doubles" }
+"negative.through"         = { kind = "text", label = "Negative doubles through", aliases = ["competitive.negative_doubles.through"] }
+"responsive.play"          = { kind = "bool", label = "Responsive doubles" }
+"responsive.through"       = { kind = "text", label = "Responsive doubles through" }
+"support.play"             = { kind = "bool", label = "Support doubles" }
+"support.through"          = { kind = "text", label = "Support doubles through" }
+"support.rdbl"             = { kind = "bool", label = "Support redouble" }
+"maximal"                  = { kind = "bool", label = "Maximal doubles" }
+
+[competitive]
+"michaels.play"            = { kind = "bool", label = "Michaels cuebid" }
+"michaels.strength"        = { kind = "text", label = "Michaels strength" }
+"leaping_michaels.play"    = { kind = "bool", label = "Leaping Michaels" }
+"non_leaping_michaels.play" = { kind = "bool", label = "Non-leaping Michaels" }
+"unusual_1nt.play"         = { kind = "bool", label = "Unusual 1NT" }
+"unusual_2nt.play"         = { kind = "bool", label = "Unusual 2NT" }
+"unusual_2nt.shows"        = { kind = "text", label = "Unusual 2NT shows" }
+"unusual_3nt.play"         = { kind = "bool", label = "Unusual 3NT" }
+"unusual_4nt.play"         = { kind = "bool", label = "Unusual 4NT" }
+"unusual_vs_unusual.play"  = { kind = "bool", label = "Unusual vs Unusual" }
+"defense_vs_strong_nt.convention" = { kind = "enum", label = "Defense vs 1NT", options = ["cappelletti", "landy", "multi_landy", "dont", "meckwell", "other"] }
+"dont.play"                = { kind = "bool", label = "DONT" }
+"cue_bid_raise.play"       = { kind = "bool", label = "Cue-bid raise" }
+"lead_directing_double.play" = { kind = "bool", label = "Lead-directing doubles" }
+"lebensohl_weak_twos.play" = { kind = "bool", label = "Lebensohl after doubling a weak two" }
+"rubensohl_after_double.play" = { kind = "bool", label = "Rubensohl after doubling a weak two" }
+"sandwich_nt.play"         = { kind = "bool", label = "Sandwich NT" }
+"snapdragon.play"          = { kind = "bool", label = "Snapdragon doubles" }
+"bromad.play"              = { kind = "bool", label = "BROMAD" }
+"ghestem.play"             = { kind = "bool", label = "Ghestem" }
+"raptor_1nt.play"          = { kind = "bool", label = "Raptor 1NT" }
+"scrambling_2nt.play"      = { kind = "bool", label = "Scrambling 2NT" }
+"fit_showing_jumps.play"   = { kind = "bool", label = "Fit-showing jumps" }
+"jordan_2nt.play"          = { kind = "bool", label = "Jordan (Truscott) 2NT" }
+"new_suit_after_overcall_forcing" = { kind = "bool", label = "1X–(Y)–2Z new suit forcing" }
+"jump_shift_after_overcall" = { kind = "enum", label = "1X–(1Y)–2Z jump shift", options = ["weak", "strong"] }
+"direct_jump_cuebid_major" = { kind = "enum", label = "Direct jump cuebid over a major", options = ["gambling", "minor", "strong"] }
+"direct_jump_cuebid_minor" = { kind = "enum", label = "Direct jump cuebid over a minor", options = ["gambling", "majors", "preempt"] }
+
+[carding]
+"inverted_count"           = { kind = "bool", label = "Inverted (upside-down) count" }
+"smith_echo"               = { kind = "bool", label = "Smith echo" }
+"lavinthal.from_void"      = { kind = "bool", label = "Lavinthal from void" }
+"lavinthal.on_ace"         = { kind = "bool", label = "Lavinthal on ace" }
+"lavinthal.on_trump"       = { kind = "bool", label = "Lavinthal on trump" }
+"lavinthal.to_void"        = { kind = "bool", label = "Lavinthal to void" }
+
+[other_conventions]
+"fourth_suit_forcing.one_round"  = { kind = "bool", label = "Fourth suit forcing (1 round)" }
+"fourth_suit_forcing.game_force" = { kind = "bool", label = "Fourth suit forcing (game force)", aliases = ["other_conventions.fourth_suit_forcing.game_forcing"] }
+"help_suit_game_tries.play" = { kind = "bool", label = "Help suit game tries" }
+"two_way_game_tries.play"  = { kind = "bool", label = "Two-way game tries" }
+"reverse_bids.forcing"     = { kind = "bool", label = "Reverses forcing" }
+"new_minor_forcing.play"   = { kind = "bool", label = "New minor forcing" }
+"new_minor_forcing.after_2nt_rebid" = { kind = "bool", label = "NMF after a 2NT rebid" }
+"new_minor_forcing.by_passed_hand"  = { kind = "bool", label = "NMF by a passed hand" }
+"two_way_nmf"              = { kind = "bool", label = "Two-way new minor forcing" }
+"two_way_nmf_by_passed_hand" = { kind = "bool", label = "Two-way NMF by a passed hand" }
+"checkback.play"           = { kind = "bool", label = "Checkback" }
+"roudi.play"               = { kind = "bool", label = "Roudi" }
+"xyz"                      = { kind = "bool", label = "XYZ" }
+"sos_redouble.play"        = { kind = "bool", label = "SOS redouble" }
+"ingberman_2nt.play"       = { kind = "bool", label = "Ingberman 2NT" }
+
+[notes]
+"general"                  = { kind = "text", label = "General notes" }
+"partnership_understandings" = { kind = "text", label = "Partnership understandings" }
+"special_agreements"       = { kind = "text", label = "Special agreements" }
+"notrump_notes"            = { kind = "text", label = "NT notes" }
+"major_notes"              = { kind = "text", label = "Major opening notes" }
+"minor_notes"              = { kind = "text", label = "Minor opening notes" }
+"two_level_notes"          = { kind = "text", label = "Two-level notes" }
+"slam_notes"               = { kind = "text", label = "Slam notes" }
+"preempts_notes"           = { kind = "text", label = "Preempt notes" }
+"overcalls_notes"          = { kind = "text", label = "Overcall notes" }
+"nt_overcalls_notes"       = { kind = "text", label = "NT overcall notes" }
+"doubles_notes"            = { kind = "text", label = "Double notes" }
+"competitive_notes"        = { kind = "text", label = "Competitive notes" }
+"carding_notes"            = { kind = "text", label = "Carding notes" }
+"leads_notes"              = { kind = "text", label = "Opening lead notes" }
+"other_notes"              = { kind = "text", label = "Other notes" }
