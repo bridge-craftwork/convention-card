@@ -28,6 +28,7 @@
 "1NT opening shape 5422"   = "notrump.one_nt.allow_5422"
 "1NT opening shape 6 minor" = "notrump.one_nt.allow_6_minor"
 "1NT opening shape 5 major" = { set = { "notrump.one_nt.five_card_major" = "sometimes" } }
+"1NT opening allows less 1HCP" = "notrump.one_nt.allow_one_less"
 
 # ── Responses to 1NT / 2NT ─────────────────────────────────────────
 "Garbage Stayman"           = "notrump.stayman.garbage"
@@ -55,6 +56,7 @@
 "Minor Suit Slam Try after 2NT"  = "notrump.two_nt.minor_slam_try"
 "Minor Suit Stayman after 2NT"   = "notrump.two_nt.minor_stayman"
 "Minor Suit Transfers after 2NT" = "notrump.two_nt.minor_transfers"
+"2N-3C-3N both majors"      = "notrump.two_nt.three_c_3nt_both_majors"
 "Gambling"                  = "notrump.three_nt.one_suit"
 
 # ── General / jump shifts ──────────────────────────────────────────
@@ -84,6 +86,7 @@
 # ── Minor openings ─────────────────────────────────────────────────
 "1D opening with 4 cards"   = { set = { "minor_openings.one_diamond.min_length" = "4" } }
 "1D opening with 5 cards"   = { set = { "minor_openings.one_diamond.min_length" = "5" } }
+"1m opening allows 5M"      = "minor_openings.may_hold_5_card_major"
 "Inverted minors"           = "minor_openings.inverted_minors.play"
 "Walsh style"               = "minor_openings.walsh.play"
 
@@ -110,6 +113,7 @@
 # ── Slam ───────────────────────────────────────────────────────────
 "Blackwood 1430"            = "slam.blackwood.rkcb_1430"
 "Blackwood 0314"            = "slam.blackwood.rkcb_0314"
+"Blackwood 0123"            = "slam.blackwood.standard"      # plain Blackwood, not keycard
 "Kickback 1430"             = "slam.kickback.rkcb_1430"
 "Kickback 0314"             = "slam.kickback.rkcb_0314"
 "King ask by 5NT"           = "slam.king_ask.five_nt"
@@ -151,6 +155,7 @@
 "Fit showing jumps"         = "competitive.fit_showing_jumps.play"
 "Jordan Truscott 2NT"       = "competitive.jordan_2nt.play"
 "1X-(Y)-2Z forcing"         = "competitive.new_suit_after_overcall_forcing"
+"(1X)-1Y-(1Z)-2Z natural"   = "overcalls.responses.natural_in_responders_suit"
 "1X-(1Y)-2Z weak"           = { set = { "competitive.jump_shift_after_overcall" = "weak" } }
 "1X-(1Y)-2Z strong"         = { set = { "competitive.jump_shift_after_overcall" = "strong" } }
 "Major Direct Jump Cuebid Gambling" = { set = { "competitive.direct_jump_cuebid_major" = "gambling" } }

@@ -43,6 +43,7 @@
 "one_nt.allow_4441"        = { kind = "bool", label = "1NT may be 4-4-4-1" }
 "one_nt.allow_5422"        = { kind = "bool", label = "1NT may be 5-4-2-2" }
 "one_nt.allow_6_minor"     = { kind = "bool", label = "1NT may contain a 6-card minor" }
+"one_nt.allow_one_less"    = { kind = "bool", label = "1NT may be 1 HCP light", desc = "e.g. 14-17 for a 15-17 range: 14 good HCP with a 5-card suit (a length point)" }
 "one_nt.seat_vul"          = { kind = "text", label = "1NT seat / vulnerability" }
 "one_nt.sys_on_vs"         = { kind = "text", label = "Systems on vs" }
 "one_nt_alt.range_min"     = { kind = "int", label = "Alternate 1NT range: minimum", min = 8, max = 25 }
@@ -91,6 +92,7 @@
 "two_nt.minor_slam_try"    = { kind = "bool", label = "Minor suit slam try after 2NT" }
 "two_nt.minor_stayman"     = { kind = "bool", label = "Minor Suit Stayman after 2NT" }
 "two_nt.minor_transfers"   = { kind = "bool", label = "Minor suit transfers after 2NT" }
+"two_nt.three_c_3nt_both_majors" = { kind = "bool", label = "2NT–3♣–3NT shows both majors", desc = "Stayman-style 3♣ over 2NT; opener's 3NT shows 4-4 in the majors" }
 "three_nt.range_min"       = { kind = "int", label = "3NT range: minimum", min = 15, max = 30, aliases = ["three_nt.range_min"] }
 "three_nt.range_max"       = { kind = "int", label = "3NT range: maximum", min = 15, max = 30, aliases = ["three_nt.range_max"] }
 "three_nt.one_suit"        = { kind = "bool", label = "Gambling 3NT", aliases = ["three_nt.one_suit"] }
@@ -160,6 +162,7 @@
 "one_diamond.nf2_4432_only" = { kind = "bool", label = "1♦ NF2 (4-4-3-2 only)" }
 "one_diamond.same_as_1c"   = { kind = "bool", label = "1♦ responses same as over 1♣" }
 "bypass_5_plus"            = { kind = "bool", label = "Bypass 5+ ♦ to bid 1♥/1♠" }
+"may_hold_5_card_major"   = { kind = "bool", label = "1♣/1♦ may hold a 5-card major", desc = "Usually a longer minor (6+) with reverse strength, planning to rebid the major" }
 "inverted_minors.play"     = { kind = "bool", label = "Inverted minors" }
 "walsh.play"               = { kind = "bool", label = "Walsh responses" }
 
@@ -258,6 +261,7 @@
 "responses.jump_raise"     = { kind = "enum", label = "Jump-raise response", options = ["weak", "mixed", "invitational"] }
 "responses.cuebids_text"   = { kind = "text", label = "Cuebid response" }
 "responses.support_cuebid" = { kind = "bool", label = "Support cuebid" }
+"responses.natural_in_responders_suit" = { kind = "bool", label = "Advancer's bid of responder's suit is natural", desc = "(1♣) 1♦ (1♥) 2♥ is natural: RHO's 1♥ promises only 4, so advancer shows 5+. 2♣ would be the cue-bid raise" }
 
 [nt_overcalls]
 "direct.range_min"         = { kind = "int", label = "Direct 1NT: minimum", min = 0, max = 25 }
@@ -304,7 +308,7 @@
 "raptor_1nt.play"          = { kind = "bool", label = "Raptor 1NT" }
 "scrambling_2nt.play"      = { kind = "bool", label = "Scrambling 2NT" }
 "fit_showing_jumps.play"   = { kind = "bool", label = "Fit-showing jumps" }
-"jordan_2nt.play"          = { kind = "bool", label = "Jordan (Truscott) 2NT" }
+"jordan_2nt.play"          = { kind = "bool", label = "Jordan (Truscott) 2NT", desc = "1M–(X)–2NT shows 4+ card support and 10+ points" }
 "new_suit_after_overcall_forcing" = { kind = "bool", label = "1X–(Y)–2Z new suit forcing" }
 "jump_shift_after_overcall" = { kind = "enum", label = "1X–(1Y)–2Z jump shift", options = ["weak", "strong"] }
 "direct_jump_cuebid_major" = { kind = "enum", label = "Direct jump cuebid over a major", options = ["gambling", "minor", "strong"] }
