@@ -206,3 +206,8 @@ set  = { "notrump.minor_transfers" = "bba" }
 
 [[derived]]
 set  = { "notrump.minor_transfers" = "none" }
+
+# Ogust replaces the feature answer to 2NT over a weak two.
+[[derived]]
+when = { "two_level.ogust.play" = true }
+set  = { "two_level.weak_two_2nt_response" = "ogust" }

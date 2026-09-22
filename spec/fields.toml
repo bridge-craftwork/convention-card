@@ -203,6 +203,7 @@
 "two_spades.new_suit_nf"   = { kind = "bool", label = "2♠: new suit non-forcing" }
 "two_spades.rebids_2nt"    = { kind = "text", label = "2♠: 2NT response", aliases = ["two_level.two_spades.rebid_2nt"] }
 "ogust.play"               = { kind = "bool", label = "Ogust" }
+"weak_two_2nt_response"    = { kind = "enum", label = "Weak two: 2NT response", options = ["feature", "ogust"], default = "feature", desc = "feature: opener bids a side ace or king with a maximum. ogust: 3♣/3♦/3♥/3♠ show minimum/maximum and suit quality" }
 "mccabe.play"              = { kind = "bool", label = "McCabe adjunct" }
 "flannery.play"            = { kind = "bool", label = "Flannery 2♦" }
 "reverse_flannery.two_h"   = { kind = "bool", label = "Reverse Flannery 2♥" }

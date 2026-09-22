@@ -255,14 +255,22 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
             }
         }
     }
-    let derived = map().derived.iter().find(|d| {
-        d.when
+    // The first entry that holds sets each field; later entries may set
+    // other fields (so a fallback for one field does not block another).
+    let mut done: Vec<&str> = Vec::new();
+    for d in &map().derived {
+        let holds = d
+            .when
             .iter()
-            .all(|(path, v)| card.effective(path).unwrap_or(&Value::Bool(false)) == v)
-    });
-    if let Some(d) = derived {
+            .all(|(path, v)| card.effective(path).unwrap_or(&Value::Bool(false)) == v);
+        if !holds || d.set.iter().all(|(p, _)| done.contains(&p.as_str())) {
+            continue;
+        }
         for (path, v) in &d.set {
-            card.set(path, v.clone())?;
+            if !done.contains(&path.as_str()) {
+                card.set(path, v.clone())?;
+                done.push(path);
+            }
         }
     }
     Ok((card, report))
