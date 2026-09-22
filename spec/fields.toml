@@ -166,7 +166,9 @@
 "bypass_5_plus"            = { kind = "bool", label = "Bypass 5+ ♦ to bid 1♥/1♠" }
 "may_hold_5_card_major"   = { kind = "bool", label = "1♣/1♦ may hold a 5-card major", desc = "Usually a longer minor (6+) with reverse strength, planning to rebid the major" }
 "inverted_minors.play"     = { kind = "bool", label = "Inverted minors" }
-"walsh.play"               = { kind = "bool", label = "Walsh responses" }
+"walsh.play"               = { kind = "bool", label = "Walsh responses (BBA's switch)", desc = "BBA's 'Walsh style'. With it on BBA still bids 1♦ over 1♣ with four diamonds and a four-card major, so our rules read one_club_responses instead" }
+"one_club_responses"       = { kind = "enum", label = "1♣ responses with diamonds and a major", options = ["up_the_line", "walsh"], default = "up_the_line", desc = "up_the_line: 1♦ with four diamonds and a four-card major (as BBA). walsh: bypass diamonds for the major unless game forcing" }
+"two_nt_response"          = { kind = "enum", label = "1m–2NT response", options = ["invitational", "game_forcing"], default = "invitational", desc = "invitational: 11-12 (as BBA). game_forcing: 13-15, and 1m–3NT 16-17" }
 
 [two_level]
 "two_clubs.meaning"        = { kind = "enum", label = "2♣ meaning", options = ["very_strong", "strong", "natural", "conventional"], default = "strong" }
