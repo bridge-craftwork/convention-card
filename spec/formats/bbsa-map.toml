@@ -19,6 +19,10 @@
 #
 # [implied] lists settings every BBA card has although no .bbsa key names
 # them: BBA always plays these. Import sets them; export has nothing to write.
+#
+# [[derived]] sets a field from other fields after the keys are read: the
+# first entry whose `when` holds (all of it; no `when` always holds) applies.
+# Export has nothing to write: the keys it was derived from carry it.
 
 "System type" = { index = "general.system_category", values = ["two_over_one", "sayc", "polish_club", "precision", "acol"] }
 
@@ -192,3 +196,13 @@
 [implied]
 "notrump.stayman.play"     = true
 "notrump.transfers.jacoby" = true
+
+# Minor-suit responses to 1NT. BBA's switches stay as they are (they
+# round-trip); the treatment our rules read is derived from them. Only the
+# combination the corpus confirms is mapped; the others are not modelled.
+[[derived]]
+when = { "notrump.transfers.two_s_clubs" = true, "notrump.transfers.three_c_diamonds" = true, "notrump.minor_suit_stayman.play" = false, "notrump.transfers.two_nt_clubs" = false, "notrump.transfers.two_nt_diamonds" = false }
+set  = { "notrump.minor_transfers" = "bba" }
+
+[[derived]]
+set  = { "notrump.minor_transfers" = "none" }

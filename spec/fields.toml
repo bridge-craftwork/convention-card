@@ -67,6 +67,7 @@
 "transfers.texas_4d"       = { kind = "bool", label = "Texas 4♦" }
 "transfers.texas_4h"       = { kind = "bool", label = "Texas 4♥" }
 "transfers.texas_4s"       = { kind = "bool", label = "Texas 4♠" }
+"minor_transfers"          = { kind = "enum", label = "Minor-suit responses to 1NT", options = ["relay", "four_way", "four_way_reversed", "bba", "none"], default = "relay", desc = "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). none: not played" }
 "transfers.two_s_clubs"    = { kind = "bool", label = "1NT–2♠ transfer to clubs" }
 "transfers.two_nt_clubs"   = { kind = "bool", label = "1NT–2NT transfer to clubs" }
 "transfers.two_nt_diamonds" = { kind = "bool", label = "1NT–2NT transfer to diamonds" }

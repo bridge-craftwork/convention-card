@@ -29,6 +29,13 @@ pub enum Mapping {
 struct Map {
     keys: HashMap<String, Mapping>,
     implied: Vec<(String, Value)>,
+    derived: Vec<Derived>,
+}
+
+/// A field set from other fields once the keys are read (`[[derived]]`).
+struct Derived {
+    when: Vec<(String, Value)>,
+    set: Vec<(String, Value)>,
 }
 
 fn map() -> &'static Map {
@@ -58,6 +65,42 @@ fn parse_mapping(text: &str) -> Result<Map, Error> {
                 .ok_or_else(|| Error::new(format!("[implied] {path}: unsupported value")))?;
             validate(&path, &Mapping::Set(vec![(path.clone(), v.clone())]))?;
             implied.push((path, v));
+        }
+    }
+    let mut derived = Vec::new();
+    if let Some(v) = table.remove("derived") {
+        let entries = v
+            .as_array()
+            .ok_or_else(|| Error::new("[[derived]] must be an array of tables"))?;
+        for (i, e) in entries.iter().enumerate() {
+            let pairs = |name: &str| -> Result<Vec<(String, Value)>, Error> {
+                let Some(t) = e.get(name) else {
+                    return Ok(Vec::new());
+                };
+                let t = t.as_table().ok_or_else(|| {
+                    Error::new(format!("[[derived]] #{}: `{name}` must be a table", i + 1))
+                })?;
+                t.iter()
+                    .map(|(path, v)| {
+                        let v = Value::from_toml(v).ok_or_else(|| {
+                            Error::new(format!("[[derived]] #{}: {path}: unsupported value", i + 1))
+                        })?;
+                        validate(path, &Mapping::Set(vec![(path.clone(), v.clone())]))?;
+                        Ok((path.clone(), v))
+                    })
+                    .collect()
+            };
+            let d = Derived {
+                when: pairs("when")?,
+                set: pairs("set")?,
+            };
+            if d.set.is_empty() {
+                return Err(Error::new(format!(
+                    "[[derived]] #{}: `set` is empty",
+                    i + 1
+                )));
+            }
+            derived.push(d);
         }
     }
     let mut out = HashMap::new();
@@ -101,7 +144,11 @@ fn parse_mapping(text: &str) -> Result<Map, Error> {
         validate(&key, &mapping)?;
         out.insert(key, mapping);
     }
-    Ok(Map { keys: out, implied })
+    Ok(Map {
+        keys: out,
+        implied,
+        derived,
+    })
 }
 
 /// Every mapped path must exist and every value must fit its field.
@@ -206,6 +253,16 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
                         .push(format!("{key} = {value}: no such option")),
                 }
             }
+        }
+    }
+    let derived = map().derived.iter().find(|d| {
+        d.when
+            .iter()
+            .all(|(path, v)| card.effective(path).unwrap_or(&Value::Bool(false)) == v)
+    });
+    if let Some(d) = derived {
+        for (path, v) in &d.set {
+            card.set(path, v.clone())?;
         }
     }
     Ok((card, report))

@@ -124,3 +124,25 @@ fn seed_card_loads_through_aliases() {
     let (again, _) = Card::from_json(&card.to_json_string()).unwrap();
     assert_eq!(again, card);
 }
+
+#[test]
+fn minor_transfer_treatment_is_derived_from_bba_switches() {
+    let style = |name: &str| {
+        let text = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/fixtures/bbsa/{name}.bbsa")),
+        )
+        .unwrap();
+        let (card, _) = bbsa::import(&text, None).unwrap();
+        card.get("notrump.minor_transfers").cloned()
+    };
+    // 2S clubs and 3C diamonds: BBA's own treatment.
+    assert_eq!(style("21GF-DEFAULT"), Some(Value::Text("bba".into())));
+    // Minor Suit Stayman over 1NT, or 3C Puppet Stayman: not modelled.
+    assert_eq!(style("21GF-MSS"), Some(Value::Text("none".into())));
+    assert_eq!(style("21GF-Puppet"), Some(Value::Text("none".into())));
+    // A card that never names it plays the default relay.
+    assert_eq!(
+        Card::new().effective("notrump.minor_transfers"),
+        Some(&Value::Text("relay".into()))
+    );
+}
