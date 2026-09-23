@@ -48,6 +48,22 @@ pub fn mapping() -> &'static HashMap<String, Mapping> {
     &map().keys
 }
 
+/// The `[[derived]]` rules as (the fields read, the fields written). A
+/// coverage report needs this: a field nothing reads directly may still
+/// matter, because a derivation turns it into one the rules do read.
+pub fn derivations() -> Vec<(Vec<String>, Vec<String>)> {
+    map()
+        .derived
+        .iter()
+        .map(|d| {
+            (
+                d.when.iter().map(|(p, _)| p.clone()).collect(),
+                d.set.iter().map(|(p, _)| p.clone()).collect(),
+            )
+        })
+        .collect()
+}
+
 /// Settings every imported card gets: conventions BBA always plays, which
 /// have no `.bbsa` key.
 pub fn implied() -> &'static [(String, Value)] {
