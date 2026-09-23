@@ -21,8 +21,13 @@
 # them: BBA always plays these. Import sets them; export has nothing to write.
 #
 # [[derived]] sets a field from other fields after the keys are read: the
-# first entry whose `when` holds (all of it; no `when` always holds) applies.
-# Export has nothing to write: the keys it was derived from carry it.
+# first entry whose `when` holds (all of it; no `when` always holds) decides
+# each field, and a later entry may still decide a field no earlier one did.
+# `set` writes the field whatever the card says; `default` writes it only
+# where the card's own keys left it unset, so an explicit key always wins.
+# Export has nothing to write: the keys it was derived from carry it. A
+# derived field must therefore be one no key maps, or export would invent a
+# key the original file did not set; a test checks that.
 
 "System type" = { index = "general.system_category", values = ["two_over_one", "sayc", "polish_club", "precision", "acol"] }
 
@@ -211,3 +216,68 @@ set  = { "notrump.minor_transfers" = "none" }
 [[derived]]
 when = { "two_level.ogust.play" = true }
 set  = { "two_level.weak_two_2nt_response" = "ogust" }
+
+# ── The base system ────────────────────────────────────────────────
+# BBA stores the system as a preset (`System type`) and carries only the
+# deltas from it, so an imported card says nothing about what its openings
+# mean. These rules expand the preset into the structural fields, so that an
+# imported card and one built by hand in the card editor describe the same
+# system in the same fields. Only what is part of the system by definition is
+# derived, and only with `default`, so any key or hand-set value wins.
+#
+# Deliberately not derived:
+#   - `polish_club`: its 1C is 12-14 balanced, or 15+ any, or 18+ — partly
+#     natural, partly artificial. No field can say "artificial on some hands
+#     only", and a plain `one_club.art_forcing` either way would be a lie, so
+#     a Polish card keeps the registry defaults for every structural field.
+#   - `precision`: `one_club.min_length`, because the Precision 1C is any
+#     shape and the field's options start at 2 cards.
+#   - `min_length_3rd_4th` outside Acol: opening a four-card major in third
+#     seat is a style, not part of 2/1, SAYC or Precision.
+#   - `nt_open_style` and the 1NT range: the .bbsa carries them as keys, and
+#     weak or strong notrump is a choice within each of these systems.
+
+[[derived]]
+when = { "general.system_category" = "two_over_one" }
+[derived.default]
+"general.forcing_opening_1c"             = false
+"general.forcing_opening_2c"             = true
+"minor_openings.one_club.art_forcing"    = false
+"major_openings.five_card_majors"        = true
+"major_openings.min_length_1st_2nd"      = "5"
+"major_openings.two_over_one.game_force" = true
+
+# SAYC: five-card majors too, but a 2/1 response is forcing for one round
+# only.
+[[derived]]
+when = { "general.system_category" = "sayc" }
+[derived.default]
+"general.forcing_opening_1c"             = false
+"general.forcing_opening_2c"             = true
+"minor_openings.one_club.art_forcing"    = false
+"major_openings.five_card_majors"        = true
+"major_openings.min_length_1st_2nd"      = "5"
+"major_openings.two_over_one.game_force" = false
+
+# Acol: four-card majors in every seat; the strong opening is still 2C.
+[[derived]]
+when = { "general.system_category" = "acol" }
+[derived.default]
+"general.forcing_opening_1c"             = false
+"general.forcing_opening_2c"             = true
+"minor_openings.one_club.art_forcing"    = false
+"major_openings.five_card_majors"        = false
+"major_openings.min_length_1st_2nd"      = "4"
+"major_openings.min_length_3rd_4th"      = "4"
+"major_openings.two_over_one.game_force" = false
+
+# Precision: the strong, artificial and forcing opening is 1C, which leaves
+# 2C a natural opening; the majors are five-card.
+[[derived]]
+when = { "general.system_category" = "precision" }
+[derived.default]
+"general.forcing_opening_1c"          = true
+"general.forcing_opening_2c"          = false
+"minor_openings.one_club.art_forcing" = true
+"major_openings.five_card_majors"     = true
+"major_openings.min_length_1st_2nd"   = "5"

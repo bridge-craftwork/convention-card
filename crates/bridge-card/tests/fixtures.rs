@@ -80,6 +80,16 @@ fn default_card_imports_expected_settings() {
         Some(&Value::Text("two_over_one".into()))
     );
     assert_eq!(card.get("notrump.one_nt.range_min"), Some(&Value::Int(15)));
+    // The system preset expands into the structural fields (`[[derived]]`).
+    assert!(card.is_on("major_openings.five_card_majors"));
+    assert_eq!(
+        card.get("major_openings.min_length_1st_2nd"),
+        Some(&Value::Text("5".into()))
+    );
+    assert!(card.is_on("major_openings.two_over_one.game_force"));
+    assert!(card.is_on("general.forcing_opening_2c"));
+    assert!(!card.is_on("general.forcing_opening_1c"));
+    assert!(!card.is_on("minor_openings.one_club.art_forcing"));
     assert!(card.is_on("notrump.smolen.play"));
     assert!(card.is_on("slam.blackwood.rkcb_1430"));
     assert!(!card.is_on("major_openings.drury.play"));
@@ -87,6 +97,29 @@ fn default_card_imports_expected_settings() {
     for (key, _) in &report.passthrough {
         assert!(bbsa::mapping().get(key).is_none());
     }
+}
+
+#[test]
+fn sayc_card_opens_five_card_majors() {
+    let text = fs::read_to_string(
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/bbsa/Basic-Bridge.bbsa"),
+    )
+    .unwrap();
+    let (card, _) = bbsa::import(&text, None).unwrap();
+    assert_eq!(
+        card.get("general.system_category"),
+        Some(&Value::Text("sayc".into()))
+    );
+    assert!(card.is_on("major_openings.five_card_majors"));
+    assert_eq!(
+        card.get("major_openings.min_length_1st_2nd"),
+        Some(&Value::Text("5".into()))
+    );
+    // A 2/1 in SAYC is forcing for one round, not to game.
+    assert_eq!(
+        card.get("major_openings.two_over_one.game_force"),
+        Some(&Value::Bool(false))
+    );
 }
 
 #[test]
@@ -100,6 +133,15 @@ fn precision_card_selects_precision() {
         card.get("general.system_category"),
         Some(&Value::Text("precision".into()))
     );
+    // ... and the card says in its own fields that the 1C is the strong,
+    // artificial and forcing opening, so 2C is natural.
+    assert!(card.is_on("general.forcing_opening_1c"));
+    assert!(card.is_on("minor_openings.one_club.art_forcing"));
+    assert_eq!(
+        card.get("general.forcing_opening_2c"),
+        Some(&Value::Bool(false))
+    );
+    assert!(card.is_on("major_openings.five_card_majors"));
 }
 
 #[test]

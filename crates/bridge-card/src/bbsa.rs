@@ -2,8 +2,10 @@
 //!
 //! A `.bbsa` file is a list of `Key = value` lines: a `System type` integer
 //! and on/off toggles, padded with `Not defined` lines. The mapping to card
-//! fields lives in `data/bbsa-map.toml`; keys it does not cover are kept on
-//! the card in [`Card::bba_passthrough`] so that export reproduces them.
+//! fields lives in `data/bbsa-map.toml`, with the `[[derived]]` rules that
+//! expand a card's system into the structural fields it implies; keys it
+//! does not cover are kept on the card in [`Card::bba_passthrough`] so that
+//! export reproduces them.
 
 use std::collections::HashMap;
 use std::sync::OnceLock;
@@ -32,10 +34,14 @@ struct Map {
     derived: Vec<Derived>,
 }
 
-/// A field set from other fields once the keys are read (`[[derived]]`).
+/// Fields set from other fields once the keys are read (`[[derived]]`).
+///
+/// `set` always writes; `default` writes only where the card's own keys
+/// left the field unset, so an explicit `.bbsa` key beats the derivation.
 struct Derived {
     when: Vec<(String, Value)>,
     set: Vec<(String, Value)>,
+    defaults: Vec<(String, Value)>,
 }
 
 fn map() -> &'static Map {
@@ -58,7 +64,11 @@ pub fn derivations() -> Vec<(Vec<String>, Vec<String>)> {
         .map(|d| {
             (
                 d.when.iter().map(|(p, _)| p.clone()).collect(),
-                d.set.iter().map(|(p, _)| p.clone()).collect(),
+                d.set
+                    .iter()
+                    .chain(&d.defaults)
+                    .map(|(p, _)| p.clone())
+                    .collect(),
             )
         })
         .collect()
@@ -109,10 +119,21 @@ fn parse_mapping(text: &str) -> Result<Map, Error> {
             let d = Derived {
                 when: pairs("when")?,
                 set: pairs("set")?,
+                defaults: pairs("default")?,
             };
-            if d.set.is_empty() {
+            if d.set.is_empty() && d.defaults.is_empty() {
                 return Err(Error::new(format!(
-                    "[[derived]] #{}: `set` is empty",
+                    "[[derived]] #{}: neither `set` nor `default` is given",
+                    i + 1
+                )));
+            }
+            if let Some((path, _)) = d
+                .set
+                .iter()
+                .find(|(p, _)| d.defaults.iter().any(|(q, _)| q == p))
+            {
+                return Err(Error::new(format!(
+                    "[[derived]] #{}: {path} is in both `set` and `default`",
                     i + 1
                 )));
             }
@@ -271,15 +292,24 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
             }
         }
     }
-    // The first entry that holds sets each field; later entries may set
-    // other fields (so a fallback for one field does not block another).
+    apply_derived(&mut card, &map().derived)?;
+    Ok((card, report))
+}
+
+/// Apply the `[[derived]]` rules to a card whose keys have been read.
+///
+/// The first entry that holds decides each field; later entries may decide
+/// other fields (so a fallback for one field does not block another). A
+/// `default` field is left alone when the card already has a value of its
+/// own, so a `.bbsa` key always beats the derived value.
+fn apply_derived(card: &mut Card, derived: &[Derived]) -> Result<(), Error> {
     let mut done: Vec<&str> = Vec::new();
-    for d in &map().derived {
+    for d in derived {
         let holds = d
             .when
             .iter()
             .all(|(path, v)| card.effective(path).unwrap_or(&Value::Bool(false)) == v);
-        if !holds || d.set.iter().all(|(p, _)| done.contains(&p.as_str())) {
+        if !holds {
             continue;
         }
         for (path, v) in &d.set {
@@ -288,8 +318,16 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
                 done.push(path);
             }
         }
+        for (path, v) in &d.defaults {
+            if !done.contains(&path.as_str()) {
+                if card.get(path).is_none() {
+                    card.set(path, v.clone())?;
+                }
+                done.push(path);
+            }
+        }
     }
-    Ok((card, report))
+    Ok(())
 }
 
 /// What an export did.
@@ -354,6 +392,140 @@ mod tests {
                 "mapped key {key:?} is not in the layout"
             );
         }
+    }
+
+    /// A `default` derivation fills a field the keys left unset, and leaves
+    /// alone one the card already has. (No `.bbsa` key writes a derived
+    /// field today — see `derived_fields_are_not_written_by_a_key` — so the
+    /// precedence is exercised on a mapping of its own.)
+    #[test]
+    fn derived_default_yields_to_a_value_the_card_has() {
+        let m = parse_mapping(
+            r#"
+[[derived]]
+when    = { "general.system_category" = "acol" }
+default = { "major_openings.five_card_majors" = false }
+"#,
+        )
+        .unwrap();
+        let acol = || {
+            let mut card = Card::new();
+            card.set("general.system_category", Value::Text("acol".into()))
+                .unwrap();
+            card
+        };
+
+        let mut derived_only = acol();
+        apply_derived(&mut derived_only, &m.derived).unwrap();
+        assert_eq!(
+            derived_only.get("major_openings.five_card_majors"),
+            Some(&Value::Bool(false))
+        );
+
+        let mut set_by_the_card = acol();
+        set_by_the_card
+            .set("major_openings.five_card_majors", Value::Bool(true))
+            .unwrap();
+        apply_derived(&mut set_by_the_card, &m.derived).unwrap();
+        assert_eq!(
+            set_by_the_card.get("major_openings.five_card_majors"),
+            Some(&Value::Bool(true)),
+            "the card's own value must beat the derived default"
+        );
+
+        // A different system leaves the field alone altogether.
+        let mut precision = Card::new();
+        precision
+            .set("general.system_category", Value::Text("precision".into()))
+            .unwrap();
+        apply_derived(&mut precision, &m.derived).unwrap();
+        assert_eq!(precision.get("major_openings.five_card_majors"), None);
+    }
+
+    /// Export writes a key from the fields it maps, so a field a derivation
+    /// writes must be one no key maps: otherwise importing and exporting a
+    /// file would switch on a key it never had.
+    #[test]
+    fn derived_fields_are_not_written_by_a_key() {
+        let written: Vec<&str> = mapping()
+            .values()
+            .flat_map(|m| match m {
+                Mapping::Toggle(path) => vec![path.as_str()],
+                Mapping::Set(pairs) => pairs.iter().map(|(p, _)| p.as_str()).collect(),
+                Mapping::Index { path, .. } => vec![path.as_str()],
+            })
+            .collect();
+        for (_, outputs) in derivations() {
+            for path in outputs {
+                assert!(
+                    !written.contains(&path.as_str()),
+                    "{path} is both derived and written by a .bbsa key"
+                );
+            }
+        }
+    }
+
+    /// The system preset expands into the structural fields it implies.
+    #[test]
+    fn system_category_expands_into_structural_fields() {
+        let card = |system: i64| {
+            import(&format!("System type = {system}\r\n"), None)
+                .unwrap()
+                .0
+        };
+
+        let two_over_one = card(0);
+        assert!(two_over_one.is_on("major_openings.five_card_majors"));
+        assert_eq!(
+            two_over_one.get("major_openings.min_length_1st_2nd"),
+            Some(&Value::Text("5".into()))
+        );
+        assert!(two_over_one.is_on("major_openings.two_over_one.game_force"));
+        assert!(!two_over_one.is_on("general.forcing_opening_1c"));
+
+        let sayc = card(1);
+        assert!(sayc.is_on("major_openings.five_card_majors"));
+        assert_eq!(
+            sayc.get("major_openings.two_over_one.game_force"),
+            Some(&Value::Bool(false))
+        );
+
+        // Polish club: nothing is derived, so every structural field is
+        // left at the registry default.
+        let polish = card(2);
+        for path in [
+            "major_openings.five_card_majors",
+            "major_openings.min_length_1st_2nd",
+            "minor_openings.one_club.art_forcing",
+            "general.forcing_opening_1c",
+            "general.forcing_opening_2c",
+        ] {
+            assert_eq!(polish.get(path), None, "{path} was derived for polish_club");
+        }
+
+        let precision = card(3);
+        assert!(precision.is_on("general.forcing_opening_1c"));
+        assert!(precision.is_on("minor_openings.one_club.art_forcing"));
+        assert_eq!(
+            precision.get("general.forcing_opening_2c"),
+            Some(&Value::Bool(false))
+        );
+        assert!(precision.is_on("major_openings.five_card_majors"));
+        // The Precision 1C is any shape; the field cannot say that.
+        assert_eq!(precision.get("minor_openings.one_club.min_length"), None);
+
+        let acol = card(4);
+        assert_eq!(
+            acol.get("major_openings.five_card_majors"),
+            Some(&Value::Bool(false))
+        );
+        for seat in ["min_length_1st_2nd", "min_length_3rd_4th"] {
+            assert_eq!(
+                acol.get(&format!("major_openings.{seat}")),
+                Some(&Value::Text("4".into()))
+            );
+        }
+        assert!(acol.is_on("general.forcing_opening_2c"));
     }
 
     #[test]
