@@ -124,6 +124,7 @@
 "Namyats"                   = "preempts.namyats.play"
 
 # ── Slam ───────────────────────────────────────────────────────────
+"Cue bid"                   = "slam.cue_bids.play"
 "Blackwood 1430"            = "slam.blackwood.rkcb_1430"
 "Blackwood 0314"            = "slam.blackwood.rkcb_0314"
 "Blackwood 0123"            = "slam.blackwood.standard"      # plain Blackwood, not keycard

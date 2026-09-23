@@ -250,7 +250,9 @@
 "dopi"                     = { kind = "bool", label = "DOPI" }
 "depo"                     = { kind = "bool", label = "DEPO" }
 "ropi"                     = { kind = "bool", label = "ROPI" }
-"control_bids"             = { kind = "text", label = "Control bids" }
+"control_bids"             = { kind = "text", label = "Control bids (notes)" }
+"cue_bids.play"            = { kind = "bool", label = "Control (cue) bids", desc = "BBA's 'Cue bid'. With a trump suit agreed and slam in the air, bid a control below game instead of asking straight away" }
+"cue_bids.style"           = { kind = "enum", label = "Control bids show", options = ["first_round", "first_or_second_round"], default = "first_or_second_round", desc = "first_round: the ace or a void only. first_or_second_round: king and singleton too, which is the more common modern treatment" }
 "vs_interference"          = { kind = "text", label = "Vs interference" }
 "trump_level"              = { kind = "text", label = "Trump-level cutover" }
 
