@@ -20,6 +20,7 @@
 [general]
 "system"                   = { kind = "text", label = "System" }
 "system_category"          = { kind = "enum", label = "System category", options = ["two_over_one", "sayc", "polish_club", "precision", "acol"], default = "two_over_one" }
+"style"                    = { kind = "enum", label = "Bidding style", options = ["standard", "bba"], desc = "Unset: our default (modern where we have one, else standard). standard: the textbook treatment where the default is modern. bba: what BBA does, as far as probes and the corpus show; for A/B tests" }
 "min_hcp_open"             = { kind = "int", label = "Min HCP to open", min = 0, max = 20, default = 12 }
 "min_hcp_respond"          = { kind = "int", label = "Min HCP to respond", min = 0, max = 20, default = 6 }
 "third_fourth_light"       = { kind = "bool", label = "Light openings in 3rd/4th seat" }
