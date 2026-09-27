@@ -227,6 +227,7 @@
 "blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"] }
 "blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"] }
 "blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"] }
+"blackwood.minor_0314"     = { kind = "bool", label = "RKCB 0314 with a minor as trumps (1430 in the majors)" }
 "blackwood.queen_ask"      = { kind = "bool", label = "Queen ask", aliases = ["other_conventions.blackwood.queen_ask"] }
 "blackwood.notes"          = { kind = "text", label = "4NT notes", aliases = ["other_conventions.blackwood.notes"] }
 "king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT" }
