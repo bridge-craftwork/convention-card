@@ -13,6 +13,9 @@
 #   aliases  older paths that load into this field (Bridge-Classroom's seed
 #            card and editor catalog disagree in places; both still load)
 #   desc     one-line description
+#   note     true for free text written for people (a card's write-in lines:
+#            notes, descriptions) inside a bidding section; `rbb card
+#            coverage` counts it with carding, leads and notes
 #
 # Adding a convention: add its field here, then a `.bid` module whose `card`
 # line names the path.
@@ -138,6 +141,10 @@
 "drury.in_comp"            = { kind = "bool", label = "Drury in competition" }
 "gazzilli.play"            = { kind = "bool", label = "Gazzilli" }
 "impossible_2s.play"       = { kind = "bool", label = "Impossible 2♠", desc = "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"three_nt_raise.range_min" = { kind = "int", label = "3NT artificial raise: minimum", min = 0, max = 25 }
+"three_nt_raise.range_max" = { kind = "int", label = "3NT artificial raise: maximum", min = 0, max = 25 }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [minor_openings]
 "one_club.min_length"      = { kind = "enum", label = "1♣ min length", options = ["2", "3", "4", "5"], default = "3" }
@@ -170,6 +177,10 @@
 "walsh.play"               = { kind = "bool", label = "Walsh responses (BBA's switch)", desc = "BBA's 'Walsh style'. With it on BBA still bids 1♦ over 1♣ with four diamonds and a four-card major, so our rules read one_club_responses instead" }
 "one_club_responses"       = { kind = "enum", label = "1♣ responses with diamonds and a major", options = ["up_the_line", "walsh"], default = "up_the_line", desc = "up_the_line: 1♦ with four diamonds and a four-card major (as BBA). walsh: bypass diamonds for the major unless game forcing" }
 "two_nt_response"          = { kind = "enum", label = "1m–2NT response", options = ["invitational", "game_forcing"], default = "invitational", desc = "invitational: 11-12 (as BBA). game_forcing: 13-15, and 1m–3NT 16-17" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"one_club.three_nt_range_min" = { kind = "int", label = "1♣–3NT range: minimum", min = 0, max = 25 }
+"one_club.three_nt_range_max" = { kind = "int", label = "1♣–3NT range: maximum", min = 0, max = 25 }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [two_level]
 "two_clubs.meaning"        = { kind = "enum", label = "2♣ meaning", options = ["very_strong", "strong", "natural", "conventional"], default = "strong" }
@@ -214,6 +225,22 @@
 "precision_2d.play"        = { kind = "bool", label = "Precision 2♦" }
 "polish_two_suiters.play"  = { kind = "bool", label = "Polish two-suiters" }
 "wilkosz.play"             = { kind = "bool", label = "Wilkosz 2♦" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"two_clubs.max_hcp"        = { kind = "text", label = "2♣ maximum (text)", desc = "Bridge-Classroom keeps it as written (BBO's 2CMax)" }
+"two_clubs.description"    = { kind = "text", label = "2♣: describe", note = true }
+"two_clubs.continuation_describe" = { kind = "text", label = "2♣: describe (second line)", note = true }
+"two_clubs.notes"          = { kind = "text", label = "2♣: responses / rebids", note = true }
+"two_clubs.continuation_response" = { kind = "text", label = "2♣: responses / rebids (second line)", note = true }
+"two_diamonds.description" = { kind = "text", label = "2♦: describe", note = true }
+"two_diamonds.notes"       = { kind = "text", label = "2♦: responses / rebids", note = true }
+"two_diamonds.two_nt_force" = { kind = "bool", label = "2♦: 2NT response forcing" }
+"two_hearts.description"   = { kind = "text", label = "2♥: describe", note = true }
+"two_hearts.notes"         = { kind = "text", label = "2♥: responses / rebids", note = true }
+"two_hearts.two_nt_force"  = { kind = "bool", label = "2♥: 2NT response forcing" }
+"two_spades.description"   = { kind = "text", label = "2♠: describe", note = true }
+"two_spades.notes"         = { kind = "text", label = "2♠: responses / rebids", note = true }
+"two_spades.two_nt_force"  = { kind = "bool", label = "2♠: 2NT response forcing" }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [preempts]
 "three_level_style"        = { kind = "text", label = "3-level style" }
@@ -271,6 +298,9 @@
 "responses.cuebids_text"   = { kind = "text", label = "Cuebid response" }
 "responses.support_cuebid" = { kind = "bool", label = "Support cuebid" }
 "responses.natural_in_responders_suit" = { kind = "bool", label = "Advancer's bid of responder's suit is natural", desc = "(1♣) 1♦ (1♥) 2♥ is natural: RHO's 1♥ promises only 4, so advancer shows 5+. 2♣ would be the cue-bid raise" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"notes"                    = { kind = "text", label = "Overcall notes (card write-in)", note = true }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [nt_overcalls]
 "direct.range_min"         = { kind = "int", label = "Direct 1NT: minimum", min = 0, max = 25 }
@@ -281,6 +311,11 @@
 "balance.systems_on"       = { kind = "bool", label = "Balancing 1NT: systems on" }
 "jump_2nt_lowest_unbid"    = { kind = "bool", label = "Jump 2NT = two lowest unbid" }
 "conv_text"                = { kind = "text", label = "Other treatments" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"direct.conv_text"         = { kind = "text", label = "Direct 1NT: conventional" }
+"balance.conv_text"        = { kind = "text", label = "Balancing 1NT: conventional" }
+"notes"                    = { kind = "text", label = "NT overcall notes (card write-in)", note = true }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [doubles]
 "takeout_style"            = { kind = "text", label = "Takeout double style", aliases = ["competitive.takeout_doubles.style"] }
@@ -292,6 +327,9 @@
 "support.through"          = { kind = "text", label = "Support doubles through" }
 "support.rdbl"             = { kind = "bool", label = "Support redouble" }
 "maximal"                  = { kind = "bool", label = "Maximal doubles" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"notes"                    = { kind = "text", label = "Double notes (card write-in)", note = true }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [competitive]
 "michaels.play"            = { kind = "bool", label = "Michaels cuebid" }
@@ -308,7 +346,7 @@
 "dont.play"                = { kind = "bool", label = "DONT" }
 "cue_bid_raise.play"       = { kind = "bool", label = "Cue-bid raise" }
 "lead_directing_double.play" = { kind = "bool", label = "Lead-directing doubles" }
-"lebensohl_weak_twos.play" = { kind = "bool", label = "Lebensohl after doubling a weak two" }
+"lebensohl_weak_twos.play" = { kind = "bool", label = "Lebensohl after doubling a weak two", aliases = ["vs_preempts.lebensohl_response"] }
 "rubensohl_after_double.play" = { kind = "bool", label = "Rubensohl after doubling a weak two" }
 "sandwich_nt.play"         = { kind = "bool", label = "Sandwich NT" }
 "snapdragon.play"          = { kind = "bool", label = "Snapdragon doubles" }
@@ -317,11 +355,14 @@
 "raptor_1nt.play"          = { kind = "bool", label = "Raptor 1NT" }
 "scrambling_2nt.play"      = { kind = "bool", label = "Scrambling 2NT" }
 "fit_showing_jumps.play"   = { kind = "bool", label = "Fit-showing jumps" }
-"jordan_2nt.play"          = { kind = "bool", label = "Jordan (Truscott) 2NT", desc = "1M–(X)–2NT shows 4+ card support and 10+ points" }
+"jordan_2nt.play"          = { kind = "bool", label = "Jordan (Truscott) 2NT", desc = "1M–(X)–2NT shows 4+ card support and 10+ points", aliases = ["vs_to_double.two_nt_raise_majors.limit_plus"] }
 "new_suit_after_overcall_forcing" = { kind = "bool", label = "1X–(Y)–2Z new suit forcing" }
 "jump_shift_after_overcall" = { kind = "enum", label = "1X–(1Y)–2Z jump shift", options = ["weak", "strong"] }
 "direct_jump_cuebid_major" = { kind = "enum", label = "Direct jump cuebid over a major", options = ["gambling", "minor", "strong"] }
 "direct_jump_cuebid_minor" = { kind = "enum", label = "Direct jump cuebid over a minor", options = ["gambling", "majors", "preempt"] }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"notes"                    = { kind = "text", label = "Defense vs 1NT notes (card write-in)", note = true }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [carding]
 "inverted_count"           = { kind = "bool", label = "Inverted (upside-down) count" }
@@ -330,6 +371,23 @@
 "lavinthal.on_ace"         = { kind = "bool", label = "Lavinthal on ace" }
 "lavinthal.on_trump"       = { kind = "bool", label = "Lavinthal on trump" }
 "lavinthal.to_void"        = { kind = "bool", label = "Lavinthal to void" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"suits.standard_attitude"  = { kind = "bool", label = "Standard attitude vs suits" }
+"suits.standard_count"     = { kind = "bool", label = "Standard count vs suits" }
+"suits.upside_down_attitude" = { kind = "bool", label = "Upside-down attitude vs suits" }
+"suits.upside_down_count"  = { kind = "bool", label = "Upside-down count vs suits" }
+"nt.standard_attitude"     = { kind = "bool", label = "Standard attitude vs NT" }
+"nt.standard_count"        = { kind = "bool", label = "Standard count vs NT" }
+"nt.upside_down_attitude"  = { kind = "bool", label = "Upside-down attitude vs NT" }
+"nt.upside_down_count"     = { kind = "bool", label = "Upside-down count vs NT" }
+"partner_lead.attitude"    = { kind = "bool", label = "Primary signal to partner's lead: attitude" }
+"partner_lead.count"       = { kind = "bool", label = "Primary signal to partner's lead: count" }
+"partner_lead.suit_preference" = { kind = "bool", label = "Primary signal to partner's lead: suit preference" }
+"smith_echo_suits"         = { kind = "bool", label = "Smith echo vs suits" }
+"smith_echo_nt"            = { kind = "bool", label = "Smith echo vs NT" }
+"trump_signals"            = { kind = "text", label = "Trump signals" }
+"notes"                    = { kind = "text", label = "Carding notes (card write-in)" }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [other_conventions]
 "fourth_suit_forcing.play"       = { kind = "bool", label = "Fourth suit forcing", desc = "We play fourth suit forcing (Bridge-Classroom's card); one_round / game_force say how far it forces. Turns off responder's natural two-level fourth suit (1♦–1♥–1♠–2♣)" }
@@ -348,6 +406,59 @@
 "xyz"                      = { kind = "bool", label = "XYZ" }
 "sos_redouble.play"        = { kind = "bool", label = "SOS redouble" }
 "ingberman_2nt.play"       = { kind = "bool", label = "Ingberman 2NT" }
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+"weak_jump_shifts_not_in_comp" = { kind = "bool", label = "Weak jump shifts (not in competition)" }
+"weak_jump_shifts_in_comp" = { kind = "bool", label = "Weak jump shifts in competition" }
+"weak_jump_shifts_notes"   = { kind = "text", label = "Weak jump shift notes", note = true }
+"nmf_notes"                = { kind = "text", label = "New minor forcing notes", note = true }
+"fourth_suit_forcing.notes" = { kind = "text", label = "Fourth suit forcing notes", note = true }
+"notes_line_1"             = { kind = "text", label = "Other conventions (write-in line 1)", note = true }
+"notes_line_2"             = { kind = "text", label = "Other conventions (write-in line 2)", note = true }
+# --- end: Bridge-Classroom card fields (bc-export) ---
+
+# --- begin: Bridge-Classroom card fields (bc-export) ---
+# Sections of Bridge-Classroom's card (the ACBL card's "vs takeout double",
+# "vs opening preempts" and "opening leads" boxes). Its 2NT-over-double
+# limit+ raise of a major is competitive.jordan_2nt.play, and its Lebensohl
+# 2NT response is competitive.lebensohl_weak_twos.play (aliases there).
+
+[vs_to_double]
+"new_suit_forcing_1lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 1-level" }
+"new_suit_forcing_2lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 2-level" }
+"new_suit_forcing_tfr"     = { kind = "bool", label = "Vs takeout double: transfer responses" }
+"jump_shift"               = { kind = "enum", label = "Vs takeout double: jump shift", options = ["weak", "mixed", "inv", "forcing", "fit"] }
+"redouble.ten_plus"        = { kind = "bool", label = "Vs takeout double: redouble shows 10+" }
+"redouble.conv"            = { kind = "bool", label = "Vs takeout double: conventional redouble" }
+"redouble.denies_fit"      = { kind = "bool", label = "Vs takeout double: redouble implies no fit" }
+"redouble.conv_desc"       = { kind = "text", label = "Vs takeout double: redouble notes", note = true }
+"two_nt_raise_majors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major" }
+"two_nt_raise_majors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, limit" }
+"two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak" }
+"two_nt_raise_majors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a major, minimum", min = 0, max = 25 }
+"two_nt_raise_majors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a major, maximum", min = 0, max = 25 }
+"two_nt_raise_minors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor" }
+"two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better" }
+"two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit" }
+"two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak" }
+"two_nt_raise_minors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a minor, minimum", min = 0, max = 25 }
+"two_nt_raise_minors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a minor, maximum", min = 0, max = 25 }
+"notes"                    = { kind = "text", label = "Vs takeout double notes (card write-in)", note = true }
+
+[vs_preempts]
+"takeout_double"           = { kind = "bool", label = "Vs preempts: double is takeout" }
+"takeout_double_thru"      = { kind = "text", label = "Vs preempts: takeout double through" }
+"takeout_double_penalty"   = { kind = "bool", label = "Vs preempts: double is penalty" }
+"conv_takeout"             = { kind = "text", label = "Vs preempts: conventional takeout" }
+"two_nt_overcall"          = { kind = "text", label = "Vs preempts: 2NT overcall" }
+"cuebid"                   = { kind = "text", label = "Vs preempts: cuebid" }
+"jump_overcalls"           = { kind = "text", label = "Vs preempts: jump overcalls" }
+"notes"                    = { kind = "text", label = "Vs preempts notes (card write-in)", note = true }
+
+[leads]
+"vs_suits.length.fourth_best" = { kind = "bool", label = "Length leads vs suits: fourth best" }
+"vs_nt.length.fourth_best" = { kind = "bool", label = "Length leads vs NT: fourth best" }
+"vs_suits.honors.lead_choice_akx" = { kind = "int", label = "Lead vs suits from AKx", min = 1, max = 3, desc = "The card led, by its place in the holding: 1 the ace, 2 the king" }
+# --- end: Bridge-Classroom card fields (bc-export) ---
 
 [notes]
 "general"                  = { kind = "text", label = "General notes" }

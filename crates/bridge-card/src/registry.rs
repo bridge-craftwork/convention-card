@@ -86,6 +86,11 @@ pub struct FieldDef {
     pub aliases: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub desc: Option<String>,
+    /// Free text written for people (a card's write-in lines: notes,
+    /// descriptions), not an agreement a rule could read. `rbb card
+    /// coverage` counts it with carding, leads and notes.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub note: bool,
 }
 
 impl FieldDef {
