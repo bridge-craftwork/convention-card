@@ -58,7 +58,6 @@
 "stayman.play"             = { kind = "bool", label = "Stayman" }
 "stayman.forcing"          = { kind = "bool", label = "Stayman is forcing" }
 "stayman.garbage"          = { kind = "bool", label = "Garbage Stayman" }
-"stayman.puppet"           = { kind = "bool", label = "Puppet Stayman over 2NT" }
 "stayman.puppet_1nt"       = { kind = "bool", label = "Puppet Stayman over 1NT (3♣)" }
 "smolen.play"              = { kind = "bool", label = "Smolen" }
 "minor_suit_stayman.play"  = { kind = "bool", label = "Minor Suit Stayman (1NT–2♠)" }
@@ -84,7 +83,7 @@
 "rubensohl.over_interference" = { kind = "bool", label = "Rubensohl over interference to 1NT" }
 "two_nt.range_min"         = { kind = "int", label = "2NT range: minimum", min = 15, max = 30, default = 20 }
 "two_nt.range_max"         = { kind = "int", label = "2NT range: maximum", min = 15, max = 30, default = 21 }
-"two_nt.puppet"            = { kind = "bool", label = "2NT: Puppet", aliases = [] }
+"two_nt.puppet"            = { kind = "bool", label = "2NT: Puppet Stayman (3♣)", aliases = ["notrump.stayman.puppet"], desc = "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major" }
 "two_nt.three_s"           = { kind = "bool", label = "2NT: 3♠ relay" }
 "two_nt.three_s_desc"      = { kind = "text", label = "2NT 3♠ relay notes" }
 "two_nt.transfers_3level"  = { kind = "bool", label = "2NT: transfers at 3-level" }

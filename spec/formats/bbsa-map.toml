@@ -63,7 +63,7 @@
 "Transfers if RHO bids clubs" = "notrump.transfers.vs_2c"
 "Lebensohl after 1NT"       = "notrump.lebensohl.over_interference"
 "Rubensohl after 1NT"       = "notrump.rubensohl.over_interference"
-"2N-3C Puppet Stayman"      = "notrump.stayman.puppet"
+"2N-3C Puppet Stayman"      = "notrump.two_nt.puppet"
 "2N-3S transfer to clubs"   = "notrump.two_nt.transfer_3s_clubs"
 "2N-4C transfer to diamonds" = "notrump.two_nt.transfer_4c_diamonds"
 "Minor Suit Slam Try after 2NT"  = "notrump.two_nt.minor_slam_try"
