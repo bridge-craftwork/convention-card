@@ -242,7 +242,9 @@ mod tests {
         assert_eq!(t("Hamilton"), v("cappelletti"));
         assert!(t("Suction").is_err());
         // The older path still loads into the field.
-        let old = registry().get("competitive.defense_vs_strong_nt.convention").unwrap();
+        let old = registry()
+            .get("competitive.defense_vs_strong_nt.convention")
+            .unwrap();
         assert_eq!(old.path, "competitive.vs_1nt_strong.system");
     }
 
