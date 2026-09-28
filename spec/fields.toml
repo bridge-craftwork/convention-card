@@ -327,7 +327,7 @@
 "responsive.play"          = { kind = "bool", label = "Responsive doubles" }
 "responsive.through"       = { kind = "text", label = "Responsive doubles through" }
 "support.play"             = { kind = "bool", label = "Support doubles" }
-"support.through"          = { kind = "text", label = "Support doubles through" }
+"support.through"          = { kind = "text", label = "Support doubles through", desc = "The highest call by RHO over which the double still shows three-card support, as a bid (2♥, 2S). Unset: two of responder's major" }
 "support.rdbl"             = { kind = "bool", label = "Support redouble" }
 "maximal"                  = { kind = "bool", label = "Maximal doubles" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
