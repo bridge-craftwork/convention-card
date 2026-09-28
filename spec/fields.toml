@@ -333,6 +333,7 @@
 "lavinthal.to_void"        = { kind = "bool", label = "Lavinthal to void" }
 
 [other_conventions]
+"fourth_suit_forcing.play"       = { kind = "bool", label = "Fourth suit forcing", desc = "We play fourth suit forcing (Bridge-Classroom's card); one_round / game_force say how far it forces. Turns off responder's natural two-level fourth suit (1♦–1♥–1♠–2♣)" }
 "fourth_suit_forcing.one_round"  = { kind = "bool", label = "Fourth suit forcing (1 round)" }
 "fourth_suit_forcing.game_force" = { kind = "bool", label = "Fourth suit forcing (game force)", aliases = ["other_conventions.fourth_suit_forcing.game_forcing"] }
 "help_suit_game_tries.play" = { kind = "bool", label = "Help suit game tries" }
