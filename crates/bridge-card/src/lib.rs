@@ -16,11 +16,13 @@ mod card;
 mod error;
 mod registry;
 pub mod schema;
+pub mod skills;
 mod vocabulary;
 
 pub use card::{Card, CardMetadata, LoadReport, EXPORT_SCHEMA};
 pub use error::Error;
 pub use registry::{FieldDef, FieldKind, Registry, Value};
+pub use skills::{Skill, SkillSource, Skills};
 pub use vocabulary::Vocabulary;
 
 /// This repository's vocabulary (`conventions/card/`), for the unit tests

@@ -97,6 +97,30 @@ pub struct FieldDef {
     /// ("Multi-Landy" is `multi_landy`). Loading stores the option.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub value_aliases: BTreeMap<String, String>,
+    /// The teaching skills this field's convention is taught under
+    /// (Bridge-Classroom's SkillPath, `bidding_conventions/stayman`):
+    /// `skill = "..."` or a list in `fields.toml`. The known paths are the
+    /// rules' `card/skills.toml` ([`crate::Skills`]).
+    #[serde(
+        default,
+        deserialize_with = "one_or_many",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub skill: Vec<String>,
+}
+
+/// A string or a list of strings.
+fn one_or_many<'de, D: serde::Deserializer<'de>>(d: D) -> Result<Vec<String>, D::Error> {
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum OneOrMany {
+        One(String),
+        Many(Vec<String>),
+    }
+    Ok(match OneOrMany::deserialize(d)? {
+        OneOrMany::One(s) => vec![s],
+        OneOrMany::Many(v) => v,
+    })
 }
 
 /// An enum spelling folded for matching: lower case, with spaces and
@@ -190,6 +214,13 @@ impl Registry {
                         )));
                     }
                 }
+                for skill in &field.skill {
+                    if !crate::skills::is_skill_path(skill) {
+                        return Err(Error::new(format!(
+                            "{path}: skill {skill:?} is not a skill path (category/name, lower case)"
+                        )));
+                    }
+                }
                 for name in std::iter::once(&path).chain(&field.aliases) {
                     if index.insert(name.clone(), fields.len()).is_some() {
                         return Err(Error::new(format!("{name} is declared twice")));
@@ -246,6 +277,42 @@ mod tests {
             .get("competitive.defense_vs_strong_nt.convention")
             .unwrap();
         assert_eq!(old.path, "competitive.vs_1nt_strong.system");
+    }
+
+    #[test]
+    fn fields_name_their_teaching_skills() {
+        let r = Registry::parse(concat!(
+            "[notrump]\n",
+            r#""stayman.play" = { kind = "bool", label = "Stayman", skill = "bidding_conventions/stayman" }"#,
+            "\n",
+            r#""smolen.play" = { kind = "bool", label = "Smolen", skill = ["bidding_conventions/smolen", "bidding_conventions/stayman"] }"#,
+            "\n",
+            r#""x" = { kind = "bool", label = "X" }"#,
+            "\n",
+        ))
+        .unwrap();
+        assert_eq!(
+            r.get("notrump.stayman.play").unwrap().skill,
+            ["bidding_conventions/stayman"]
+        );
+        assert_eq!(r.get("notrump.smolen.play").unwrap().skill.len(), 2);
+        assert!(r.get("notrump.x").unwrap().skill.is_empty());
+        let bad = Registry::parse(concat!(
+            "[notrump]\n",
+            r#""stayman.play" = { kind = "bool", label = "S", skill = "Stayman" }"#,
+        ))
+        .unwrap_err();
+        assert!(bad.message.contains("not a skill path"), "{bad}");
+        let bad = Registry::parse(concat!(
+            "[notrump]\n",
+            r#""stayman.play" = { kind = "bool", label = "S", skill = 3 }"#,
+        ));
+        assert!(bad.is_err());
+        // This repository's fields carry them.
+        assert_eq!(
+            registry().get("notrump.stayman.play").unwrap().skill,
+            ["bidding_conventions/stayman"]
+        );
     }
 
     #[test]
