@@ -11,6 +11,11 @@ use crate::{Error, Vocabulary};
 pub(crate) const SCHEMA_VERSION: &str = "1.0";
 const FORMAT: &str = "bridge_classroom";
 
+/// The `schema` of Bridge-Classroom's card export: `{schema, name,
+/// description, exportedAt, card_data}`, with the card in `card_data`.
+pub const EXPORT_SCHEMA: &str = "bridge-classroom/card_data@v1";
+const EXPORT_SCHEMA_FAMILY: &str = "bridge-classroom/card_data@";
+
 /// Leaves the editor stores for its own use; kept, but not reported.
 const EDITOR_METADATA_LEAVES: &[&str] = &["skill_path"];
 const EDITOR_METADATA_TOP: &[&str] = &["conventions_list"];
@@ -53,6 +58,13 @@ pub struct LoadReport {
     pub unknown: Vec<String>,
     /// `(path, problem)` for values the registry rejected (kept as-is).
     pub invalid: Vec<(String, String)>,
+    /// Keys starting with `_` (Bridge-Classroom's raw import records, such
+    /// as `_bbo_raw`): not card settings. Kept as-is so a round trip loses
+    /// nothing, never read, and not counted as unknown.
+    pub ignored: Vec<String>,
+    /// The export wrapper the card came in (its `schema`,
+    /// [`EXPORT_SCHEMA`]), when it was not bare `card_data`.
+    pub wrapper: Option<String>,
 }
 
 impl LoadReport {
@@ -139,16 +151,56 @@ impl Card {
         self.values.iter().map(|(k, v)| (k.as_str(), v))
     }
 
-    /// Load a card in `vocab` from Bridge-Classroom's nested `card_data` JSON.
+    /// What the JSON the card was loaded from held at `path` when that path
+    /// is not a field of the vocabulary (an unknown leaf, kept as-is).
+    pub fn unknown_value(&self, path: &str) -> Option<&Json> {
+        self.extra.get(path)
+    }
+
+    /// Load a card in `vocab` from Bridge-Classroom's nested `card_data`
+    /// JSON, bare or in the editor's export wrapper ([`EXPORT_SCHEMA`]:
+    /// `{schema, name, description, exportedAt, card_data}`), whose `name`
+    /// and `description` then become the card's. Keys starting with `_`
+    /// (`_bbo_raw`, the raw record of a BBO import) are not settings: they
+    /// are kept for the round trip and listed in [`LoadReport::ignored`].
     pub fn from_json(vocab: &Vocabulary, text: &str) -> Result<(Card, LoadReport), Error> {
         let json: Json = serde_json::from_str(text).map_err(|e| Error::new(e.to_string()))?;
-        let Json::Object(top) = json else {
+        let Json::Object(mut top) = json else {
             return Err(Error::new("card JSON must be an object"));
         };
         let mut card = Card::new(vocab);
         let mut report = LoadReport::default();
+        let mut wrapper_meta = (None, None);
+        if top.get("card_data").is_some_and(Json::is_object) {
+            let schema = top.get("schema").and_then(Json::as_str).unwrap_or_default();
+            if !schema.is_empty() && schema != EXPORT_SCHEMA {
+                return Err(Error::new(if schema.starts_with(EXPORT_SCHEMA_FAMILY) {
+                    format!("{schema}: a newer Bridge-Classroom export than this reads ({EXPORT_SCHEMA})")
+                } else {
+                    format!(
+                        "schema {schema:?}: not a Bridge-Classroom card export ({EXPORT_SCHEMA})"
+                    )
+                }));
+            }
+            report.wrapper = Some(EXPORT_SCHEMA.to_string());
+            let text_of = |v: Option<&Json>| {
+                v.and_then(Json::as_str)
+                    .filter(|s| !s.trim().is_empty())
+                    .map(str::to_string)
+            };
+            wrapper_meta = (text_of(top.get("name")), text_of(top.get("description")));
+            let Some(Json::Object(inner)) = top.remove("card_data") else {
+                unreachable!("checked above");
+            };
+            top = inner;
+        }
         let mut leaves = Vec::new();
         for (key, value) in top {
+            if key.starts_with('_') {
+                report.ignored.push(key.clone());
+                card.extra.insert(key, value);
+                continue;
+            }
             match key.as_str() {
                 "schema_version" | "format" => {}
                 "metadata" => {
@@ -162,10 +214,23 @@ impl Card {
                 k if EDITOR_METADATA_TOP.contains(&k) => {
                     card.extra.insert(key, value);
                 }
-                _ => flatten(&key, value, &mut leaves),
+                _ => flatten(&key, value, &mut leaves, &mut report.ignored),
             }
         }
+        // The wrapper's name is the one the editor shows (its card list);
+        // `metadata.name` inside may be older.
+        let (name, description) = wrapper_meta;
+        if name.is_some() {
+            card.metadata.name = name;
+        }
+        if description.is_some() {
+            card.metadata.description = description;
+        }
         for (path, value) in leaves {
+            if report.ignored.contains(&path) {
+                card.extra.insert(path, value);
+                continue;
+            }
             let last = path.rsplit('.').next().unwrap_or_default();
             if EDITOR_METADATA_LEAVES.contains(&last) || value.is_null() {
                 card.extra.insert(path, value);
@@ -221,15 +286,45 @@ impl Card {
     pub fn to_json_string(&self) -> String {
         serde_json::to_string_pretty(&self.to_json()).expect("card serializes")
     }
+
+    /// Write the card in Bridge-Classroom's export wrapper
+    /// ([`EXPORT_SCHEMA`]), as the editor's "Export content" writes it:
+    /// `{schema, name, description, exportedAt, card_data}`. `exportedAt`
+    /// (an ISO 8601 time) is written only when given.
+    pub fn to_export_json(&self, exported_at: Option<&str>) -> Json {
+        let mut top = Map::new();
+        top.insert("schema".into(), EXPORT_SCHEMA.into());
+        top.insert("name".into(), self.metadata.name.clone().into());
+        top.insert(
+            "description".into(),
+            self.metadata.description.clone().into(),
+        );
+        if let Some(at) = exported_at {
+            top.insert("exportedAt".into(), at.into());
+        }
+        top.insert("card_data".into(), self.to_json());
+        Json::Object(top)
+    }
+
+    pub fn to_export_json_string(&self, exported_at: Option<&str>) -> String {
+        serde_json::to_string_pretty(&self.to_export_json(exported_at)).expect("card serializes")
+    }
 }
 
 /// Collect `(dotted path, leaf)` pairs; objects are walked, everything else
-/// (including arrays) is a leaf.
-fn flatten(prefix: &str, value: Json, out: &mut Vec<(String, Json)>) {
+/// (including arrays) is a leaf. A key starting with `_` is not walked: it
+/// comes out whole, and its path goes in `ignored`.
+fn flatten(prefix: &str, value: Json, out: &mut Vec<(String, Json)>, ignored: &mut Vec<String>) {
     match value {
         Json::Object(map) => {
             for (k, v) in map {
-                flatten(&format!("{prefix}.{k}"), v, out);
+                let path = format!("{prefix}.{k}");
+                if k.starts_with('_') {
+                    ignored.push(path.clone());
+                    out.push((path, v));
+                } else {
+                    flatten(&path, v, out, ignored);
+                }
             }
         }
         leaf => out.push((prefix.to_string(), leaf)),
@@ -276,6 +371,43 @@ mod tests {
             card.effective("notrump.one_nt.range_max"),
             Some(&Value::Int(17))
         );
+    }
+
+    #[test]
+    fn export_wrapper_is_unwrapped_and_underscore_keys_ignored() {
+        let text = r#"{"schema": "bridge-classroom/card_data@v1", "name": "Pat and Sam",
+                       "description": "Imported from BBO", "exportedAt": "2026-09-28T20:04:58.311Z",
+                       "card_data": {"metadata": {"name": "old name"},
+                                     "_bbo_raw": {"conventions": {"1NStayman": "y"}},
+                                     "notrump": {"stayman": {"play": true, "_note": {"x": 1}}}}}"#;
+        let (card, report) = Card::from_json(crate::test_vocabulary(), text).unwrap();
+        assert_eq!(report.wrapper.as_deref(), Some(EXPORT_SCHEMA));
+        assert_eq!(report.ignored, vec!["_bbo_raw", "notrump.stayman._note"]);
+        assert!(report.is_clean(), "{report:?}");
+        assert!(card.is_on("notrump.stayman.play"));
+        assert_eq!(card.metadata.name.as_deref(), Some("Pat and Sam"));
+        assert_eq!(
+            card.metadata.description.as_deref(),
+            Some("Imported from BBO")
+        );
+        // Written back out, the raw record is still there, and the wrapper
+        // reads back as the same card.
+        let bare = card.to_json();
+        assert_eq!(bare["_bbo_raw"]["conventions"]["1NStayman"], "y");
+        assert_eq!(bare["notrump"]["stayman"]["_note"]["x"], 1);
+        let wrapped = card.to_export_json_string(Some("2026-09-28T00:00:00Z"));
+        let (again, report) = Card::from_json(card.vocabulary(), &wrapped).unwrap();
+        assert_eq!(card, again);
+        assert_eq!(report.wrapper.as_deref(), Some(EXPORT_SCHEMA));
+    }
+
+    #[test]
+    fn other_export_schemas_are_refused() {
+        let v2 = r#"{"schema": "bridge-classroom/card_data@v2", "card_data": {}}"#;
+        let e = Card::from_json(crate::test_vocabulary(), v2).unwrap_err();
+        assert!(e.message.contains("newer"), "{e}");
+        let other = r#"{"schema": "something/else", "card_data": {}}"#;
+        assert!(Card::from_json(crate::test_vocabulary(), other).is_err());
     }
 
     #[test]

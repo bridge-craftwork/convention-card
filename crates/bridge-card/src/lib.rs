@@ -18,7 +18,7 @@ mod registry;
 pub mod schema;
 mod vocabulary;
 
-pub use card::{Card, CardMetadata, LoadReport};
+pub use card::{Card, CardMetadata, LoadReport, EXPORT_SCHEMA};
 pub use error::Error;
 pub use registry::{FieldDef, FieldKind, Registry, Value};
 pub use vocabulary::Vocabulary;
