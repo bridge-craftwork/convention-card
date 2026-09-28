@@ -93,6 +93,25 @@ impl Card {
         Ok(())
     }
 
+    /// Apply a change written `path=value` (`general.style=bba`,
+    /// `notrump.stayman.play=false`): `true`/`false` are booleans, whole
+    /// numbers integers, anything else text.
+    pub fn apply_change(&mut self, change: &str) -> Result<(), Error> {
+        let (path, value) = change
+            .split_once('=')
+            .ok_or_else(|| Error::new(format!("card change {change:?}: expected path=value")))?;
+        let value = match value {
+            "true" => Value::Bool(true),
+            "false" => Value::Bool(false),
+            v => v
+                .parse::<i64>()
+                .map(Value::Int)
+                .unwrap_or_else(|_| Value::Text(v.to_string())),
+        };
+        self.set(path, value)
+            .map_err(|e| Error::new(format!("card change {change:?}: {e}")))
+    }
+
     pub fn unset(&mut self, path: &str) {
         if let Some(field) = registry().get(path) {
             self.values.remove(&field.path);
