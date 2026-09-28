@@ -138,6 +138,7 @@
 "drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)" }
 "drury.in_comp"            = { kind = "bool", label = "Drury in competition" }
 "gazzilli.play"            = { kind = "bool", label = "Gazzilli" }
+"impossible_2s.play"       = { kind = "bool", label = "Impossible 2♠", desc = "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor" }
 
 [minor_openings]
 "one_club.min_length"      = { kind = "enum", label = "1♣ min length", options = ["2", "3", "4", "5"], default = "3" }

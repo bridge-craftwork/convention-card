@@ -95,6 +95,11 @@
 "Drury"                     = "major_openings.drury.play"
 "Reverse drury"             = "major_openings.drury.reverse"
 "Gazzilli"                  = "major_openings.gazzilli.play"
+# BBA's spelling. Mapped on the meaning Todd ("The Impossible ♠ Bid",
+# Adventures in Bridge TWiB 269) and GIB's "Impossible spade" give it:
+# 1♥–1NT–2m–2♠ is a good raise of opener's minor (impossible-2s.notes.md).
+# BBA's own note on the call agrees: "limit raise or better in !C/!D".
+"Imposible 2S"              = "major_openings.impossible_2s.play"
 
 # ── Minor openings ─────────────────────────────────────────────────
 "1D opening with 4 cards"   = { set = { "minor_openings.one_diamond.min_length" = "4" } }
