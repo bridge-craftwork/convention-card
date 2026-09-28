@@ -2,15 +2,16 @@
 
 use serde_json::{json, Map, Value as Json};
 
-use crate::registry::{registry, FieldDef, FieldKind};
+use crate::registry::{FieldDef, FieldKind, Registry};
 
-/// A JSON Schema (draft 2020-12) describing nested card JSON.
+/// A JSON Schema (draft 2020-12) describing nested card JSON with the
+/// fields of `registry`.
 ///
 /// `additionalProperties` stays open: the editor stores its own leaves
 /// (`skill_path`) and older cards may hold fields not yet in the registry.
-pub fn json_schema() -> Json {
+pub fn json_schema(registry: &Registry) -> Json {
     let mut settings = Json::Object(Map::new());
-    for field in registry().fields() {
+    for field in registry.fields() {
         insert(&mut settings, &field.path, leaf(field));
     }
     let mut properties = match settings {
@@ -104,7 +105,7 @@ mod tests {
 
     #[test]
     fn schema_nests_fields_by_path() {
-        let s = json_schema();
+        let s = json_schema(crate::test_vocabulary().registry());
         let range = &s["properties"]["notrump"]["properties"]["one_nt"]["properties"]["range_min"];
         assert_eq!(range["type"], "integer");
         assert_eq!(range["default"], 15);

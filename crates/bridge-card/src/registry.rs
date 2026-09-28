@@ -1,14 +1,12 @@
-//! The field registry: every setting a card can hold, from `data/fields.toml`.
+//! The field registry: every setting a card can hold, from the rules'
+//! `card/fields.toml` (see [`crate::Vocabulary`]).
 
 use std::collections::HashMap;
 use std::fmt;
-use std::sync::OnceLock;
 
 use serde::{Deserialize, Serialize};
 
 use crate::Error;
-
-const FIELDS_TOML: &str = include_str!("../data/fields.toml");
 
 /// The type of a card field.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -126,18 +124,10 @@ pub struct Registry {
     index: HashMap<String, usize>,
 }
 
-/// The built-in registry from `data/fields.toml`.
-pub fn registry() -> &'static Registry {
-    static REGISTRY: OnceLock<Registry> = OnceLock::new();
-    REGISTRY.get_or_init(|| Registry::parse(FIELDS_TOML).expect("data/fields.toml is invalid"))
-}
-
 impl Registry {
-    /// Parse a registry in the `data/fields.toml` format.
+    /// Parse a registry in the `fields.toml` format.
     pub fn parse(text: &str) -> Result<Registry, Error> {
-        let table: toml::Table = text
-            .parse()
-            .map_err(|e| Error::new(format!("fields.toml: {e}")))?;
+        let table: toml::Table = toml::from_str(text).map_err(|e| Error::toml(&e, text))?;
         let mut fields = Vec::new();
         let mut index = HashMap::new();
         for (section, entries) in table {
@@ -187,8 +177,12 @@ impl Registry {
 mod tests {
     use super::*;
 
+    fn registry() -> &'static Registry {
+        crate::test_vocabulary().registry()
+    }
+
     #[test]
-    fn builtin_registry_loads() {
+    fn registry_loads() {
         let r = registry();
         assert!(r.fields().len() > 250);
         let f = r.get("notrump.one_nt.range_min").unwrap();

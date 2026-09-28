@@ -5,8 +5,8 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value as Json};
 
-use crate::registry::{registry, Value};
-use crate::Error;
+use crate::registry::Value;
+use crate::{Error, Vocabulary};
 
 pub(crate) const SCHEMA_VERSION: &str = "1.0";
 const FORMAT: &str = "bridge_classroom";
@@ -29,9 +29,11 @@ pub struct CardMetadata {
     pub other: Map<String, Json>,
 }
 
-/// A convention card.
-#[derive(Debug, Clone, Default, PartialEq)]
+/// A convention card, in the vocabulary it was made with: every read and
+/// write resolves paths, aliases and defaults in that vocabulary.
+#[derive(Debug, Clone, PartialEq)]
 pub struct Card {
+    vocab: Vocabulary,
     pub metadata: CardMetadata,
     /// Settings, by canonical path.
     values: BTreeMap<String, Value>,
@@ -60,19 +62,31 @@ impl LoadReport {
 }
 
 impl Card {
-    pub fn new() -> Card {
-        Card::default()
+    /// An empty card in `vocab`.
+    pub fn new(vocab: &Vocabulary) -> Card {
+        Card {
+            vocab: vocab.clone(),
+            metadata: CardMetadata::default(),
+            values: BTreeMap::new(),
+            bba_passthrough: BTreeMap::new(),
+            extra: BTreeMap::new(),
+        }
+    }
+
+    /// The vocabulary this card was made with.
+    pub fn vocabulary(&self) -> &Vocabulary {
+        &self.vocab
     }
 
     /// The stored value at `path` (canonical or alias), if set.
     pub fn get(&self, path: &str) -> Option<&Value> {
-        let field = registry().get(path)?;
+        let field = self.vocab.registry().get(path)?;
         self.values.get(&field.path)
     }
 
     /// The stored value, or the registry default when unset.
     pub fn effective(&self, path: &str) -> Option<&Value> {
-        let field = registry().get(path)?;
+        let field = self.vocab.registry().get(path)?;
         self.values.get(&field.path).or(field.default.as_ref())
     }
 
@@ -83,7 +97,9 @@ impl Card {
 
     /// Set a value, checking it against the registry.
     pub fn set(&mut self, path: &str, value: Value) -> Result<(), Error> {
-        let field = registry()
+        let field = self
+            .vocab
+            .registry()
             .get(path)
             .ok_or_else(|| Error::new(format!("unknown card field {path}")))?;
         let value = field
@@ -113,7 +129,7 @@ impl Card {
     }
 
     pub fn unset(&mut self, path: &str) {
-        if let Some(field) = registry().get(path) {
+        if let Some(field) = self.vocab.registry().get(path) {
             self.values.remove(&field.path);
         }
     }
@@ -123,13 +139,13 @@ impl Card {
         self.values.iter().map(|(k, v)| (k.as_str(), v))
     }
 
-    /// Load a card from Bridge-Classroom's nested `card_data` JSON.
-    pub fn from_json(text: &str) -> Result<(Card, LoadReport), Error> {
+    /// Load a card in `vocab` from Bridge-Classroom's nested `card_data` JSON.
+    pub fn from_json(vocab: &Vocabulary, text: &str) -> Result<(Card, LoadReport), Error> {
         let json: Json = serde_json::from_str(text).map_err(|e| Error::new(e.to_string()))?;
         let Json::Object(top) = json else {
             return Err(Error::new("card JSON must be an object"));
         };
-        let mut card = Card::new();
+        let mut card = Card::new(vocab);
         let mut report = LoadReport::default();
         let mut leaves = Vec::new();
         for (key, value) in top {
@@ -155,7 +171,7 @@ impl Card {
                 card.extra.insert(path, value);
                 continue;
             }
-            let Some(field) = registry().get(&path) else {
+            let Some(field) = vocab.registry().get(&path) else {
                 report.unknown.push(path.clone());
                 card.extra.insert(path, value);
                 continue;
@@ -242,7 +258,7 @@ mod tests {
 
     #[test]
     fn set_validates_and_resolves_aliases() {
-        let mut card = Card::new();
+        let mut card = Card::new(crate::test_vocabulary());
         card.set("other_conventions.blackwood.rkcb_1430", Value::Bool(true))
             .unwrap();
         assert!(card.is_on("slam.blackwood.rkcb_1430"));
@@ -254,7 +270,7 @@ mod tests {
 
     #[test]
     fn effective_falls_back_to_default() {
-        let card = Card::new();
+        let card = Card::new(crate::test_vocabulary());
         assert_eq!(card.get("notrump.one_nt.range_max"), None);
         assert_eq!(
             card.effective("notrump.one_nt.range_max"),
@@ -266,9 +282,9 @@ mod tests {
     fn json_round_trip_keeps_unknown_leaves() {
         let text = r#"{"notrump": {"stayman": {"play": true, "mystery": 3}},
                        "metadata": {"name": "Test"}}"#;
-        let (card, report) = Card::from_json(text).unwrap();
+        let (card, report) = Card::from_json(crate::test_vocabulary(), text).unwrap();
         assert_eq!(report.unknown, vec!["notrump.stayman.mystery".to_string()]);
-        let (again, _) = Card::from_json(&card.to_json_string()).unwrap();
+        let (again, _) = Card::from_json(card.vocabulary(), &card.to_json_string()).unwrap();
         assert_eq!(card, again);
     }
 }

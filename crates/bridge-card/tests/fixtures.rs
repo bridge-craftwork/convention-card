@@ -4,7 +4,13 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use bridge_card::{bbsa, Card, Value};
+use bridge_card::{bbsa, Card, Value, Vocabulary};
+
+/// The vocabulary of this repository's rules (`conventions/card`).
+fn vocab() -> Vocabulary {
+    Vocabulary::load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../../conventions"))
+        .expect("conventions/card loads")
+}
 
 fn bbsa_fixtures() -> Vec<PathBuf> {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/bbsa");
@@ -28,11 +34,11 @@ fn layout_of(text: &str) -> Vec<String> {
 
 #[test]
 fn every_bbsa_fixture_round_trips() {
-    let current_layout = layout_of(&bbsa::export(&Card::new()).0);
+    let current_layout = layout_of(&bbsa::export(&Card::new(&vocab())).0);
     for path in bbsa_fixtures() {
         let text = fs::read_to_string(&path).unwrap();
         let name = path.file_stem().unwrap().to_str().unwrap();
-        let (card, report) = bbsa::import(&text, Some(name)).unwrap();
+        let (card, report) = bbsa::import(&vocab(), &text, Some(name)).unwrap();
         assert!(report.warnings.is_empty(), "{name}: {:?}", report.warnings);
         let (exported, _) = bbsa::export(&card);
 
@@ -42,7 +48,7 @@ fn every_bbsa_fixture_round_trips() {
         } else {
             // Older layout: every setting must survive. Keys the old layout
             // lacked are written as 0, so they come back as explicit "off".
-            let (again, _) = bbsa::import(&exported, Some(name)).unwrap();
+            let (again, _) = bbsa::import(&vocab(), &exported, Some(name)).unwrap();
             for (path, value) in card.values() {
                 assert_eq!(
                     again.get(path),
@@ -62,7 +68,7 @@ fn every_bbsa_fixture_round_trips() {
         }
 
         // Card JSON round trip.
-        let (from_json, load) = Card::from_json(&card.to_json_string()).unwrap();
+        let (from_json, load) = Card::from_json(&vocab(), &card.to_json_string()).unwrap();
         assert!(load.is_clean(), "{name}: {load:?}");
         assert_eq!(from_json, card, "{name}: JSON round trip changed the card");
     }
@@ -74,7 +80,7 @@ fn default_card_imports_expected_settings() {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/bbsa/21GF-DEFAULT.bbsa"),
     )
     .unwrap();
-    let (card, report) = bbsa::import(&text, None).unwrap();
+    let (card, report) = bbsa::import(&vocab(), &text, None).unwrap();
     assert_eq!(
         card.get("general.system_category"),
         Some(&Value::Text("two_over_one".into()))
@@ -95,7 +101,7 @@ fn default_card_imports_expected_settings() {
     assert!(!card.is_on("major_openings.drury.play"));
     // Passthrough keys are exactly the unmapped ones.
     for (key, _) in &report.passthrough {
-        assert!(bbsa::mapping().get(key).is_none());
+        assert!(vocab().bbsa_mapping().get(key).is_none());
     }
 }
 
@@ -105,7 +111,7 @@ fn sayc_card_opens_five_card_majors() {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/bbsa/Basic-Bridge.bbsa"),
     )
     .unwrap();
-    let (card, _) = bbsa::import(&text, None).unwrap();
+    let (card, _) = bbsa::import(&vocab(), &text, None).unwrap();
     assert_eq!(
         card.get("general.system_category"),
         Some(&Value::Text("sayc".into()))
@@ -128,7 +134,7 @@ fn precision_card_selects_precision() {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/bbsa/Precision.bbsa"),
     )
     .unwrap();
-    let (card, _) = bbsa::import(&text, None).unwrap();
+    let (card, _) = bbsa::import(&vocab(), &text, None).unwrap();
     assert_eq!(
         card.get("general.system_category"),
         Some(&Value::Text("precision".into()))
@@ -150,7 +156,7 @@ fn seed_card_loads_through_aliases() {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/21_intermediate_card.json"),
     )
     .unwrap();
-    let (card, report) = Card::from_json(&text).unwrap();
+    let (card, report) = Card::from_json(&vocab(), &text).unwrap();
     assert!(report.invalid.is_empty(), "{:?}", report.invalid);
     assert_eq!(card.metadata.name.as_deref(), Some("2/1 Intermediate"));
     assert!(card.is_on("notrump.transfers.jacoby"));
@@ -163,7 +169,7 @@ fn seed_card_loads_through_aliases() {
         .any(|(from, _)| from == "competitive.takeout_doubles.style"));
 
     // Saving and reloading keeps everything, including unknown leaves.
-    let (again, _) = Card::from_json(&card.to_json_string()).unwrap();
+    let (again, _) = Card::from_json(&vocab(), &card.to_json_string()).unwrap();
     assert_eq!(again, card);
 }
 
@@ -174,7 +180,7 @@ fn minor_transfer_treatment_is_derived_from_bba_switches() {
             Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/fixtures/bbsa/{name}.bbsa")),
         )
         .unwrap();
-        let (card, _) = bbsa::import(&text, None).unwrap();
+        let (card, _) = bbsa::import(&vocab(), &text, None).unwrap();
         card.get("notrump.minor_transfers").cloned()
     };
     // 2S clubs and 3C diamonds: BBA's own treatment.
@@ -184,7 +190,7 @@ fn minor_transfer_treatment_is_derived_from_bba_switches() {
     assert_eq!(style("21GF-Puppet"), Some(Value::Text("none".into())));
     // A card that never names it plays the default relay.
     assert_eq!(
-        Card::new().effective("notrump.minor_transfers"),
+        Card::new(&vocab()).effective("notrump.minor_transfers"),
         Some(&Value::Text("relay".into()))
     );
 }

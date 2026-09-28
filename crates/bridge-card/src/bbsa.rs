@@ -2,18 +2,18 @@
 //!
 //! A `.bbsa` file is a list of `Key = value` lines: a `System type` integer
 //! and on/off toggles, padded with `Not defined` lines. The mapping to card
-//! fields lives in `data/bbsa-map.toml`, with the `[[derived]]` rules that
-//! expand a card's system into the structural fields it implies; keys it
-//! does not cover are kept on the card in [`Card::bba_passthrough`] so that
-//! export reproduces them.
+//! fields is part of the rules' [`Vocabulary`] (`card/bbsa-map.toml` in the
+//! rules directory), with the `[[derived]]` rules that expand a card's
+//! system into the structural fields it implies; keys it does not cover are
+//! kept on the card in [`Card::bba_passthrough`] so that export reproduces
+//! them. BBA's file layout (`data/bbsa-layout.txt`) is the file format's,
+//! not the vocabulary's, so it stays here.
 
 use std::collections::HashMap;
-use std::sync::OnceLock;
 
-use crate::registry::{registry, Value};
-use crate::{Card, Error};
+use crate::registry::{Registry, Value};
+use crate::{Card, Error, Vocabulary};
 
-const MAP_TOML: &str = include_str!("../data/bbsa-map.toml");
 const LAYOUT: &str = include_str!("../data/bbsa-layout.txt");
 const PADDING: &str = "Not defined";
 
@@ -28,9 +28,10 @@ pub enum Mapping {
     Index { path: String, values: Vec<String> },
 }
 
-struct Map {
-    keys: HashMap<String, Mapping>,
-    implied: Vec<(String, Value)>,
+/// A parsed `bbsa-map.toml` (held by a [`Vocabulary`]).
+pub(crate) struct Map {
+    pub(crate) keys: HashMap<String, Mapping>,
+    pub(crate) implied: Vec<(String, Value)>,
     derived: Vec<Derived>,
 }
 
@@ -44,46 +45,44 @@ struct Derived {
     defaults: Vec<(String, Value)>,
 }
 
-fn map() -> &'static Map {
-    static MAP: OnceLock<Map> = OnceLock::new();
-    MAP.get_or_init(|| parse_mapping(MAP_TOML).expect("data/bbsa-map.toml is invalid"))
+impl Map {
+    /// The `[[derived]]` rules as (the fields read, the fields written).
+    pub(crate) fn derivations(&self) -> Vec<(Vec<String>, Vec<String>)> {
+        self.derived
+            .iter()
+            .map(|d| {
+                (
+                    d.when.iter().map(|(p, _)| p.clone()).collect(),
+                    d.set
+                        .iter()
+                        .chain(&d.defaults)
+                        .map(|(p, _)| p.clone())
+                        .collect(),
+                )
+            })
+            .collect()
+    }
 }
 
-/// The built-in mapping from `data/bbsa-map.toml`, by `.bbsa` key.
-pub fn mapping() -> &'static HashMap<String, Mapping> {
-    &map().keys
-}
-
-/// The `[[derived]]` rules as (the fields read, the fields written). A
-/// coverage report needs this: a field nothing reads directly may still
-/// matter, because a derivation turns it into one the rules do read.
-pub fn derivations() -> Vec<(Vec<String>, Vec<String>)> {
-    map()
-        .derived
-        .iter()
-        .map(|d| {
-            (
-                d.when.iter().map(|(p, _)| p.clone()).collect(),
-                d.set
-                    .iter()
-                    .chain(&d.defaults)
-                    .map(|(p, _)| p.clone())
-                    .collect(),
-            )
-        })
+/// Mapped keys that BBA's current layout does not have (see
+/// [`Vocabulary::lint`]).
+pub(crate) fn lint(map: &Map) -> Vec<String> {
+    let layout: Vec<&str> = LAYOUT.lines().collect();
+    let mut keys: Vec<&String> = map
+        .keys
+        .keys()
+        .filter(|k| !layout.contains(&k.as_str()))
+        .collect();
+    keys.sort();
+    keys.into_iter()
+        .map(|k| format!("bbsa-map.toml: {k:?} is not a key of BBA's current .bbsa layout"))
         .collect()
 }
 
-/// Settings every imported card gets: conventions BBA always plays, which
-/// have no `.bbsa` key.
-pub fn implied() -> &'static [(String, Value)] {
-    &map().implied
-}
-
-fn parse_mapping(text: &str) -> Result<Map, Error> {
-    let mut table: toml::Table = text
-        .parse()
-        .map_err(|e| Error::new(format!("bbsa-map.toml: {e}")))?;
+/// Parse `bbsa-map.toml` against the fields in `registry`.
+pub(crate) fn parse_mapping(text: &str, registry: &Registry) -> Result<Map, Error> {
+    let validate = |key: &str, mapping: &Mapping| validate(registry, key, mapping);
+    let mut table: toml::Table = toml::from_str(text).map_err(|e| Error::toml(&e, text))?;
     let mut implied = Vec::new();
     if let Some(toml::Value::Table(t)) = table.remove("implied") {
         for (path, v) in t {
@@ -142,7 +141,7 @@ fn parse_mapping(text: &str) -> Result<Map, Error> {
     }
     let mut out = HashMap::new();
     for (key, spec) in table {
-        let bad = |msg: &str| Error::new(format!("bbsa-map.toml, {key:?}: {msg}"));
+        let bad = |msg: &str| Error::new(format!("{key:?}: {msg}"));
         let mapping = match &spec {
             toml::Value::String(path) => Mapping::Toggle(path.clone()),
             toml::Value::Table(t) if t.contains_key("set") => {
@@ -181,23 +180,51 @@ fn parse_mapping(text: &str) -> Result<Map, Error> {
         validate(&key, &mapping)?;
         out.insert(key, mapping);
     }
-    Ok(Map {
+    let map = Map {
         keys: out,
         implied,
         derived,
-    })
+    };
+    // Export writes a key from the fields it maps, so a field a derivation
+    // writes must be one no key maps: otherwise importing and exporting a
+    // file would switch on a key it never had.
+    let written: Vec<&str> = map
+        .keys
+        .values()
+        .flat_map(|m| match m {
+            Mapping::Toggle(path) => vec![path.as_str()],
+            Mapping::Set(pairs) => pairs.iter().map(|(p, _)| p.as_str()).collect(),
+            Mapping::Index { path, .. } => vec![path.as_str()],
+        })
+        .collect();
+    for (_, outputs) in map.derivations() {
+        for path in outputs {
+            let field = registry
+                .get(&path)
+                .map_or(path.as_str(), |f| f.path.as_str());
+            if written
+                .iter()
+                .any(|w| registry.get(w).map_or(*w, |f| f.path.as_str()) == field)
+            {
+                return Err(Error::new(format!(
+                    "[[derived]] writes {path}, which a .bbsa key also writes"
+                )));
+            }
+        }
+    }
+    Ok(map)
 }
 
 /// Every mapped path must exist and every value must fit its field.
-fn validate(key: &str, mapping: &Mapping) -> Result<(), Error> {
+fn validate(registry: &Registry, key: &str, mapping: &Mapping) -> Result<(), Error> {
     let check = |path: &str, v: Value| {
-        let field = registry()
+        let field = registry
             .get(path)
-            .ok_or_else(|| Error::new(format!("bbsa-map.toml, {key:?}: unknown field {path}")))?;
+            .ok_or_else(|| Error::new(format!("{key:?}: unknown field {path}")))?;
         field
             .normalize(v)
             .map(|_| ())
-            .map_err(|e| Error::new(format!("bbsa-map.toml, {key:?}: {path}: {e}")))
+            .map_err(|e| Error::new(format!("{key:?}: {path}: {e}")))
     };
     match mapping {
         Mapping::Toggle(path) => check(path, Value::Bool(true)),
@@ -242,11 +269,16 @@ pub struct ImportReport {
     pub warnings: Vec<String>,
 }
 
-/// Convert `.bbsa` text to a card.
-pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Error> {
-    let mut card = Card::new();
+/// Convert `.bbsa` text to a card in `vocab`.
+pub fn import(
+    vocab: &Vocabulary,
+    text: &str,
+    name: Option<&str>,
+) -> Result<(Card, ImportReport), Error> {
+    let map = vocab.bbsa();
+    let mut card = Card::new(vocab);
     card.metadata.name = name.map(str::to_string);
-    for (path, v) in implied() {
+    for (path, v) in &map.implied {
         card.set(path, v.clone())?;
     }
     let mut report = ImportReport::default();
@@ -254,7 +286,7 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
         if key == PADDING {
             continue;
         }
-        let Some(mapping) = mapping().get(&key) else {
+        let Some(mapping) = map.keys.get(&key) else {
             report.passthrough.push((key.clone(), value));
             card.bba_passthrough.insert(key, value);
             continue;
@@ -292,7 +324,7 @@ pub fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Er
             }
         }
     }
-    apply_derived(&mut card, &map().derived)?;
+    apply_derived(&mut card, &map.derived)?;
     Ok((card, report))
 }
 
@@ -338,15 +370,17 @@ pub struct ExportReport {
     pub dropped: Vec<String>,
 }
 
-/// Convert a card to `.bbsa` text in BBA's current 258-line layout (CRLF).
+/// Convert a card to `.bbsa` text in BBA's current 258-line layout (CRLF),
+/// through the mapping of the card's own vocabulary.
 pub fn export(card: &Card) -> (String, ExportReport) {
+    let vocab = card.vocabulary();
     let mut report = ExportReport::default();
     let layout: Vec<&str> = LAYOUT.lines().collect();
     let mut out = String::new();
     for key in &layout {
         let value = if *key == PADDING {
             0
-        } else if let Some(mapping) = mapping().get(*key) {
+        } else if let Some(mapping) = vocab.bbsa_mapping().get(*key) {
             export_value(card, mapping)
         } else {
             card.bba_passthrough.get(*key).copied().unwrap_or(0)
@@ -376,22 +410,29 @@ fn export_value(card: &Card, mapping: &Mapping) -> i64 {
 mod tests {
     use super::*;
 
+    fn vocab() -> &'static Vocabulary {
+        crate::test_vocabulary()
+    }
+
+    fn import(text: &str, name: Option<&str>) -> Result<(Card, ImportReport), Error> {
+        super::import(vocab(), text, name)
+    }
+
     #[test]
-    fn builtin_mapping_is_valid() {
-        assert!(mapping().len() > 130);
+    fn mapping_is_valid() {
+        assert!(vocab().bbsa_mapping().len() > 130);
     }
 
     #[test]
     fn layout_keys_are_mapped_or_passed_through() {
-        // Every layout key is either mapped or padding; the rest round-trip
-        // through passthrough. This guards against typos in the map file.
-        let layout: Vec<&str> = LAYOUT.lines().collect();
-        for key in mapping().keys() {
-            assert!(
-                layout.contains(&key.as_str()),
-                "mapped key {key:?} is not in the layout"
-            );
-        }
+        // Every mapped key is in the layout; the rest round-trip through
+        // passthrough. This guards against typos in the map file.
+        assert_eq!(vocab().lint(), Vec::<String>::new());
+        let typo = parse_mapping(
+            r#""Smolen typo" = "notrump.smolen.play""#,
+            vocab().registry(),
+        );
+        assert_eq!(lint(&typo.unwrap()).len(), 1);
     }
 
     /// A `default` derivation fills a field the keys left unset, and leaves
@@ -406,10 +447,11 @@ mod tests {
 when    = { "general.system_category" = "acol" }
 default = { "major_openings.five_card_majors" = false }
 "#,
+            vocab().registry(),
         )
         .unwrap();
         let acol = || {
-            let mut card = Card::new();
+            let mut card = Card::new(vocab());
             card.set("general.system_category", Value::Text("acol".into()))
                 .unwrap();
             card
@@ -434,7 +476,7 @@ default = { "major_openings.five_card_majors" = false }
         );
 
         // A different system leaves the field alone altogether.
-        let mut precision = Card::new();
+        let mut precision = Card::new(vocab());
         precision
             .set("general.system_category", Value::Text("precision".into()))
             .unwrap();
@@ -445,24 +487,20 @@ default = { "major_openings.five_card_majors" = false }
     /// Export writes a key from the fields it maps, so a field a derivation
     /// writes must be one no key maps: otherwise importing and exporting a
     /// file would switch on a key it never had.
+    /// (`parse_mapping` refuses such a map; the real one parses.)
     #[test]
     fn derived_fields_are_not_written_by_a_key() {
-        let written: Vec<&str> = mapping()
-            .values()
-            .flat_map(|m| match m {
-                Mapping::Toggle(path) => vec![path.as_str()],
-                Mapping::Set(pairs) => pairs.iter().map(|(p, _)| p.as_str()).collect(),
-                Mapping::Index { path, .. } => vec![path.as_str()],
-            })
-            .collect();
-        for (_, outputs) in derivations() {
-            for path in outputs {
-                assert!(
-                    !written.contains(&path.as_str()),
-                    "{path} is both derived and written by a .bbsa key"
-                );
-            }
-        }
+        let err = parse_mapping(
+            r#"
+"SMOLEN" = "notrump.smolen.play"
+[[derived]]
+set = { "notrump.smolen.play" = true }
+"#,
+            vocab().registry(),
+        )
+        .err()
+        .expect("a derived field a key writes is refused");
+        assert!(err.message.contains("notrump.smolen.play"), "{err}");
     }
 
     /// The system preset expands into the structural fields it implies.
