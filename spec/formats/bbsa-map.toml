@@ -153,7 +153,14 @@
 "Maximal Doubles"           = "doubles.maximal"
 
 # ── Competitive ────────────────────────────────────────────────────
-"Michaels Cuebid"           = "competitive.michaels.play"
+# BBA's Michaels, onto Bridge-Classroom's direct cue bid matrix (the
+# canonical fields). Probed 2026-09-28 (probes/michaels-1C.toml, -1D,
+# -1H, -1S; two-suited-overcalls.notes.md): over 1♣/1♦ BBA's cue shows
+# five-five in the majors, over 1♥/1♠ five of the other major and five of
+# a minor. BBA's 1♣/1♦ are natural (three cards or more), so only the
+# natural columns are set; nothing is known about its cue of a short or
+# artificial minor.
+"Michaels Cuebid"           = { set = { "direct_cuebids.nat_minors_michaels" = true, "direct_cuebids.nat_majors_michaels" = true } }
 "Leaping Michaels"          = "competitive.leaping_michaels.play"
 "Non-Leaping Michaels"      = "competitive.non_leaping_michaels.play"
 "Unusual 1NT"               = "competitive.unusual_1nt.play"

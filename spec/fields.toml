@@ -336,7 +336,7 @@
 
 [competitive]
 "michaels.play"            = { kind = "bool", label = "Michaels cuebid" }
-"michaels.strength"        = { kind = "text", label = "Michaels strength" }
+"michaels.strength"        = { kind = "enum", label = "Michaels strength", options = ["wide_range", "weak_or_strong"], default = "wide_range", desc = "wide_range: any strength from about 7 HCP with five-five (BBA: 8+ total points, 12+ vulnerable). weak_or_strong (mini-maxi): weak, or 16+ and bids again; an intermediate hand overcalls instead. Bridge-Classroom's seed card writes weak_or_strong" }
 "leaping_michaels.play"    = { kind = "bool", label = "Leaping Michaels" }
 "non_leaping_michaels.play" = { kind = "bool", label = "Non-leaping Michaels" }
 "unusual_1nt.play"         = { kind = "bool", label = "Unusual 1NT" }
@@ -381,6 +381,33 @@
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "notes"                    = { kind = "text", label = "Defense vs 1NT notes (card write-in)", note = true }
 # --- end: Bridge-Classroom card fields (bc-export) ---
+
+# ── Direct cue bids of their opening (Michaels) ──────────────────────
+# Bridge-Classroom's DirectCuebidsMatrix (the ACBL card's "Direct
+# cuebid" box): one row per meaning of our cue bid of their one-level
+# opening, one column per kind of opening. Columns: art = artificial
+# 1♣/1♦ (a strong club), quasi = a 1♣/1♦ that may be short,
+# nat_minors = natural 1♣/1♦, nat_majors = 1♥/1♠. Rows: michaels = the
+# two-suiter (over a minor both majors, over a major the other major and
+# a minor), natural = the suit bid, other = something else (described in
+# `description`). The rules (competitive/two-suited-overcalls.bid) read
+# the Michaels cells of the natural columns and quasi; the other cells
+# are recorded for the card.
+[direct_cuebids]
+"art_michaels"             = { kind = "bool", label = "Cue of an artificial 1♣/1♦: Michaels" }
+"art_natural"              = { kind = "bool", label = "Cue of an artificial 1♣/1♦: natural" }
+"art_other"                = { kind = "bool", label = "Cue of an artificial 1♣/1♦: other" }
+"quasi_michaels"           = { kind = "bool", label = "Cue of a possibly short 1♣/1♦: Michaels" }
+"quasi_natural"            = { kind = "bool", label = "Cue of a possibly short 1♣/1♦: natural" }
+"quasi_other"              = { kind = "bool", label = "Cue of a possibly short 1♣/1♦: other" }
+"nat_minors_michaels"      = { kind = "bool", label = "Cue of a natural 1♣/1♦: Michaels (both majors)" }
+"nat_minors_natural"       = { kind = "bool", label = "Cue of a natural 1♣/1♦: natural" }
+"nat_minors_other"         = { kind = "bool", label = "Cue of a natural 1♣/1♦: other" }
+"nat_majors_michaels"      = { kind = "bool", label = "Cue of 1♥/1♠: Michaels (the other major and a minor)" }
+"nat_majors_natural"       = { kind = "bool", label = "Cue of 1♥/1♠: natural" }
+"nat_majors_other"         = { kind = "bool", label = "Cue of 1♥/1♠: other" }
+"description"              = { kind = "text", label = "Direct cuebids: notes" }
+# ── end of the direct cue bid block ──────────────────────────────────
 
 [carding]
 "inverted_count"           = { kind = "bool", label = "Inverted (upside-down) count" }
