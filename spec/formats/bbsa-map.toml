@@ -161,9 +161,9 @@
 "Unusual 3NT"               = "competitive.unusual_3nt.play"
 "Unusual 4NT"               = "competitive.unusual_4nt.play"
 "Unusual vs. Unusual"       = "competitive.unusual_vs_unusual.play"
-"Cappelletti"               = { set = { "competitive.defense_vs_strong_nt.convention" = "cappelletti" } }
-"Landy"                     = { set = { "competitive.defense_vs_strong_nt.convention" = "landy" } }
-"Multi-Landy"               = { set = { "competitive.defense_vs_strong_nt.convention" = "multi_landy" } }
+"Cappelletti"               = { set = { "competitive.vs_1nt_strong.system" = "cappelletti" } }
+"Landy"                     = { set = { "competitive.vs_1nt_strong.system" = "landy" } }
+"Multi-Landy"               = { set = { "competitive.vs_1nt_strong.system" = "multi_landy" } }
 "Lebensohl after double"    = "competitive.lebensohl_weak_twos.play"
 "Rubensohl after double"    = "competitive.rubensohl_after_double.play"
 "Snapdragon Double"         = "competitive.snapdragon.play"

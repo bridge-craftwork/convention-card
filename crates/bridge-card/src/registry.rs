@@ -1,7 +1,7 @@
 //! The field registry: every setting a card can hold, from the rules'
 //! `card/fields.toml` (see [`crate::Vocabulary`]).
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
@@ -91,6 +91,24 @@ pub struct FieldDef {
     /// coverage` counts it with carding, leads and notes.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub note: bool,
+    /// Other spellings of an enum option, as another tool writes them
+    /// (Bridge-Classroom's "Hamilton" for `cappelletti`). An enum value
+    /// also matches an option or alias ignoring case, spaces and hyphens
+    /// ("Multi-Landy" is `multi_landy`). Loading stores the option.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub value_aliases: BTreeMap<String, String>,
+}
+
+/// An enum spelling folded for matching: lower case, with spaces and
+/// hyphens as underscores.
+fn fold(s: &str) -> String {
+    s.trim()
+        .chars()
+        .map(|c| match c {
+            ' ' | '-' => '_',
+            c => c.to_ascii_lowercase(),
+        })
+        .collect()
 }
 
 impl FieldDef {
@@ -110,10 +128,19 @@ impl FieldDef {
             (FieldKind::Enum, Value::Int(i)) => self.normalize(Value::Text(i.to_string())),
             (FieldKind::Enum, Value::Text(s)) => {
                 if self.options.contains(&s) {
-                    Ok(Value::Text(s))
-                } else {
-                    Err(format!("{s:?} is not one of {:?}", self.options))
+                    return Ok(Value::Text(s));
                 }
+                if let Some(o) = self.value_aliases.get(&s) {
+                    return Ok(Value::Text(o.clone()));
+                }
+                let f = fold(&s);
+                if let Some(o) = self.options.iter().find(|o| fold(o) == f) {
+                    return Ok(Value::Text(o.clone()));
+                }
+                if let Some((_, o)) = self.value_aliases.iter().find(|(a, _)| fold(a) == f) {
+                    return Ok(Value::Text(o.clone()));
+                }
+                Err(format!("{s:?} is not one of {:?}", self.options))
             }
             (FieldKind::Text, v @ Value::Text(_)) => Ok(v),
             (kind, v) => Err(format!("expected {kind:?}, found {v}")),
@@ -156,6 +183,13 @@ impl Registry {
                 if field.kind == FieldKind::Enum && field.options.is_empty() {
                     return Err(Error::new(format!("{path}: enum without options")));
                 }
+                for (alias, option) in &field.value_aliases {
+                    if field.kind != FieldKind::Enum || !field.options.contains(option) {
+                        return Err(Error::new(format!(
+                            "{path}: value alias {alias:?} names {option:?}, which is not an option"
+                        )));
+                    }
+                }
                 for name in std::iter::once(&path).chain(&field.aliases) {
                     if index.insert(name.clone(), fields.len()).is_some() {
                         return Err(Error::new(format!("{name} is declared twice")));
@@ -193,6 +227,23 @@ mod tests {
         let f = r.get("notrump.one_nt.range_min").unwrap();
         assert_eq!(f.kind, FieldKind::Int);
         assert_eq!(f.default, Some(Value::Int(15)));
+    }
+
+    #[test]
+    fn enum_values_match_aliases_and_other_spellings() {
+        let f = registry().get("competitive.vs_1nt_strong.system").unwrap();
+        let t = |s: &str| f.normalize(Value::Text(s.into()));
+        let v = |s: &str| Ok(Value::Text(s.into()));
+        assert_eq!(t("meckwell"), v("meckwell"));
+        assert_eq!(t("Meckwell"), v("meckwell"));
+        assert_eq!(t("Multi-Landy"), v("multi_landy"));
+        assert_eq!(t("DONT"), v("dont"));
+        assert_eq!(t("Modified Cappelletti"), v("modified_cappelletti"));
+        assert_eq!(t("Hamilton"), v("cappelletti"));
+        assert!(t("Suction").is_err());
+        // The older path still loads into the field.
+        let old = registry().get("competitive.defense_vs_strong_nt.convention").unwrap();
+        assert_eq!(old.path, "competitive.vs_1nt_strong.system");
     }
 
     #[test]
