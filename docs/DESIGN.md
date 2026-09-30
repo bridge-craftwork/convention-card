@@ -65,6 +65,38 @@ field is never renamed without adding the old path as an alias, and fields a
 reader does not know are kept and written back untouched, as the Rust crate
 already does.
 
+#### Conventions written as text
+
+Much of what players type into a card's text boxes names a convention or
+treatment the card has no checkbox for. Rick's partnership cards (2026-09-30)
+name Exclusion Blackwood, Minorwood, Spiral, Sandwich NT, SOS redouble, Kokish,
+Mini-Roman, Suction, Ingberman and more, all in notes. Those are agreements that
+differ between partners, that a bot needs, and that a lesson teaches, so the
+spec treats them as agreements:
+
+1. **Every convention is a field, checkbox or not.** A field can carry
+   **names**: the ways people write it ("Exclusion Blackwood", "Exclusion
+   RKC"). The field list is the convention vocabulary, not the ACBL card's
+   layout; the format maps decide what gets a box on a printed card, and the
+   rest prints in the text areas.
+2. **The library and the crate recognise names in text.** "Exclusion
+   Blackwood, 5NT Pick-a-slam" yields two conventions. The typed text is never
+   rewritten.
+3. **A person confirms before a match becomes an agreement.** The editor
+   suggests ("This mentions Exclusion Blackwood: add it?"); confirming sets the
+   field and keeps the text. Importers may apply matches and report them, as
+   they report other guesses. A bot reads fields, never raw matches: a wrong
+   guess there changes its bidding.
+4. **Text that matches nothing is the vocabulary's to-do list.** Unmatched
+   phrases from real cards and imports show which conventions to add next.
+
+The same names resolve enum values that importers write as prose ("Strong -
+Suction" for the defence to 1NT).
+
+A card never states which skill a convention belongs to; the spec does. Some
+saved cards carry `<path>.skill_path` values; they are kept and written back
+like any unknown field, but nothing new writes them.
+
 ### 2. The JavaScript library (repo root + `js/`)
 
 Reads and writes cards against the spec, and holds the converters: BBO,
