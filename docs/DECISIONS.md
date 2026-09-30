@@ -4,6 +4,14 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: shared cards** (Rick Wilson)
+
+18. **Partners share a saved card, as on BBO and bridgeodex.** Members have a
+    role (owner, editor, viewer) and join by an invitation link that expires
+    after 30 days. Bridge Classroom holds the members and the API; the merge
+    of two partners' edits is a library function here. See DESIGN.md,
+    "Shared cards".
+
 **2026-09-30: one file per convention** (Rick Wilson)
 
 17. **Each standard convention or skill is its own file,**

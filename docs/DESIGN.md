@@ -275,6 +275,35 @@ Know* and *25 More Bridge Conventions You Should Know*, which on Advancing in
 Bridge's scale cover roughly 3–6 and 5–9. Each value is our own judgment, informed by these; the
 spec does not reproduce another source's list.
 
+## Shared cards
+
+On BBO and bridgeodex, partners share one card and either can edit it. Bridge
+Classroom's saved cards will work the same way. Storage and membership stay
+in Bridge Classroom (DECISIONS, 7); the API side is
+[Bridge-Classroom #436](https://github.com/bridge-craftwork/Bridge-Classroom/issues/436).
+
+- **Membership, not ownership.** A card has members, each with a role:
+  owner, editor or viewer. Bridge Classroom's `user_convention_cards` table
+  already links several users to one card; it gains the role, and the read
+  and write checks look at membership instead of only `owner_id`.
+- **Partners join by an invitation link.** The owner makes a link that
+  carries a one-off token and a role (editor or viewer). Whoever opens it
+  while signed in joins the card with that role. That identifies the partner
+  without looking anyone up: the partner is whoever accepts. Links expire
+  after 30 days, and the owner can revoke a link or remove a member.
+- **Two partners editing at once.** A save names the version it started
+  from; if the card has changed since, it is refused, and the editor merges.
+  A card is paths and values, so a three-way merge (the version both started
+  from, mine, theirs) applies changes to different fields by itself; only a
+  field both changed differently needs a person, shown as in the comparison
+  matrix below. The merge is a library function, so it works the same in
+  Bridge Classroom and anywhere else.
+- **History.** Each save is kept with who made it, so partners can see who
+  changed what ("our 1NT range went from 15-17 to 14-16 on Tuesday").
+
+The standalone editor has no account, so it shares only by file or by
+handing the card to Bridge Classroom (DECISIONS, open question 4).
+
 ## Comparing cards
 
 A player with several partners has different agreements with each, and wants a
