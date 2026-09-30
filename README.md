@@ -45,6 +45,7 @@ read them without either library.
 
 - [docs/DESIGN.md](docs/DESIGN.md) — how the pieces fit together, and why.
 - [docs/DECISIONS.md](docs/DECISIONS.md) — what has been decided, and what is still open.
+- [docs/adr/](docs/adr/) — architecture decision records. Start with [ADR-0001](docs/adr/0001-standard-and-namespaced-conventions.md): how conventions are named, and how anyone can publish a new one.
 - [docs/MIGRATION.md](docs/MIGRATION.md) — moving the code here from its current homes.
 
 ## License

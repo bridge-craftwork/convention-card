@@ -57,7 +57,11 @@ Language-neutral files that every other part reads:
   bot's `bbsa-map.toml`. BBO, bridgeodex and the ACBL PDF field maps are tables
   inside JavaScript today and move into data over time, not on day one.
 - **Skills**: the teaching-skill vocabulary (path, display name, level). See
-  [The skill taxonomy](#the-skill-taxonomy).
+  [The skill taxonomy](#the-skill-taxonomy). A convention is a skill that can
+  appear on a card, and this is the **standard list** of them. Conventions
+  outside it are named under their author's own namespace and carried in the
+  card's `other_agreements` list: see
+  [ADR-0001](adr/0001-standard-and-namespaced-conventions.md).
 
 **The interchange format is Bridge Classroom's existing nested `card_data`
 JSON.** Cards already saved in Bridge Classroom must keep loading unchanged. A
@@ -105,8 +109,8 @@ rusty-bidding-bot's crate, moved here with its history: the field registry,
 and `.bbsa` import/export. It has **no built-in vocabulary**: a caller loads one
 at run time, and the crate refuses a card from a different vocabulary. That
 stays. What changes is where the standard vocabulary comes from (this repo's
-`spec/`). How that squares with the bot's decision to keep the vocabulary with
-its rules is the first open question in [DECISIONS.md](DECISIONS.md).
+`spec/`), with namespaced conventions covering anything a rule author adds
+([ADR-0001](adr/0001-standard-and-namespaced-conventions.md)).
 
 ## Accounts and storage: local first
 
