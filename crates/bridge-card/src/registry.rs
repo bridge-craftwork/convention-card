@@ -99,14 +99,20 @@ pub struct FieldDef {
     pub value_aliases: BTreeMap<String, String>,
     /// The teaching skills this field's convention is taught under
     /// (Bridge-Classroom's SkillPath, `bidding_conventions/stayman`):
-    /// `skill = "..."` or a list in `fields.toml`. The known paths are the
-    /// rules' `card/skills.toml` ([`crate::Skills`]).
+    /// `skill = "..."` or a list in `fields.toml`. The first is the
+    /// convention the field belongs to (ADR-0001). The known IDs are
+    /// `conventions.toml` ([`crate::Skills`]).
     #[serde(
         default,
         deserialize_with = "one_or_many",
         skip_serializing_if = "Vec::is_empty"
     )]
     pub skill: Vec<String>,
+    /// How hard the agreement is to learn, 1-10. An extension of a
+    /// convention (Stayman's slam sequences) has a higher level than the
+    /// convention's own, which is the lowest of its fields'.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub level: Option<u8>,
 }
 
 /// A string or a list of strings.
@@ -220,6 +226,9 @@ impl Registry {
                             "{path}: skill {skill:?} is not a skill path (category/name, lower case)"
                         )));
                     }
+                }
+                if field.level.is_some_and(|l| !(1..=10).contains(&l)) {
+                    return Err(Error::new(format!("{path}: level must be 1 to 10")));
                 }
                 for name in std::iter::once(&path).chain(&field.aliases) {
                     if index.insert(name.clone(), fields.len()).is_some() {

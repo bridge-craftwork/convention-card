@@ -51,7 +51,7 @@ Copy those helpers and leave the file where it is.
 | `crates/bridge-card/` | 1,872 | `crates/bridge-card/` |
 | `conventions/card/fields.toml` | 529 | `spec/fields.toml` (the starting point for the merged list) |
 | `conventions/card/bbsa-map.toml` | 296 | `spec/formats/bbsa-map.toml` |
-| `conventions/card/skills.toml` | 99 | `spec/skills` (see DECISIONS open question 3) |
+| `conventions/card/skills.toml` | 99 | `spec/conventions.toml` (DECISIONS decision 14) |
 
 The bot's other crates (`engine`, `bidspec`, `cli`, `compare`, `wasm`) switch
 from the path dependency to a git dependency on this repo.
@@ -82,8 +82,9 @@ Bridge-Classroom.
 ### Phase 1: the spec and the Rust crate
 
 **Under way.** Done: the crate and the vocabulary moved here with history
-(`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/skills.toml`), building
-and passing its tests against `spec/`; all 11 saved Bridge Classroom cards
+(`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/conventions.toml`), building
+and passing its tests against `spec/`; the notrump section merged (levels,
+convention entries, the paths real cards use); all 11 saved Bridge Classroom cards
 (2026-09-30 backup) load and write back without loss.
 
 - Move `crates/bridge-card` and `conventions/card/*.toml` here with history.
