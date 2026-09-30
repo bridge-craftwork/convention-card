@@ -201,48 +201,48 @@
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [two_level]
-"two_clubs.meaning"        = { kind = "enum", label = "2♣ meaning", options = ["very_strong", "strong", "natural", "conventional"], default = "strong", skill = "bidding_conventions/strong_2c" }
+"two_clubs.meaning"        = { kind = "enum", label = "2♣ meaning", options = ["very_strong", "strong", "natural", "conventional"], default = "strong", skill = "bidding_conventions/strong_2c", level = 3 }
 "two_clubs.min_hcp"        = { kind = "int", label = "2♣ minimum HCP", min = 0, max = 30 }
 "two_clubs.min_hcp_str"    = { kind = "text", label = "2♣ minimum (text)" }
 "two_clubs.2d_response"    = { kind = "enum", label = "2♣–2♦ response", options = ["negative", "waiting", "steps"] }
 "two_clubs.2h_response"    = { kind = "enum", label = "2♣–2♥ response", options = ["negative", "steps"] }
-"two_clubs.kokish"         = { kind = "bool", label = "Kokish relay" }
-"two_clubs.parrish_bust"   = { kind = "bool", label = "Parrish 2♥ bust" }
-"two_diamonds.meaning"     = { kind = "enum", label = "2♦ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s" }
+"two_clubs.kokish"         = { kind = "bool", label = "Kokish relay", skill = "bidding_conventions/kokish", level = 8 }
+"two_clubs.parrish_bust"   = { kind = "bool", label = "Parrish 2♥ bust", skill = "bidding_conventions/two_heart_bust", level = 7 }
+"two_diamonds.meaning"     = { kind = "enum", label = "2♦ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 }
 "two_diamonds.min_hcp"     = { kind = "int", label = "2♦ range: minimum", min = 0, max = 30 }
 "two_diamonds.max_hcp"     = { kind = "int", label = "2♦ range: maximum", min = 0, max = 30 }
 "two_diamonds.min_length"  = { kind = "int", label = "2♦ minimum length", min = 4, max = 8 }
 "two_diamonds.two_suited"  = { kind = "bool", label = "2♦ two-suited" }
 "two_diamonds.new_suit_nf" = { kind = "bool", label = "2♦: new suit non-forcing" }
 "two_diamonds.rebids_2nt"  = { kind = "text", label = "2♦: 2NT response", aliases = ["two_level.two_diamonds.rebid_2nt"] }
-"two_diamonds.multi"       = { kind = "bool", label = "Multi 2♦" }
-"two_diamonds.mini_roman"  = { kind = "bool", label = "Mini-Roman 2♦" }
-"two_diamonds.reverse_flannery" = { kind = "bool", label = "Reverse Flannery 2♦" }
-"two_hearts.meaning"       = { kind = "enum", label = "2♥ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s" }
+"two_diamonds.multi"       = { kind = "bool", label = "Multi 2♦", skill = "bidding_conventions/multi_2d", level = 8 }
+"two_diamonds.mini_roman"  = { kind = "bool", label = "Mini-Roman 2♦", skill = "bidding_conventions/mini_roman_2d", level = 7 }
+"two_diamonds.reverse_flannery" = { kind = "bool", label = "Reverse Flannery 2♦", skill = "bidding_conventions/reverse_flannery", level = 8 }
+"two_hearts.meaning"       = { kind = "enum", label = "2♥ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 }
 "two_hearts.min_hcp"       = { kind = "int", label = "2♥ range: minimum", min = 0, max = 30 }
 "two_hearts.max_hcp"       = { kind = "int", label = "2♥ range: maximum", min = 0, max = 30 }
 "two_hearts.min_length"    = { kind = "int", label = "2♥ minimum length", min = 4, max = 8 }
 "two_hearts.two_suited"    = { kind = "bool", label = "2♥ two-suited" }
 "two_hearts.new_suit_nf"   = { kind = "bool", label = "2♥: new suit non-forcing" }
 "two_hearts.rebids_2nt"    = { kind = "text", label = "2♥: 2NT response", aliases = ["two_level.two_hearts.rebid_2nt"] }
-"two_spades.meaning"       = { kind = "enum", label = "2♠ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s" }
+"two_spades.meaning"       = { kind = "enum", label = "2♠ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 }
 "two_spades.min_hcp"       = { kind = "int", label = "2♠ range: minimum", min = 0, max = 30 }
 "two_spades.max_hcp"       = { kind = "int", label = "2♠ range: maximum", min = 0, max = 30 }
 "two_spades.min_length"    = { kind = "int", label = "2♠ minimum length", min = 4, max = 8 }
 "two_spades.two_suited"    = { kind = "bool", label = "2♠ two-suited" }
 "two_spades.new_suit_nf"   = { kind = "bool", label = "2♠: new suit non-forcing" }
 "two_spades.rebids_2nt"    = { kind = "text", label = "2♠: 2NT response", aliases = ["two_level.two_spades.rebid_2nt"] }
-"ogust.play"               = { kind = "bool", label = "Ogust", skill = "bidding_conventions/ogust" }
-"weak_two_2nt_response"    = { kind = "enum", label = "Weak two: 2NT response", options = ["feature", "ogust"], default = "feature", desc = "feature: opener bids a side ace or king with a maximum. ogust: 3♣/3♦/3♥/3♠ show minimum/maximum and suit quality", skill = "bidding_conventions/ogust" }
-"mccabe.play"              = { kind = "bool", label = "McCabe adjunct" }
-"flannery.play"            = { kind = "bool", label = "Flannery 2♦" }
-"reverse_flannery.two_h"   = { kind = "bool", label = "Reverse Flannery 2♥" }
-"reverse_flannery.two_s"   = { kind = "bool", label = "Reverse Flannery 2♠" }
-"benjamin.play"            = { kind = "bool", label = "Benjamin 2♦" }
-"french_2d.play"           = { kind = "bool", label = "French 2♦" }
-"precision_2d.play"        = { kind = "bool", label = "Precision 2♦" }
-"polish_two_suiters.play"  = { kind = "bool", label = "Polish two-suiters" }
-"wilkosz.play"             = { kind = "bool", label = "Wilkosz 2♦" }
+"ogust.play"               = { kind = "bool", label = "Ogust", skill = "bidding_conventions/ogust", level = 5 }
+"weak_two_2nt_response"    = { kind = "enum", label = "Weak two: 2NT response", options = ["feature", "ogust"], default = "feature", desc = "feature: opener bids a side ace or king with a maximum. ogust: 3♣/3♦/3♥/3♠ show minimum/maximum and suit quality", skill = "bidding_conventions/ogust", level = 5 }
+"mccabe.play"              = { kind = "bool", label = "McCabe adjunct", skill = "bidding_conventions/mccabe", level = 8 }
+"flannery.play"            = { kind = "bool", label = "Flannery 2♦", skill = "bidding_conventions/flannery", level = 6 }
+"reverse_flannery.two_h"   = { kind = "bool", label = "Reverse Flannery 2♥", skill = "bidding_conventions/reverse_flannery", level = 8 }
+"reverse_flannery.two_s"   = { kind = "bool", label = "Reverse Flannery 2♠", skill = "bidding_conventions/reverse_flannery", level = 8 }
+"benjamin.play"            = { kind = "bool", label = "Benjamin 2♦", skill = "bidding_conventions/benjamin_2d", level = 8 }
+"french_2d.play"           = { kind = "bool", label = "French 2♦", skill = "bidding_conventions/french_2d", level = 8 }
+"precision_2d.play"        = { kind = "bool", label = "Precision 2♦", skill = "bidding_conventions/precision_2d", level = 7 }
+"polish_two_suiters.play"  = { kind = "bool", label = "Polish two-suiters", skill = "bidding_conventions/polish_two_suiters", level = 9 }
+"wilkosz.play"             = { kind = "bool", label = "Wilkosz 2♦", skill = "bidding_conventions/wilkosz", level = 9 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "two_clubs.max_hcp"        = { kind = "text", label = "2♣ maximum (text)", desc = "Bridge-Classroom keeps it as written (BBO's 2CMax)" }
 "two_clubs.description"    = { kind = "text", label = "2♣: describe", note = true }
@@ -265,8 +265,8 @@
 "three_level_response"     = { kind = "text", label = "3-level responses" }
 "four_level_style"         = { kind = "text", label = "4-level style" }
 "four_level_response"      = { kind = "text", label = "4-level responses" }
-"transfer_4_minor"         = { kind = "bool", label = "4♣/4♦ transfer to major" }
-"namyats.play"             = { kind = "bool", label = "Namyats" }
+"transfer_4_minor"         = { kind = "bool", label = "4♣/4♦ transfer to major", skill = "bidding_conventions/namyats", level = 6 }
+"namyats.play"             = { kind = "bool", label = "Namyats", skill = "bidding_conventions/namyats", level = 6 }
 
 [slam]
 "blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood" }
