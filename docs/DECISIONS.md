@@ -4,6 +4,17 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: the field vocabulary lives here** (Rick Wilson; open question 1)
+
+The standard vocabulary (`spec/fields.toml`, `spec/formats/bbsa-map.toml`) lives
+in this repo's `spec/`, and a new field is a pull request here. This reverses
+rusty-bidding-bot's 2026-09-28 decision that the vocabulary belongs to the rules:
+the editor, the converters and Bridge Classroom need the same list, and none of
+them has anything to do with the bot's rules. Rule sets name the vocabulary
+version they were checked against. The crate keeps loading its vocabulary at run
+time, so a rule set can still add fields only a bot uses (such as
+`general.style`) on top of the standard list.
+
 **2026-09-30: the repo, and its terms** (Rick Wilson)
 
 1. **Its own repo, `bridge-craftwork/convention-card`**, public.
@@ -27,16 +38,7 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Open
 
-**1. Who owns the field vocabulary: this repo, or the bidding rules?**
-rusty-bidding-bot decided on 2026-09-28 that the card vocabulary (`fields.toml`,
-`bbsa-map.toml`) "belongs to the rules, not to the engine", so a rule author can
-add a field without an engine release. The editor, the converters and Bridge
-Classroom need the same list, though, and none of them has anything to do with
-the bot's rules.
-*Recommendation:* the standard vocabulary lives here. Rule sets name the
-vocabulary version they were checked against, and a new field is a pull request
-here. The crate keeps loading its vocabulary at run time, so a rule set can still
-bring extra fields if that turns out to be needed.
+**1. Who owns the field vocabulary.** Decided 2026-09-30; see above.
 
 **2. Reconciling the field lists.** There are two lists (the bot's
 `fields.toml` and Bridge Classroom's `conventionCatalog.js`), and Bridge
