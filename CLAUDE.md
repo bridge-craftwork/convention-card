@@ -12,9 +12,10 @@ maps, the skill vocabulary), a **JavaScript library** (converters, PDF), the
 the ADRs in [docs/adr/](docs/adr/). ADR-0001 (standard vs namespaced convention
 IDs) shapes every tool that names a convention.
 [docs/MIGRATION.md](docs/MIGRATION.md) tracks the move from Bridge-Classroom and
-rusty-bidding-bot. **As of 2026-09-30 nothing has moved yet**: the code still
-lives in those repos, and Phase 0 (finishing the PDF legibility work in
-Bridge-Classroom) comes first.
+rusty-bidding-bot. **As of 2026-09-30**, Phase 0 is done (Bridge-Classroom
+#434) and Phase 1 is under way: `crates/bridge-card` and `spec/` have moved here
+with their history; the editor, the JS library and the bot's switch-over have
+not.
 
 ## Ground rules
 

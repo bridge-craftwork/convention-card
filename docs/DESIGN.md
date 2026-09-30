@@ -69,6 +69,39 @@ field is never renamed without adding the old path as an alias, and fields a
 reader does not know are kept and written back untouched, as the Rust crate
 already does.
 
+#### Conventions written as text
+
+Much of what players type into a card's text boxes names a convention or
+treatment the card has no checkbox for. Rick's partnership cards (2026-09-30)
+name Exclusion Blackwood, Minorwood, Spiral, Sandwich NT, SOS redouble, Kokish,
+Mini-Roman, Suction, Ingberman and more, all in notes. Those are agreements that
+differ between partners, that a bot needs, and that a lesson teaches, so the
+spec treats them as agreements, named by their convention IDs
+([ADR-0001](adr/0001-standard-and-namespaced-conventions.md)):
+
+1. **A convention carries names**: the ways people write it ("Exclusion
+   Blackwood", "Exclusion RKC"). Standard conventions get them in `spec/`; a
+   namespaced convention's come from its `convention.toml`.
+2. **The library and the crate recognise names in text.** "Exclusion
+   Blackwood, 5NT Pick-a-slam" yields two conventions. The typed text is never
+   rewritten.
+3. **A person confirms before a match becomes an agreement.** The editor
+   suggests ("This mentions Exclusion Blackwood: add it?"). Confirming sets the
+   convention's fixed field if it has one, and otherwise adds an
+   `other_agreements` entry with its ID and the text (ADR-0001 D5); either way
+   the typed text stays. Importers may apply matches and report them, as
+   they report other guesses. A bot reads fields and `other_agreements` IDs,
+   never raw matches: a wrong guess there changes its bidding.
+4. **Text that matches nothing is the vocabulary's to-do list.** Unmatched
+   phrases from real cards and imports show which conventions to add next.
+
+The same names resolve enum values that importers write as prose ("Strong -
+Suction" for the defence to 1NT).
+
+A card never states which skill a convention belongs to; the spec does. Some
+saved cards carry `<path>.skill_path` values; they are kept and written back
+like any unknown field, but nothing new writes them.
+
 ### 2. The JavaScript library (repo root + `js/`)
 
 Reads and writes cards against the spec, and holds the converters: BBO,
@@ -150,6 +183,72 @@ Classroom knowing the inside of any collection:
 card → the fields it switches on → their skills → each collection's manifest
      → boards tagged with those skills → a practice set
 ```
+
+## Difficulty levels
+
+One scale, **1 to 10**, for everything: skills and conventions, bidding and
+cardplay. A level says how hard a thing is to learn, which is the same as when
+a partnership might put it on its card. Named bands (for the editor's filter,
+lesson front matter) are ranges of the number, derived, never stored.
+
+**A convention's level is the lowest level at which it is taught.** Its
+extensions are taught later, and they carry their own, higher levels while
+staying part of the same convention:
+
+- **Stayman** is taught early: the invitational and game-forcing sequences,
+  often with Garbage Stayman. Responder's three of the other major, agreeing
+  opener's suit with slam interest, comes later.
+- **Keycard**: the basic responses come early; responding with a void, later.
+- **After interference**: when advancer doubles a Jacoby transfer, completing
+  it shows three-card support or a stopper in the doubled suit, so responder
+  can invite with 2NT. That is more Jacoby, not a new convention.
+
+The model: every field names the **convention** it belongs to, by its ID
+(ADR-0001: `bidding_conventions/stayman`, which is also its skill path), and
+has its own **level**. The convention's level is its base
+field's, the lowest. The editor shows an extension as part of its convention
+("Stayman › slam tries"); a card's difficulty counts it as more of an agreement
+it already has, not as one more convention. Grouping is an attribute, not the
+path: saved cards fix the paths, and they already split one convention across
+sections (`other_conventions.blackwood.*` and `slam.blackwood.*`).
+
+Evidence for the values (2026-09-30): Bridge Classroom's editor levels (67
+conventions) and skill levels (50 skills); Advancing in Bridge's lesson levels
+(1–10, about 490 lessons; lessons before about #338 use an earlier, compressed
+scale); Bridge Master's hand levels (1–5, declarer play); the conventions BBA's
+`.bbsa` files switch; and the three-section ordering ("learn these first",
+"more complicated", "sophisticated stuff") of *25 Bridge Conventions You Should
+Know* and *25 More Bridge Conventions You Should Know*, which on Advancing in
+Bridge's scale cover roughly 3–6 and 5–9. Each value is our own judgment, informed by these; the
+spec does not reproduce another source's list.
+
+## Comparing cards
+
+A player with several partners has different agreements with each, and wants a
+quick reference that flags where they differ: a matrix, one column per card,
+one row per agreement that is not the same on every card. It belongs in the
+library (a pure function over cards and the spec), with a view in the editor
+and a printable version.
+
+A plain field-by-field comparison is too noisy to use. Across Rick's five
+partnership cards (2026-09-30), 165 of the 212 fields set on any card differ.
+Most of the noise comes from things the spec can fix:
+
+- **One agreement, several fields.** Count signals are
+  `carding.suits.standard_count` on one card and
+  `carding.suits.upside_down_count` on another: two rows for one difference.
+  The spec needs a way to say that fields are alternatives to one another (a
+  choice group), so the comparison shows one row: "Count: standard | UDCA".
+- **Unset is not the same as different.** A card imported from a sparser format
+  leaves fields unset that another card fills in. "Not recorded" should look
+  different from a real disagreement.
+- **Same text, different spelling.** "Penalty" and "penalty"; enum values
+  written by importers ("Strong 1NT"). Compare after the spec's normalisation.
+- **References to other fields.** "Same" in the defence to a weak notrump means
+  the defence to a strong one.
+
+Choice groups will also serve a planned difficulty rating for cards: a
+card's load is counted in agreements, not checkboxes.
 
 ## Deployment
 

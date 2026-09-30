@@ -60,6 +60,8 @@ from the path dependency to a git dependency on this repo.
 
 ### Phase 0: land the unfinished work where it is *(in Bridge-Classroom)*
 
+**Done 2026-09-30** (Bridge-Classroom #434).
+
 Don't move code that's mid-change.
 
 - Fix the two bugs found in the Classic PDF export on 2026-09-30, then land the
@@ -78,6 +80,11 @@ letters and no struck-through printed text, and the work is merged in
 Bridge-Classroom.
 
 ### Phase 1: the spec and the Rust crate
+
+**Under way.** Done: the crate and the vocabulary moved here with history
+(`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/skills.toml`), building
+and passing its tests against `spec/`; all 11 saved Bridge Classroom cards
+(2026-09-30 backup) load and write back without loss.
 
 - Move `crates/bridge-card` and `conventions/card/*.toml` here with history.
 - Settle DECISIONS open questions 2–3 (reconciling the field lists, the
