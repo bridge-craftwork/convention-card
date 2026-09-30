@@ -4,6 +4,13 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: the standard list starts large** (Rick Wilson)
+
+15. **Every BBA treatment and every PBS scenario's convention is on the
+    standard list**, since rusty-bidding-bot is to support most of both. This
+    amends ADR-0001's "deliberately small" (Amendment 1); its admission rule,
+    "our tools support it together", stands.
+
 **2026-09-30: the convention and skill list file** (Rick Wilson; open question 3)
 
 14. **TOML is the source.** One entry per standard convention or skill, keyed
