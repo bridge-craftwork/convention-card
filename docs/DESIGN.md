@@ -210,7 +210,10 @@ Evidence for the values (2026-09-30): Bridge Classroom's editor levels (67
 conventions) and skill levels (50 skills); Advancing in Bridge's lesson levels
 (1–10, about 490 lessons; lessons before about #338 use an earlier, compressed
 scale); Bridge Master's hand levels (1–5, declarer play); the conventions BBA's
-`.bbsa` files switch. Each value is our own judgment, informed by these; the
+`.bbsa` files switch; and the three-section ordering ("learn these first",
+"more complicated", "sophisticated stuff") of *25 Bridge Conventions You Should
+Know* and *25 More Bridge Conventions You Should Know*, which on Advancing in
+Bridge's scale cover roughly 3–6 and 5–9. Each value is our own judgment, informed by these; the
 spec does not reproduce another source's list.
 
 ## Comparing cards

@@ -86,10 +86,14 @@ OFL and fine to ship with its licence.)
 machine-readable reference. For this tool the natural content is the spec: every
 field with its path, kind, options and description, generated at build time.
 
-**7. The named level bands.** Five names over 1–10, for example Beginner 1–2,
-Basic 3–4, Intermediate 5–6, Advanced 7–8, Expert 9–10. Bridge Classroom has four
-(`basic` to `expert`) and lesson-studio's Contract 4 uses the same four, so a
-fifth name, or a different split, changes both.
+**7. The named level bands.** Stay with Bridge Classroom's four names for now
+(`basic` to `expert`), though "basic" is not a recognised bridge level; only the
+number is stored, so renaming or re-splitting later changes no data. Proposed
+split, from the evidence in DESIGN.md: basic 1–3 (fundamentals and the first
+conventions), intermediate 4–6 (most of *25 Conventions*), advanced 7–8 (most of
+*25 More Conventions*), expert 9–10 (beyond both). Under it several editor
+levels move down: DONT, Lebensohl, Drury, Jacoby 2NT and splinters are
+"advanced" today and would be intermediate.
 
 **8. What counts as a convention.** Named variants of a convention (Puppet
 Stayman against Stayman, 0314 against 1430) could be extensions of it or
