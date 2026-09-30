@@ -1,0 +1,13 @@
+id = "competitive_bidding/equal_level_conversion"
+name = "Equal level conversion"
+source = "proposed"
+level = 6
+names = ["Equal level conversion", "ELC"]
+summary = """
+After a takeout double and partner's forced response, the doubler's bid of
+another suit at the same level shows a two-suited hand without extra
+strength, rather than a strong one.
+"""
+see = [
+  { title = "Equal Level Conversion", site = "Bridge Bum", url = "https://www.bridgebum.com/equal_level_conversion.php" },
+]

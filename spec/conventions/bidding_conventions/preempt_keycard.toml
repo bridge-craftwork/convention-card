@@ -1,0 +1,12 @@
+id = "bidding_conventions/preempt_keycard"
+name = "Keycard over preempts"
+source = "proposed"
+level = 9
+names = ["Preempt keycard", "Keycard over preempts", "4♣ keycard over a weak two"]
+summary = """
+After partner's preempt, an agreed bid (often 4♣) asks for keycards in
+partner's suit, since 4NT would take the auction too high.
+"""
+see = [
+  { title = "Preempt Keycard", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/578" },
+]

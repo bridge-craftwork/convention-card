@@ -1,0 +1,10 @@
+id = "defense/odd_even_discards"
+name = "Odd-even discards"
+source = "proposed"
+level = 6
+names = ["Odd-even", "Odd/even discards", "Roman discards"]
+summary = """
+A defender's first discard says something by being odd or even: an odd card
+encourages that suit, an even card discourages and its size points to
+another suit.
+"""

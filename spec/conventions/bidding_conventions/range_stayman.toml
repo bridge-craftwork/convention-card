@@ -1,0 +1,14 @@
+id = "bidding_conventions/range_stayman"
+name = "Range Stayman"
+source = "proposed"
+level = 6
+names = ["Range Stayman", "Size ask", "2♠ size ask"]
+summary = """
+Over partner's 1NT, a bid (often 2♠, or 2♣ then 2♠) asks whether opener is
+minimum or maximum, for responder with an invitation to 2NT or a minor-suit
+hand.
+"""
+see = [
+  { title = "NT and Balancing Auctions: Range Stayman", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/560" },
+  { title = "NT Auctions: 2S Size Ask Response", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/522" },
+]

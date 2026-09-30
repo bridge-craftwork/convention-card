@@ -22,13 +22,13 @@
 #   skill    the convention the field belongs to, by its ADR-0001 ID
 #            ("bidding_conventions/stayman"), or a list: the first is the
 #            convention, the rest are skills it is also taught under. The IDs
-#            are in conventions.toml
+#            are the files in conventions/ (one per ID)
 #   level    1-10, how hard the agreement is to learn. A convention's base
-#            fields carry its level (conventions.toml); an extension, such as
+#            fields carry its level (its file in conventions/); an extension, such as
 #            Texas under Jacoby transfers or transfers after a double, carries
 #            its own higher level (docs/DESIGN.md, "Difficulty levels")
 #
-# Adding a convention: add its entry to conventions.toml and its fields here.
+# Adding a convention: add its file to conventions/ and its fields here.
 
 [general]
 "system"                   = { kind = "text", label = "System" }

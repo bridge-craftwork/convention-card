@@ -1,0 +1,13 @@
+id = "bidding_conventions/smolen"
+name = "Smolen"
+source = "proposed"
+level = 4
+names = ["Smolen"]
+summary = """
+After 1NT–2♣–2♦, responder with five cards in one major, four in the other
+and game values jumps to three of the four-card major, so the strong hand
+becomes declarer in a 5-3 fit.
+"""
+see = [
+  { title = "Smolen and 5/5 Majors After a 2NT Opening", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/634" },
+]

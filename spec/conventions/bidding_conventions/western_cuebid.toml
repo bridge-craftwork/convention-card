@@ -1,0 +1,12 @@
+id = "bidding_conventions/western_cuebid"
+name = "Western cue bid"
+source = "proposed"
+level = 4
+names = ["Western cue bid", "Western cuebid", "Asking for a stopper"]
+summary = """
+A cue bid of the opponents' suit when looking for 3NT asks partner to bid
+notrump with a stopper in that suit.
+"""
+see = [
+  { title = "Thinking and Responding: Western Cuebids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/510" },
+]

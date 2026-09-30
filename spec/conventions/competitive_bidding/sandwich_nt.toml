@@ -1,0 +1,12 @@
+id = "competitive_bidding/sandwich_nt"
+name = "Sandwich 1NT"
+source = "proposed"
+level = 7
+names = ["Sandwich NT", "Sandwich 1NT"]
+summary = """
+In the sandwich seat, after the opponents have bid two suits, a 1NT overcall
+shows the two unbid suits rather than a strong balanced hand.
+"""
+see = [
+  { title = "Competitive Bidding: Sandwich NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/194" },
+]

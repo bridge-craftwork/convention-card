@@ -1,0 +1,13 @@
+id = "bidding_conventions/two_over_one"
+name = "2/1 Game Force"
+source = "taxonomy"
+level = 4
+names = ["2/1", "2/1 game force", "two over one", "2 over 1", "2/1 GF"]
+summary = """
+After a one-level opening, responder's new suit at the two level, without
+jumping and by an unpassed hand, forces to game. The auction can then go
+slowly, with room to describe both hands.
+"""
+see = [
+  { title = "2 over 1 Game Forcing: Modern Bridge Standard", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/641" },
+]

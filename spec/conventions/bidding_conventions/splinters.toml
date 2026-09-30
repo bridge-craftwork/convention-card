@@ -1,0 +1,15 @@
+id = "bidding_conventions/splinters"
+name = "Splinters"
+source = "proposed"
+level = 5
+names = ["Splinters", "Splinter", "Splinter bids", "Splinter raise", "Mini-splinters"]
+summary = """
+A double jump in a new suit, by responder or by opener, shows a singleton or
+void there and a fit with game values, so partner can judge slam by how well
+the hands fit.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 11 },
+  { title = "Slam Bidding: Splinter Bids by Responder", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/408" },
+  { title = "Slam Bidding: Splinters by Opener", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/409" },
+]

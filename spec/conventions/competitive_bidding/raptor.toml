@@ -1,0 +1,9 @@
+id = "competitive_bidding/raptor"
+name = "Raptor 1NT"
+source = "proposed"
+level = 8
+names = ["Raptor", "Raptor 1NT"]
+summary = """
+An overcall of 1NT that shows a four-card major and a longer minor, rather
+than a strong balanced hand.
+"""

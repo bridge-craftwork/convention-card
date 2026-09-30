@@ -1,0 +1,13 @@
+id = "bidding_conventions/two_way_drury"
+name = "Two-way Drury"
+source = "proposed"
+level = 6
+names = ["Two-way Drury", "2-way Drury", "Two-way Reverse Drury"]
+summary = """
+Played instead of Drury: a passed hand's 2♣ and 2♦ over partner's third- or
+fourth-seat major both show limit raises, split by trump length (usually 2♣
+three trumps, 2♦ four).
+"""
+see = [
+  { title = "Fits and More: 2-Way Reverse Drury", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/525" },
+]

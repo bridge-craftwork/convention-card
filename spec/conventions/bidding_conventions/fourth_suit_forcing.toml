@@ -1,0 +1,15 @@
+id = "bidding_conventions/fourth_suit_forcing"
+name = "Fourth Suit Forcing"
+source = "taxonomy"
+level = 5
+names = ["Fourth suit forcing", "4th suit forcing", "FSF", "Fourth suit game force"]
+summary = """
+When three suits have been bid, responder's bid of the fourth suit is
+artificial and forcing (for one round, or to game by agreement), asking
+opener to describe the hand further.
+"""
+see = [
+  { title = "Fourth Suit Forcing", site = "Bridge Bum", url = "https://www.bridgebum.com/fourth_suit_forcing.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 21 },
+  { title = "2/1: Bidding the 4th Suit", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/424" },
+]

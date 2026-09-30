@@ -1,0 +1,14 @@
+id = "bidding_conventions/new_minor_forcing"
+name = "New Minor Forcing"
+source = "taxonomy"
+level = 5
+names = ["New minor forcing", "NMF"]
+summary = """
+After opener's 1NT rebid, responder's bid of the unbid minor is artificial
+and forcing, asking opener about three-card support for responder's major or
+a four-card other major.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 22 },
+  { title = "New Minor Forcing Fundamentals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/227" },
+]

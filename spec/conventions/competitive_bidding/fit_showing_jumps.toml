@@ -1,0 +1,13 @@
+id = "competitive_bidding/fit_showing_jumps"
+name = "Fit-showing jumps"
+source = "proposed"
+level = 7
+names = ["Fit-showing jumps", "Fit jumps", "Fit showing jump"]
+summary = """
+In competition, a jump in a new suit shows a good suit there and a fit for
+partner, so partner can judge how the hands fit.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 14 },
+  { title = "Fit-Showing Jumps", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/574" },
+]

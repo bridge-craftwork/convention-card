@@ -1,0 +1,14 @@
+id = "competitive_bidding/rubensohl"
+name = "Rubensohl"
+source = "proposed"
+level = 9
+names = ["Rubensohl", "Transfer Lebensohl"]
+summary = """
+A transfer version of Lebensohl: after they overcall partner's 1NT,
+responder's bids from 2NT up are transfers to the next suit, which lets
+responder show a suit, a stopper or values at a lower level.
+"""
+see = [
+  { title = "Transfer Lebensohl", by = "Larry Cohen", url = "https://www.larryco.com/bridge-articles/transfer-lebensohl" },
+  { title = "NT Bidding: Modern, Transfer, and Modern Transfer Lebensohl", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/548" },
+]

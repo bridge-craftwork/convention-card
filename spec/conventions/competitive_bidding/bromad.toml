@@ -1,0 +1,10 @@
+id = "competitive_bidding/bromad"
+name = "BROMAD"
+source = "proposed"
+level = 8
+names = ["BROMAD", "Bergen raises over a double"]
+summary = """
+Bergen raises used over the opponents' takeout double of partner's major
+(Bergen Raises Over Major Doubles), with the structure adjusted for the
+double.
+"""

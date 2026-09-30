@@ -1,0 +1,9 @@
+id = "defense/lavinthal"
+name = "Lavinthal"
+source = "proposed"
+level = 6
+names = ["Lavinthal", "McKenney", "Suit-preference discards"]
+summary = """
+A discard is suit preference: a high card asks for the higher of the other
+two suits, a low card for the lower.
+"""

@@ -1,0 +1,9 @@
+id = "bidding_conventions/polish_two_suiters"
+name = "Polish two-suiters"
+source = "proposed"
+level = 9
+names = ["Polish two-suiters", "Polish 2♥/2♠"]
+summary = """
+Weak openings at the two level that show two-suited hands, with the second
+suit unknown or limited, as used in Polish Club.
+"""

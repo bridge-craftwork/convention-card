@@ -1,0 +1,15 @@
+id = "competitive_bidding/lead_directing_doubles"
+name = "Lead-directing doubles"
+source = "proposed"
+level = 5
+names = ["Lead-directing double", "Lead directing double", "Lightner"]
+summary = """
+A double of an artificial bid (a cue bid, Stayman, a transfer, a response to
+an ace ask) or of a slam asks partner to lead that suit, or a specific
+unusual suit.
+"""
+see = [
+  { title = "Lead Directing Double", site = "Bridge Bum", url = "https://www.bridgebum.com/lead_directing_double.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 24 },
+  { title = "Lead-Directing Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/467" },
+]

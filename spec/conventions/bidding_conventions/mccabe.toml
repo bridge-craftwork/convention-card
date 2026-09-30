@@ -1,0 +1,14 @@
+id = "bidding_conventions/mccabe"
+name = "McCabe adjunct"
+source = "proposed"
+level = 8
+names = ["McCabe", "McCabe adjunct"]
+summary = """
+After partner's weak two is doubled, responder's new suits and 2NT say what
+to lead rather than show length, so the partnership can compete and direct
+the defence at once.
+"""
+see = [
+  { title = "McCabe Responses to Preempts", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/468" },
+  { title = "Transfer McCabe Responses to Preempts", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/606" },
+]

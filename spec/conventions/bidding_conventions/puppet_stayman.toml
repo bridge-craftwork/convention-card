@@ -1,0 +1,16 @@
+id = "bidding_conventions/puppet_stayman"
+name = "Puppet Stayman"
+source = "proposed"
+level = 7
+names = ["Puppet Stayman", "Puppet", "5-card Stayman", "five-card Stayman"]
+summary = """
+A form of Stayman, usually over 2NT, that finds five-card majors as well as
+four-card ones: 3♣ asks, opener shows a five-card major directly or bids 3♦
+with a four-card major, and responder then bids the major responder does
+not hold.
+"""
+see = [
+  { title = "Puppet Stayman", site = "Bridge Bum", url = "https://www.bridgebum.com/puppet_stayman.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 16 },
+  { title = "NT Auctions: Puppet Stayman and 5-Card Stayman", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/523" },
+]

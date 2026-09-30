@@ -1,0 +1,13 @@
+id = "bidding_conventions/semi_forcing_1nt"
+name = "Semi-forcing 1NT"
+source = "proposed"
+level = 5
+names = ["Semi-forcing 1NT", "Semi-forcing NT", "1NT semi-forcing"]
+summary = """
+Played instead of the forcing 1NT: responder's 1NT over a major is forcing
+only if opener has more than a minimum, so opener may pass with a balanced
+minimum.
+"""
+see = [
+  { title = "2 over 1 Game Forcing: Responder's Rebids after 1NT Semi-Forcing Response", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/375" },
+]

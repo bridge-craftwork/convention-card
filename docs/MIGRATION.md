@@ -51,7 +51,7 @@ Copy those helpers and leave the file where it is.
 | `crates/bridge-card/` | 1,872 | `crates/bridge-card/` |
 | `conventions/card/fields.toml` | 529 | `spec/fields.toml` (the starting point for the merged list) |
 | `conventions/card/bbsa-map.toml` | 296 | `spec/formats/bbsa-map.toml` |
-| `conventions/card/skills.toml` | 99 | `spec/conventions.toml` (DECISIONS decision 14) |
+| `conventions/card/skills.toml` | 99 | `spec/conventions/` (DECISIONS decisions 14, 17) |
 
 The bot's other crates (`engine`, `bidspec`, `cli`, `compare`, `wasm`) switch
 from the path dependency to a git dependency on this repo.
@@ -82,10 +82,10 @@ Bridge-Classroom.
 ### Phase 1: the spec and the Rust crate
 
 **Under way.** Done: the crate and the vocabulary moved here with history
-(`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/conventions.toml`),
+(`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/conventions/`),
 building and passing its tests against `spec/`. The field lists are merged
 section by section (PRs #5, #7–#13): every convention field has a level and
-names its convention, `conventions.toml` has 173 entries with summaries and
+names its convention, `spec/conventions/` has 173 entries with summaries and
 citations, every editor-catalog and importer path resolves, and all 11 saved
 Bridge Classroom cards (2026-09-30 backup) load with no unknown path or invalid
 value and write back without loss. Still to do: choice groups; generating

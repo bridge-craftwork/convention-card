@@ -1,0 +1,9 @@
+id = "competitive_bidding/rodrigue"
+name = "Rodrigue"
+source = "proposed"
+level = 8
+names = ["Rodrigue"]
+summary = """
+After partner's minor and their 1♠, a double shows four hearts, and five or
+more hearts are shown by 2m with 8–10 points or 2♥ with 11 or more.
+"""

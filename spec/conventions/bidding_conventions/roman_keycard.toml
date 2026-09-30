@@ -1,0 +1,14 @@
+id = "bidding_conventions/roman_keycard"
+name = "Roman Keycard"
+source = "taxonomy"
+level = 4
+names = ["RKCB", "Roman Keycard", "Roman Key Card Blackwood", "Keycard", "1430", "0314"]
+summary = """
+4NT asks for five keycards, the four aces and the trump king. 1430 answers
+5♣ one or four, 5♦ three or none, 5♥ two without the trump queen, 5♠ two
+with it; 0314 swaps 5♣ and 5♦. The next step asks for the trump queen.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 9 },
+  { title = "Slam Bidding: 1430 Keycard Blackwood", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/403" },
+]

@@ -1,0 +1,12 @@
+id = "competitive_bidding/cappelletti"
+name = "Cappelletti over 1NT"
+source = "proposed"
+level = 5
+names = ["Cappelletti", "Hamilton", "Pottage"]
+summary = """
+Over their 1NT: double is for penalty, 2♣ shows a one-suited hand, 2♦ both
+majors, 2♥ and 2♠ that major and a minor, 2NT both minors.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 1 },
+]

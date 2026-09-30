@@ -1,0 +1,13 @@
+id = "bidding_conventions/forcing_1nt"
+name = "Forcing 1NT"
+source = "proposed"
+level = 4
+names = ["Forcing 1NT", "Forcing NT", "1NT forcing", "1NT forcing response"]
+summary = """
+Over partner's 1♥ or 1♠, responder's 1NT is forcing for one round, covering
+a wide range of hands including invitational ones; opener must bid again, on
+a three-card minor if need be.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 19 },
+]

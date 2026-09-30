@@ -1,0 +1,12 @@
+id = "bidding_conventions/soloway"
+name = "Soloway jump shifts"
+source = "proposed"
+level = 8
+names = ["Soloway", "Soloway jump shifts"]
+summary = """
+Responder's jump shifts are strong and describe the hand by type: a one-
+suiter, a fit for opener, or a balanced hand, as GIB plays them.
+"""
+see = [
+  { title = "Soloway Jump Shift", site = "BBO GIB system notes", url = "https://www.bridgebase.com/doc/gib_system_notes.php#Soloway_Jump_Shift" },
+]

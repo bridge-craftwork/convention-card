@@ -1,0 +1,13 @@
+id = "bidding_conventions/minor_suit_stayman"
+name = "Minor Suit Stayman"
+source = "proposed"
+level = 6
+names = ["Minor Suit Stayman", "MSS", "2♠ Minor Suit Stayman"]
+summary = """
+Over partner's 1NT (or 2NT), a bid, usually 2♠, asks opener for a four-card
+minor, for responder with both minors and slam interest or a hand looking
+for a minor-suit game.
+"""
+see = [
+  { title = "Minor Suit Stayman", site = "Bridge Bum", url = "https://www.bridgebum.com/minor_suit_stayman.php" },
+]

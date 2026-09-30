@@ -1,0 +1,4 @@
+id = "declarer_play/suit_establishment"
+name = "Suit Establishment"
+source = "taxonomy"
+level = 2

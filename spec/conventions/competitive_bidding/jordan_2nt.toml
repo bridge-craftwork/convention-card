@@ -1,0 +1,12 @@
+id = "competitive_bidding/jordan_2nt"
+name = "Jordan 2NT"
+source = "proposed"
+level = 5
+names = ["Jordan", "Jordan 2NT", "Truscott", "Jordan Truscott 2NT", "Dormer"]
+summary = """
+After partner's opening is doubled for takeout, responder's 2NT shows a
+limit raise or better in partner's suit, leaving the direct raises weak.
+"""
+see = [
+  { title = "Jordan 2NT", site = "Bridge Bum", url = "https://www.bridgebum.com/jordan_2nt.php" },
+]

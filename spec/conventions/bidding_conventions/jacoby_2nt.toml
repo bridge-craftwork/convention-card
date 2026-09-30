@@ -1,0 +1,14 @@
+id = "bidding_conventions/jacoby_2nt"
+name = "Jacoby 2NT"
+source = "proposed"
+level = 4
+names = ["Jacoby 2NT", "Jacoby 2N", "Jacoby"]
+summary = """
+Over partner's 1♥ or 1♠, responder's 2NT shows four or more trumps and game-
+forcing values. Opener's rebid describes the hand: a short suit at the three
+level, a good second suit at the four level, or strength by 3M, 3NT or 4M.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 10 },
+  { title = "Slam Bidding: Jacoby 2NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/407" },
+]

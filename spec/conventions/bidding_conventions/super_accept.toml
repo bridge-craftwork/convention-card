@@ -1,0 +1,13 @@
+id = "bidding_conventions/super_accept"
+name = "Super-Accepting a Transfer"
+source = "proposed"
+level = 5
+names = ["super-accept", "super accept", "superaccept", "super-acceptance"]
+summary = """
+After partner's transfer over 1NT, opener with four-card support and a
+maximum bids above the two-level completion to say so, and responder can bid
+a thin game.
+"""
+see = [
+  { title = "NT Auctions: Superaccepting Jacoby Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/518" },
+]

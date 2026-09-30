@@ -1,0 +1,13 @@
+id = "competitive_bidding/thrump_double"
+name = "Thrump double"
+source = "proposed"
+level = 8
+names = ["Thrump double", "Thrump X", "Bergen Thrump"]
+summary = """
+After partner opens and the opponents preempt at the three level,
+responder's double asks opener to bid 3NT with a stopper, for a hand with
+values and no fit or long suit.
+"""
+see = [
+  { title = "Thrump Double", site = "Bridge Bum", url = "https://www.bridgebum.com/thrump_double.php" },
+]

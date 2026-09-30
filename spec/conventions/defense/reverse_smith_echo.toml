@@ -1,0 +1,12 @@
+id = "defense/reverse_smith_echo"
+name = "Reverse Smith echo"
+source = "proposed"
+level = 8
+names = ["Reverse Smith", "Reverse Smith echo"]
+summary = """
+Played instead of the Smith echo: on declarer's first suit, a defender's
+high-low says they did not like partner's opening lead.
+"""
+see = [
+  { title = "Defensive Carding: Smith Echo (Reverse)", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/475" },
+]

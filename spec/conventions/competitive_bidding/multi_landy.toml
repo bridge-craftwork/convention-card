@@ -1,0 +1,13 @@
+id = "competitive_bidding/multi_landy"
+name = "Landy and Multi-Landy over 1NT"
+source = "proposed"
+level = 7
+names = ["Multi-Landy", "Multi Landy", "Woolsey"]
+summary = """
+Over their 1NT: double shows a four-card major and a longer minor, 2♣ both
+majors, 2♦ one long major, and 2♥ and 2♠ that major with a minor.
+"""
+see = [
+  { title = "Multi-Landy", site = "Bridge Bum", url = "https://www.bridgebum.com/multi_landy.php" },
+  { title = "NT Bidding: Woolsey", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/542" },
+]

@@ -1,0 +1,13 @@
+id = "defense/rusinow_leads"
+name = "Rusinow leads"
+source = "proposed"
+level = 8
+names = ["Rusinow", "Rusinow leads"]
+summary = """
+Played instead of standard honour leads: from touching honours lead the
+second highest (the king from KQ, the queen from QJ), usually only at trick
+one against suit contracts.
+"""
+see = [
+  { title = "Rusinow Opening Leads", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/276" },
+]

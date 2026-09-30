@@ -1,0 +1,8 @@
+id = "competitive_bidding/landy"
+name = "Landy"
+source = "proposed"
+level = 4
+names = ["Landy"]
+summary = """
+Over their 1NT, 2♣ shows both majors; other overcalls are natural.
+"""

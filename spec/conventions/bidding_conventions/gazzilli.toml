@@ -1,0 +1,13 @@
+id = "bidding_conventions/gazzilli"
+name = "Gazzilli"
+source = "proposed"
+level = 9
+names = ["Gazzilli"]
+summary = """
+After 1♥ or 1♠ and a 1NT response, opener's 2♣ is artificial: either natural
+clubs or any strong hand. Responder's 2♦ asks, letting opener show strong
+hands at the two level.
+"""
+see = [
+  { title = "Constructive Bidding: Modern Gazzilli", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/488" },
+]

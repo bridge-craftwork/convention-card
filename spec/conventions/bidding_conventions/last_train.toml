@@ -1,0 +1,14 @@
+id = "bidding_conventions/last_train"
+name = "Last Train"
+source = "proposed"
+level = 9
+names = ["Last Train", "Last train to Clarksville"]
+summary = """
+When the only bid left between a fit and game in the agreed major is one
+step below it, that bid is a general slam try rather than showing anything
+in its suit.
+"""
+see = [
+  { title = "Last Train", site = "Wikipedia", url = "https://en.wikipedia.org/wiki/Last_Train_(bridge)" },
+  { title = "Slam Bidding: Last Train Slam Try", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/540" },
+]

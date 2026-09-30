@@ -1,0 +1,12 @@
+id = "bidding_conventions/xyz"
+name = "XYZ"
+source = "proposed"
+level = 9
+names = ["XYZ", "xyz"]
+summary = """
+After any three one-level bids, responder's 2♣ relays to 2♦ and 2♦ is game
+forcing, extending two-way checkback to every such auction.
+"""
+see = [
+  { title = "XYZ", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/587" },
+]

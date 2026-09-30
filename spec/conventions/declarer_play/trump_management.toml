@@ -1,0 +1,4 @@
+id = "declarer_play/trump_management"
+name = "Trump Management"
+source = "taxonomy"
+level = 3

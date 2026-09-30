@@ -1,0 +1,14 @@
+id = "competitive_bidding/unusual_vs_unusual"
+name = "Unusual vs Unusual"
+source = "proposed"
+level = 8
+names = ["Unusual vs Unusual", "Unusual over Unusual", "UvU"]
+summary = """
+After they show two suits with Michaels or the Unusual 2NT, cue bids of
+their suits show hands in the other two suits: one cue bid a raise of
+partner, the other a strong hand in the fourth suit.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 21 },
+  { title = "Unusual vs. Unusual and Unusual vs. Michaels", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/470" },
+]

@@ -1,0 +1,4 @@
+id = "basic_bidding/hand_evaluation"
+name = "Hand Evaluation"
+source = "lessons"
+level = 1

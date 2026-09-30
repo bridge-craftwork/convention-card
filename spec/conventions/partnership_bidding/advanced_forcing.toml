@@ -1,0 +1,4 @@
+id = "partnership_bidding/advanced_forcing"
+name = "Advanced Forcing (Partnership)"
+source = "taxonomy"
+level = 6

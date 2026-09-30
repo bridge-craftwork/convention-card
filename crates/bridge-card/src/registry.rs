@@ -101,7 +101,7 @@ pub struct FieldDef {
     /// (Bridge-Classroom's SkillPath, `bidding_conventions/stayman`):
     /// `skill = "..."` or a list in `fields.toml`. The first is the
     /// convention the field belongs to (ADR-0001). The known IDs are
-    /// `conventions.toml` ([`crate::Skills`]).
+    /// `spec/conventions/` ([`crate::Skills`]).
     #[serde(
         default,
         deserialize_with = "one_or_many",

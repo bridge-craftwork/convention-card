@@ -1,0 +1,9 @@
+id = "bidding_conventions/french_2d"
+name = "French 2♦"
+source = "proposed"
+level = 8
+names = ["French 2♦"]
+summary = """
+An opening 2♦ with an artificial meaning in the French style; details vary
+by partnership, so the card's notes say which.
+"""

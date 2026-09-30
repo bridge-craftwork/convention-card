@@ -1,0 +1,10 @@
+id = "bidding_conventions/tislevoll"
+name = "Tislevoll slam try"
+source = "proposed"
+level = 9
+names = ["Tislevoll"]
+summary = """
+After partner opens a major and the opponents preempt, responder's 4♣ and 4♦
+are slam tries in partner's major that show or deny a control in the
+opponents' suit.
+"""

@@ -1,0 +1,15 @@
+id = "bidding_conventions/weak_2s"
+name = "Weak Twos"
+source = "taxonomy"
+level = 3
+names = ["Weak twos", "Weak two", "Weak 2", "Weak two-bids"]
+summary = """
+An opening 2♦, 2♥ or 2♠ shows a good six-card suit and less than an opening
+bid, as a preempt. Responder's 2NT usually asks for more, and a raise
+continues the preempt.
+"""
+see = [
+  { title = "Weak Two", site = "Bridge Bum", url = "https://www.bridgebum.com/weak_two.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 5 },
+  { title = "Modern 2-Level Preemptive Openings", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/411" },
+]

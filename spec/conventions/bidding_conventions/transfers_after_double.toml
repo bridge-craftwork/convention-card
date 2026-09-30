@@ -1,0 +1,14 @@
+id = "bidding_conventions/transfers_after_double"
+name = "Transfers after a takeout double"
+source = "proposed"
+level = 9
+names = ["Transfer responses after a double", "Transfers over a double", "Rubin transfers"]
+summary = """
+After partner's opening is doubled for takeout, responder's new-suit bids
+are transfers to the next suit, so opener can accept or show a fit and
+responder can describe more hands.
+"""
+see = [
+  { title = "1-Major (X) Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/598" },
+  { title = "1-minor (X) Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/599" },
+]

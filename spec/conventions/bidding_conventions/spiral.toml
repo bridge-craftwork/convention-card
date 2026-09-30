@@ -1,0 +1,12 @@
+id = "bidding_conventions/spiral"
+name = "Spiral"
+source = "proposed"
+level = 8
+names = ["Spiral", "Spiral cue bids", "Spiral 2NT"]
+summary = """
+A relay that asks about trump length and quality in steps once a fit is
+found, so the asker can judge game or slam from how good the trumps are.
+"""
+see = [
+  { title = "Fits and More: 2NT Trump Suit Game Try - Spiral", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/529" },
+]

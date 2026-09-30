@@ -1,0 +1,16 @@
+id = "competitive_bidding/michaels_unusual"
+name = "Michaels & Unusual 2NT"
+source = "taxonomy"
+level = 4
+names = ["Michaels", "Michaels cue bid", "Michaels cuebid", "Unusual 2NT", "Unusual notrump", "Unusual NT"]
+summary = """
+Two-suited overcalls. A cue bid of their suit shows five-five in two other
+suits (over a minor, the majors; over a major, the other major and a minor);
+a jump to 2NT shows the two lowest unbid suits.
+"""
+see = [
+  { title = "Michaels Cuebid", site = "Bridge Bum", url = "https://www.bridgebum.com/michaels_cuebid.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 17 },
+  { title = "Competitive Bidding: Michaels Cuebid", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/480" },
+  { title = "Competitive Bidding: Unusual 2NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/481" },
+]

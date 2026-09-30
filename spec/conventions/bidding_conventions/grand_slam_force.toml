@@ -1,0 +1,12 @@
+id = "bidding_conventions/grand_slam_force"
+name = "Grand slam force"
+source = "proposed"
+level = 6
+names = ["Grand slam force", "GSF", "Josephine", "5NT grand slam force"]
+summary = """
+A jump to 5NT (not after a keycard ask) asks partner to bid the grand slam
+in the agreed suit holding two of the top three trump honours.
+"""
+see = [
+  { title = "Grand Slam Force", site = "Bridge Bum", url = "https://www.bridgebum.com/grand_slam_force.php" },
+]

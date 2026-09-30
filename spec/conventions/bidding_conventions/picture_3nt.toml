@@ -1,0 +1,12 @@
+id = "bidding_conventions/picture_3nt"
+name = "1M–3NT picture raise"
+source = "proposed"
+level = 7
+names = ["Picture 3NT", "1M-3NT", "3NT picture bid", "Picture bid"]
+summary = """
+Over partner's 1♥ or 1♠, responder's 3NT is a game-forcing raise with a
+balanced hand and good trumps, better than a direct raise to four.
+"""
+see = [
+  { title = "1-Major – 3NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/628" },
+]

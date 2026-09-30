@@ -1,0 +1,14 @@
+id = "bidding_conventions/walsh"
+name = "Walsh"
+source = "proposed"
+level = 4
+names = ["Walsh", "Walsh style", "Walsh responses"]
+summary = """
+Over partner's 1♣, responder with a weak or moderate hand bids a four-card
+major ahead of longer diamonds, so opener can rebid 1NT with any balanced
+hand knowing no 4-4 major fit is lost.
+"""
+see = [
+  { title = "Walsh Style", by = "Larry Cohen", url = "https://www.larryco.com/bridge-articles/walsh-style" },
+  { title = "Thinking and Responding: Walsh and Extended Walsh", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/511" },
+]

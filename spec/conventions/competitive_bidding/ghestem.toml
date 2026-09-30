@@ -1,0 +1,9 @@
+id = "competitive_bidding/ghestem"
+name = "Ghestem"
+source = "proposed"
+level = 8
+names = ["Ghestem"]
+summary = """
+Played instead of Michaels and the Unusual 2NT: 2NT, a cue bid and a jump
+cue bid each show a specific pair of suits.
+"""

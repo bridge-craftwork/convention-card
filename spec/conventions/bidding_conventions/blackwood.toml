@@ -1,0 +1,12 @@
+id = "bidding_conventions/blackwood"
+name = "Blackwood"
+source = "taxonomy"
+level = 2
+names = ["Blackwood", "Standard Blackwood", "Easley Blackwood", "Plain Blackwood", "4NT ace ask"]
+summary = """
+Once a trump suit is agreed, 4NT asks how many aces partner holds: 5♣ none
+or four, 5♦ one, 5♥ two, 5♠ three. 5NT then asks for kings the same way.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 1 },
+]

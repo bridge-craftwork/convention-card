@@ -1,0 +1,12 @@
+id = "competitive_bidding/crash"
+name = "CRASH"
+source = "proposed"
+level = 9
+names = ["CRASH"]
+summary = """
+A defence to a strong 1♣ opening: overcalls show two-suited hands by colour,
+rank and shape (CRASH: Colour, RAnk, SHape).
+"""
+see = [
+  { title = "CRASH", site = "Bridge Bum", url = "https://www.bridgebum.com/crash.php" },
+]

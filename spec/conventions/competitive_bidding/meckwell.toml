@@ -1,0 +1,14 @@
+id = "competitive_bidding/meckwell"
+name = "Meckwell over 1NT"
+source = "proposed"
+level = 5
+names = ["Meckwell", "Meckwell defense"]
+summary = """
+Over their 1NT: double shows a one-suited minor or both majors; 2♣ and 2♦
+show that minor and a major; 2♥ and 2♠ are natural; 2NT shows both minors.
+"""
+see = [
+  { title = "Meckwell Defense to 1NT", site = "Bridge Bum", url = "https://www.bridgebum.com/meckwell_defense_to_1nt.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 19 },
+  { title = "NT Bidding: DONT and Meckwell", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/541" },
+]

@@ -1,0 +1,15 @@
+id = "bidding_conventions/dopi_ropi"
+name = "DOPI and ROPI"
+source = "proposed"
+level = 7
+names = ["DOPI", "ROPI", "DOPI/ROPI", "D0P1", "R0P1"]
+summary = """
+When the opponents interfere over a keycard ask, double shows no keycards
+(or none of the first step) and pass shows one (DOPI); after they double,
+redouble shows none and pass one (ROPI). The next steps continue.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 15 },
+  { title = "DOPI and ROPI", site = "ACBL Unit 390", url = "https://www.acblunit390.org/Simon/dopi-ropi.htm" },
+  { title = "Slam Bidding: Dealing with Interference Over Ace-Asking Bids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/536" },
+]

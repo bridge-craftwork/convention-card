@@ -1,0 +1,9 @@
+id = "bidding_conventions/reverse_bergen_raises"
+name = "Reverse Bergen raises"
+source = "proposed"
+level = 6
+names = ["Reverse Bergen"]
+summary = """
+Played instead of Bergen raises: the same four-card raises with the meanings
+of 3♣ and 3♦ swapped.
+"""

@@ -1,0 +1,14 @@
+id = "competitive_bidding/scrambling_2nt"
+name = "Scrambling 2NT"
+source = "proposed"
+level = 7
+names = ["Scrambling 2NT", "Scrambling"]
+summary = """
+In a competitive auction where a takeout double would be natural, advancer's
+2NT asks partner to pick a minor or a two-suited contract, rather than
+showing values.
+"""
+see = [
+  { title = "Scrambling vs Good/Bad 2NT", url = "https://tinyurl.com/Scrambling-vs-Good-Bad-2N" },
+  { title = "Competitive Auctions: Scrambling 2NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/555" },
+]
