@@ -147,6 +147,34 @@ card → the fields it switches on → their skills → each collection's manife
      → boards tagged with those skills → a practice set
 ```
 
+## Comparing cards
+
+A player with several partners has different agreements with each, and wants a
+quick reference that flags where they differ: a matrix, one column per card,
+one row per agreement that is not the same on every card. It belongs in the
+library (a pure function over cards and the spec), with a view in the editor
+and a printable version.
+
+A plain field-by-field comparison is too noisy to use. Across Rick's five
+partnership cards (2026-09-30), 165 of the 212 fields set on any card differ.
+Most of the noise comes from things the spec can fix:
+
+- **One agreement, several fields.** Count signals are
+  `carding.suits.standard_count` on one card and
+  `carding.suits.upside_down_count` on another: two rows for one difference.
+  The spec needs a way to say that fields are alternatives to one another (a
+  choice group), so the comparison shows one row: "Count: standard | UDCA".
+- **Unset is not the same as different.** A card imported from a sparser format
+  leaves fields unset that another card fills in. "Not recorded" should look
+  different from a real disagreement.
+- **Same text, different spelling.** "Penalty" and "penalty"; enum values
+  written by importers ("Strong 1NT"). Compare after the spec's normalisation.
+- **References to other fields.** "Same" in the defence to a weak notrump means
+  the defence to a strong one.
+
+Choice groups will also serve a planned difficulty rating for cards: a
+card's load is counted in agreements, not checkboxes.
+
 ## Deployment
 
 The editor follows the site conventions in `bridge-craftwork-site`:
