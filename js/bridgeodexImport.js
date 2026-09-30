@@ -34,18 +34,32 @@ function suits(text) {
 }
 
 /**
- * Split a bridgeodex range string into a leading integer and an
- * optional trailing qualifier. "14+" → {n: 14, suffix: null},
- * "17 Vul" → {n: 17, suffix: "Vul"}.
+ * Split a bridgeodex range string into a leading integer, an
+ * open-ended marker, and an optional trailing qualifier.
+ * "14+" → {n: 14, plus: true}, "17 Vul" → {n: 17, suffix: "Vul"}.
+ *
+ * The `+` used to be swallowed by the regex and thrown away, so a
+ * "14+ to 17" notrump range exported as a flat "14 to 17" — a
+ * different agreement from the one the partnership recorded. We keep
+ * the number numeric (the editor renders a numeric input) and carry
+ * the qualifier alongside it as `<path>_plus`.
  */
 function parseRange(value) {
-  if (value == null || value === '') return { n: null, suffix: null }
+  if (value == null || value === '') return { n: null, plus: false, suffix: null }
   const s = String(value).trim()
-  const m = s.match(/^([+\-]?\d+)\+?\s*(.*)$/)
-  if (!m) return { n: null, suffix: s }
+  const m = s.match(/^([+\-]?\d+)(\+?)\s*(.*)$/)
+  if (!m) return { n: null, plus: false, suffix: s }
   const n = parseInt(m[1], 10)
-  const suffix = m[2].trim() || null
-  return { n: Number.isFinite(n) ? n : null, suffix }
+  const suffix = m[3].trim() || null
+  return { n: Number.isFinite(n) ? n : null, plus: m[2] === '+', suffix }
+}
+
+/** Write a parsed range onto `obj[key]`, carrying an open-ended `+`
+ *  over to the sibling `<key>_plus` the PDF exporter looks for. */
+function assignRange(obj, key, raw) {
+  const r = parseRange(raw)
+  obj[key] = r.n
+  if (r.plus) obj[`${key}_plus`] = true
 }
 
 function num(value) {
@@ -123,12 +137,16 @@ export function importBridgeodexJson(input) {
   const aMax = parseRange(nt.a_range_max)
   if (aMin.n != null) card_data.notrump.one_nt.range_min = aMin.n
   if (aMax.n != null) card_data.notrump.one_nt.range_max = aMax.n
+  if (aMin.plus) card_data.notrump.one_nt.range_min_plus = true
+  if (aMax.plus) card_data.notrump.one_nt.range_max_plus = true
   card_data.notrump.one_nt.seat_vul = [aMin.suffix, aMax.suffix].filter(Boolean).join(' ').trim() || null
 
   const bMin = parseRange(nt.b_range_min)
   const bMax = parseRange(nt.b_range_max)
   if (bMin.n != null) card_data.notrump.one_nt_alt.range_min = bMin.n
   if (bMax.n != null) card_data.notrump.one_nt_alt.range_max = bMax.n
+  if (bMin.plus) card_data.notrump.one_nt_alt.range_min_plus = true
+  if (bMax.plus) card_data.notrump.one_nt_alt.range_max_plus = true
   card_data.notrump.one_nt_alt.seat_vul = [bMin.suffix, bMax.suffix].filter(Boolean).join(' ').trim() || null
   if (on(nt.b_range_same_resp)) card_data.notrump.one_nt_alt.same_responses = true
 
@@ -381,10 +399,10 @@ export function importBridgeodexJson(input) {
 
   // ─── NT overcalls ─────────────────────────────────────────────
   const no = s.nt_overcalls || {}
-  card_data.nt_overcalls.direct.range_min = parseRange(no.direct_1nt_min).n
-  card_data.nt_overcalls.direct.range_max = parseRange(no.direct_1nt_max).n
-  card_data.nt_overcalls.balance.range_min = parseRange(no.balance_1nt_min).n
-  card_data.nt_overcalls.balance.range_max = parseRange(no.balance_1nt_max).n
+  assignRange(card_data.nt_overcalls.direct,  'range_min', no.direct_1nt_min)
+  assignRange(card_data.nt_overcalls.direct,  'range_max', no.direct_1nt_max)
+  assignRange(card_data.nt_overcalls.balance, 'range_min', no.balance_1nt_min)
+  assignRange(card_data.nt_overcalls.balance, 'range_max', no.balance_1nt_max)
   if (on(no.direct_systems_on))  card_data.nt_overcalls.direct.systems_on = true
   if (on(no.balance_systems_on)) card_data.nt_overcalls.balance.systems_on = true
   if (on(no.jump_2nt_2_lowest_unbid)) card_data.nt_overcalls.jump_2nt_lowest_unbid = true

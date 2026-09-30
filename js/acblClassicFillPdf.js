@@ -16,8 +16,10 @@
  * user clicks Export (no impact on initial page load).
  */
 
-import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFDict, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './conventionCatalog.js'
+import { TEMPLATE_INK } from './acblTemplateInk.js'
 
 // Custom Info-dict key under which we embed the source card_data as
 // JSON, so a generated PDF can be re-imported into the editor with
@@ -29,6 +31,83 @@ const TEMPLATE_URLS = {
   classic: `${BASE}templates/acbl-classic-2023.pdf`,
   new:     `${BASE}templates/acbl-new.pdf`
 }
+
+// ─── Condensed field font ─────────────────────────────────────
+// The ACBL card's own printed text is set in HelveticaLTStd-Cond /
+// -Comp. Its form fields, by contrast, all carry `/Helv 0 Tf` — plain
+// Helvetica at auto-size — so pdf-lib shrinks each value until it fits
+// on ONE line. Measured across the 99 text fields we fill, a typical
+// value landed at 5pt and a long one at 3pt (pdf-lib's floor). Since
+// the fields are width-bound, not height-bound (an ~11pt box would
+// carry ~8pt text), a narrower face converts directly into a larger,
+// more legible one.
+//
+// We can't reuse the template's own condensed font: it's subset-
+// embedded for the printed boilerplate only, and its width table has
+// zero-width entries for `6 7 8 X Y Z z` and most punctuation. Nor can
+// we ship Helvetica Condensed itself (not redistributable). Barlow
+// Condensed is an OFL grotesque of similar proportion, ~102KB, fetched
+// on demand at export time exactly like the template — so it costs
+// nothing on initial page load and only its used glyphs are embedded.
+const NARROW_FONT_URL = `${BASE}fonts/BarlowCondensed-Regular.ttf`
+
+let _cachedNarrowBytes = null
+async function loadNarrowFontBytes() {
+  if (_cachedNarrowBytes) return _cachedNarrowBytes
+  const res = await fetch(NARROW_FONT_URL)
+  if (!res.ok) throw new Error(`Failed to load condensed font (${res.status}) from ${NARROW_FONT_URL}`)
+  _cachedNarrowBytes = await res.arrayBuffer()
+  return _cachedNarrowBytes
+}
+
+// Where Barlow Condensed's letters actually reach, in em: the tallest
+// glyph we print, '(', tops out at 0.763 and the deepest, 'j', drops to
+// −0.208. The font DECLARES an ascent of 1.00 and a descent of −0.20,
+// and pdf-lib lays text out from those declared numbers:
+//
+// - A single line is centred by its ascent alone, ignoring the
+//   descender, so the baseline sits half the declared ascent below the
+//   box's centre. With a 1.00em ascent that dropped every line about a
+//   quarter of its size below true centre, and the tails of g, j, p and
+//   y fell under the box's clip: "Strong" printed as "Strona".
+// - Multiline text is led at 1.2 × (ascent + descent) = 1.44em, 50%
+//   more than the ink needs.
+//
+// useInkMetrics() hands pdf-lib these measured numbers instead, so its
+// own layout centres the real ink and leads lines by what they occupy.
+const NARROW_INK = { ascent: 0.77, descent: 0.21 }
+
+/**
+ * Make pdf-lib lay out `font` by its measured ink (NARROW_INK) rather
+ * than its declared ascent and descent. Every pdf-lib layout call for
+ * this font goes through `heightAtSize`, so overriding it on the
+ * instance is enough:
+ *
+ * - `heightAtSize(size)` is the full ink height, ascent + descent. It
+ *   sets the multiline leading.
+ * - `heightAtSize(size, { descender: false })` is ascent − descent. That
+ *   is not a real height: pdf-lib puts a single line's baseline at
+ *   centre − this / 2, and with this value the ink (from baseline − d to
+ *   baseline + a) lands exactly centred in the box.
+ */
+function useInkMetrics(font) {
+  const { ascent, descent } = NARROW_INK
+  font.heightAtSize = (size, { descender = true } = {}) =>
+    (descender ? ascent + descent : ascent - descent) * size
+}
+
+// The embedded condensed font for a given PDFDocument. buildAcblPdf()
+// embeds it and finalizeForm() needs it again to regenerate appearance
+// streams, and the two are separate calls — so hang it off the doc.
+const NARROW_BY_DOC = new WeakMap()
+
+// Widgets whose rectangle the typography pass enlarged. They must NOT
+// get the white /BG that finalizeForm paints into text fields: that
+// fill is bounded by the widget rect, so on a grown box it erases the
+// printed boilerplate — and, worse, a neighbouring value — under the
+// extra height. Same failure the checkbox exclusion already guards
+// against, just reached from the other direction.
+const GROWN_WIDGETS = new WeakSet()
 
 const _cachedBytes = {}
 async function loadTemplateBytes(templateName = 'classic') {
@@ -64,6 +143,28 @@ async function loadTemplateBytes(templateName = 'classic') {
 // Export from the editor). The "_N" suffixed names are auto-generated
 // by Acrobat when a label is reused; the suffix follows the field
 // creation order in the original PDF design, not strict reading order.
+// ─── Fields the template is missing ───────────────────────────
+// The Classic PDF prints "Lebensohl ☑(____ denies)" but ships no form
+// field in that blank — the underline is ink. We create one, so the
+// qualifier lands where a player reads it AND stays editable like every
+// other value (drawing the text on the page would not). Namespaced so
+// it can't collide with an ACBL field name.
+//
+// Geometry measured off a labelled field-map render of page 1: the blank
+// sits one 12pt row above the Neg. Double field (436.7, 394.2) and a few
+// points left of it.
+// pdf-lib gives a field it creates a white background and a black
+// border unless told otherwise (`'backgroundColor' in options` decides,
+// so the keys must be present). A created field sits over printed art
+// like any other, and that white fill erased whatever it overlapped.
+// finalizeForm decides each field's background; creation stays neutral.
+const CREATED_FIELD_LOOK = { borderWidth: 0, backgroundColor: undefined, borderColor: undefined }
+
+const BC_LEBENSOHL_FIELD = 'bc_lebensohl_denies'
+const ADDED_FIELDS_CLASSIC = [
+  { name: BC_LEBENSOHL_FIELD, page: 0, x: 429.5, y: 405.4, width: 16.5, height: 10.5 },
+]
+
 const FIELD_MAP_CLASSIC = [
   // ─── NAMES ───
   { pdf: 'NAMES', card: 'metadata.partner_names', kind: 'text' },
@@ -105,7 +206,20 @@ const FIELD_MAP_CLASSIC = [
   { pdf: '3d',                                card: 'notrump.responses.3d',         kind: 'text' },
   { pdf: '3h 1',                              card: 'notrump.responses.3h',         kind: 'text' },
   { pdf: '3h 2',                              card: 'notrump.responses.3s',         kind: 'text' },
-  { pdf: 'denies Conventional NT Openings',   card: 'notrump.lebensohl.description', kind: 'text' },
+  // Lebensohl's qualifier goes in the blank we ADD at the printed
+  // "(____ denies)" (see ADDED_FIELDS_CLASSIC). The field the template
+  // *names* `denies Conventional NT Openings` is not that blank — it
+  // sits on the Neg. Double rule below; Acrobat named it after nearby
+  // ink. Verified against a labelled field-map render.
+  { pdf: BC_LEBENSOHL_FIELD, card: 'notrump.lebensohl.description', kind: 'text',
+    // "fast denies" → "fast": the card already prints "denies" beside
+    // the blank, and the slot is ~15pt wide.
+    transform: (v) => String(v).replace(/\s*\bdenies\b\s*\)?\s*$/i, '').trim() || String(v) },
+  // NOTE: `denies Conventional NT Openings` (the Neg. Double blank) is
+  // deliberately left unmapped. `notrump.dbl.negative_desc` is the
+  // obvious candidate but on a real card it reads "at 3-leve or higher"
+  // — 20 characters into a 22pt slot, which lands at 3pt. Needs a
+  // decision on what belongs there before it's worth filling.
   { pdf: 'Other_3',                           card: 'notrump.notes',                kind: 'text' },
 
   // ─── 2NT side panel ───
@@ -819,18 +933,772 @@ function weakTwoMapping(prefix, suitName, maxPrefix = prefix) {
  * `templateName` selects between 'classic' (the 2023 SS1 Rev 4-12 form)
  * and 'new' (the redesigned ACBL form with cleaner field naming).
  */
+// ─── Typography pass ──────────────────────────────────────────
+// Runs after the raw values are in the fields and rewrites how they're
+// typeset: condensed font, wrapped to two lines, and — where there is
+// measurable room — a taller widget rectangle. The card's printed
+// boilerplate is familiar to every player; the hand-entered text and
+// the checkboxes are what make a card *this partnership's* card, so
+// legibility of the fill wins over never touching the surrounding art.
+
+const TYPO = {
+  // Text is laid out to hit this size if it can; we only shrink below
+  // it when the box (after any growth) can't hold the content.
+  // 9pt, not 8 — the template's own auto-size reached 10pt for the
+  // shortest values, and capping lower would have made those *smaller*
+  // than before. Condensed at 9 is still narrower than Helvetica at 8.
+  targetSize: 9,
+  minSize: 4.5,
+  // Absolute floor, only reached when a value is too long for its box
+  // even after growth. Shrinking past `minSize` is ugly, but it is the
+  // only alternative to dropping words — and a card that silently
+  // loses half an agreement is worse than one that's hard to read.
+  hardMinSize: 3,
+  maxSize: 9,
+  // These two MUST mirror pdf-lib's own text-field appearance code
+  // (api/form/appearances.js + api/text/layout.js), because it — not
+  // this module — performs the final layout. It insets the widget rect
+  // by `borderWidth + 1` on every side and advances each line by
+  // `font.heightAtSize(size) * 1.2`, where heightAtSize is the ink
+  // height set by useInkMetrics(). The fitting maths below (inkHeight,
+  // linesThatFit, stackHeight) is that layout run in reverse; if they
+  // disagree, pdf-lib puts ink outside the box and its clip path hides
+  // it — the value looks truncated while the text sits right there.
+  pad: 1,
+  lineHeightFactor: 1.2,
+  // Growth is bounded by neighbouring widgets AND by the template's
+  // printed ink (TEMPLATE_INK), so this only has to stop a value from
+  // taking a whole panel to itself.
+  maxGrowthFactor: 3,
+  // Leave this much clear between a grown box and its nearest neighbour
+  // so two adjacent values can't collide.
+  neighbourMargin: 0.5,
+  // How far a box may reach into space with no occupied neighbour at
+  // all — a bound on "there's nothing below me, take the whole card".
+  maxBlankReach: 4,
+  // An underline this far below a field's original bottom edge, or in
+  // its lower half, is the field's OWN line: the value sits on it, so it
+  // never blocks that field. Any other underline does.
+  ownUnderlineReach: 3,
+  // Minimum point gain that justifies breaking a value onto a second
+  // line (see the growth decision below).
+  minGainForExtraLine: 2,
+  // Clear space kept between the two ink lines of a split row.
+  splitGap: 1,
+  // Gain required to split a row into two stacked single-line boxes.
+  // Lower than minGainForExtraLine because the result reads as two
+  // proper ruled lines rather than a wrapped block straddling a rule,
+  // so it costs the row much less visually.
+  minGainForSplit: 1,
+  // A single line this close to the full usable width counts as
+  // "fills the row" and may be split even without a size gain.
+  fullRowFraction: 0.9,
+  // …but never into lines smaller than this.
+  splitFloorSize: 7,
+  maxLines: 2,
+  // Narrow inline blanks — the "Lebensohl ☑(___ denies)" kind, ~22pt
+  // wide — stay on one line. Wrapping them puts the second line on the
+  // NEXT printed row, where it reads as that row's answer instead of
+  // this one's. A small single line is the lesser evil.
+  minMultilineWidth: 40,
+}
+
+// Fields that are physically two lines on the card but that the map
+// treats as one. The card value is wrapped across the group in order,
+// at a single shared font size, instead of being crammed into the
+// first line and truncated.
+//
+// `notrump.two_nt.three_s_desc`: the 2NT-opening 3♠-response row has a
+// second ruled line underneath (`3s`, unmapped and otherwise unused).
+const SPLIT_GROUPS = {
+  classic: [
+    { card: 'notrump.two_nt.three_s_desc', fields: ['undefined_6', '3s'] },
+  ],
+  new: [],
+}
+
+/**
+ * The template's printed ink, as obstacles for growth.
+ *
+ * Growth could see other form fields, but not the card's printed words,
+ * checkbox squares and section rules: those are page art. So a field
+ * with no widget above it grew straight up into the section heading
+ * ("DEFENSE VS NOTRUMP"), and one whose neighbour was an empty field
+ * grew over that row's printed label ("2♥ Transfer to ♠"). The ink is
+ * measured off the blank template (scripts/measure-acbl-template-ink.mjs)
+ * and blocks exactly like a filled field: nothing may be written over it.
+ * Underlines count as well: growing across another row's line reads as a
+ * strike-through. A field's own underline is exempt (isOwnUnderline).
+ */
+function templateInkBoxes(templateName) {
+  return (TEMPLATE_INK[templateName] || []).map(([page, x, y, w, h, underline]) => ({
+    name: null, ink: true, underline: !!underline, occupied: true, filled: true,
+    page, x, y, w, h, blockY: y, blockH: h,
+  }))
+}
+
+/** Is underline `line` the one `box` is written on? Judged against the
+ *  box's ORIGINAL rectangle, since growth moves its edges. */
+function isOwnUnderline(line, box) {
+  return line.y >= box.origY - TYPO.ownUnderlineReach && line.y <= box.origY + box.origH / 2
+}
+
+/**
+ * Split a cramped value across TWO stacked single-line boxes, creating
+ * the second one, when the row's blank band can hold them.
+ *
+ * This exists because pdf-lib's multiline layout advances 1.2 × the
+ * ink height per line, and starts the first line a full advance below
+ * the top of the box, while a single-line field only needs its own ink.
+ * In a tight band two single lines come out a point or more larger than
+ * one wrapped field. The card's densest rows have about that much room:
+ * measured on the Classic template, the MAJOR OPENING "Other" row has
+ * 15pt of clear space between the Drury row's descenders and the panel
+ * rule beneath it.
+ *
+ * Returns the pair of boxes, or null when the band can't beat what a
+ * single line already achieves.
+ */
+function trySplitIntoTwoLines(pdf, form, boxes, box, value, narrow, currentSize) {
+  const { above, below } = verticalGaps(box, boxes)
+  const bandTop = box.y + box.h + above
+  const bandBottom = box.y - below
+  const band = bandTop - bandBottom
+
+  // Size is set by the INK budget, not by the box budget. pdf-lib
+  // centres a single line in its widget, so a box may be taller than
+  // its glyphs and may overlap its neighbours — only its centre decides
+  // where the line lands. Sizing each box to half the band and then
+  // subtracting padding (the first attempt) threw away ~2pt of the very
+  // space we were trying to use; two 7.5pt lines fit a 15pt band, two
+  // 5.5pt lines is what you get if the padding comes out of the ink.
+  const inkPerLine = (band - TYPO.splitGap) / 2
+  const size = Math.min(TYPO.targetSize, Math.floor((inkPerLine / inkHeight(narrow, 1)) * 4) / 4)
+
+  // Normally a split has to buy size. But a value that fills its row
+  // edge to edge is worth splitting even at parity: two shorter lines
+  // read better than one that runs the full width of the card, and it
+  // matches how the neighbouring block is set. The floor stops that
+  // exception from trading a comfortable single line for two cramped
+  // ones.
+  const fillsRow = narrow.widthOfTextAtSize(value, currentSize) >= usableWidth(box.w) * TYPO.fullRowFraction
+  const worthIt = size >= currentSize + TYPO.minGainForSplit ||
+    (fillsRow && size >= TYPO.splitFloorSize)
+  if (!worthIt) return null
+
+  // Each box is just big enough for its own line; the pair is centred
+  // on the two ink positions, so they may overlap each other and the
+  // rows above and below without the ink colliding.
+  const boxH = inkHeight(narrow, size) + TYPO.pad * 2
+  const lowerCentre = bandBottom + band / 4
+  const upperCentre = bandBottom + (band * 3) / 4
+  const lower = { ...box, y: lowerCentre - boxH / 2, h: boxH }
+  const upper = { ...box, y: upperCentre - boxH / 2, h: boxH }
+  const filled = balancedTwoLineBreak(narrow, size, value, usableWidth(box.w))
+  if (!filled) return null
+
+  let second
+  try {
+    second = form.createTextField(`${box.name}__bc_line2`)
+    second.addToPage(pdf.getPages()[box.page], {
+      x: lower.x, y: lower.y, width: lower.w, height: lower.h,
+      ...CREATED_FIELD_LOOK,
+    })
+  } catch (err) {
+    console.warn(`Could not add continuation field for "${box.name}":`, err)
+    return null
+  }
+
+  box.widget.setRectangle({ x: upper.x, y: upper.y, width: upper.w, height: upper.h })
+  GROWN_WIDGETS.add(box.widget.dict)
+  box.y = upper.y; box.h = upper.h
+  for (const w of second.acroField.getWidgets()) GROWN_WIDGETS.add(w.dict)
+  // Register the new box so later fields treat it as occupied.
+  boxes.push({ name: second.getName(), widget: second.acroField.getWidgets()[0], occupied: true,
+    page: box.page, x: lower.x, y: lower.y, w: lower.w, h: lower.h,
+    origY: box.origY, origH: box.origH })
+
+  return { size, upperLine: filled[0], lowerLine: filled[1], second }
+}
+
+/**
+ * Every widget rectangle in the document, flagged with whether it is
+ * an obstacle to growth.
+ *
+ * An EMPTY text field is not an obstacle. This is the whole reason a
+ * box can grow at all on a card as dense as this one: most of the
+ * vertical space around a value belongs to sibling fields the
+ * partnership left blank, and refusing to expand into blank space kept
+ * the crowded entries pinned at 4-5pt. Checkboxes and *filled* text
+ * fields do block — the one thing growth must never do is push one
+ * person's agreement on top of another.
+ */
+function collectWidgetBoxes(pdf, form, templateName) {
+  // Widget → page index. Without this, the private scoresheet on the
+  // back of the card (whose cells occupy the same x/y as the front's
+  // convention fields) reads as a wall of obstacles and nothing on the
+  // front can grow at all.
+  //
+  // Keyed by the widget's *dict*, not its ref: pdf-lib's widget objects
+  // don't carry a `.ref`, so a ref-keyed map silently matches nothing
+  // and every widget reads as page -1 — which compares equal to every
+  // other page -1 and quietly restores the very cross-page confusion
+  // this is meant to remove.
+  const pageOfDict = new Map()
+  pdf.getPages().forEach((page, i) => {
+    const annots = page.node.Annots()
+    if (!annots) return
+    for (let a = 0; a < annots.size(); a++) {
+      try { pageOfDict.set(pdf.context.lookup(annots.get(a)), i) } catch { /* skip */ }
+    }
+  })
+
+  const boxes = []
+  for (const field of form.getFields()) {
+    let widgets
+    try { widgets = field.acroField.getWidgets() } catch { continue }
+    // Only a text field carrying a VALUE blocks growth; empty fields are
+    // free space. Checkboxes block too, but see `inset` below.
+    const isText = field instanceof PDFTextField
+    let filled = false
+    if (isText) {
+      try { filled = !!(field.getText() || '').trim() } catch { filled = false }
+    }
+    const occupied = true
+    // A checkbox widget's rect is much larger than the printed □ it
+    // marks, and it hangs well below its own row's ink — so taking the
+    // rect at face value costs the row beneath it real space. Taking it
+    // at zero, though, is worse: these widgets are the only proxy we
+    // have for where the row ABOVE prints, since that text is page art
+    // and invisible to us. Blocking at 15% in from each edge splits the
+    // difference: the neighbouring row keeps its ink, the row below
+    // recovers most of the overhang.
+    // How much of a neighbour's rectangle actually blocks growth.
+    //
+    // A FILLED text field blocks completely — that's another
+    // partnership agreement and must never be overrun.
+    //
+    // A checkbox or an EMPTY text field blocks at 15% in from each
+    // edge. Both are larger than the ink they represent, so taking
+    // them at face value costs the row beneath them real space. But
+    // taking them at zero is worse: every row of this card carries
+    // printed labels ("3NT:", "to", "Drury ☑:") that are page art and
+    // therefore invisible here, and a neighbouring widget is the only
+    // evidence that row exists. Ignoring empty fields entirely sent the
+    // MINOR "Other" value up onto the "3NT: ___ to ___" line.
+    const inset = filled ? 0 : 0.15
+    for (const w of widgets) {
+      try {
+        const r = w.getRectangle()
+        boxes.push({
+          name: field.getName(), widget: w, occupied, filled,
+          page: pageOfDict.get(w.dict) ?? -1,
+          x: r.x, y: r.y, w: r.width, h: r.height,
+          origY: r.y, origH: r.height,
+          // Blocking extent, which for a checkbox is narrower than the
+          // widget itself (see `inset`).
+          blockY: r.y + r.height * inset,
+          blockH: r.height * (1 - inset * 2),
+        })
+      } catch { /* skip malformed widget */ }
+    }
+  }
+  return boxes.concat(templateInkBoxes(templateName))
+}
+
+/** Vertical clearance above and below `box` before the nearest
+ *  *occupied* widget sharing horizontal extent with it. */
+function verticalGaps(box, boxes, { ignoreEmpty = false } = {}) {
+  let above = Infinity, below = Infinity
+  for (const o of boxes) {
+    if (o === box || !o.occupied || o.page !== box.page) continue
+    if (ignoreEmpty && !o.filled) continue
+    if (o.underline && isOwnUnderline(o, box)) continue
+    const overlap = Math.min(box.x + box.w, o.x + o.w) - Math.max(box.x, o.x)
+    if (overlap <= 2) continue // only genuinely stacked neighbours count
+    // Clamp each direction independently. A neighbour that already
+    // intrudes slightly (the template's checkboxes overhang their rows
+    // by a point or so) closes off *that* direction — it must not also
+    // veto growing the other way, which is what a blanket "don't touch
+    // this box" did, and it was why the tightest fields never grew.
+    // Which side a neighbour is on is decided by its centre, so a
+    // slight overhang doesn't get misfiled as the opposite direction.
+    const oy = o.blockY ?? o.y
+    const oh = o.blockH ?? o.h
+    if (oy + oh / 2 > box.y + box.h / 2) {
+      above = Math.min(above, Math.max(0, oy - (box.y + box.h)))
+    } else {
+      below = Math.min(below, Math.max(0, box.y - (oy + oh)))
+    }
+  }
+  // The template's ink is among `boxes` (templateInkBoxes), so section
+  // rules and headings already bound these gaps. The cap only stops a
+  // box reaching indefinitely into a truly blank area.
+  const cap = TYPO.maxBlankReach
+  const clamp = (gap) => Math.max(0, Math.min(Number.isFinite(gap) ? gap : cap, cap))
+  return { above: clamp(above), below: clamp(below) }
+}
+
+/**
+ * Greedy word-wrap. ALWAYS returns every word — `overflow` reports
+ * whether it needed more than `maxLines` (or a line wider than the box)
+ * so the caller can shrink instead of losing text.
+ */
+function wrapToLines(font, size, text, width, maxLines) {
+  const words = String(text).split(/\s+/).filter(Boolean)
+  const lines = []
+  let line = ''
+  for (const word of words) {
+    const trial = line ? `${line} ${word}` : word
+    if (font.widthOfTextAtSize(trial, size) <= width || !line) {
+      line = trial
+    } else {
+      lines.push(line)
+      line = word
+    }
+  }
+  if (line) lines.push(line)
+  const overflow = lines.length > maxLines ||
+    lines.some(l => font.widthOfTextAtSize(l, size) > width)
+  return { lines, overflow }
+}
+
+/**
+ * Largest size at which `text` fits the box on at most `maxLines`
+ * lines. Falls back through `minSize` to `hardMinSize` before giving
+ * up, and never returns a partial value — the last resort is the
+ * hard floor with every word still present.
+ */
+function fitTextToBox(font, text, width, height, maxLines, { allowHardFloor = false } = {}) {
+  const usableW = usableWidth(width)
+  const floor = allowHardFloor ? TYPO.hardMinSize : TYPO.minSize
+  for (let size = TYPO.targetSize; size >= floor; size -= 0.25) {
+    // pdf-lib routes single-line and multiline fields through different
+    // layout functions. The multiline one advances by a full
+    // `heightAtSize * 1.2` per line — including the first — so applying
+    // it to a single-line field caps an 11pt box at ~6pt, when the
+    // template's own auto-size comfortably reached 10pt there. Only
+    // fields we actually make multiline pay that per-line cost.
+    const oneLineOk = inkHeight(font, size) <= usableHeight(height)
+    const multiCap = linesThatFit(font, size, height)
+    const allowed = Math.min(maxLines, Math.max(multiCap, oneLineOk ? 1 : 0))
+    if (allowed < 1) continue
+    const { lines, overflow } = wrapToLines(font, size, text, usableW, allowed)
+    if (overflow) continue
+    if (lines.length === 1 ? oneLineOk : lines.length <= multiCap) return { size, lines }
+  }
+  return null
+}
+
+const usableWidth = (w) => w - TYPO.pad * 2
+const usableHeight = (h) => h - TYPO.pad * 2
+
+/** Ink height of one line: descender to tallest glyph (see useInkMetrics). */
+const inkHeight = (font, size) => font.heightAtSize(size)
+
+/** How far below its baseline a line's ink reaches. */
+const inkDescent = (size) => NARROW_INK.descent * size
+
+/** pdf-lib's per-line advance for this font at this size. */
+const lineAdvance = (font, size) => font.heightAtSize(size) * TYPO.lineHeightFactor
+
+/**
+ * Widget height a stack of `n` lines needs, padding included. pdf-lib
+ * sets line k's baseline k advances below the top, so the last line's
+ * descender needs room beyond the n-th advance.
+ */
+function stackHeight(font, size, n) {
+  return n * lineAdvance(font, size) + inkDescent(size) + TYPO.pad * 2
+}
+
+/**
+ * Break `text` into exactly two lines of at most `width`, choosing the
+ * break that makes the two lines most equal.
+ *
+ * Greedy wrapping packs the first line full and leaves a stub — "…3 of
+ * major, 13-15 HCP;" over "Schuler Shift". Beyond looking lopsided,
+ * that stub is what a viewer's auto-sizer inflates when it re-renders,
+ * so the two halves of one value end up at visibly different sizes.
+ * Returns null if no break puts both lines within `width`.
+ */
+function balancedTwoLineBreak(font, size, text, width) {
+  const words = String(text).split(/\s+/).filter(Boolean)
+  if (words.length < 2) return null
+  let best = null
+  for (let i = 1; i < words.length; i++) {
+    const a = words.slice(0, i).join(' ')
+    const b = words.slice(i).join(' ')
+    const wa = font.widthOfTextAtSize(a, size)
+    const wb = font.widthOfTextAtSize(b, size)
+    if (wa > width || wb > width) continue
+    const score = Math.abs(wa - wb)
+    if (!best || score < best.score) best = { score, lines: [a, b] }
+  }
+  return best?.lines ?? null
+}
+
+/**
+ * Pour `text` through `boxes` in order, filling each to ITS OWN width
+ * and line capacity before moving to the next. Returns an array of
+ * line-arrays, or null if words are left over (caller drops a size and
+ * retries). With `spill`, the last box keeps the remainder instead.
+ */
+function fillAcrossBoxes(font, size, text, boxes, { spill = false } = {}) {
+  const words = String(text).split(/\s+/).filter(Boolean)
+  const out = boxes.map(() => [])
+  let i = 0
+  for (let b = 0; b < boxes.length && i < words.length; b++) {
+    const width = usableWidth(boxes[b].w)
+    const cap = Math.max(1, linesThatFit(font, size, boxes[b].h))
+    while (out[b].length < cap && i < words.length) {
+      let line = ''
+      while (i < words.length) {
+        const trial = line ? `${line} ${words[i]}` : words[i]
+        if (font.widthOfTextAtSize(trial, size) > width && line) break
+        line = trial
+        i++
+      }
+      out[b].push(line)
+    }
+  }
+  if (i < words.length) {
+    if (!spill) return null
+    out[out.length - 1].push(words.slice(i).join(' '))
+  }
+  return out
+}
+
+/** How many lines of `size` fit in a widget of `height`. */
+function linesThatFit(font, size, height) {
+  return Math.floor((usableHeight(height) - inkDescent(size)) / lineAdvance(font, size))
+}
+
+/** Height needed to hold `text` at `TYPO.targetSize` in `maxLines`. */
+function heightNeeded(font, text, width, maxLines) {
+  const { lines } = wrapToLines(font, TYPO.targetSize, text, usableWidth(width), maxLines)
+  // +1pt of slack: asking for the exact height loses the last line to
+  // floating-point (25.90 of room for a 25.92 stack), and a point of
+  // over-reach costs nothing.
+  return stackHeight(font, TYPO.targetSize, Math.min(lines.length, maxLines)) + 1
+}
+
+/**
+ * Grow a widget's rectangle vertically into free space, taking room
+ * from BELOW first. Text is laid out from the top of the box, so
+ * growing downward leaves the first line exactly where the card's
+ * printed rule expects it and puts the overflow in the blank beneath.
+ * Growing upward instead lifts the whole value off its rule and into
+ * the row above's printed label, which reads as a misplaced fragment.
+ * Returns the new height.
+ */
+function growWidget(box, boxes, wanted, opts) {
+  const cap = box.h * TYPO.maxGrowthFactor
+  const target = Math.min(wanted, cap)
+  let extra = target - box.h
+  if (extra <= 0.25) return box.h
+  const { above, below } = verticalGaps(box, boxes, opts)
+  const upRoom = Math.max(0, above - TYPO.neighbourMargin)
+  const downRoom = Math.max(0, below - TYPO.neighbourMargin)
+  const down = Math.min(extra, downRoom)
+  extra -= down
+  const up = Math.min(extra, upRoom)
+  if (up + down <= 0.25) return box.h
+  const newY = box.y - down
+  const newH = box.h + up + down
+  box.widget.setRectangle({ x: box.x, y: newY, width: box.w, height: newH })
+  GROWN_WIDGETS.add(box.widget.dict)
+  box.y = newY
+  box.h = newH
+  return newH
+}
+
+/**
+ * Re-typeset every text field that carries a value: condensed font,
+ * explicit size, wrapped across up to `TYPO.maxLines` lines, growing
+ * the box where the content needs it and the space exists.
+ */
+function applyTypography(pdf, form, narrow, templateName, cardData) {
+  zeroTextFieldBorders(form)
+  const boxes = collectWidgetBoxes(pdf, form, templateName)
+  const byName = new Map()
+  for (const b of boxes) if (!b.ink && !byName.has(b.name)) byName.set(b.name, b)
+
+  // ── Split groups first: they own more than one box, so the shared
+  // size has to be settled before the single-box pass runs.
+  const handled = new Set()
+  for (const group of SPLIT_GROUPS[templateName] || []) {
+    const text = readPath(cardData, group.card)
+    if (text == null || String(text).trim() === '') continue
+    const groupBoxes = group.fields.map(n => byName.get(n)).filter(Boolean)
+    if (groupBoxes.length < 2) continue
+    const value = sanitizeForWinAnsi(String(text).trim())
+
+    // One size for the whole group, chosen so the text fits across all
+    // of its lines. Each box contributes as many lines as it can hold.
+    // Give each line of the group room for one comfortable line before
+    // settling on a shared size — same reasoning as the single-box
+    // path, just applied per line of the group.
+    for (const b of groupBoxes) {
+      growWidget(b, boxes, stackHeight(narrow, TYPO.targetSize, 1))
+    }
+
+    // Wrap against EACH box's own width, not the narrowest in the
+    // group. The two ruled lines of the 3♠ row differ by ~20% in
+    // length, and wrapping both to the shorter one leaves that much
+    // of the wider line unused while forcing a smaller size.
+    let chosen = null
+    for (let size = TYPO.targetSize; size >= TYPO.hardMinSize; size -= 0.25) {
+      const filled = fillAcrossBoxes(narrow, size, value, groupBoxes)
+      if (filled) { chosen = { size, perBox: filled }; break }
+    }
+    if (!chosen) {
+      chosen = {
+        size: TYPO.hardMinSize,
+        perBox: fillAcrossBoxes(narrow, TYPO.hardMinSize, value, groupBoxes, { spill: true }),
+      }
+    }
+
+    for (let i = 0; i < groupBoxes.length; i++) {
+      const slice = chosen.perBox[i] || []
+      const field = form.getTextField(groupBoxes[i].name)
+      if (slice.length > 1) field.enableMultiline()
+      field.setText(slice.join('\n'))
+      field.setFontSize(chosen.size)
+      handled.add(groupBoxes[i].name)
+    }
+    // Any box beyond the text simply stays empty.
+    for (let i = groupBoxes.length; i < group.fields.length; i++) handled.add(group.fields[i])
+  }
+
+  // ── Everything else: one box, up to TYPO.maxLines lines.
+  for (const field of form.getFields()) {
+    if (!(field instanceof PDFTextField)) continue
+    const name = field.getName()
+    if (handled.has(name)) continue
+    let text
+    try { text = field.getText() } catch { continue }
+    if (!text || !String(text).trim()) continue
+    const box = byName.get(name)
+    if (!box) continue
+
+    const value = String(text).trim()
+    const maxLines = box.w >= TYPO.minMultilineWidth ? TYPO.maxLines : 1
+    let fit = fitTextToBox(narrow, value, box.w, box.h, maxLines)
+
+    // Grow whenever the box as-drawn can't hold the value at the target
+    // size — whether it missed outright or only fits by shrinking.
+    // Height is what buys back size here: these fields are width-bound,
+    // so a second line at 8pt beats one cramped line at 5pt.
+    if (!fit || fit.size < TYPO.targetSize) {
+      const original = { x: box.x, y: box.y, w: box.w, h: box.h }
+      growWidget(box, boxes, heightNeeded(narrow, value, box.w, maxLines))
+      if (box.h > original.h) {
+        const grown = fitTextToBox(narrow, value, box.w, box.h, maxLines)
+        // Keep the taller box only if it actually bought a bigger size.
+        // A width-bound value gains nothing from height, and pdf-lib
+        // centres a single line in its box — so pointless growth just
+        // drops the text below the rule it's supposed to sit on.
+        //
+        // Breaking a value onto a second line straddles the row's ruled
+        // line and makes it look unlike its neighbours, so that costs
+        // more than a fraction of a point: demand a real gain before
+        // trading one clean line for two.
+        const needsMoreLines = fit && grown && grown.lines.length > fit.lines.length
+        const threshold = needsMoreLines ? TYPO.minGainForExtraLine : 0
+        if (grown && (!fit || grown.size >= fit.size + threshold && grown.size > fit.size)) {
+          fit = grown
+        } else {
+          box.widget.setRectangle({ x: original.x, y: original.y, width: original.w, height: original.h })
+          GROWN_WIDGETS.delete(box.widget.dict)
+          box.x = original.x; box.y = original.y; box.w = original.w; box.h = original.h
+        }
+      }
+    }
+    if (!fit) {
+      // The value wants more lines than the box can show. Take every
+      // point of room available before giving any of it back in font
+      // size — a third line the reader can see beats a second line
+      // that pdf-lib lays out below the clip path and hides.
+      growWidget(box, boxes, box.h * TYPO.maxGrowthFactor)
+      fit = fitTextToBox(narrow, value, box.w, box.h, Infinity, { allowHardFloor: true })
+    }
+    // Last resort: an empty neighbour's row normally stays off limits,
+    // because its printed label is ink we can't see. But a value that
+    // has been squeezed under the readable floor is already failing the
+    // reader, and encroaching on a blank row is the lesser harm.
+    if (fit && fit.size < TYPO.minSize) {
+      const before = box.h
+      growWidget(box, boxes, heightNeeded(narrow, value, box.w, maxLines), { ignoreEmpty: true })
+      if (box.h > before) {
+        fit = fitTextToBox(narrow, value, box.w, box.h, maxLines, { allowHardFloor: true }) || fit
+      }
+    }
+    if (!fit) {
+      // Genuinely impossible (a single unbreakable string wider than
+      // the box at 3pt). Emit it at the floor on as many lines as the
+      // box can actually display, so what shows is real rather than a
+      // hidden overflow.
+      const cap = Math.max(1, linesThatFit(narrow, TYPO.hardMinSize, box.h))
+      fit = {
+        size: TYPO.hardMinSize,
+        lines: wrapToLines(narrow, TYPO.hardMinSize, value, usableWidth(box.w), cap).lines.slice(0, cap),
+      }
+    }
+    // One last option before settling: if the value is still small and
+    // the row's blank band can hold two stacked single-line boxes, that
+    // beats both one cramped line and pdf-lib's generously-led wrap.
+    if (fit.lines.length === 1 && fit.size < TYPO.targetSize && maxLines > 1) {
+      const split = trySplitIntoTwoLines(pdf, form, boxes, box, value, narrow, fit.size)
+      if (split) {
+        field.setText(split.upperLine)
+        field.setFontSize(split.size)
+        split.second.setText(split.lowerLine)
+        split.second.setFontSize(split.size)
+        continue
+      }
+    }
+
+    if (fit.lines.length > 1) field.enableMultiline()
+    field.setText(fit.lines.join('\n'))
+    field.setFontSize(fit.size)
+  }
+
+  raiseGrownWidgets(pdf)
+}
+
+/**
+ * Give every text widget a zero-width border, before any fitting.
+ *
+ * pdf-lib insets a field's text by (border width + 1) on every side, and
+ * the fitting maths assumes the 1pt of a borderless field (TYPO.pad). The
+ * New template's fields carry a 1pt border (`/BS /W 1`), so pdf-lib
+ * clipped them 2pt in from each edge and cut off the descenders the
+ * fitting had made room for. That border was also the white stroke
+ * finalizeForm's New-template notes blame for cutting into the row
+ * below. (finalizeForm's `field.setBorderWidth(0)` never did this:
+ * pdf-lib fields have no such method, and the call is guarded by a
+ * typeof check, so it was skipped silently. The border lives on the
+ * widget.)
+ */
+function zeroTextFieldBorders(form) {
+  for (const field of form.getFields()) {
+    if (!(field instanceof PDFTextField)) continue
+    for (const widget of field.acroField.getWidgets()) {
+      try { widget.getOrCreateBorderStyle().setWidth(0) } catch { /* malformed widget: leave it */ }
+    }
+  }
+}
+
+/**
+ * Move every grown widget to the end of its page's /Annots array so it
+ * paints last.
+ *
+ * Widgets are drawn in /Annots order, and finalizeForm gives text
+ * fields an opaque white background to suppress the viewer's form-field
+ * highlight wash. An EMPTY neighbour keeps that white fill, so if it
+ * happens to sit later in the array than a box we grew into its space,
+ * it paints over the extra line — the value looks truncated even though
+ * the text is right there in the field. Ordering fixes it without
+ * giving up the clean white fill everywhere else.
+ */
+function raiseGrownWidgets(pdf) {
+  for (const page of pdf.getPages()) {
+    const annots = page.node.Annots()
+    if (!annots) continue
+    const raise = []
+    for (let i = annots.size() - 1; i >= 0; i--) {
+      const ref = annots.get(i)
+      let dict
+      try { dict = pdf.context.lookup(ref) } catch { continue }
+      if (GROWN_WIDGETS.has(dict)) {
+        raise.unshift(ref)
+        annots.remove(i)
+      }
+    }
+    for (const ref of raise) annots.push(ref)
+  }
+}
+
+/**
+ * Publish the embedded font in the AcroForm's `/DR /Font` dictionary.
+ *
+ * Every field's default appearance names the font — `/BarlowCondensed-
+ * Regular 6.5 Tf` — but a name is only resolvable if it appears in the
+ * form's resource dictionary, and the ACBL template ships `/Helv`,
+ * `/HeBo`, `/ZaDb` only. A viewer that trusts our appearance streams
+ * renders correctly either way; one that regenerates them cannot find
+ * the font, falls back to Helvetica, and — because the fallback also
+ * loses our explicit size — re-auto-sizes each field independently.
+ * That is what makes two lines of one split row come out at different
+ * sizes: the short line gets a big auto-size, the long line a small one.
+ */
+function registerFontInAcroFormResources(pdf, font) {
+  try {
+    const acro = pdf.catalog.getOrCreateAcroForm()
+    let dr = acro.dict.lookup(PDFName.of('DR'), PDFDict)
+    if (!dr) {
+      dr = pdf.context.obj({})
+      acro.dict.set(PDFName.of('DR'), dr)
+    }
+    let fonts = dr.lookup(PDFName.of('Font'), PDFDict)
+    if (!fonts) {
+      fonts = pdf.context.obj({})
+      dr.set(PDFName.of('Font'), fonts)
+    }
+    fonts.set(PDFName.of(font.name), font.ref)
+  } catch (err) {
+    console.warn('Could not register the condensed font in /DR:', err)
+  }
+}
+
+/** Create the blanks the template prints but never made fillable. */
+function addMissingFields(pdf, form) {
+  const pages = pdf.getPages()
+  for (const spec of ADDED_FIELDS_CLASSIC) {
+    try {
+      form.getTextField(spec.name) // already present — nothing to do
+    } catch {
+      try {
+        const field = form.createTextField(spec.name)
+        field.addToPage(pages[spec.page], {
+          x: spec.x, y: spec.y, width: spec.width, height: spec.height,
+          ...CREATED_FIELD_LOOK,
+        })
+      } catch (err) {
+        console.warn(`Could not add field "${spec.name}":`, err)
+      }
+    }
+  }
+}
+
 export async function buildAcblPdf(card, templateName = 'classic') {
   const bytes = await loadTemplateBytes(templateName)
   const pdf = await PDFDocument.load(bytes)
   const form = pdf.getForm()
   const fieldMap = templateName === 'new' ? FIELD_MAP_NEW : FIELD_MAP_CLASSIC
 
+  // Condensed field font. Best-effort: if it can't be fetched or
+  // embedded we fall through to the template's own Helvetica rather
+  // than failing the export outright.
+  if (templateName === 'classic') addMissingFields(pdf, form)
+
+  let narrow = null
+  try {
+    pdf.registerFontkit(fontkit)
+    narrow = await pdf.embedFont(await loadNarrowFontBytes(), { subset: true })
+    useInkMetrics(narrow)
+    NARROW_BY_DOC.set(pdf, narrow)
+    registerFontInAcroFormResources(pdf, narrow)
+  } catch (err) {
+    console.warn('Condensed field font unavailable; falling back to Helvetica:', err)
+  }
+
   const missingFields = []
   const droppedPaths = []
   for (const entry of fieldMap) {
     const cardValue = readPath(card?.card_data, entry.card)
     try {
-      applyEntry(form, entry, cardValue)
+      applyEntry(form, entry, cardValue, card?.card_data)
     } catch (e) {
       // Field doesn't exist in the template (likely a name typo or
       // pdf-lib parsing quirk). Collect for one summary log instead of
@@ -848,6 +1716,13 @@ export async function buildAcblPdf(card, templateName = 'classic') {
   if (droppedPaths.length) {
     console.warn(`ACBL fill (${templateName}): ${droppedPaths.length} value(s) had no destination field`, droppedPaths)
     await drawDiagnosticFooter(pdf, templateName, droppedPaths, card)
+  }
+  if (narrow) {
+    try {
+      applyTypography(pdf, form, narrow, templateName, card?.card_data)
+    } catch (err) {
+      console.warn('Typography pass failed; values keep the template default:', err)
+    }
   }
   embedCardDataInPdf(pdf, card)
   return pdf
@@ -1027,7 +1902,20 @@ export async function extractCardDataFromPdf(bytes) {
   }
 }
 
-function applyEntry(form, entry, cardValue) {
+/**
+ * An open-ended HCP range ("14+", "22+") carries its `+` in a sibling
+ * boolean at `<path>_plus`, because the range itself is stored as a
+ * number so the editor can render a numeric input. Bridgeodex sends
+ * "14+" and the importer preserves the qualifier separately; without
+ * this the exported card reads a flat "14" and silently changes the
+ * partnership's agreement.
+ */
+function plusSuffixFor(entry, cardData) {
+  if (entry.kind !== 'text' || !entry.card) return ''
+  return readPath(cardData, `${entry.card}_plus`) ? '+' : ''
+}
+
+function applyEntry(form, entry, cardValue, cardData) {
   if (entry.kind === 'check') {
     const box = form.getCheckBox(entry.pdf)
     const on = isCheckOn(entry, cardValue)
@@ -1038,7 +1926,8 @@ function applyEntry(form, entry, cardValue) {
   if (entry.kind === 'text') {
     if (cardValue == null) return
     const tf = form.getTextField(entry.pdf)
-    tf.setText(sanitizeForWinAnsi(String(cardValue)))
+    const shaped = entry.transform ? entry.transform(cardValue) : String(cardValue)
+    tf.setText(sanitizeForWinAnsi(shaped + plusSuffixFor(entry, cardData)))
     return
   }
 }
@@ -1089,7 +1978,13 @@ function isCheckOn(entry, value) {
  * Pass `{ flatten: true }` to bake everything into static page art
  * instead (no longer editable).
  */
-export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false } = {}) {
+/**
+ * The full render pipeline, returning the PDF bytes. Split out from
+ * `downloadAcblPdf` so the output can be produced (and inspected)
+ * without a browser download — the export is otherwise only reachable
+ * through a click.
+ */
+export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false } = {}) {
   const pdf = await buildAcblPdf(card, templateName)
   finalizeForm(pdf, templateName, { flatten })
   // Draw red ellipses around the user's chosen lead cards for the New
@@ -1099,7 +1994,11 @@ export async function downloadAcblPdf(card, templateName = 'classic', { flatten 
   if (templateName === 'new') {
     drawLeadCircles(pdf, card)
   }
-  const bytes = await pdf.save()
+  return pdf.save()
+}
+
+export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false } = {}) {
+  const bytes = await renderAcblPdfBytes(card, templateName, { flatten })
   triggerDownload(bytes, pdfFilename(card, templateName))
 }
 
@@ -1319,6 +2218,16 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
         try {
           for (const widget of field.acroField.getWidgets()) {
             const ac = widget.getOrCreateAppearanceCharacteristics()
+            if (GROWN_WIDGETS.has(widget.dict)) {
+              // Same rule as the Classic path below: a grown widget
+              // overlaps printed art, so it paints no fill and no border.
+              // This template ships a white /BG on every field, so it has
+              // to be removed, not just left unset.
+              ac.dict.delete(PDFName.of('BG'))
+              ac.dict.delete(PDFName.of('BC'))
+              widget.dict.delete(apName)
+              continue
+            }
             ac.setBorderColor([1, 1, 1])
             ac.setBackgroundColor([1, 1, 1])
             // Drop the cached AP so it regenerates borderless with the
@@ -1343,7 +2252,14 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
         try {
           for (const widget of field.acroField.getWidgets()) {
             const ac = widget.getOrCreateAppearanceCharacteristics()
-            ac.setBorderColor([1, 1, 1]) // RGB white as components array
+            // A GROWN widget gets no border colour at all. pdf-lib strokes
+            // a field's border whenever it has a border colour and no
+            // background fill, and a 0 width means "thinnest visible
+            // line", not "none". Grown widgets deliberately have no fill
+            // (below), so a white border colour traced a white hairline
+            // round each one, cutting through whatever it crossed.
+            if (isText && GROWN_WIDGETS.has(widget.dict)) ac.dict.delete(PDFName.of('BC'))
+            else ac.setBorderColor([1, 1, 1]) // RGB white as components array
             // Bake a white background into TEXT fields only. Interactive
             // viewers tint un-backgrounded form fields with their
             // form-field highlight colour (the light-blue wash the user
@@ -1359,15 +2275,34 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
             // (Dropping a CHECKBOX's /AP would throw away the template's
             // "on"-state glyph and the checkmark would vanish — the
             // original "all my conventions are missing" bug.)
-            if (isText) {
+            //
+            // A widget the typography pass GREW is excluded from the
+            // white fill for the same reason checkboxes are: its rect
+            // now covers printed art (and possibly a neighbour's value)
+            // that a white fill would erase. Those few fields keep the
+            // viewer's highlight wash on screen; it doesn't print.
+            if (isText && !GROWN_WIDGETS.has(widget.dict)) {
               ac.setBackgroundColor([1, 1, 1])
-              widget.dict.delete(apName)
             }
+            if (isText) widget.dict.delete(apName)
           }
         } catch { /* ignore — some widgets may not have a writable MK dict */ }
       }
     }
     form.updateFieldAppearances()
+
+    // Re-render the TEXT fields in the condensed font. This runs after
+    // the blanket pass (last write wins) and touches text fields only —
+    // regenerating a checkbox's appearance with a text font is exactly
+    // how the checkmarks got lost before.
+    const narrow = NARROW_BY_DOC.get(pdf)
+    if (narrow) {
+      for (const field of form.getFields()) {
+        if (!(field instanceof PDFTextField)) continue
+        try { field.defaultUpdateAppearances(narrow) } catch { /* leave Helvetica */ }
+      }
+    }
+
     if (flatten) {
       form.flatten()
       return
