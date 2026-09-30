@@ -4,6 +4,15 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: variants and extensions** (Rick Wilson; open question 8)
+
+16. **A variant played instead of a convention gets its own ID; something
+    played in addition to it is an extension.** You play Puppet Stayman or
+    Stayman over 2NT, Reverse Drury or Drury, Modified or standard Jacoby 2NT:
+    each has its own ID, and a card can carry either. Texas, Garbage Stayman or
+    transfers after a double add to their convention: they share its ID, with
+    their own higher levels (decision 13).
+
 **2026-09-30: the standard list starts large** (Rick Wilson)
 
 15. **Every BBA treatment and every PBS scenario's convention is on the
@@ -102,8 +111,5 @@ field with its path, kind, options and description, generated at build time.
 
 **7. The named level bands.** Decided 2026-09-30; see above.
 
-**8. What counts as a convention.** Named variants of a convention (Puppet
-Stayman against Stayman, 0314 against 1430) could be extensions of it or
-conventions of their own. Extensions share a convention id; a variant that
-replaces the base convention may be better as its own, linked back.
+**8. What counts as a convention.** Decided 2026-09-30 (16).
 
