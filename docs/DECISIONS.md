@@ -4,6 +4,15 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: the convention and skill list file** (Rick Wilson; open question 3)
+
+14. **TOML is the source.** One entry per standard convention or skill, keyed
+    by its ADR-0001 ID: name, level, names, summary and sources (DESIGN.md,
+    "Describing a convention"). lesson-studio's Contract 4 `taxonomy.json` is
+    generated from it and committed, with a test that the two agree, since a
+    GitHub dependency gets no build step. Summaries are hand-written prose,
+    which TOML's multi-line strings suit, and the rest of `spec/` is TOML.
+
 **2026-09-30: difficulty levels** (Rick Wilson)
 
 11. **One scale, 1 to 10,** for skills and conventions, bidding and cardplay.
@@ -67,14 +76,10 @@ one path, alias the other. Check against the cards actually saved in Bridge
 Classroom's database before choosing, since the paths real cards use are the
 ones that must not break.
 
-**3. The convention and skill list file.** One entry per standard convention
-or skill (ADR-0001: they share IDs): name, level (1–10), the names people write
-it as, a summary and sources (DESIGN.md, "Describing a convention"). Still to
-settle: the file format, either TOML as the source with lesson-studio's
-Contract 4 `taxonomy.json` generated from it and committed (A), or JSON as the
-source (B); and what becomes of the bot's `[lessons]` and `[proposed]` tables.
-Summaries are hand-written prose, which favours TOML's multi-line strings, and
-the rest of `spec/` is TOML: *recommendation* A.
+**3. The convention and skill list file.** Format decided (14). Still open: what
+becomes of the bot's `[lessons]` skills (lesson tags missing from Bridge
+Classroom's list) and `[proposed]` ones (conventions the bot plays that have no
+skill yet), and levels for the 28 skills that have none.
 
 **4. How "Save to Bridge Classroom" hands the card over.** The standalone editor
 can't call Bridge Classroom's API with the user's session (third-party cookie;
