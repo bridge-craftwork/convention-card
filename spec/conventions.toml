@@ -38,6 +38,15 @@ source = "taxonomy"
 ["bidding_conventions/blackwood"]
 name = "Blackwood"
 source = "taxonomy"
+level = 2
+names = ["Blackwood", "Standard Blackwood", "Easley Blackwood", "Plain Blackwood", "4NT ace ask"]
+summary = """
+Once a trump suit is agreed, 4NT asks how many aces partner holds: 5♣ none
+or four, 5♦ one, 5♥ two, 5♠ three. 5NT then asks for kings the same way.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 1 },
+]
 
 ["bidding_conventions/fourth_suit_forcing"]
 name = "Fourth Suit Forcing"
@@ -111,6 +120,17 @@ see = [
 ["bidding_conventions/roman_keycard"]
 name = "Roman Keycard"
 source = "taxonomy"
+level = 4
+names = ["RKCB", "Roman Keycard", "Roman Key Card Blackwood", "Keycard", "1430", "0314"]
+summary = """
+4NT asks for five keycards, the four aces and the trump king. 1430 answers
+5♣ one or four, 5♦ three or none, 5♥ two without the trump queen, 5♠ two
+with it; 0314 swaps 5♣ and 5♦. The next step asks for the trump queen.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 9 },
+  { title = "Slam Bidding: 1430 Keycard Blackwood", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/403" },
+]
 
 ["bidding_conventions/stayman"]
 name = "Stayman"
@@ -362,6 +382,19 @@ source = "lessons"
 ["bidding_conventions/control_bids"]
 name = "Control (Cue) Bids"
 source = "proposed"
+level = 5
+names = ["Control bids", "Cue bids", "Cuebids", "Control-showing bids", "Italian cuebids", "Ace-and-king cuebids"]
+summary = """
+With a trump suit agreed and slam possible, bidding a new suit below game
+shows a control there (an ace or void, and in many styles a king or
+singleton), so the partnership can find out whether a suit is unguarded
+before asking for keycards.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 20 },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 20 },
+  { title = "Slam Bidding: Control-Showing Bids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/406" },
+]
 
 ["bidding_conventions/drury"]
 name = "Drury"
@@ -378,6 +411,18 @@ replies.
 ["bidding_conventions/gerber"]
 name = "Gerber"
 source = "proposed"
+level = 3
+names = ["Gerber", "4♣ Gerber", "1430 Gerber"]
+summary = """
+A jump to 4♣ over partner's notrump asks for aces, with steps answering as
+for Blackwood (4♦ none or four, 4♥ one, and so on), leaving 4NT as a natural
+raise.
+"""
+see = [
+  { title = "Gerber", site = "Bridge Bum", url = "https://www.bridgebum.com/gerber.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 1 },
+  { title = "Slam Bidding: Gerber and 1430 Gerber", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/402" },
+]
 
 ["bidding_conventions/impossible_2s"]
 name = "Impossible 2♠"
@@ -869,4 +914,129 @@ respectively, so a direct 4♥ or 4♠ opening is weaker.
 """
 see = [
   { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 8 },
+]
+
+["bidding_conventions/kickback"]
+name = "Kickback"
+source = "proposed"
+level = 9
+names = ["Kickback", "Kickback keycard", "Redwood"]
+summary = """
+A keycard ask in the suit above trumps instead of 4NT: 4♦ with clubs as
+trumps, 4♥ with diamonds, 4♠ with hearts, and 4NT with spades. The answers
+then never take the auction past five of the trump suit.
+"""
+see = [
+  { title = "Kickback Keycard Ask", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/582" },
+]
+
+["bidding_conventions/minorwood"]
+name = "Minorwood"
+source = "proposed"
+level = 7
+names = ["Minorwood", "4m keycard", "Crosswood"]
+summary = """
+With a minor agreed, four of that minor asks for keycards instead of 4NT,
+keeping the answers low enough to stop in five of the minor.
+"""
+see = [
+  { title = "Slam Bidding: Minorwood", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/405" },
+]
+
+["bidding_conventions/exclusion_blackwood"]
+name = "Exclusion Blackwood"
+source = "proposed"
+level = 7
+names = ["Exclusion Blackwood", "Exclusion", "Exclusion RKC", "Voidwood"]
+summary = """
+A jump to the five level in a new suit after agreeing trumps shows a void
+there and asks for keycards outside it, so the ace in the void suit does not
+count.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 10 },
+  { title = "Exclusion Keycard", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/584" },
+]
+
+["bidding_conventions/pick_a_slam_5nt"]
+name = "Pick-a-slam 5NT"
+source = "proposed"
+level = 7
+names = ["Pick-a-slam", "5NT pick a slam", "5NT choice of slams"]
+summary = """
+A 5NT bid, not after a keycard ask, asks partner to choose among several
+possible slams, usually in notrump or in a suit partner prefers.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 23 },
+  { title = "Slam Bidding: 5NT Choice of Slams", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/535" },
+]
+
+["bidding_conventions/western_cuebid"]
+name = "Western cue bid"
+source = "proposed"
+level = 4
+names = ["Western cue bid", "Western cuebid", "Asking for a stopper"]
+summary = """
+A cue bid of the opponents' suit when looking for 3NT asks partner to bid
+notrump with a stopper in that suit.
+"""
+see = [
+  { title = "Thinking and Responding: Western Cuebids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/510" },
+]
+
+["bidding_conventions/spiral"]
+name = "Spiral"
+source = "proposed"
+level = 8
+names = ["Spiral", "Spiral cue bids", "Spiral 2NT"]
+summary = """
+A relay that asks about trump length and quality in steps once a fit is
+found, so the asker can judge game or slam from how good the trumps are.
+"""
+see = [
+  { title = "Fits and More: 2NT Trump Suit Game Try - Spiral", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/529" },
+]
+
+["bidding_conventions/serious_3nt"]
+name = "Serious 3NT"
+source = "proposed"
+level = 9
+names = ["Serious 3NT", "Non-serious 3NT", "Frivolous 3NT"]
+summary = """
+In a game-forcing auction with a major agreed at the three level, 3NT is
+artificial and says whether the bidder is serious about slam (serious or
+non-serious by agreement), before control bids begin.
+"""
+see = [
+  { title = "Slam Bidding: Non-Serious 3NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/539" },
+]
+
+["bidding_conventions/dopi_ropi"]
+name = "DOPI and ROPI"
+source = "proposed"
+level = 7
+names = ["DOPI", "ROPI", "DOPI/ROPI", "D0P1", "R0P1"]
+summary = """
+When the opponents interfere over a keycard ask, double shows no keycards
+(or none of the first step) and pass shows one (DOPI); after they double,
+redouble shows none and pass one (ROPI). The next steps continue.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 15 },
+  { title = "DOPI and ROPI", site = "ACBL Unit 390", url = "https://www.acblunit390.org/Simon/dopi-ropi.htm" },
+  { title = "Slam Bidding: Dealing with Interference Over Ace-Asking Bids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/536" },
+]
+
+["bidding_conventions/depo"]
+name = "DEPO"
+source = "proposed"
+level = 7
+names = ["DEPO", "Double even, pass odd"]
+summary = """
+Played instead of DOPI: when they interfere over a keycard ask, double shows
+an even number of keycards and pass an odd number.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 15 },
 ]

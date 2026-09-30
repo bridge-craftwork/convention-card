@@ -269,39 +269,40 @@
 "namyats.play"             = { kind = "bool", label = "Namyats", skill = "bidding_conventions/namyats", level = 6 }
 
 [slam]
-"blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood" }
-"blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"], skill = "bidding_conventions/roman_keycard" }
-"blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"], skill = "bidding_conventions/roman_keycard" }
-"blackwood.minor_0314"     = { kind = "bool", label = "RKCB 0314 with a minor as trumps (1430 in the majors)", skill = "bidding_conventions/roman_keycard" }
-"blackwood.queen_ask"      = { kind = "bool", label = "Queen ask", aliases = ["other_conventions.blackwood.queen_ask"], skill = "bidding_conventions/roman_keycard" }
+"blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood", level = 2 }
+"blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"], skill = "bidding_conventions/roman_keycard", level = 4 }
+"blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"], skill = "bidding_conventions/roman_keycard", level = 4 }
+"blackwood.minor_0314"     = { kind = "bool", label = "RKCB 0314 with a minor as trumps (1430 in the majors)", skill = "bidding_conventions/roman_keycard", level = 6 }
+"blackwood.queen_ask"      = { kind = "bool", label = "Queen ask", aliases = ["other_conventions.blackwood.queen_ask"], skill = "bidding_conventions/roman_keycard", level = 6 }
 "blackwood.notes"          = { kind = "text", label = "4NT notes", aliases = ["other_conventions.blackwood.notes"] }
-"king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT" }
-"king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid" }
-"quantitative_4nt.play"    = { kind = "bool", label = "Quantitative 4NT" }
-"four_nt_opening.play"     = { kind = "bool", label = "4NT opening (specific aces)" }
-"gerber.play"              = { kind = "bool", label = "Gerber", aliases = ["other_conventions.gerber.play"], skill = "bidding_conventions/gerber" }
+"king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT", skill = "bidding_conventions/roman_keycard", level = 5 }
+"king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid", skill = "bidding_conventions/roman_keycard", level = 7 }
+"quantitative_4nt.play"    = { kind = "bool", label = "Quantitative 4NT", level = 3 }
+"four_nt_opening.play"     = { kind = "bool", label = "4NT opening (specific aces)", level = 8 }
+"gerber.play"              = { kind = "bool", label = "Gerber", aliases = ["other_conventions.gerber.play"], skill = "bidding_conventions/gerber", level = 3 }
 "gerber.over"              = { kind = "text", label = "Gerber applies over" }
 "gerber.only_over_nt_openings" = { kind = "bool", label = "Gerber only over NT openings" }
 "gerber.directly_over_nt"  = { kind = "bool", label = "Gerber directly over NT", aliases = ["other_conventions.gerber.directly_over_nt"] }
 "gerber.over_nt_seq"       = { kind = "bool", label = "Gerber over NT sequence", aliases = ["other_conventions.gerber.over_nt_seq"] }
 "gerber.non_nt_seq"        = { kind = "bool", label = "Gerber in non-NT sequence", aliases = ["other_conventions.gerber.non_nt_seq"] }
-"kickback.play"            = { kind = "bool", label = "Kickback", aliases = ["other_conventions.kickback.play"] }
-"kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430" }
-"kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314" }
-"minorwood.play"           = { kind = "bool", label = "Minorwood" }
-"exclusion_blackwood.play" = { kind = "bool", label = "Exclusion Blackwood" }
-"pick_a_slam_5nt.play"     = { kind = "bool", label = "Pick-a-slam 5NT" }
-"western_cuebid.play"      = { kind = "bool", label = "Western cuebid" }
-"spiral_cuebids.play"      = { kind = "bool", label = "Spiral cuebids" }
-"non_serious_3nt.play"     = { kind = "bool", label = "Non-serious 3NT" }
-"dopi"                     = { kind = "bool", label = "DOPI" }
-"depo"                     = { kind = "bool", label = "DEPO" }
-"ropi"                     = { kind = "bool", label = "ROPI" }
+"kickback.play"            = { kind = "bool", label = "Kickback", aliases = ["other_conventions.kickback.play"], skill = "bidding_conventions/kickback", level = 9 }
+"kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430", skill = "bidding_conventions/kickback", level = 9 }
+"kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314", skill = "bidding_conventions/kickback", level = 9 }
+"minorwood.play"           = { kind = "bool", label = "Minorwood", skill = "bidding_conventions/minorwood", level = 7 }
+"exclusion_blackwood.play" = { kind = "bool", label = "Exclusion Blackwood", skill = "bidding_conventions/exclusion_blackwood", level = 7 }
+"pick_a_slam_5nt.play"     = { kind = "bool", label = "Pick-a-slam 5NT", skill = "bidding_conventions/pick_a_slam_5nt", level = 7 }
+"western_cuebid.play"      = { kind = "bool", label = "Western cuebid", skill = "bidding_conventions/western_cuebid", level = 4 }
+"spiral_cuebids.play"      = { kind = "bool", label = "Spiral cuebids", skill = "bidding_conventions/spiral", level = 8 }
+"non_serious_3nt.play"     = { kind = "bool", label = "Non-serious 3NT", skill = "bidding_conventions/serious_3nt", level = 9 }
+"dopi"                     = { kind = "bool", label = "DOPI", skill = "bidding_conventions/dopi_ropi", level = 7 }
+"depo"                     = { kind = "bool", label = "DEPO", skill = "bidding_conventions/depo", level = 7 }
+"ropi"                     = { kind = "bool", label = "ROPI", skill = "bidding_conventions/dopi_ropi", level = 7 }
 "control_bids"             = { kind = "text", label = "Control bids (notes)" }
-"cue_bids.play"            = { kind = "bool", label = "Control (cue) bids", desc = "BBA's 'Cue bid'. With a trump suit agreed and slam in the air, bid a control below game instead of asking straight away", skill = "bidding_conventions/control_bids" }
+"cue_bids.play"            = { kind = "bool", label = "Control (cue) bids", desc = "BBA's 'Cue bid'. With a trump suit agreed and slam in the air, bid a control below game instead of asking straight away", skill = "bidding_conventions/control_bids", level = 5 }
 "cue_bids.style"           = { kind = "enum", label = "Control bids show", options = ["first_round", "first_or_second_round"], default = "first_or_second_round", desc = "first_round: the ace or a void only. first_or_second_round: king and singleton too, which is the more common modern treatment" }
 "vs_interference"          = { kind = "text", label = "Vs interference" }
 "trump_level"              = { kind = "text", label = "Trump-level cutover" }
+"notes"                    = { kind = "text", label = "Slam notes", note = true }
 
 [overcalls]
 "one_level_min"            = { kind = "int", label = "1-level overcall: minimum", min = 0, max = 20 }
