@@ -1,0 +1,142 @@
+# Migration
+
+Moving the convention card here from Bridge-Classroom and rusty-bidding-bot.
+Each phase leaves every consumer working; nothing is switched off before its
+replacement is running.
+
+**Keep the history.** Move files with `git filter-repo --path …` on a fresh
+clone of the source repo, then merge that history in here
+(`git merge --allow-unrelated-histories`), so `git log` and `git blame` still
+explain why each line is the way it is.
+
+## What moves
+
+### From Bridge-Classroom (≈ 11,000 lines)
+
+| Source | Lines | Goes to | Notes |
+|---|---:|---|---|
+| `src/utils/conventionCatalog.js` | 929 | `spec/` + `js/` | Field list → merged into `spec/fields.toml`; display/section layout stays with the editor |
+| `src/utils/acblClassicFillPdf.js` | 2,389 | `js/` | Includes the unfinished legibility work; see Phase 0 |
+| `src/utils/acblCardPdf.js` | 873 | `js/` | |
+| `src/utils/bridgeodexImport.js` | 725 | `js/` | |
+| `src/utils/bboImport.js` | 441 | `js/` | |
+| `src/utils/ntDefenses.js` | 136 | `js/` | Used only by the card |
+| `src/utils/__tests__/bboImport.test.js`, `bridgeodexImport.test.js` | | `js/` tests | |
+| `src/composables/useConventionCard.js` | 481 | `web/` | Split: editing state moves; the Bridge Classroom API calls become BC's storage adapter and stay |
+| `src/views/ConventionCardView.vue` | 844 | `web/` | |
+| `src/components/conventionCard/*.vue` (13 files) | 2,787 | `web/` | |
+| `public/templates/acbl-*.pdf` | | `web/public/` or fetched | Blocked on DECISIONS open question 5 (redistribution) |
+| `public/fonts/BarlowCondensed-Regular.ttf` + `OFL.txt` | | `web/public/fonts/` | Uncommitted in BC today; arrives with the PDF work |
+
+**Copied, not moved:** `src/utils/cardFormatting.js` (289 lines). Bridge
+Classroom uses it everywhere; the card needs a few suit-symbol helpers from it.
+Copy those helpers and leave the file where it is.
+
+**Stays in Bridge Classroom:**
+- `bridge-classroom-api/src/routes/convention_cards.rs` and the
+  `convention_cards` table (saved cards, linking cards to users).
+- The proficiency overlay's data (lesson mastery), handed to the editor through
+  the overlay adapter.
+- `src/utils/bakerBridgeTaxonomy.js`: its skill vocabulary moves to `spec/`,
+  but its Baker-Bridge lesson data (`pbn`, `dealCount`) moves to Baker-Bridge's
+  manifest (Phase 5).
+- `src/utils/cardToTaxonomyMapping.js`, `cardSkills.js`, `studentProgressData.js`
+  and `ExerciseEditorModal.vue`. These are Bridge Classroom features that *read*
+  the taxonomy; they switch to reading it from this repo.
+
+### From rusty-bidding-bot
+
+| Source | Lines | Goes to |
+|---|---:|---|
+| `crates/bridge-card/` | 1,872 | `crates/bridge-card/` |
+| `conventions/card/fields.toml` | 529 | `spec/fields.toml` (the starting point for the merged list) |
+| `conventions/card/bbsa-map.toml` | 296 | `spec/formats/bbsa-map.toml` |
+| `conventions/card/skills.toml` | 99 | `spec/skills` (see DECISIONS open question 3) |
+
+The bot's other crates (`engine`, `bidspec`, `cli`, `compare`, `wasm`) switch
+from the path dependency to a git dependency on this repo.
+
+## Phases
+
+### Phase 0: land the unfinished work where it is *(in Bridge-Classroom)*
+
+Don't move code that's mid-change.
+
+- Fix the two bugs found in the Classic PDF export on 2026-09-30, then land the
+  legibility work:
+  1. **Descenders are clipped** in the new condensed font (g, j, p, y): "Strong"
+     renders as "Strona", "major" as "maior".
+  2. **Enlarged boxes cover the card's printed text**: they strike through the
+     headings "DEFENSE VS NOTRUMP", "NOTRUMP OPENING BIDS" and
+     "RESPONSES/REBIDS". Growth checks for room only against other form
+     fields, not against the page's printed text.
+- Land the bridgeodex `14+` fix with it. Only the new PDF code reads the
+  `<path>_plus` fields it writes.
+
+**Done when:** a sample export of a full card is legible with no clipped
+letters and no struck-through printed text, and the work is merged in
+Bridge-Classroom.
+
+### Phase 1: the spec and the Rust crate
+
+- Move `crates/bridge-card` and `conventions/card/*.toml` here with history.
+- Settle DECISIONS open questions 1–3 (who owns the vocabulary, reconciling the
+  field lists, the taxonomy file).
+- Merge `conventionCatalog.js`'s fields into `spec/fields.toml`. Every path any
+  saved Bridge Classroom card uses must load, directly or through an alias.
+- Point rusty-bidding-bot at this repo (git dependency, pinned tag).
+
+**Done when:** the crate's tests pass here; the bot builds and passes its tests
+against the tag; and every card in Bridge Classroom's `convention_cards` table
+loads through the crate without error.
+
+### Phase 2: the JavaScript library
+
+- Move the converters, the PDF code and their tests here with history.
+- The library reads its field list from `spec/`.
+- Bridge Classroom depends on the tag and deletes its copies.
+
+**Done when:** Bridge Classroom's Convention Card tab behaves exactly as before
+(import each format, export each PDF, re-import a PDF), and its test suite
+passes.
+
+### Phase 3: the editor
+
+- Move the view and components here; split `useConventionCard.js` into editor
+  state (moves) and Bridge Classroom's storage and overlay adapters (stay).
+- Bridge Classroom embeds the editor component from the tag.
+- Add the standalone build: IndexedDB storage, file import/export, and the
+  "Save to Bridge Classroom" hand-off (DECISIONS open question 4).
+
+**Done when:** the lobby tab works as before, including saving and the
+proficiency overlay; and the standalone build runs locally with no account.
+
+### Phase 4: publish at `bridge-craftwork.com/card/`
+
+- A Cloudflare Pages project `convention-card`, deployed by CI (copy
+  `pbn-to-pdf`'s `pages.yml`).
+- `/card/reference.txt` generated from the spec, plus `window.card` (site issue
+  #3).
+- In `bridge-craftwork-site`: add `/card` to the router's `TOOLS`, a tile, and
+  docs at `/docs/card/`.
+
+**Done when:** `bridge-craftwork.com/card/` loads, and a card can be built,
+exported to PDF, re-imported, and handed to Bridge Classroom. That means
+actually exercised, not just loaded.
+
+### Phase 5: every consumer on the one spec
+
+- rusty-bidding-bot deletes `conventions/card/skills.toml` and reads skills from
+  here.
+- lesson-studio validates against the taxonomy here (its Contract 4).
+- Baker-Bridge carries its skill-to-lesson data in its manifest; Bridge
+  Classroom's `bakerBridgeTaxonomy.js` reduces to reading it.
+- Better BBO Convention Card uses the library for BBO import/export and PDF.
+
+**Done when:** no repo keeps its own copy of the field list or the skill
+vocabulary.
+
+### Later: "practice our card" *(a Bridge Classroom feature)*
+
+card → its fields → their skills → collection manifests → a practice set. See
+DESIGN.md, "The skill taxonomy".
