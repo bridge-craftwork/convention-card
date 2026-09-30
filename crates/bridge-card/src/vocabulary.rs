@@ -73,6 +73,26 @@ impl Vocabulary {
         })
     }
 
+    /// Load the vocabulary of a spec directory laid out as this
+    /// repository's `spec/`: `fields.toml` and `formats/bbsa-map.toml`.
+    /// [`crate::standard`] has the standard one built in.
+    pub fn load_spec(spec_dir: &Path) -> Result<Vocabulary, Error> {
+        let read = |rel: &str| {
+            let path = spec_dir.join(rel);
+            std::fs::read_to_string(&path)
+                .map_err(|e| Error::new(e.to_string()).in_file(&path.display().to_string()))
+        };
+        let (fields, map) = (read("fields.toml")?, read("formats/bbsa-map.toml")?);
+        Vocabulary::parse(&fields, &map).map_err(|mut e| {
+            let rel = match e.file.as_deref() {
+                Some("bbsa-map.toml") => "formats/bbsa-map.toml",
+                _ => "fields.toml",
+            };
+            e.file = Some(spec_dir.join(rel).display().to_string());
+            e
+        })
+    }
+
     /// The fields.
     pub fn registry(&self) -> &Registry {
         &self.0.registry

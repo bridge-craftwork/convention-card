@@ -113,6 +113,12 @@ pub struct FieldDef {
     /// convention's own, which is the lowest of its fields'.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub level: Option<u8>,
+    /// A choice group: yes/no fields with the same `choice` are
+    /// alternatives, at most one of them on (standard or upside-down count;
+    /// weak, mixed or invitational jump raises). A comparison shows the
+    /// group as one agreement, and a card's difficulty counts it once.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub choice: Option<String>,
 }
 
 /// A string or a list of strings.
@@ -230,6 +236,11 @@ impl Registry {
                 if field.level.is_some_and(|l| !(1..=10).contains(&l)) {
                     return Err(Error::new(format!("{path}: level must be 1 to 10")));
                 }
+                if field.choice.is_some() && field.kind != FieldKind::Bool {
+                    return Err(Error::new(format!(
+                        "{path}: only a yes/no field can be in a choice group"
+                    )));
+                }
                 for name in std::iter::once(&path).chain(&field.aliases) {
                     if index.insert(name.clone(), fields.len()).is_some() {
                         return Err(Error::new(format!("{name} is declared twice")));
@@ -238,7 +249,16 @@ impl Registry {
                 fields.push(field);
             }
         }
-        Ok(Registry { fields, index })
+        let registry = Registry { fields, index };
+        for (group, members) in registry.choices() {
+            if members.len() < 2 {
+                return Err(Error::new(format!(
+                    "choice group {group:?} has one field ({}): a choice needs two",
+                    members[0].path
+                )));
+            }
+        }
+        Ok(registry)
     }
 
     /// Look up a field by canonical path or alias.
@@ -249,6 +269,17 @@ impl Registry {
     /// All fields, in declaration order.
     pub fn fields(&self) -> &[FieldDef] {
         &self.fields
+    }
+
+    /// The choice groups: each group's fields, in declaration order.
+    pub fn choices(&self) -> BTreeMap<&str, Vec<&FieldDef>> {
+        let mut groups: BTreeMap<&str, Vec<&FieldDef>> = BTreeMap::new();
+        for f in &self.fields {
+            if let Some(c) = &f.choice {
+                groups.entry(c.as_str()).or_default().push(f);
+            }
+        }
+        groups
     }
 }
 
@@ -267,6 +298,22 @@ mod tests {
         let f = r.get("notrump.one_nt.range_min").unwrap();
         assert_eq!(f.kind, FieldKind::Int);
         assert_eq!(f.default, Some(Value::Int(15)));
+    }
+
+    #[test]
+    fn choice_groups_need_two_yes_no_fields() {
+        let ok = Registry::parse(
+            "[s]\n\"a\" = { kind = \"bool\", label = \"A\", choice = \"s.g\" }\n\
+             \"b\" = { kind = \"bool\", label = \"B\", choice = \"s.g\" }\n",
+        )
+        .unwrap();
+        assert_eq!(ok.choices()["s.g"].len(), 2);
+        let one = "[s]\n\"a\" = { kind = \"bool\", label = \"A\", choice = \"s.g\" }\n";
+        assert!(Registry::parse(one).is_err());
+        let text = "[s]\n\"a\" = { kind = \"text\", label = \"A\", choice = \"s.g\" }\n\
+                    \"b\" = { kind = \"bool\", label = \"B\", choice = \"s.g\" }\n";
+        assert!(Registry::parse(text).is_err());
+        assert!(registry().choices().contains_key("carding.suits.count"));
     }
 
     #[test]

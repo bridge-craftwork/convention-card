@@ -88,9 +88,11 @@ section by section (PRs #5, #7–#13): every convention field has a level and
 names its convention, `spec/conventions/` has 173 entries with summaries and
 citations, every editor-catalog and importer path resolves, and all 11 saved
 Bridge Classroom cards (2026-09-30 backup) load with no unknown path or invalid
-value and write back without loss. Still to do: choice groups; generating
-`taxonomy.json`; `other_agreements` (ADR-0001 D5); `Vocabulary::load` reading
-`spec/`; pointing rusty-bidding-bot at a tag.
+value and write back without loss. Then (PR #15): choice groups; CI generates
+`conventions.json` and Contract 4's `taxonomy.json`; typed `other_agreements`
+(ADR-0001 D5) and `Card::names_convention`; the standard vocabulary built into
+the crate (`bridge_card::standard`) and `Vocabulary::load_spec`. Still to do:
+tag `v0.1.0`, and point rusty-bidding-bot at it.
 
 - Move `crates/bridge-card` and `conventions/card/*.toml` here with history.
 - Settle DECISIONS open questions 2–3 (reconciling the field lists, the

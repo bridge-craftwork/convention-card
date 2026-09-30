@@ -1,0 +1,11 @@
+# Display names for the categories: the first segment of an ID.
+# scripts/build_conventions.py reads this for lesson-studio's taxonomy.json.
+
+basic_bidding = "Basic Bidding"
+bidding_conventions = "Bidding Conventions"
+competitive_bidding = "Competitive Bidding"
+declarer_play = "Declarer Play"
+defense = "Defense"
+partnership_bidding = "Partnership Bidding"
+practice_deals = "Practice Deals"
+precision = "Precision"

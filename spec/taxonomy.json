@@ -1,0 +1,1063 @@
+{
+ "schema": "taxonomy/v1",
+ "version": "0.1.0",
+ "generated": "2026-09-30",
+ "categories": [
+  {
+   "id": "basic_bidding",
+   "name": "Basic Bidding"
+  },
+  {
+   "id": "bidding_conventions",
+   "name": "Bidding Conventions"
+  },
+  {
+   "id": "competitive_bidding",
+   "name": "Competitive Bidding"
+  },
+  {
+   "id": "declarer_play",
+   "name": "Declarer Play"
+  },
+  {
+   "id": "defense",
+   "name": "Defense"
+  },
+  {
+   "id": "partnership_bidding",
+   "name": "Partnership Bidding"
+  },
+  {
+   "id": "precision",
+   "name": "Precision"
+  }
+ ],
+ "paths": [
+  {
+   "path": "basic_bidding/hand_evaluation",
+   "name": "Hand Evaluation",
+   "category": "basic_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "basic_bidding/major_suit_openings",
+   "name": "Major Suit Openings",
+   "category": "basic_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "basic_bidding/minor_suit_openings",
+   "name": "Minor Suit Openings",
+   "category": "basic_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "basic_bidding/notrump_openings",
+   "name": "Notrump Openings",
+   "category": "basic_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/bart",
+   "name": "BART",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/benjamin_2d",
+   "name": "Benjamin 2♦",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/bergen_raises",
+   "name": "Bergen raises",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/blackwood",
+   "name": "Blackwood",
+   "category": "bidding_conventions",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/checkback",
+   "name": "Checkback",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/control_bids",
+   "name": "Control (Cue) Bids",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/depo",
+   "name": "DEPO",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/dopi_ropi",
+   "name": "DOPI and ROPI",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/drury",
+   "name": "Drury",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/exclusion_blackwood",
+   "name": "Exclusion Blackwood",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/flannery",
+   "name": "Flannery 2♦",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/forcing_1nt",
+   "name": "Forcing 1NT",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/fourth_suit_forcing",
+   "name": "Fourth Suit Forcing",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/french_2d",
+   "name": "French 2♦",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/gambling_3nt",
+   "name": "Gambling 3NT",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/gazzilli",
+   "name": "Gazzilli",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/gerber",
+   "name": "Gerber",
+   "category": "bidding_conventions",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/grand_slam_force",
+   "name": "Grand slam force",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/help_suit_game_try",
+   "name": "Help Suit Game Try",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/impossible_2s",
+   "name": "Impossible 2♠",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/ingberman",
+   "name": "Ingberman 2NT",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/inverted_minors",
+   "name": "Inverted Minor Raises",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/jacoby_2nt",
+   "name": "Jacoby 2NT",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/jacoby_2nt_splinters",
+   "name": "Jacoby 2NT & Splinters",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/jacoby_transfers",
+   "name": "Jacoby Transfers",
+   "category": "bidding_conventions",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/kickback",
+   "name": "Kickback",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/kokish",
+   "name": "Kokish relay",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/kokish_game_tries",
+   "name": "Kokish game tries",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/lars_multi",
+   "name": "Lars Multi 2♦",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/last_train",
+   "name": "Last Train",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/mccabe",
+   "name": "McCabe adjunct",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/mini_roman_2d",
+   "name": "Mini-Roman 2♦",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/minor_suit_stayman",
+   "name": "Minor Suit Stayman",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/minor_suit_transfers",
+   "name": "Minor-Suit Transfers over 1NT",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/minorwood",
+   "name": "Minorwood",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/modified_jacoby_2nt",
+   "name": "Modified Jacoby 2NT",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/muiderberg",
+   "name": "Muiderberg twos",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/multi_2d",
+   "name": "Multi 2♦",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/namyats",
+   "name": "Namyats",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/new_minor_forcing",
+   "name": "New Minor Forcing",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/ogust",
+   "name": "Ogust",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/over_splinters",
+   "name": "Over-splinters",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/pick_a_slam_5nt",
+   "name": "Pick-a-slam 5NT",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/picture_3nt",
+   "name": "1M–3NT picture raise",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/polish_two_suiters",
+   "name": "Polish two-suiters",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/precision_2d",
+   "name": "Precision 2♦",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/preempt_keycard",
+   "name": "Keycard over preempts",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/preemptive_bids",
+   "name": "Preemptive Bids",
+   "category": "bidding_conventions",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/puppet_stayman",
+   "name": "Puppet Stayman",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/range_stayman",
+   "name": "Range Stayman",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/reverse_bergen_raises",
+   "name": "Reverse Bergen raises",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/reverse_bids",
+   "name": "Reverse Bids",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/reverse_drury",
+   "name": "Reverse Drury",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/reverse_flannery",
+   "name": "Reverse Flannery",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/roman_keycard",
+   "name": "Roman Keycard",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/roudi",
+   "name": "Roudi",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/semi_forcing_1nt",
+   "name": "Semi-forcing 1NT",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/serious_3nt",
+   "name": "Serious 3NT",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/six_key_rkcb",
+   "name": "Six-key Roman Keycard",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/smolen",
+   "name": "Smolen",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/soloway",
+   "name": "Soloway jump shifts",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/spiral",
+   "name": "Spiral",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/splinters",
+   "name": "Splinters",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/stayman",
+   "name": "Stayman",
+   "category": "bidding_conventions",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/strong_2c",
+   "name": "Strong 2♣",
+   "category": "bidding_conventions",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/super_accept",
+   "name": "Super-Accepting a Transfer",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/tislevoll",
+   "name": "Tislevoll slam try",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/transfer_walsh",
+   "name": "Transfer Walsh",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/transfers_after_double",
+   "name": "Transfers after a takeout double",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/two_heart_bust",
+   "name": "2♥ bust over 2♣",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/two_over_one",
+   "name": "2/1 Game Force",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/two_way_drury",
+   "name": "Two-way Drury",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/two_way_game_tries",
+   "name": "Two-way game tries",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/two_way_nmf",
+   "name": "Two-way new minor forcing",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/walsh",
+   "name": "Walsh",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/weak_2s",
+   "name": "Weak Twos",
+   "category": "bidding_conventions",
+   "level": "basic"
+  },
+  {
+   "path": "bidding_conventions/weak_jump_shifts",
+   "name": "Weak jump shifts",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/western_cuebid",
+   "name": "Western cue bid",
+   "category": "bidding_conventions",
+   "level": "intermediate"
+  },
+  {
+   "path": "bidding_conventions/wilkosz",
+   "name": "Wilkosz 2♦",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "bidding_conventions/wolff_signoff",
+   "name": "Wolff signoff",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/xyz",
+   "name": "XYZ",
+   "category": "bidding_conventions",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/advancing_overcalls",
+   "name": "Responding to Overcalls",
+   "category": "competitive_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "competitive_bidding/anti_lead_directing_doubles",
+   "name": "Anti-lead-directing doubles",
+   "category": "competitive_bidding",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/balancing",
+   "name": "Balancing",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/bromad",
+   "name": "BROMAD",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/cappelletti",
+   "name": "Cappelletti over 1NT",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/collante",
+   "name": "Collante",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/crash",
+   "name": "CRASH",
+   "category": "competitive_bidding",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/defense_vs_1nt",
+   "name": "Defending against 1NT",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/defense_vs_preempts",
+   "name": "Defending against Preempts",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/dont",
+   "name": "DONT",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/equal_level_conversion",
+   "name": "Equal level conversion",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/exit_transfers",
+   "name": "Exit transfers",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/fit_showing_jumps",
+   "name": "Fit-showing jumps",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/forcing_pass",
+   "name": "Forcing pass",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/ghestem",
+   "name": "Ghestem",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/good_bad_2nt",
+   "name": "Good/bad 2NT",
+   "category": "competitive_bidding",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/jordan_2nt",
+   "name": "Jordan 2NT",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/landy",
+   "name": "Landy",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/law_of_total_tricks",
+   "name": "The Law of Total Tricks",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/lead_directing_doubles",
+   "name": "Lead-directing doubles",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/leaping_michaels",
+   "name": "Leaping Michaels",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/lebensohl",
+   "name": "Lebensohl",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/mathe",
+   "name": "Mathe",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/maximal_doubles",
+   "name": "Maximal doubles",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/meckwell",
+   "name": "Meckwell over 1NT",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/michaels_unusual",
+   "name": "Michaels & Unusual 2NT",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/mitchell_stayman",
+   "name": "Mitchell Stayman",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/modified_cappelletti",
+   "name": "Modified Cappelletti",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/multi_landy",
+   "name": "Landy and Multi-Landy over 1NT",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/negative_doubles",
+   "name": "Negative Doubles",
+   "category": "competitive_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "competitive_bidding/non_leaping_michaels",
+   "name": "Non-leaping Michaels",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/overcalls",
+   "name": "Overcalls",
+   "category": "competitive_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "competitive_bidding/raptor",
+   "name": "Raptor 1NT",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/responsive_doubles",
+   "name": "Responsive Doubles",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/rodrigue",
+   "name": "Rodrigue",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/rosenkranz",
+   "name": "Rosenkranz double",
+   "category": "competitive_bidding",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/rubensohl",
+   "name": "Rubensohl",
+   "category": "competitive_bidding",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/sandwich_nt",
+   "name": "Sandwich 1NT",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/scrambling_2nt",
+   "name": "Scrambling 2NT",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/snapdragon",
+   "name": "Snapdragon doubles",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/sos_redouble",
+   "name": "SOS redouble",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/spear",
+   "name": "Spear",
+   "category": "competitive_bidding",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/suction",
+   "name": "Suction",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/support_cuebids",
+   "name": "Support Cuebids",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/support_doubles",
+   "name": "Support Doubles and Redoubles",
+   "category": "competitive_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "competitive_bidding/takeout_doubles",
+   "name": "Takeout Doubles",
+   "category": "competitive_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "competitive_bidding/thrump_double",
+   "name": "Thrump double",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/transfer_advances",
+   "name": "Transfer advances",
+   "category": "competitive_bidding",
+   "level": "expert"
+  },
+  {
+   "path": "competitive_bidding/unusual_vs_unusual",
+   "name": "Unusual vs Unusual",
+   "category": "competitive_bidding",
+   "level": "advanced"
+  },
+  {
+   "path": "declarer_play/elimination_plays",
+   "name": "Elimination Plays",
+   "category": "declarer_play",
+   "level": "advanced"
+  },
+  {
+   "path": "declarer_play/entry_management",
+   "name": "Entry Management",
+   "category": "declarer_play",
+   "level": "intermediate"
+  },
+  {
+   "path": "declarer_play/finessing",
+   "name": "Finessing",
+   "category": "declarer_play",
+   "level": "basic"
+  },
+  {
+   "path": "declarer_play/holdup_plays",
+   "name": "Holdup Plays",
+   "category": "declarer_play",
+   "level": "basic"
+  },
+  {
+   "path": "declarer_play/squeeze_plays",
+   "name": "Squeeze Plays",
+   "category": "declarer_play",
+   "level": "advanced"
+  },
+  {
+   "path": "declarer_play/suit_establishment",
+   "name": "Suit Establishment",
+   "category": "declarer_play",
+   "level": "basic"
+  },
+  {
+   "path": "declarer_play/trump_management",
+   "name": "Trump Management",
+   "category": "declarer_play",
+   "level": "basic"
+  },
+  {
+   "path": "defense/defensive_signals",
+   "name": "Defensive Signals",
+   "category": "defense",
+   "level": "basic"
+  },
+  {
+   "path": "defense/lavinthal",
+   "name": "Lavinthal",
+   "category": "defense",
+   "level": "intermediate"
+  },
+  {
+   "path": "defense/odd_even_discards",
+   "name": "Odd-even discards",
+   "category": "defense",
+   "level": "intermediate"
+  },
+  {
+   "path": "defense/opening_leads",
+   "name": "Opening Leads",
+   "category": "defense",
+   "level": "basic"
+  },
+  {
+   "path": "defense/reverse_smith_echo",
+   "name": "Reverse Smith echo",
+   "category": "defense",
+   "level": "advanced"
+  },
+  {
+   "path": "defense/rusinow_leads",
+   "name": "Rusinow leads",
+   "category": "defense",
+   "level": "advanced"
+  },
+  {
+   "path": "defense/second_hand_play",
+   "name": "Second Hand Play",
+   "category": "defense",
+   "level": "intermediate"
+  },
+  {
+   "path": "defense/smith_echo",
+   "name": "Smith echo",
+   "category": "defense",
+   "level": "advanced"
+  },
+  {
+   "path": "defense/third_hand_play",
+   "name": "Third Hand Play",
+   "category": "defense",
+   "level": "basic"
+  },
+  {
+   "path": "defense/upside_down_signals",
+   "name": "Upside-down signals",
+   "category": "defense",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/advanced_forcing",
+   "name": "Advanced Forcing (Partnership)",
+   "category": "partnership_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/basic_bidding",
+   "name": "Basic Bidding (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/basic_major",
+   "name": "Basic Major (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/basic_notrump",
+   "name": "Basic Notrump (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/blackwood",
+   "name": "Blackwood (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/jacoby_2nt",
+   "name": "Jacoby 2NT (Partnership)",
+   "category": "partnership_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/miscellaneous",
+   "name": "Miscellaneous Auctions",
+   "category": "partnership_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/negative_doubles",
+   "name": "Negative Doubles (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/overcalls",
+   "name": "Overcalls (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/passed_hand_bidding",
+   "name": "Passed Hand Bidding",
+   "category": "partnership_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/rebids",
+   "name": "Rebids by Opener or Responder",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/responders_rebid",
+   "name": "Responder's Rebid",
+   "category": "partnership_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/roman_key_card",
+   "name": "Roman Key Card (Partnership)",
+   "category": "partnership_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/slam_bidding",
+   "name": "Slam Bidding",
+   "category": "partnership_bidding",
+   "level": "intermediate"
+  },
+  {
+   "path": "partnership_bidding/stayman_transfers",
+   "name": "Stayman & Transfers (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/two_club",
+   "name": "Two Club (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "partnership_bidding/weak_twos",
+   "name": "Weak Twos (Partnership)",
+   "category": "partnership_bidding",
+   "level": "basic"
+  },
+  {
+   "path": "precision/1c_mixed",
+   "name": "Precision 1♣ (Mixed)",
+   "category": "precision",
+   "level": "advanced"
+  },
+  {
+   "path": "precision/1c_opener",
+   "name": "Precision 1♣ (Opener)",
+   "category": "precision",
+   "level": "advanced"
+  },
+  {
+   "path": "precision/1c_responder",
+   "name": "Precision 1♣ (Responder)",
+   "category": "precision",
+   "level": "advanced"
+  }
+ ]
+}

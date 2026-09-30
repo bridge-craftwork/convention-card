@@ -34,6 +34,35 @@ pub struct CardMetadata {
     pub other: Map<String, Json>,
 }
 
+/// A convention on the card with no fixed field (ADR-0001 D5): its ID, when
+/// it has one, and the text a person reads, which the PDF prints in the
+/// section's free-text lines.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct OtherAgreement {
+    /// A standard ID (`bidding_conventions/gerber`) or a namespaced one
+    /// (`github.com/alice/bridge-ideas/relay-stayman`); plain free text
+    /// has none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    /// The card section it belongs to (`notrump`), for printing.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub section: Option<String>,
+    pub text: String,
+    /// Keys this version does not know, kept for the round trip.
+    #[serde(flatten)]
+    pub other: Map<String, Json>,
+}
+
+impl OtherAgreement {
+    /// Whether `id` is namespaced: its first segment contains a `.`, as a
+    /// domain does (ADR-0001 D1).
+    pub fn is_namespaced(id: &str) -> bool {
+        id.split('/')
+            .next()
+            .is_some_and(|first| first.contains('.'))
+    }
+}
+
 /// A convention card, in the vocabulary it was made with: every read and
 /// write resolves paths, aliases and defaults in that vocabulary.
 #[derive(Debug, Clone, PartialEq)]
@@ -44,6 +73,8 @@ pub struct Card {
     values: BTreeMap<String, Value>,
     /// `.bbsa` keys with no card field yet, kept so export is lossless.
     pub bba_passthrough: BTreeMap<String, i64>,
+    /// Conventions with no fixed field (ADR-0001 D5).
+    pub other_agreements: Vec<OtherAgreement>,
     /// Leaves not in the registry, kept so a load/save round trip loses
     /// nothing the editor wrote.
     extra: BTreeMap<String, Json>,
@@ -62,6 +93,10 @@ pub struct LoadReport {
     /// as `_bbo_raw`): not card settings. Kept as-is so a round trip loses
     /// nothing, never read, and not counted as unknown.
     pub ignored: Vec<String>,
+    /// `(choice group, the fields on)` where more than one alternative of a
+    /// choice group is on. Kept as loaded; a comparison or an editor should
+    /// ask which one the partnership means.
+    pub conflicts: Vec<(String, Vec<String>)>,
     /// The export wrapper the card came in (its `schema`,
     /// [`EXPORT_SCHEMA`]), when it was not bare `card_data`.
     pub wrapper: Option<String>,
@@ -81,6 +116,7 @@ impl Card {
             metadata: CardMetadata::default(),
             values: BTreeMap::new(),
             bba_passthrough: BTreeMap::new(),
+            other_agreements: Vec::new(),
             extra: BTreeMap::new(),
         }
     }
@@ -88,6 +124,22 @@ impl Card {
     /// The vocabulary this card was made with.
     pub fn vocabulary(&self) -> &Vocabulary {
         &self.vocab
+    }
+
+    /// Whether the card plays the convention `id`: a yes/no field whose
+    /// convention it is (its first `skill`) is on, or an `other_agreements`
+    /// entry names it (ADR-0001 D5). Fields that are not yes/no (a range,
+    /// the choice of defence to 1NT) are read by their own paths.
+    pub fn names_convention(&self, id: &str) -> bool {
+        self.other_agreements
+            .iter()
+            .any(|a| a.id.as_deref() == Some(id))
+            || self
+                .vocab
+                .registry()
+                .fields()
+                .iter()
+                .any(|f| f.skill.first().is_some_and(|s| s == id) && self.is_on(&f.path))
     }
 
     /// The stored value at `path` (canonical or alias), if set.
@@ -211,6 +263,15 @@ impl Card {
                     card.bba_passthrough = serde_json::from_value(value)
                         .map_err(|e| Error::new(format!("bba_passthrough: {e}")))?;
                 }
+                "other_agreements" => match serde_json::from_value(value.clone()) {
+                    Ok(list) => card.other_agreements = list,
+                    Err(e) => {
+                        report
+                            .invalid
+                            .push((key.clone(), format!("other_agreements: {e}")));
+                        card.extra.insert(key, value);
+                    }
+                },
                 k if EDITOR_METADATA_TOP.contains(&k) => {
                     card.extra.insert(key, value);
                 }
@@ -257,6 +318,16 @@ impl Card {
                 }
             }
         }
+        for (group, members) in vocab.registry().choices() {
+            let on: Vec<String> = members
+                .iter()
+                .filter(|f| card.is_on(&f.path))
+                .map(|f| f.path.clone())
+                .collect();
+            if on.len() > 1 {
+                report.conflicts.push((group.to_string(), on));
+            }
+        }
         Ok((card, report))
     }
 
@@ -279,6 +350,10 @@ impl Card {
         if !self.bba_passthrough.is_empty() {
             root["bba_passthrough"] =
                 serde_json::to_value(&self.bba_passthrough).expect("map serializes");
+        }
+        if !self.other_agreements.is_empty() {
+            root["other_agreements"] =
+                serde_json::to_value(&self.other_agreements).expect("list serializes");
         }
         root
     }
@@ -408,6 +483,57 @@ mod tests {
         assert!(e.message.contains("newer"), "{e}");
         let other = r#"{"schema": "something/else", "card_data": {}}"#;
         assert!(Card::from_json(crate::test_vocabulary(), other).is_err());
+    }
+
+    #[test]
+    fn two_alternatives_on_are_reported_not_refused() {
+        let text = r#"{"carding": {"suits": {"standard_count": true, "upside_down_count": true}}}"#;
+        let (card, report) = Card::from_json(crate::test_vocabulary(), text).unwrap();
+        assert_eq!(
+            report.conflicts,
+            vec![(
+                "carding.suits.count".to_string(),
+                vec![
+                    "carding.suits.standard_count".to_string(),
+                    "carding.suits.upside_down_count".to_string()
+                ]
+            )]
+        );
+        assert!(card.is_on("carding.suits.standard_count"));
+    }
+
+    #[test]
+    fn other_agreements_round_trip_and_name_conventions() {
+        let text = r#"{"notrump": {"stayman": {"play": true}},
+            "other_agreements": [
+              {"id": "github.com/alice/bridge-ideas/relay-stayman", "section": "notrump",
+               "text": "Relay Stayman", "since": "2026"},
+              {"id": "bidding_conventions/grand_slam_force", "text": "GSF"},
+              {"text": "Plain free text"}]}"#;
+        let (card, report) = Card::from_json(crate::test_vocabulary(), text).unwrap();
+        assert!(report.is_clean(), "{report:?}");
+        assert_eq!(card.other_agreements.len(), 3);
+        assert!(OtherAgreement::is_namespaced(
+            card.other_agreements[0].id.as_deref().unwrap()
+        ));
+        assert!(!OtherAgreement::is_namespaced("bidding_conventions/gerber"));
+        // A fixed field, and an entry with no field, both name their convention.
+        assert!(card.names_convention("bidding_conventions/stayman"));
+        assert!(card.names_convention("bidding_conventions/grand_slam_force"));
+        assert!(!card.names_convention("bidding_conventions/smolen"));
+        // Keys this version does not know survive the round trip.
+        let json = card.to_json();
+        assert_eq!(json["other_agreements"][0]["since"], "2026");
+        let (again, _) = Card::from_json(card.vocabulary(), &card.to_json_string()).unwrap();
+        assert_eq!(card, again);
+        // A malformed list is kept as it was and reported.
+        let (bad, report) = Card::from_json(
+            crate::test_vocabulary(),
+            r#"{"other_agreements": [{"id": 3}]}"#,
+        )
+        .unwrap();
+        assert_eq!(report.invalid.len(), 1);
+        assert!(bad.to_json()["other_agreements"].is_array());
     }
 
     #[test]
