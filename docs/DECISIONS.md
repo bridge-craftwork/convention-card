@@ -67,11 +67,14 @@ one path, alias the other. Check against the cards actually saved in Bridge
 Classroom's database before choosing, since the paths real cards use are the
 ones that must not break.
 
-**3. The taxonomy file.** Its format (the bot's `skills.toml`, lesson-studio's
-proposed `taxonomy.json`, or both, generated from one), where each skill's level
-lives, and how the bot's `[lessons]` and proposed tables fit in. lesson-studio's
-Contract 4 (`documentation/contracts/taxonomy-and-front-matter.md`) is the
-fullest thinking so far and should be the starting point.
+**3. The convention and skill list file.** One entry per standard convention
+or skill (ADR-0001: they share IDs): name, level (1–10), the names people write
+it as, a summary and sources (DESIGN.md, "Describing a convention"). Still to
+settle: the file format, either TOML as the source with lesson-studio's
+Contract 4 `taxonomy.json` generated from it and committed (A), or JSON as the
+source (B); and what becomes of the bot's `[lessons]` and `[proposed]` tables.
+Summaries are hand-written prose, which favours TOML's multi-line strings, and
+the rest of `spec/` is TOML: *recommendation* A.
 
 **4. How "Save to Bridge Classroom" hands the card over.** The standalone editor
 can't call Bridge Classroom's API with the user's session (third-party cookie;

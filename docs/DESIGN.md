@@ -102,6 +102,45 @@ A card never states which skill a convention belongs to; the spec does. Some
 saved cards carry `<path>.skill_path` values; they are kept and written back
 like any unknown field, but nothing new writes them.
 
+#### Describing a convention: summary and sources
+
+Each standard convention's entry in `spec/` carries, beside its ID, name,
+level and names:
+
+- **`summary`**: what the convention is, in a few lines of plain text in our own
+  words. It is sized for a chat line: Practice-Bidding-Scenarios already puts a
+  summary like this in each scenario's `@chat` block, and it goes into BBO chat
+  when a player picks that scenario. Suits are written as ♣♦♥♠; a tool that
+  writes BBO chat converts them (`!C`).
+- **`see`**: where to read more, and what informed our treatment. Each entry is
+  a citation only (title, author, site or book, chapter or URL): never another
+  source's text, summaries or level numbers.
+
+```toml
+["bidding_conventions/dont"]         # illustrative; the file format is open question 3
+name = "DONT"
+level = 5
+summary = """
+Over their strong 1NT: X shows one long suit (partner relays 2♣); 2♣ and 2♦
+show that suit and a higher one; 2♥ both majors; 2♠ six or more spades.
+"""
+see = [
+  { title = "DONT", site = "Bridge Bum", url = "https://www.bridgebum.com/dont.php" },
+  { title = "NT Bidding: DONT and Meckwell", by = "Robert S. Todd",
+    site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/541" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 18 },
+]
+```
+
+Every tool reads the same entry: the editor shows it beside the convention
+("learn more"), lessons and scenarios can quote it, and the bot links to it.
+Each tool keeps its own record of how it *applies* a convention:
+rusty-bidding-bot's `.notes.md` files already end with a Sources section saying
+which source shaped which rule and where the module differs (its
+`docs/CONTRACT.md`, Part 2). A scenario's `@chat` text stays specific to the
+scenario ("15-17 notrump opening and DONT action"); it can name its convention
+ID to pick up the shared summary and links.
+
 ### 2. The JavaScript library (repo root + `js/`)
 
 Reads and writes cards against the spec, and holds the converters: BBO,
