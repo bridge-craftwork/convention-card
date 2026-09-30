@@ -179,6 +179,40 @@ card → the fields it switches on → their skills → each collection's manife
      → boards tagged with those skills → a practice set
 ```
 
+## Difficulty levels
+
+One scale, **1 to 10**, for everything: skills and conventions, bidding and
+cardplay. A level says how hard a thing is to learn, which is the same as when
+a partnership might put it on its card. Named bands (for the editor's filter,
+lesson front matter) are ranges of the number, derived, never stored.
+
+**A convention's level is the lowest level at which it is taught.** Its
+extensions are taught later, and they carry their own, higher levels while
+staying part of the same convention:
+
+- **Stayman** is taught early: the invitational and game-forcing sequences,
+  often with Garbage Stayman. Responder's three of the other major, agreeing
+  opener's suit with slam interest, comes later.
+- **Keycard**: the basic responses come early; responding with a void, later.
+- **After interference**: when advancer doubles a Jacoby transfer, completing
+  it shows three-card support or a stopper in the doubled suit, so responder
+  can invite with 2NT. That is more Jacoby, not a new convention.
+
+The model: every field names the **convention** it belongs to (an id such as
+`stayman`) and has its own **level**. The convention's level is its base
+field's, the lowest. The editor shows an extension as part of its convention
+("Stayman › slam tries"); a card's difficulty counts it as more of an agreement
+it already has, not as one more convention. Grouping is an attribute, not the
+path: saved cards fix the paths, and they already split one convention across
+sections (`other_conventions.blackwood.*` and `slam.blackwood.*`).
+
+Evidence for the values (2026-09-30): Bridge Classroom's editor levels (67
+conventions) and skill levels (50 skills); Advancing in Bridge's lesson levels
+(1–10, about 490 lessons; lessons before about #338 use an earlier, compressed
+scale); Bridge Master's hand levels (1–5, declarer play); the conventions BBA's
+`.bbsa` files switch. Each value is our own judgment, informed by these; the
+spec does not reproduce another source's list.
+
 ## Comparing cards
 
 A player with several partners has different agreements with each, and wants a

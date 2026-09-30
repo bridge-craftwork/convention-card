@@ -4,6 +4,18 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: difficulty levels** (Rick Wilson)
+
+1. **One scale, 1 to 10,** for skills and conventions, bidding and cardplay.
+   Advancing in Bridge moved from a compressed 1–6 to 1–10 as its lessons grew;
+   four named tiers are too coarse to rate a card.
+2. **Named bands are derived** from the number, for the editor's filter and
+   lesson front matter, and never stored. About five of them (open question 7).
+3. **A convention's level is the lowest level at which it is taught.** Later
+   material (slam sequences, bidding after interference, responses with a void)
+   is an extension of the same convention, with its own higher level. See
+   DESIGN.md, "Difficulty levels".
+
 **2026-09-30: the field vocabulary lives here** (Rick Wilson; open question 1)
 
 The standard vocabulary (`spec/fields.toml`, `spec/formats/bbsa-map.toml`) lives
@@ -73,3 +85,14 @@ OFL and fine to ship with its licence.)
 **6. What `reference.txt` contains.** Per site issue #3, each tool publishes a
 machine-readable reference. For this tool the natural content is the spec: every
 field with its path, kind, options and description, generated at build time.
+
+**7. The named level bands.** Five names over 1–10, for example Beginner 1–2,
+Basic 3–4, Intermediate 5–6, Advanced 7–8, Expert 9–10. Bridge Classroom has four
+(`basic` to `expert`) and lesson-studio's Contract 4 uses the same four, so a
+fifth name, or a different split, changes both.
+
+**8. What counts as a convention.** Named variants of a convention (Puppet
+Stayman against Stayman, 0314 against 1430) could be extensions of it or
+conventions of their own. Extensions share a convention id; a variant that
+replaces the base convention may be better as its own, linked back.
+
