@@ -280,7 +280,9 @@ mod tests {
         assert_eq!(t("DONT"), v("dont"));
         assert_eq!(t("Modified Cappelletti"), v("modified_cappelletti"));
         assert_eq!(t("Hamilton"), v("cappelletti"));
-        assert!(t("Suction").is_err());
+        assert_eq!(t("Strong - Suction"), v("suction"));
+        assert_eq!(t("Weak (Cappelletti)"), v("cappelletti"));
+        assert!(t("Astro").is_err());
         // The older path still loads into the field.
         let old = registry()
             .get("competitive.defense_vs_strong_nt.convention")

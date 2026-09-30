@@ -269,39 +269,40 @@
 "namyats.play"             = { kind = "bool", label = "Namyats", skill = "bidding_conventions/namyats", level = 6 }
 
 [slam]
-"blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood" }
-"blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"], skill = "bidding_conventions/roman_keycard" }
-"blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"], skill = "bidding_conventions/roman_keycard" }
-"blackwood.minor_0314"     = { kind = "bool", label = "RKCB 0314 with a minor as trumps (1430 in the majors)", skill = "bidding_conventions/roman_keycard" }
-"blackwood.queen_ask"      = { kind = "bool", label = "Queen ask", aliases = ["other_conventions.blackwood.queen_ask"], skill = "bidding_conventions/roman_keycard" }
+"blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood", level = 2 }
+"blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"], skill = "bidding_conventions/roman_keycard", level = 4 }
+"blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"], skill = "bidding_conventions/roman_keycard", level = 4 }
+"blackwood.minor_0314"     = { kind = "bool", label = "RKCB 0314 with a minor as trumps (1430 in the majors)", skill = "bidding_conventions/roman_keycard", level = 6 }
+"blackwood.queen_ask"      = { kind = "bool", label = "Queen ask", aliases = ["other_conventions.blackwood.queen_ask"], skill = "bidding_conventions/roman_keycard", level = 6 }
 "blackwood.notes"          = { kind = "text", label = "4NT notes", aliases = ["other_conventions.blackwood.notes"] }
-"king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT" }
-"king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid" }
-"quantitative_4nt.play"    = { kind = "bool", label = "Quantitative 4NT" }
-"four_nt_opening.play"     = { kind = "bool", label = "4NT opening (specific aces)" }
-"gerber.play"              = { kind = "bool", label = "Gerber", aliases = ["other_conventions.gerber.play"], skill = "bidding_conventions/gerber" }
+"king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT", skill = "bidding_conventions/roman_keycard", level = 5 }
+"king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid", skill = "bidding_conventions/roman_keycard", level = 7 }
+"quantitative_4nt.play"    = { kind = "bool", label = "Quantitative 4NT", level = 3 }
+"four_nt_opening.play"     = { kind = "bool", label = "4NT opening (specific aces)", level = 8 }
+"gerber.play"              = { kind = "bool", label = "Gerber", aliases = ["other_conventions.gerber.play"], skill = "bidding_conventions/gerber", level = 3 }
 "gerber.over"              = { kind = "text", label = "Gerber applies over" }
 "gerber.only_over_nt_openings" = { kind = "bool", label = "Gerber only over NT openings" }
 "gerber.directly_over_nt"  = { kind = "bool", label = "Gerber directly over NT", aliases = ["other_conventions.gerber.directly_over_nt"] }
 "gerber.over_nt_seq"       = { kind = "bool", label = "Gerber over NT sequence", aliases = ["other_conventions.gerber.over_nt_seq"] }
 "gerber.non_nt_seq"        = { kind = "bool", label = "Gerber in non-NT sequence", aliases = ["other_conventions.gerber.non_nt_seq"] }
-"kickback.play"            = { kind = "bool", label = "Kickback", aliases = ["other_conventions.kickback.play"] }
-"kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430" }
-"kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314" }
-"minorwood.play"           = { kind = "bool", label = "Minorwood" }
-"exclusion_blackwood.play" = { kind = "bool", label = "Exclusion Blackwood" }
-"pick_a_slam_5nt.play"     = { kind = "bool", label = "Pick-a-slam 5NT" }
-"western_cuebid.play"      = { kind = "bool", label = "Western cuebid" }
-"spiral_cuebids.play"      = { kind = "bool", label = "Spiral cuebids" }
-"non_serious_3nt.play"     = { kind = "bool", label = "Non-serious 3NT" }
-"dopi"                     = { kind = "bool", label = "DOPI" }
-"depo"                     = { kind = "bool", label = "DEPO" }
-"ropi"                     = { kind = "bool", label = "ROPI" }
+"kickback.play"            = { kind = "bool", label = "Kickback", aliases = ["other_conventions.kickback.play"], skill = "bidding_conventions/kickback", level = 9 }
+"kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430", skill = "bidding_conventions/kickback", level = 9 }
+"kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314", skill = "bidding_conventions/kickback", level = 9 }
+"minorwood.play"           = { kind = "bool", label = "Minorwood", skill = "bidding_conventions/minorwood", level = 7 }
+"exclusion_blackwood.play" = { kind = "bool", label = "Exclusion Blackwood", skill = "bidding_conventions/exclusion_blackwood", level = 7 }
+"pick_a_slam_5nt.play"     = { kind = "bool", label = "Pick-a-slam 5NT", skill = "bidding_conventions/pick_a_slam_5nt", level = 7 }
+"western_cuebid.play"      = { kind = "bool", label = "Western cuebid", skill = "bidding_conventions/western_cuebid", level = 4 }
+"spiral_cuebids.play"      = { kind = "bool", label = "Spiral cuebids", skill = "bidding_conventions/spiral", level = 8 }
+"non_serious_3nt.play"     = { kind = "bool", label = "Non-serious 3NT", skill = "bidding_conventions/serious_3nt", level = 9 }
+"dopi"                     = { kind = "bool", label = "DOPI", skill = "bidding_conventions/dopi_ropi", level = 7 }
+"depo"                     = { kind = "bool", label = "DEPO", skill = "bidding_conventions/depo", level = 7 }
+"ropi"                     = { kind = "bool", label = "ROPI", skill = "bidding_conventions/dopi_ropi", level = 7 }
 "control_bids"             = { kind = "text", label = "Control bids (notes)" }
-"cue_bids.play"            = { kind = "bool", label = "Control (cue) bids", desc = "BBA's 'Cue bid'. With a trump suit agreed and slam in the air, bid a control below game instead of asking straight away", skill = "bidding_conventions/control_bids" }
+"cue_bids.play"            = { kind = "bool", label = "Control (cue) bids", desc = "BBA's 'Cue bid'. With a trump suit agreed and slam in the air, bid a control below game instead of asking straight away", skill = "bidding_conventions/control_bids", level = 5 }
 "cue_bids.style"           = { kind = "enum", label = "Control bids show", options = ["first_round", "first_or_second_round"], default = "first_or_second_round", desc = "first_round: the ace or a void only. first_or_second_round: king and singleton too, which is the more common modern treatment" }
 "vs_interference"          = { kind = "text", label = "Vs interference" }
 "trump_level"              = { kind = "text", label = "Trump-level cutover" }
+"notes"                    = { kind = "text", label = "Slam notes", note = true }
 
 [overcalls]
 "one_level_min"            = { kind = "int", label = "1-level overcall: minimum", min = 0, max = 20 }
@@ -309,13 +310,13 @@
 "two_level_min"            = { kind = "int", label = "2-level overcall: minimum", min = 0, max = 20 }
 "two_level_max"            = { kind = "int", label = "2-level overcall: maximum", min = 0, max = 25 }
 "often_4_cards"            = { kind = "bool", label = "Often 4-card suits at 1-level" }
-"jump"                     = { kind = "enum", label = "Jump overcalls", options = ["weak", "intermediate", "strong"] }
+"jump"                     = { kind = "enum", label = "Jump overcalls", options = ["weak", "intermediate", "strong"], level = 3 }
 "conv_text"                = { kind = "text", label = "Conventional overcalls" }
 "responses.new_suit"       = { kind = "enum", label = "New-suit response", options = ["forcing", "nf_constructive", "nf", "transfer"] }
 "responses.jump_raise"     = { kind = "enum", label = "Jump-raise response", options = ["weak", "mixed", "invitational"] }
 "responses.cuebids_text"   = { kind = "text", label = "Cuebid response" }
-"responses.support_cuebid" = { kind = "bool", label = "Support cuebid", skill = "competitive_bidding/support_cuebids" }
-"responses.natural_in_responders_suit" = { kind = "bool", label = "Advancer's bid of responder's suit is natural", desc = "(1♣) 1♦ (1♥) 2♥ is natural: RHO's 1♥ promises only 4, so advancer shows 5+. 2♣ would be the cue-bid raise" }
+"responses.support_cuebid" = { kind = "bool", label = "Support cuebid", skill = "competitive_bidding/support_cuebids", level = 4 }
+"responses.natural_in_responders_suit" = { kind = "bool", label = "Advancer's bid of responder's suit is natural", desc = "(1♣) 1♦ (1♥) 2♥ is natural: RHO's 1♥ promises only 4, so advancer shows 5+. 2♣ would be the cue-bid raise", level = 6 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "notes"                    = { kind = "text", label = "Overcall notes (card write-in)", note = true }
 # --- end: Bridge-Classroom card fields (bc-export) ---
@@ -323,11 +324,11 @@
 [nt_overcalls]
 "direct.range_min"         = { kind = "int", label = "Direct 1NT: minimum", min = 0, max = 25 }
 "direct.range_max"         = { kind = "int", label = "Direct 1NT: maximum", min = 0, max = 25 }
-"direct.systems_on"        = { kind = "bool", label = "Direct 1NT: systems on" }
+"direct.systems_on"        = { kind = "bool", label = "Direct 1NT: systems on", level = 4 }
 "balance.range_min"        = { kind = "int", label = "Balancing 1NT: minimum", min = 0, max = 25 }
 "balance.range_max"        = { kind = "int", label = "Balancing 1NT: maximum", min = 0, max = 25 }
-"balance.systems_on"       = { kind = "bool", label = "Balancing 1NT: systems on" }
-"jump_2nt_lowest_unbid"    = { kind = "bool", label = "Jump 2NT = two lowest unbid" }
+"balance.systems_on"       = { kind = "bool", label = "Balancing 1NT: systems on", level = 4 }
+"jump_2nt_lowest_unbid"    = { kind = "bool", label = "Jump 2NT = two lowest unbid", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "conv_text"                = { kind = "text", label = "Other treatments" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "direct.conv_text"         = { kind = "text", label = "Direct 1NT: conventional" }
@@ -336,31 +337,31 @@
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [doubles]
-"takeout_style"            = { kind = "text", label = "Takeout double style", aliases = ["competitive.takeout_doubles.style"], skill = "competitive_bidding/takeout_doubles" }
-"negative.play"            = { kind = "bool", label = "Negative doubles", skill = "competitive_bidding/negative_doubles" }
+"takeout_style"            = { kind = "text", label = "Takeout double style", aliases = ["competitive.takeout_doubles.style"], skill = "competitive_bidding/takeout_doubles", level = 2 }
+"negative.play"            = { kind = "bool", label = "Negative doubles", skill = "competitive_bidding/negative_doubles", level = 3 }
 "negative.through"         = { kind = "text", label = "Negative doubles through", aliases = ["competitive.negative_doubles.through"], skill = "competitive_bidding/negative_doubles" }
-"responsive.play"          = { kind = "bool", label = "Responsive doubles", skill = "competitive_bidding/responsive_doubles" }
+"responsive.play"          = { kind = "bool", label = "Responsive doubles", skill = "competitive_bidding/responsive_doubles", level = 5 }
 "responsive.through"       = { kind = "text", label = "Responsive doubles through" }
-"support.play"             = { kind = "bool", label = "Support doubles", skill = "competitive_bidding/support_doubles" }
+"support.play"             = { kind = "bool", label = "Support doubles", skill = "competitive_bidding/support_doubles", level = 5 }
 "support.through"          = { kind = "text", label = "Support doubles through", desc = "The highest call by RHO over which the double still shows three-card support, as a bid (2♥, 2S). Unset: two of responder's major" }
-"support.rdbl"             = { kind = "bool", label = "Support redouble", skill = "competitive_bidding/support_doubles" }
-"maximal"                  = { kind = "bool", label = "Maximal doubles" }
+"support.rdbl"             = { kind = "bool", label = "Support redouble", skill = "competitive_bidding/support_doubles", level = 5 }
+"maximal"                  = { kind = "bool", label = "Maximal doubles", skill = "competitive_bidding/maximal_doubles", level = 6 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "notes"                    = { kind = "text", label = "Double notes (card write-in)", note = true }
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [competitive]
-"michaels.play"            = { kind = "bool", label = "Michaels cuebid", skill = "competitive_bidding/michaels_unusual" }
+"michaels.play"            = { kind = "bool", label = "Michaels cuebid", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "michaels.strength"        = { kind = "enum", label = "Michaels strength", options = ["wide_range", "weak_or_strong"], default = "wide_range", desc = "wide_range: any strength from about 7 HCP with five-five (BBA: 8+ total points, 12+ vulnerable). weak_or_strong (mini-maxi): weak, or 16+ and bids again; an intermediate hand overcalls instead. Bridge-Classroom's seed card writes weak_or_strong" }
-"leaping_michaels.play"    = { kind = "bool", label = "Leaping Michaels" }
-"non_leaping_michaels.play" = { kind = "bool", label = "Non-leaping Michaels" }
-"unusual_1nt.play"         = { kind = "bool", label = "Unusual 1NT" }
-"unusual_2nt.play"         = { kind = "bool", label = "Unusual 2NT", skill = "competitive_bidding/michaels_unusual" }
+"leaping_michaels.play"    = { kind = "bool", label = "Leaping Michaels", skill = "competitive_bidding/leaping_michaels", level = 7 }
+"non_leaping_michaels.play" = { kind = "bool", label = "Non-leaping Michaels", skill = "competitive_bidding/non_leaping_michaels", level = 8 }
+"unusual_1nt.play"         = { kind = "bool", label = "Unusual 1NT", skill = "competitive_bidding/michaels_unusual", level = 6 }
+"unusual_2nt.play"         = { kind = "bool", label = "Unusual 2NT", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "unusual_2nt.shows"        = { kind = "text", label = "Unusual 2NT shows" }
-"unusual_3nt.play"         = { kind = "bool", label = "Unusual 3NT" }
-"unusual_4nt.play"         = { kind = "bool", label = "Unusual 4NT" }
-"unusual_vs_unusual.play"  = { kind = "bool", label = "Unusual vs Unusual", skill = "competitive_bidding/unusual_vs_unusual" }
-"vs_1nt_strong.system"     = { kind = "enum", label = "Defense vs strong 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "other"], aliases = ["competitive.defense_vs_strong_nt.convention"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other" }, desc = "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/multi_landy"] }
+"unusual_3nt.play"         = { kind = "bool", label = "Unusual 3NT", skill = "competitive_bidding/michaels_unusual", level = 6 }
+"unusual_4nt.play"         = { kind = "bool", label = "Unusual 4NT", skill = "competitive_bidding/michaels_unusual", level = 5 }
+"unusual_vs_unusual.play"  = { kind = "bool", label = "Unusual vs Unusual", skill = "competitive_bidding/unusual_vs_unusual", level = 8 }
+"vs_1nt_strong.system"     = { kind = "enum", label = "Defense vs strong 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "other"], aliases = ["competitive.defense_vs_strong_nt.convention"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other" }, desc = "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
 "vs_1nt_strong.dbl"        = { kind = "text", label = "Vs strong 1NT: double" }
 "vs_1nt_strong.2c"         = { kind = "text", label = "Vs strong 1NT: 2♣" }
 "vs_1nt_strong.2d"         = { kind = "text", label = "Vs strong 1NT: 2♦" }
@@ -368,7 +369,7 @@
 "vs_1nt_strong.2s"         = { kind = "text", label = "Vs strong 1NT: 2♠" }
 "vs_1nt_strong.2nt"        = { kind = "text", label = "Vs strong 1NT: 2NT" }
 "vs_1nt_strong.other"      = { kind = "text", label = "Vs strong 1NT: other" }
-"vs_1nt_weak.system"       = { kind = "enum", label = "Defense vs weak 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "other"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other" }, desc = "Not read by the rules yet: vs_1nt_strong.system is played against every range", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/multi_landy"] }
+"vs_1nt_weak.system"       = { kind = "enum", label = "Defense vs weak 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "other"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other" }, desc = "Not read by the rules yet: vs_1nt_strong.system is played against every range", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
 "vs_1nt_weak.dbl"          = { kind = "text", label = "Vs weak 1NT: double" }
 "vs_1nt_weak.2c"           = { kind = "text", label = "Vs weak 1NT: 2♣" }
 "vs_1nt_weak.2d"           = { kind = "text", label = "Vs weak 1NT: 2♦" }
@@ -376,20 +377,20 @@
 "vs_1nt_weak.2s"           = { kind = "text", label = "Vs weak 1NT: 2♠" }
 "vs_1nt_weak.2nt"          = { kind = "text", label = "Vs weak 1NT: 2NT" }
 "vs_1nt_weak.other"        = { kind = "text", label = "Vs weak 1NT: other" }
-"dont.play"                = { kind = "bool", label = "DONT", desc = "Bridge-Classroom's DONT switch: plays DONT when vs_1nt_strong.system is unset or other", skill = "competitive_bidding/dont" }
-"cue_bid_raise.play"       = { kind = "bool", label = "Cue-bid raise", skill = "competitive_bidding/support_cuebids" }
-"lead_directing_double.play" = { kind = "bool", label = "Lead-directing doubles" }
-"lebensohl_weak_twos.play" = { kind = "bool", label = "Lebensohl after doubling a weak two", aliases = ["vs_preempts.lebensohl_response"], skill = "competitive_bidding/lebensohl" }
-"rubensohl_after_double.play" = { kind = "bool", label = "Rubensohl after doubling a weak two" }
-"sandwich_nt.play"         = { kind = "bool", label = "Sandwich NT" }
-"snapdragon.play"          = { kind = "bool", label = "Snapdragon doubles" }
-"bromad.play"              = { kind = "bool", label = "BROMAD" }
-"ghestem.play"             = { kind = "bool", label = "Ghestem" }
-"raptor_1nt.play"          = { kind = "bool", label = "Raptor 1NT" }
-"scrambling_2nt.play"      = { kind = "bool", label = "Scrambling 2NT" }
-"fit_showing_jumps.play"   = { kind = "bool", label = "Fit-showing jumps" }
-"jordan_2nt.play"          = { kind = "bool", label = "Jordan (Truscott) 2NT", desc = "1M–(X)–2NT shows 4+ card support and 10+ points", aliases = ["vs_to_double.two_nt_raise_majors.limit_plus"] }
-"new_suit_after_overcall_forcing" = { kind = "bool", label = "1X–(Y)–2Z new suit forcing" }
+"dont.play"                = { kind = "bool", label = "DONT", desc = "Bridge-Classroom's DONT switch: plays DONT when vs_1nt_strong.system is unset or other", skill = "competitive_bidding/dont", level = 5 }
+"cue_bid_raise.play"       = { kind = "bool", label = "Cue-bid raise", skill = "competitive_bidding/support_cuebids", level = 4 }
+"lead_directing_double.play" = { kind = "bool", label = "Lead-directing doubles", skill = "competitive_bidding/lead_directing_doubles", level = 5 }
+"lebensohl_weak_twos.play" = { kind = "bool", label = "Lebensohl after doubling a weak two", aliases = ["vs_preempts.lebensohl_response"], skill = "competitive_bidding/lebensohl", level = 7 }
+"rubensohl_after_double.play" = { kind = "bool", label = "Rubensohl after doubling a weak two", skill = "competitive_bidding/rubensohl", level = 9 }
+"sandwich_nt.play"         = { kind = "bool", label = "Sandwich NT", skill = "competitive_bidding/sandwich_nt", level = 7 }
+"snapdragon.play"          = { kind = "bool", label = "Snapdragon doubles", skill = "competitive_bidding/snapdragon", level = 8 }
+"bromad.play"              = { kind = "bool", label = "BROMAD", skill = "competitive_bidding/bromad", level = 8 }
+"ghestem.play"             = { kind = "bool", label = "Ghestem", skill = "competitive_bidding/ghestem", level = 8 }
+"raptor_1nt.play"          = { kind = "bool", label = "Raptor 1NT", skill = "competitive_bidding/raptor", level = 8 }
+"scrambling_2nt.play"      = { kind = "bool", label = "Scrambling 2NT", skill = "competitive_bidding/scrambling_2nt", level = 7 }
+"fit_showing_jumps.play"   = { kind = "bool", label = "Fit-showing jumps", skill = "competitive_bidding/fit_showing_jumps", level = 7 }
+"jordan_2nt.play"          = { kind = "bool", label = "Jordan (Truscott) 2NT", desc = "1M–(X)–2NT shows 4+ card support and 10+ points", aliases = ["vs_to_double.two_nt_raise_majors.limit_plus"], skill = "competitive_bidding/jordan_2nt", level = 5 }
+"new_suit_after_overcall_forcing" = { kind = "bool", label = "1X–(Y)–2Z new suit forcing", level = 4 }
 "jump_shift_after_overcall" = { kind = "enum", label = "1X–(1Y)–2Z jump shift", options = ["weak", "strong"] }
 "direct_jump_cuebid_major" = { kind = "enum", label = "Direct jump cuebid over a major", options = ["gambling", "minor", "strong"] }
 "direct_jump_cuebid_minor" = { kind = "enum", label = "Direct jump cuebid over a minor", options = ["gambling", "majors", "preempt"] }
@@ -409,16 +410,16 @@
 # the Michaels cells of the natural columns and quasi; the other cells
 # are recorded for the card.
 [direct_cuebids]
-"art_michaels"             = { kind = "bool", label = "Cue of an artificial 1♣/1♦: Michaels", skill = "competitive_bidding/michaels_unusual" }
+"art_michaels"             = { kind = "bool", label = "Cue of an artificial 1♣/1♦: Michaels", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "art_natural"              = { kind = "bool", label = "Cue of an artificial 1♣/1♦: natural" }
 "art_other"                = { kind = "bool", label = "Cue of an artificial 1♣/1♦: other" }
-"quasi_michaels"           = { kind = "bool", label = "Cue of a possibly short 1♣/1♦: Michaels", skill = "competitive_bidding/michaels_unusual" }
+"quasi_michaels"           = { kind = "bool", label = "Cue of a possibly short 1♣/1♦: Michaels", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "quasi_natural"            = { kind = "bool", label = "Cue of a possibly short 1♣/1♦: natural" }
 "quasi_other"              = { kind = "bool", label = "Cue of a possibly short 1♣/1♦: other" }
-"nat_minors_michaels"      = { kind = "bool", label = "Cue of a natural 1♣/1♦: Michaels (both majors)", skill = "competitive_bidding/michaels_unusual" }
+"nat_minors_michaels"      = { kind = "bool", label = "Cue of a natural 1♣/1♦: Michaels (both majors)", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "nat_minors_natural"       = { kind = "bool", label = "Cue of a natural 1♣/1♦: natural" }
 "nat_minors_other"         = { kind = "bool", label = "Cue of a natural 1♣/1♦: other" }
-"nat_majors_michaels"      = { kind = "bool", label = "Cue of 1♥/1♠: Michaels (the other major and a minor)", skill = "competitive_bidding/michaels_unusual" }
+"nat_majors_michaels"      = { kind = "bool", label = "Cue of 1♥/1♠: Michaels (the other major and a minor)", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "nat_majors_natural"       = { kind = "bool", label = "Cue of 1♥/1♠: natural" }
 "nat_majors_other"         = { kind = "bool", label = "Cue of 1♥/1♠: other" }
 "description"              = { kind = "text", label = "Direct cuebids: notes" }
@@ -483,31 +484,31 @@
 # 2NT response is competitive.lebensohl_weak_twos.play (aliases there).
 
 [vs_to_double]
-"new_suit_forcing_1lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 1-level" }
-"new_suit_forcing_2lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 2-level" }
-"new_suit_forcing_tfr"     = { kind = "bool", label = "Vs takeout double: transfer responses" }
+"new_suit_forcing_1lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 1-level", level = 4 }
+"new_suit_forcing_2lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 2-level", level = 4 }
+"new_suit_forcing_tfr"     = { kind = "bool", label = "Vs takeout double: transfer responses", skill = "bidding_conventions/transfers_after_double", level = 9 }
 "jump_shift"               = { kind = "enum", label = "Vs takeout double: jump shift", options = ["weak", "mixed", "inv", "forcing", "fit"] }
-"redouble.ten_plus"        = { kind = "bool", label = "Vs takeout double: redouble shows 10+" }
-"redouble.conv"            = { kind = "bool", label = "Vs takeout double: conventional redouble" }
-"redouble.denies_fit"      = { kind = "bool", label = "Vs takeout double: redouble implies no fit" }
+"redouble.ten_plus"        = { kind = "bool", label = "Vs takeout double: redouble shows 10+", level = 2 }
+"redouble.conv"            = { kind = "bool", label = "Vs takeout double: conventional redouble", level = 7 }
+"redouble.denies_fit"      = { kind = "bool", label = "Vs takeout double: redouble implies no fit", level = 4 }
 "redouble.conv_desc"       = { kind = "text", label = "Vs takeout double: redouble notes", note = true }
-"two_nt_raise_majors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major" }
-"two_nt_raise_majors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, limit" }
-"two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak" }
+"two_nt_raise_majors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major", skill = "competitive_bidding/jordan_2nt", level = 5 }
+"two_nt_raise_majors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, limit", skill = "competitive_bidding/jordan_2nt", level = 5 }
+"two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak", skill = "competitive_bidding/jordan_2nt", level = 7 }
 "two_nt_raise_majors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a major, minimum", min = 0, max = 25 }
 "two_nt_raise_majors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a major, maximum", min = 0, max = 25 }
-"two_nt_raise_minors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor" }
-"two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better" }
-"two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit" }
-"two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak" }
+"two_nt_raise_minors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor", skill = "competitive_bidding/jordan_2nt", level = 6 }
+"two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better", skill = "competitive_bidding/jordan_2nt", level = 6 }
+"two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit", skill = "competitive_bidding/jordan_2nt", level = 6 }
+"two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak", skill = "competitive_bidding/jordan_2nt", level = 7 }
 "two_nt_raise_minors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a minor, minimum", min = 0, max = 25 }
 "two_nt_raise_minors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a minor, maximum", min = 0, max = 25 }
 "notes"                    = { kind = "text", label = "Vs takeout double notes (card write-in)", note = true }
 
 [vs_preempts]
-"takeout_double"           = { kind = "bool", label = "Vs preempts: double is takeout" }
+"takeout_double"           = { kind = "bool", label = "Vs preempts: double is takeout", skill = "competitive_bidding/takeout_doubles", level = 3 }
 "takeout_double_thru"      = { kind = "text", label = "Vs preempts: takeout double through" }
-"takeout_double_penalty"   = { kind = "bool", label = "Vs preempts: double is penalty" }
+"takeout_double_penalty"   = { kind = "bool", label = "Vs preempts: double is penalty", level = 5 }
 "conv_takeout"             = { kind = "text", label = "Vs preempts: conventional takeout" }
 "two_nt_overcall"          = { kind = "text", label = "Vs preempts: 2NT overcall" }
 "cuebid"                   = { kind = "text", label = "Vs preempts: cuebid" }
