@@ -1,14 +1,16 @@
-//! Teaching skills: the SkillPath strings Bridge-Classroom tags its lessons
-//! with (`bidding_conventions/stayman`), which a card field (`skill = ...`
-//! in `fields.toml`) and a `.bid` module (`skill` header lines) may name.
+//! The standard conventions and skills (ADR-0001): the IDs
+//! (`bidding_conventions/stayman`) that a card field (`skill = ...` in
+//! `fields.toml`), a lesson's SkillPath tag and a `.bid` module (`skill`
+//! header lines) name, with what the spec says about each.
 //!
-//! The known paths are the rules directory's `card/skills.toml`
-//! ([`Skills::FILE`]): Bridge-Classroom's taxonomy, the tags its lessons
-//! use beyond it, and the paths we propose. Nothing refuses to load over an
-//! unknown path; `rbb bid check` warns and `rbb bid skills` lists it.
+//! The list is `conventions.toml` ([`Skills::FILE`]): one table per ID. Nothing
+//! refuses to load over an unknown ID; `rbb bid check` warns and
+//! `rbb bid skills` lists it.
 
 use std::collections::BTreeMap;
 use std::path::Path;
+
+use serde::Deserialize;
 
 use crate::Error;
 
@@ -26,20 +28,20 @@ pub fn is_skill_path(s: &str) -> bool {
     }
 }
 
-/// Where a known skill path comes from.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+/// Where an ID comes from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum SkillSource {
     /// Bridge-Classroom's taxonomy (`public/data/skillPaths.json`).
     Taxonomy,
     /// A SkillPath tag its lesson files use that the taxonomy lacks.
     Lessons,
-    /// Proposed by us for a convention the taxonomy has no skill for; not
-    /// in Bridge-Classroom yet.
+    /// Proposed by us; not in Bridge-Classroom yet.
     Proposed,
 }
 
 impl SkillSource {
-    /// The table in `skills.toml` that lists it.
+    /// How `conventions.toml` writes it (`source = "..."`).
     pub fn table(self) -> &'static str {
         match self {
             SkillSource::Taxonomy => "taxonomy",
@@ -49,71 +51,101 @@ impl SkillSource {
     }
 }
 
-/// One known skill path.
+/// A citation: where to read more about a convention. Never another
+/// source's text.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Citation {
+    pub title: String,
+    #[serde(default)]
+    pub by: Option<String>,
+    #[serde(default)]
+    pub site: Option<String>,
+    #[serde(default)]
+    pub url: Option<String>,
+    /// `"book"` for a book; unset for a page.
+    #[serde(default)]
+    pub kind: Option<String>,
+    #[serde(default)]
+    pub chapter: Option<u32>,
+}
+
+/// One standard convention or skill.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Skill {
     pub path: String,
     pub name: String,
     pub source: SkillSource,
+    /// 1-10: the lowest level at which it is taught.
+    pub level: Option<u8>,
+    /// The ways people write it, for finding it in free text.
+    pub names: Vec<String>,
+    /// What it is, in a few lines of plain text.
+    pub summary: Option<String>,
+    pub see: Vec<Citation>,
 }
 
-/// The known skill paths (`card/skills.toml`).
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Entry {
+    name: String,
+    source: SkillSource,
+    #[serde(default)]
+    level: Option<u8>,
+    #[serde(default)]
+    names: Vec<String>,
+    #[serde(default)]
+    summary: Option<String>,
+    #[serde(default)]
+    see: Vec<Citation>,
+}
+
+/// The standard conventions and skills (`conventions.toml`).
 #[derive(Debug, Clone, Default)]
 pub struct Skills {
     skills: BTreeMap<String, Skill>,
 }
 
 impl Skills {
-    /// Where the list lives, relative to the rules directory.
-    pub const FILE: &'static str = "card/skills.toml";
+    /// Where the list lives, relative to the spec directory.
+    pub const FILE: &'static str = "conventions.toml";
 
-    /// Parse the `skills.toml` format: tables `[taxonomy]`, `[lessons]` and
-    /// `[proposed]`, each mapping a skill path to its display name.
+    /// Parse the `conventions.toml` format: one table per ID.
     pub fn parse(text: &str) -> Result<Skills, Error> {
         let table: toml::Table = toml::from_str(text).map_err(|e| Error::toml(&e, text))?;
         let mut skills = BTreeMap::new();
-        for (key, entries) in table {
-            let source = match key.as_str() {
-                "taxonomy" => SkillSource::Taxonomy,
-                "lessons" => SkillSource::Lessons,
-                "proposed" => SkillSource::Proposed,
-                _ => {
-                    return Err(Error::new(format!(
-                        "unknown table [{key}]: expected [taxonomy], [lessons] or [proposed]"
-                    )))
-                }
-            };
-            let entries = entries
-                .as_table()
-                .ok_or_else(|| Error::new(format!("[{key}] is not a table")))?;
-            for (path, name) in entries {
-                if !is_skill_path(path) {
-                    return Err(Error::new(format!(
-                        "[{key}] {path:?} is not a skill path (category/name, lower case)"
-                    )));
-                }
-                let name = name
-                    .as_str()
-                    .ok_or_else(|| Error::new(format!("[{key}] {path}: expected a name")))?;
-                let skill = Skill {
-                    path: path.clone(),
-                    name: name.to_string(),
-                    source,
-                };
-                if let Some(old) = skills.insert(path.clone(), skill) {
-                    return Err(Error::new(format!(
-                        "{path} is listed in [{}] and [{key}]",
-                        old.source.table()
-                    )));
-                }
+        for (path, entry) in table {
+            if !is_skill_path(&path) {
+                return Err(Error::new(format!(
+                    "{path:?} is not a skill path (category/name, lower case)"
+                )));
             }
+            let e: Entry = entry
+                .try_into()
+                .map_err(|e| Error::new(format!("{path}: {e}")))?;
+            if e.level.is_some_and(|l| !(1..=10).contains(&l)) {
+                return Err(Error::new(format!("{path}: level must be 1 to 10")));
+            }
+            let summary = e.summary.map(|s| s.trim().to_string());
+            skills.insert(
+                path.clone(),
+                Skill {
+                    path,
+                    name: e.name,
+                    source: e.source,
+                    level: e.level,
+                    names: e.names,
+                    summary,
+                    see: e.see,
+                },
+            );
         }
         Ok(Skills { skills })
     }
 
-    /// Load `<rules_dir>/card/skills.toml`; `None` when the rules have none.
-    pub fn load(rules_dir: &Path) -> Result<Option<Skills>, Error> {
-        let path = rules_dir.join(Self::FILE);
+    /// Load `<dir>/conventions.toml`; `None` when there is none.
+    pub fn load(dir: &Path) -> Result<Option<Skills>, Error> {
+        let path = dir.join(Self::FILE);
         match std::fs::read_to_string(&path) {
             Ok(text) => Skills::parse(&text)
                 .map(Some)
@@ -148,28 +180,35 @@ mod tests {
     }
 
     #[test]
-    fn parses_the_three_tables() {
+    fn parses_entries() {
         let s = Skills::parse(
-            "[taxonomy]\n\"bidding_conventions/stayman\" = \"Stayman\"\n\
-             [proposed]\n\"bidding_conventions/smolen\" = \"Smolen\"\n",
+            "[\"bidding_conventions/stayman\"]\nname = \"Stayman\"\nsource = \"taxonomy\"\nlevel = 3\n\
+             see = [{ title = \"Stayman\", url = \"https://example.org\" }]\n\
+             [\"bidding_conventions/smolen\"]\nname = \"Smolen\"\nsource = \"proposed\"\n",
         )
         .unwrap();
         assert_eq!(
             s.get("bidding_conventions/smolen").unwrap().source,
             SkillSource::Proposed
         );
-        assert!(Skills::parse("[other]\n").is_err());
-        assert!(Skills::parse("[taxonomy]\n\"Stayman\" = \"x\"\n").is_err());
-        let twice = "[taxonomy]\n\"a/b\" = \"x\"\n[proposed]\n\"a/b\" = \"x\"\n";
-        assert!(Skills::parse(twice).is_err());
+        assert_eq!(s.get("bidding_conventions/stayman").unwrap().level, Some(3));
+        assert!(Skills::parse("[\"Stayman\"]\nname = \"x\"\nsource = \"taxonomy\"\n").is_err());
+        assert!(Skills::parse("[\"a/b\"]\nname = \"x\"\nsource = \"other\"\n").is_err());
+        assert!(
+            Skills::parse("[\"a/b\"]\nname = \"x\"\nsource = \"proposed\"\nlevel = 11\n").is_err()
+        );
+        assert!(
+            Skills::parse("[\"a/b\"]\nname = \"x\"\nsource = \"proposed\"\nlevl = 3\n").is_err()
+        );
     }
 
-    /// `spec/skills.toml` loads, and every `skill` a field of
-    /// `fields.toml` names is in it.
+    /// `spec/conventions.toml` loads, every `skill` a field of
+    /// `fields.toml` names is in it, and a convention's level is the lowest
+    /// level among the fields that belong to it (their first `skill`).
     #[test]
-    fn the_rules_skill_list_covers_the_fields() {
-        let skills = Skills::parse(include_str!("../../../spec/skills.toml"))
-            .expect("spec/skills.toml is valid");
+    fn the_spec_list_covers_the_fields() {
+        let skills = Skills::parse(include_str!("../../../spec/conventions.toml"))
+            .expect("spec/conventions.toml is valid");
         assert!(
             skills
                 .iter()
@@ -178,16 +217,26 @@ mod tests {
                 >= 50
         );
         let mut tagged = 0;
+        let mut lowest: BTreeMap<&str, u8> = BTreeMap::new();
         for f in crate::test_vocabulary().registry().fields() {
             for s in &f.skill {
                 tagged += 1;
                 assert!(
                     skills.get(s).is_some(),
-                    "{}: skill {s} is not in skills.toml",
+                    "{}: skill {s} is not in conventions.toml",
                     f.path
                 );
             }
+            if let (Some(s), Some(l)) = (f.skill.first(), f.level) {
+                let e = lowest.entry(s).or_insert(l);
+                *e = (*e).min(l);
+            }
         }
         assert!(tagged > 20);
+        for (s, l) in lowest {
+            if let Some(level) = skills.get(s).unwrap().level {
+                assert_eq!(level, l, "{s}: level {level}, but its lowest field is {l}");
+            }
+        }
     }
 }
