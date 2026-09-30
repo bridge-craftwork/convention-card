@@ -25,16 +25,16 @@ pub use registry::{FieldDef, FieldKind, Registry, Value};
 pub use skills::{Skill, SkillSource, Skills};
 pub use vocabulary::Vocabulary;
 
-/// This repository's vocabulary (`conventions/card/`), for the unit tests
+/// This repository's vocabulary (`spec/`), for the unit tests
 /// only: the crate itself has no built-in vocabulary.
 #[cfg(test)]
 pub(crate) fn test_vocabulary() -> &'static Vocabulary {
     static V: std::sync::OnceLock<Vocabulary> = std::sync::OnceLock::new();
     V.get_or_init(|| {
         Vocabulary::parse(
-            include_str!("../../../conventions/card/fields.toml"),
-            include_str!("../../../conventions/card/bbsa-map.toml"),
+            include_str!("../../../spec/fields.toml"),
+            include_str!("../../../spec/formats/bbsa-map.toml"),
         )
-        .expect("conventions/card is valid")
+        .expect("spec/ is valid")
     })
 }

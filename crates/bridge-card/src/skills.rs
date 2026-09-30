@@ -164,12 +164,12 @@ mod tests {
         assert!(Skills::parse(twice).is_err());
     }
 
-    /// `conventions/card/skills.toml` loads, and every `skill` a field of
+    /// `spec/skills.toml` loads, and every `skill` a field of
     /// `fields.toml` names is in it.
     #[test]
     fn the_rules_skill_list_covers_the_fields() {
-        let skills = Skills::parse(include_str!("../../../conventions/card/skills.toml"))
-            .expect("conventions/card/skills.toml is valid");
+        let skills = Skills::parse(include_str!("../../../spec/skills.toml"))
+            .expect("spec/skills.toml is valid");
         assert!(
             skills
                 .iter()

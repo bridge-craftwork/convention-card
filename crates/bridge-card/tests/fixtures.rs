@@ -6,10 +6,11 @@ use std::path::{Path, PathBuf};
 
 use bridge_card::{bbsa, Card, Value, Vocabulary};
 
-/// The vocabulary of this repository's rules (`conventions/card`).
+/// This repository's vocabulary (`spec/`).
 fn vocab() -> Vocabulary {
-    Vocabulary::load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../../conventions"))
-        .expect("conventions/card loads")
+    let spec = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../spec");
+    let read = |rel: &str| fs::read_to_string(spec.join(rel)).unwrap();
+    Vocabulary::parse(&read("fields.toml"), &read("formats/bbsa-map.toml")).expect("spec/ loads")
 }
 
 fn bbsa_fixtures() -> Vec<PathBuf> {
