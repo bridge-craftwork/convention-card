@@ -198,6 +198,19 @@ see = [
 ["competitive_bidding/dont"]
 name = "DONT"
 source = "taxonomy"
+level = 5
+names = ["DONT", "D.O.N.T.", "Disturb Opponents' No Trump", "Disturbing Opponents NT"]
+summary = """
+Over their strong 1NT: double shows one long suit (partner relays 2♣); 2♣
+and 2♦ show that suit and a higher one; 2♥ both majors; 2♠ six or more
+spades.
+"""
+see = [
+  { title = "DONT", site = "Bridge Bum", url = "https://www.bridgebum.com/dont.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 18 },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 7 },
+  { title = "NT Bidding: DONT and Meckwell", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/541" },
+]
 
 ["competitive_bidding/lebensohl"]
 name = "Lebensohl"
@@ -218,10 +231,35 @@ see = [
 ["competitive_bidding/michaels_unusual"]
 name = "Michaels & Unusual 2NT"
 source = "taxonomy"
+level = 4
+names = ["Michaels", "Michaels cue bid", "Michaels cuebid", "Unusual 2NT", "Unusual notrump", "Unusual NT"]
+summary = """
+Two-suited overcalls. A cue bid of their suit shows five-five in two other
+suits (over a minor, the majors; over a major, the other major and a minor);
+a jump to 2NT shows the two lowest unbid suits.
+"""
+see = [
+  { title = "Michaels Cuebid", site = "Bridge Bum", url = "https://www.bridgebum.com/michaels_cuebid.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 17 },
+  { title = "Competitive Bidding: Michaels Cuebid", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/480" },
+  { title = "Competitive Bidding: Unusual 2NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/481" },
+]
 
 ["competitive_bidding/negative_doubles"]
 name = "Negative Doubles"
 source = "taxonomy"
+level = 3
+names = ["Negative double", "Negative doubles", "Sputnik"]
+summary = """
+After partner opens and the next player overcalls, responder's double is for
+takeout, usually showing the unbid major or majors, so responder can compete
+without a long suit or a fit.
+"""
+see = [
+  { title = "Negative Doubles", by = "Larry Cohen", url = "https://www.larryco.com/bridge-articles/negative-doubles" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 8 },
+  { title = "Negative Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/353" },
+]
 
 ["competitive_bidding/overcalls"]
 name = "Overcalls"
@@ -230,10 +268,33 @@ source = "taxonomy"
 ["competitive_bidding/support_cuebids"]
 name = "Support Cuebids"
 source = "taxonomy"
+level = 4
+names = ["Cue-bid raise", "Cuebid raise", "Support cue bid", "Limit raise or better"]
+summary = """
+A cue bid of the opponents' suit in response to partner's opening or
+overcall shows a raise of partner's suit with limit-raise values or better,
+leaving direct raises weaker.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 15 },
+  { title = "Constructive Bidding Opposite 3rd Hand Openings: Cuebid as Limit Raise+ by a Passed Hand", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/116" },
+]
 
 ["competitive_bidding/takeout_doubles"]
 name = "Takeout Doubles"
 source = "taxonomy"
+level = 2
+names = ["Takeout double", "Takeout doubles", "Double for takeout"]
+summary = """
+A double of an opening bid, when partner has not bid, asks partner to bid:
+it shows opening values, shortness in their suit and support for the unbid
+suits, or a hand too strong to overcall.
+"""
+see = [
+  { title = "Takeout Double", site = "Bridge Bum", url = "https://www.bridgebum.com/takeout_double.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 4 },
+  { title = "Takeout Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/352" },
+]
 
 ["declarer_play/elimination_plays"]
 name = "Elimination Plays"
@@ -499,10 +560,26 @@ see = [
 ["competitive_bidding/cappelletti"]
 name = "Cappelletti over 1NT"
 source = "proposed"
+level = 5
+names = ["Cappelletti", "Hamilton", "Pottage"]
+summary = """
+Over their 1NT: double is for penalty, 2♣ shows a one-suited hand, 2♦ both
+majors, 2♥ and 2♠ that major and a minor, 2NT both minors.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 1 },
+]
 
 ["competitive_bidding/defense_vs_1nt"]
 name = "Defending against 1NT"
 source = "proposed"
+level = 5
+names = ["Defense to 1NT", "Defence to 1NT", "Conventional defense to 1NT"]
+summary = """
+An agreement on what overcalls and doubles of the opponents' 1NT mean,
+usually a system that shows two-suited hands at the two level. The card
+names which one, against strong and weak notrumps.
+"""
 
 ["competitive_bidding/defense_vs_preempts"]
 name = "Defending against Preempts"
@@ -515,22 +592,77 @@ source = "proposed"
 ["competitive_bidding/meckwell"]
 name = "Meckwell over 1NT"
 source = "proposed"
+level = 5
+names = ["Meckwell", "Meckwell defense"]
+summary = """
+Over their 1NT: double shows a one-suited minor or both majors; 2♣ and 2♦
+show that minor and a major; 2♥ and 2♠ are natural; 2NT shows both minors.
+"""
+see = [
+  { title = "Meckwell Defense to 1NT", site = "Bridge Bum", url = "https://www.bridgebum.com/meckwell_defense_to_1nt.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 19 },
+  { title = "NT Bidding: DONT and Meckwell", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/541" },
+]
 
 ["competitive_bidding/multi_landy"]
 name = "Landy and Multi-Landy over 1NT"
 source = "proposed"
+level = 7
+names = ["Multi-Landy", "Multi Landy", "Woolsey"]
+summary = """
+Over their 1NT: double shows a four-card major and a longer minor, 2♣ both
+majors, 2♦ one long major, and 2♥ and 2♠ that major with a minor.
+"""
+see = [
+  { title = "Multi-Landy", site = "Bridge Bum", url = "https://www.bridgebum.com/multi_landy.php" },
+  { title = "NT Bidding: Woolsey", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/542" },
+]
 
 ["competitive_bidding/responsive_doubles"]
 name = "Responsive Doubles"
 source = "proposed"
+level = 5
+names = ["Responsive double", "Responsive doubles"]
+summary = """
+After partner doubles for takeout and the next player raises, advancer's
+double is for takeout too, showing values and usually both unbid suits of a
+kind (the majors or the minors).
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 23 },
+  { title = "Responsive Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/354" },
+]
 
 ["competitive_bidding/support_doubles"]
 name = "Support Doubles and Redoubles"
 source = "proposed"
+level = 5
+names = ["Support double", "Support doubles", "Support redouble"]
+summary = """
+After opener's one-level opening and responder's one-level suit, when the
+next player bids, opener's double shows exactly three-card support for
+responder (a redouble after their double), and a raise shows four.
+"""
+see = [
+  { title = "Support Double", site = "Bridge Bum", url = "https://www.bridgebum.com/support_double.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 13 },
+  { title = "Support Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/355" },
+]
 
 ["competitive_bidding/unusual_vs_unusual"]
 name = "Unusual vs Unusual"
 source = "proposed"
+level = 8
+names = ["Unusual vs Unusual", "Unusual over Unusual", "UvU"]
+summary = """
+After they show two suits with Michaels or the Unusual 2NT, cue bids of
+their suits show hands in the other two suits: one cue bid a raise of
+partner, the other a strong hand in the fourth suit.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 21 },
+  { title = "Unusual vs. Unusual and Unusual vs. Michaels", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/470" },
+]
 
 ["bidding_conventions/puppet_stayman"]
 name = "Puppet Stayman"
@@ -1039,4 +1171,212 @@ an even number of keycards and pass an odd number.
 """
 see = [
   { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 15 },
+]
+
+["competitive_bidding/modified_cappelletti"]
+name = "Modified Cappelletti"
+source = "proposed"
+level = 6
+names = ["Modified Cappelletti"]
+summary = """
+Played instead of Cappelletti: over their 1NT, 2♣ shows a one-suited minor
+or a major and a minor, and 2♥ and 2♠ are natural one-suiters.
+"""
+
+["competitive_bidding/landy"]
+name = "Landy"
+source = "proposed"
+level = 4
+names = ["Landy"]
+summary = """
+Over their 1NT, 2♣ shows both majors; other overcalls are natural.
+"""
+
+["competitive_bidding/suction"]
+name = "Suction"
+source = "proposed"
+level = 8
+names = ["Suction"]
+summary = """
+Over their 1NT, each two-level suit bid shows either the next suit up or the
+other two suits, so the overcall is ambiguous by design and partner bids the
+next suit to find out.
+"""
+see = [
+  { title = "Suction", site = "Bridge Bum", url = "https://www.bridgebum.com/suction.php" },
+]
+
+["competitive_bidding/maximal_doubles"]
+name = "Maximal doubles"
+source = "proposed"
+level = 6
+names = ["Maximal double", "Maximal doubles"]
+summary = """
+When the opponents have competed to the three level just below your suit, a
+double is a game try rather than penalty, since there is no room for another
+try.
+"""
+see = [
+  { title = "Maximal Double", site = "Bridge Bum", url = "https://www.bridgebum.com/maximal_double.php" },
+  { title = "Non-Takeout Doubles: Card-Showing, Maximal, Penalty, Lead-Directing", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/357" },
+]
+
+["competitive_bidding/leaping_michaels"]
+name = "Leaping Michaels"
+source = "proposed"
+level = 7
+names = ["Leaping Michaels"]
+summary = """
+Over their weak two, a jump to four of a minor shows that minor and the
+other major (or both majors over a minor), five-five with game values.
+"""
+see = [
+  { title = "Leaping Michaels", site = "Bridge Bum", url = "https://www.bridgebum.com/leaping_michaels.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 18 },
+  { title = "Competitive Bidding: Leaping Michaels", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/484" },
+]
+
+["competitive_bidding/non_leaping_michaels"]
+name = "Non-leaping Michaels"
+source = "proposed"
+level = 8
+names = ["Non-leaping Michaels", "Non leaping Michaels"]
+summary = """
+Played instead of Leaping Michaels: over their preempt, a non-jump bid of a
+new suit at the next level shows that suit and a major.
+"""
+see = [
+  { title = "Leaping and Non-Leaping Michaels", site = "Alton Bridge Club", url = "https://www.bridgewebs.com/alton/EBU%20-%20Stage%202%20Conventions%20-%20Leaping%20and%20Non-Leaping%20Michaels.pdf" },
+]
+
+["competitive_bidding/lead_directing_doubles"]
+name = "Lead-directing doubles"
+source = "proposed"
+level = 5
+names = ["Lead-directing double", "Lead directing double", "Lightner"]
+summary = """
+A double of an artificial bid (a cue bid, Stayman, a transfer, a response to
+an ace ask) or of a slam asks partner to lead that suit, or a specific
+unusual suit.
+"""
+see = [
+  { title = "Lead Directing Double", site = "Bridge Bum", url = "https://www.bridgebum.com/lead_directing_double.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 24 },
+  { title = "Lead-Directing Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/467" },
+]
+
+["competitive_bidding/sandwich_nt"]
+name = "Sandwich 1NT"
+source = "proposed"
+level = 7
+names = ["Sandwich NT", "Sandwich 1NT"]
+summary = """
+In the sandwich seat, after the opponents have bid two suits, a 1NT overcall
+shows the two unbid suits rather than a strong balanced hand.
+"""
+see = [
+  { title = "Competitive Bidding: Sandwich NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/194" },
+]
+
+["competitive_bidding/snapdragon"]
+name = "Snapdragon doubles"
+source = "proposed"
+level = 8
+names = ["Snapdragon", "Snapdragon double"]
+summary = """
+When three suits have been bid, one by each of three players, fourth hand's
+double shows the unbid suit and tolerance for partner's.
+"""
+see = [
+  { title = "Snapdragon Double", site = "Bridge Bum", url = "https://www.bridgebum.com/snapdragon_double.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 24 },
+  { title = "Snapdragon Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/568" },
+]
+
+["competitive_bidding/bromad"]
+name = "BROMAD"
+source = "proposed"
+level = 8
+names = ["BROMAD", "Bergen raises over a double"]
+summary = """
+Bergen raises used over the opponents' takeout double of partner's major
+(Bergen Raises Over Major Doubles), with the structure adjusted for the
+double.
+"""
+
+["competitive_bidding/ghestem"]
+name = "Ghestem"
+source = "proposed"
+level = 8
+names = ["Ghestem"]
+summary = """
+Played instead of Michaels and the Unusual 2NT: 2NT, a cue bid and a jump
+cue bid each show a specific pair of suits.
+"""
+
+["competitive_bidding/raptor"]
+name = "Raptor 1NT"
+source = "proposed"
+level = 8
+names = ["Raptor", "Raptor 1NT"]
+summary = """
+An overcall of 1NT that shows a four-card major and a longer minor, rather
+than a strong balanced hand.
+"""
+
+["competitive_bidding/scrambling_2nt"]
+name = "Scrambling 2NT"
+source = "proposed"
+level = 7
+names = ["Scrambling 2NT", "Scrambling"]
+summary = """
+In a competitive auction where a takeout double would be natural, advancer's
+2NT asks partner to pick a minor or a two-suited contract, rather than
+showing values.
+"""
+see = [
+  { title = "Scrambling vs Good/Bad 2NT", url = "https://tinyurl.com/Scrambling-vs-Good-Bad-2N" },
+  { title = "Competitive Auctions: Scrambling 2NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/555" },
+]
+
+["competitive_bidding/fit_showing_jumps"]
+name = "Fit-showing jumps"
+source = "proposed"
+level = 7
+names = ["Fit-showing jumps", "Fit jumps", "Fit showing jump"]
+summary = """
+In competition, a jump in a new suit shows a good suit there and a fit for
+partner, so partner can judge how the hands fit.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 14 },
+  { title = "Fit-Showing Jumps", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/574" },
+]
+
+["competitive_bidding/jordan_2nt"]
+name = "Jordan 2NT"
+source = "proposed"
+level = 5
+names = ["Jordan", "Jordan 2NT", "Truscott", "Jordan Truscott 2NT", "Dormer"]
+summary = """
+After partner's opening is doubled for takeout, responder's 2NT shows a
+limit raise or better in partner's suit, leaving the direct raises weak.
+"""
+see = [
+  { title = "Jordan 2NT", site = "Bridge Bum", url = "https://www.bridgebum.com/jordan_2nt.php" },
+]
+
+["bidding_conventions/transfers_after_double"]
+name = "Transfers after a takeout double"
+source = "proposed"
+level = 9
+names = ["Transfer responses after a double", "Transfers over a double", "Rubin transfers"]
+summary = """
+After partner's opening is doubled for takeout, responder's new-suit bids
+are transfers to the next suit, so opener can accept or show a fit and
+responder can describe more hands.
+"""
+see = [
+  { title = "1-Major (X) Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/598" },
+  { title = "1-minor (X) Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/599" },
 ]
