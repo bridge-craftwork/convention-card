@@ -130,32 +130,34 @@
 "five_card_majors"         = { kind = "bool", label = "Five-card majors", default = true }
 "min_length_1st_2nd"       = { kind = "enum", label = "Min length 1st/2nd seat", options = ["4", "5"], default = "5" }
 "min_length_3rd_4th"       = { kind = "enum", label = "Min length 3rd/4th seat", options = ["4", "5"], default = "5" }
-"one_nt_response.forcing"  = { kind = "bool", label = "Forcing 1NT response" }
-"one_nt_response.semi_forcing" = { kind = "bool", label = "Semi-forcing 1NT response" }
-"one_nt_response.bypass_1s" = { kind = "bool", label = "1NT may bypass 1♠ over 1♥" }
-"two_over_one.game_force"  = { kind = "bool", label = "2/1 game force", skill = "bidding_conventions/two_over_one" }
-"three_nt_raise.play"      = { kind = "bool", label = "3NT artificial raise (4-3-3-3)" }
+"one_nt_response.forcing"  = { kind = "bool", label = "Forcing 1NT response", skill = "bidding_conventions/forcing_1nt", level = 4 }
+"one_nt_response.semi_forcing" = { kind = "bool", label = "Semi-forcing 1NT response", skill = "bidding_conventions/semi_forcing_1nt", level = 5 }
+"one_nt_response.bypass_1s" = { kind = "bool", label = "1NT may bypass 1♠ over 1♥", level = 4 }
+"two_over_one.game_force"  = { kind = "bool", label = "2/1 game force", skill = "bidding_conventions/two_over_one", level = 4 }
+"three_nt_raise.play"      = { kind = "bool", label = "3NT artificial raise (4-3-3-3)", level = 6 }
 "art_raises_other"         = { kind = "text", label = "Other artificial raises" }
-"jump_raise.weak"          = { kind = "bool", label = "Jump raise: weak" }
-"jump_raise.mixed"         = { kind = "bool", label = "Jump raise: mixed" }
-"jump_raise.inv"           = { kind = "bool", label = "Jump raise: invitational" }
-"jump_raise_after_overcall.weak"  = { kind = "bool", label = "Jump raise after overcall: weak" }
-"jump_raise_after_overcall.mixed" = { kind = "bool", label = "Jump raise after overcall: mixed" }
-"jump_raise_after_overcall.inv"   = { kind = "bool", label = "Jump raise after overcall: invitational" }
-"jacoby_2nt.play"          = { kind = "bool", label = "Jacoby 2NT", skill = "bidding_conventions/jacoby_2nt_splinters" }
-"jacoby_2nt.modified"      = { kind = "bool", label = "Modified Jacoby 2NT", skill = "bidding_conventions/jacoby_2nt_splinters" }
-"bergen_raises.play"       = { kind = "bool", label = "Bergen raises" }
-"bergen_raises.reverse"    = { kind = "bool", label = "Reverse Bergen raises" }
-"splinters.play"           = { kind = "bool", label = "Splinters", skill = "bidding_conventions/jacoby_2nt_splinters" }
-"splinters.by_responder"   = { kind = "bool", label = "Splinters by responder" }
-"splinters.by_opener"      = { kind = "bool", label = "Splinters by opener" }
-"mini_splinters.play"      = { kind = "bool", label = "Mini splinters" }
-"drury.play"               = { kind = "bool", label = "Drury", skill = "bidding_conventions/drury" }
-"drury.reverse"            = { kind = "bool", label = "Reverse Drury", skill = "bidding_conventions/reverse_drury" }
-"drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)", skill = "bidding_conventions/drury" }
-"drury.in_comp"            = { kind = "bool", label = "Drury in competition" }
-"gazzilli.play"            = { kind = "bool", label = "Gazzilli" }
-"impossible_2s.play"       = { kind = "bool", label = "Impossible 2♠", desc = "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor", skill = "bidding_conventions/impossible_2s" }
+"jump_raise.weak"          = { kind = "bool", label = "Jump raise: weak", level = 4 }
+"jump_raise.mixed"         = { kind = "bool", label = "Jump raise: mixed", level = 6 }
+"jump_raise.inv"           = { kind = "bool", label = "Jump raise: invitational", level = 3 }
+"jump_raise_after_overcall.weak"  = { kind = "bool", label = "Jump raise after overcall: weak", level = 4 }
+"jump_raise_after_overcall.mixed" = { kind = "bool", label = "Jump raise after overcall: mixed", level = 6 }
+"jump_raise_after_overcall.inv"   = { kind = "bool", label = "Jump raise after overcall: invitational", level = 4 }
+"jacoby_2nt.play"          = { kind = "bool", label = "Jacoby 2NT", skill = ["bidding_conventions/jacoby_2nt", "bidding_conventions/jacoby_2nt_splinters"], level = 4 }
+"jacoby_2nt.modified"      = { kind = "bool", label = "Modified Jacoby 2NT", skill = ["bidding_conventions/modified_jacoby_2nt", "bidding_conventions/jacoby_2nt_splinters"], level = 6 }
+"bergen_raises.play"       = { kind = "bool", label = "Bergen raises", skill = "bidding_conventions/bergen_raises", level = 5 }
+"bergen_raises.reverse"    = { kind = "bool", label = "Reverse Bergen raises", skill = "bidding_conventions/reverse_bergen_raises", level = 6 }
+"splinters.play"           = { kind = "bool", label = "Splinters", skill = ["bidding_conventions/splinters", "bidding_conventions/jacoby_2nt_splinters"], level = 5 }
+"splinters.by_responder"   = { kind = "bool", label = "Splinters by responder", skill = ["bidding_conventions/splinters", "bidding_conventions/jacoby_2nt_splinters"], level = 5 }
+"splinters.by_opener"      = { kind = "bool", label = "Splinters by opener", skill = ["bidding_conventions/splinters", "bidding_conventions/jacoby_2nt_splinters"], level = 6 }
+"mini_splinters.play"      = { kind = "bool", label = "Mini splinters", skill = "bidding_conventions/splinters", level = 7 }
+"drury.play"               = { kind = "bool", label = "Drury", skill = "bidding_conventions/drury", level = 5 }
+"drury.reverse"            = { kind = "bool", label = "Reverse Drury", skill = "bidding_conventions/reverse_drury", level = 5 }
+"drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)", skill = "bidding_conventions/two_way_drury", level = 6 }
+"drury.in_comp"            = { kind = "bool", label = "Drury in competition", skill = "bidding_conventions/drury", level = 6 }
+"gazzilli.play"            = { kind = "bool", label = "Gazzilli", skill = "bidding_conventions/gazzilli", level = 9 }
+"impossible_2s.play"       = { kind = "bool", label = "Impossible 2♠", desc = "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor", skill = "bidding_conventions/impossible_2s", level = 7 }
+"notes"                    = { kind = "text", label = "Major opening notes", note = true }
+"bergen_raises_notes"      = { kind = "text", label = "Bergen raises notes", note = true }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "three_nt_raise.range_min" = { kind = "int", label = "3NT artificial raise: minimum", min = 0, max = 25 }
 "three_nt_raise.range_max" = { kind = "int", label = "3NT artificial raise: maximum", min = 0, max = 25 }

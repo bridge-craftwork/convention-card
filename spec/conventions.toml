@@ -86,6 +86,17 @@ source = "taxonomy"
 ["bidding_conventions/reverse_drury"]
 name = "Reverse Drury"
 source = "taxonomy"
+level = 5
+names = ["Reverse Drury", "Drury"]
+summary = """
+By a passed hand over partner's third- or fourth-seat 1♥ or 1♠, 2♣ shows a
+limit raise with three or more trumps. Opener rebids two of the major with a
+light opening; other bids show a full one.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 12 },
+  { title = "Fits and More: 2-Way Reverse Drury", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/525" },
+]
 
 ["bidding_conventions/roman_keycard"]
 name = "Roman Keycard"
@@ -115,6 +126,16 @@ source = "taxonomy"
 ["bidding_conventions/two_over_one"]
 name = "2/1 Game Force"
 source = "taxonomy"
+level = 4
+names = ["2/1", "2/1 game force", "two over one", "2 over 1", "2/1 GF"]
+summary = """
+After a one-level opening, responder's new suit at the two level, without
+jumping and by an unpassed hand, forces to game. The auction can then go
+slowly, with room to describe both hands.
+"""
+see = [
+  { title = "2 over 1 Game Forcing: Modern Bridge Standard", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/641" },
+]
 
 ["bidding_conventions/weak_2s"]
 name = "Weak Twos"
@@ -311,6 +332,14 @@ source = "proposed"
 ["bidding_conventions/drury"]
 name = "Drury"
 source = "proposed"
+level = 5
+names = ["Drury", "Original Drury"]
+summary = """
+By a passed hand over partner's third- or fourth-seat 1♥ or 1♠, 2♣ asks
+whether opener has a full opening, with a fit for the major. In the original
+form opener's 2♦ shows a light opening; Reverse Drury swaps opener's
+replies.
+"""
 
 ["bidding_conventions/gerber"]
 name = "Gerber"
@@ -319,6 +348,16 @@ source = "proposed"
 ["bidding_conventions/impossible_2s"]
 name = "Impossible 2♠"
 source = "proposed"
+level = 7
+names = ["Impossible 2♠", "Impossible Spade", "Impossible 2S"]
+summary = """
+After 1♥–1NT–2♣ or 2♦, responder's 2♠ cannot be natural, so it shows a good
+raise of opener's minor, forcing to three of it.
+"""
+see = [
+  { title = "The Impossible Spade Bid", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/269" },
+  { title = "Impossible 2 Spade", site = "Kiva Bridge Club", url = "http://kivabridgeclub.com/images/Impossible%202%20Spade.pdf" },
+]
 
 ["bidding_conventions/inverted_minors"]
 name = "Inverted Minor Raises"
@@ -463,4 +502,129 @@ see = [
   { title = "Gambling 3NT", site = "Bridge Bum", url = "https://www.bridgebum.com/gambling_3nt.php" },
   { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 6 },
   { title = "NT Auctions: Trick-Showing NT Bids - Gambling 3NT and More", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/519" },
+]
+
+["bidding_conventions/forcing_1nt"]
+name = "Forcing 1NT"
+source = "proposed"
+level = 4
+names = ["Forcing 1NT", "Forcing NT", "1NT forcing", "1NT forcing response"]
+summary = """
+Over partner's 1♥ or 1♠, responder's 1NT is forcing for one round, covering
+a wide range of hands including invitational ones; opener must bid again, on
+a three-card minor if need be.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 19 },
+]
+
+["bidding_conventions/semi_forcing_1nt"]
+name = "Semi-forcing 1NT"
+source = "proposed"
+level = 5
+names = ["Semi-forcing 1NT", "Semi-forcing NT", "1NT semi-forcing"]
+summary = """
+Played instead of the forcing 1NT: responder's 1NT over a major is forcing
+only if opener has more than a minimum, so opener may pass with a balanced
+minimum.
+"""
+see = [
+  { title = "2 over 1 Game Forcing: Responder's Rebids after 1NT Semi-Forcing Response", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/375" },
+]
+
+["bidding_conventions/jacoby_2nt"]
+name = "Jacoby 2NT"
+source = "proposed"
+level = 4
+names = ["Jacoby 2NT", "Jacoby 2N", "Jacoby"]
+summary = """
+Over partner's 1♥ or 1♠, responder's 2NT shows four or more trumps and game-
+forcing values. Opener's rebid describes the hand: a short suit at the three
+level, a good second suit at the four level, or strength by 3M, 3NT or 4M.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 10 },
+  { title = "Slam Bidding: Jacoby 2NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/407" },
+]
+
+["bidding_conventions/modified_jacoby_2nt"]
+name = "Modified Jacoby 2NT"
+source = "proposed"
+level = 6
+names = ["Modified Jacoby 2NT", "Modified Jacoby"]
+summary = """
+Played instead of standard Jacoby 2NT: responder's 2NT is the same raise,
+but opener's rebids are rearranged, usually so that 3♣ shows a minimum and
+responder can then ask for shortness.
+"""
+
+["bidding_conventions/splinters"]
+name = "Splinters"
+source = "proposed"
+level = 5
+names = ["Splinters", "Splinter", "Splinter bids", "Splinter raise", "Mini-splinters"]
+summary = """
+A double jump in a new suit, by responder or by opener, shows a singleton or
+void there and a fit with game values, so partner can judge slam by how well
+the hands fit.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 11 },
+  { title = "Slam Bidding: Splinter Bids by Responder", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/408" },
+  { title = "Slam Bidding: Splinters by Opener", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/409" },
+]
+
+["bidding_conventions/bergen_raises"]
+name = "Bergen raises"
+source = "proposed"
+level = 5
+names = ["Bergen", "Bergen raises", "Bergen raise"]
+summary = """
+Over partner's 1♥ or 1♠, responder's jumps to 3♣ and 3♦ show four-card
+raises of different strength (usually 3♣ constructive, 3♦ limit) and 3M is
+preemptive, so opener knows the fit and strength at once.
+"""
+see = [
+  { title = "Bergen Raises", site = "Bridge Bum", url = "https://www.bridgebum.com/bergen_raises.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 13 },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 3 },
+  { title = "Bergen Raises", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/572" },
+]
+
+["bidding_conventions/reverse_bergen_raises"]
+name = "Reverse Bergen raises"
+source = "proposed"
+level = 6
+names = ["Reverse Bergen"]
+summary = """
+Played instead of Bergen raises: the same four-card raises with the meanings
+of 3♣ and 3♦ swapped.
+"""
+
+["bidding_conventions/two_way_drury"]
+name = "Two-way Drury"
+source = "proposed"
+level = 6
+names = ["Two-way Drury", "2-way Drury", "Two-way Reverse Drury"]
+summary = """
+Played instead of Drury: a passed hand's 2♣ and 2♦ over partner's third- or
+fourth-seat major both show limit raises, split by trump length (usually 2♣
+three trumps, 2♦ four).
+"""
+see = [
+  { title = "Fits and More: 2-Way Reverse Drury", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/525" },
+]
+
+["bidding_conventions/gazzilli"]
+name = "Gazzilli"
+source = "proposed"
+level = 9
+names = ["Gazzilli"]
+summary = """
+After 1♥ or 1♠ and a 1NT response, opener's 2♣ is artificial: either natural
+clubs or any strong hand. Responder's 2♦ asks, letting opener show strong
+hands at the two level.
+"""
+see = [
+  { title = "Constructive Bidding: Modern Gazzilli", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/488" },
 ]
