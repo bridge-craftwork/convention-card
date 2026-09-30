@@ -367,7 +367,7 @@ names = ["Inverted minors", "Inverted minor raises", "Inverted raises"]
 summary = """
 Over partner's 1♣ or 1♦, the single raise is strong (invitational or better,
 forcing one round) and the jump raise is weak, the reverse of the natural
-meanings. It denies a four-card major.
+meanings. It usually denies a four-card major.
 """
 see = [
   { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 17 },
