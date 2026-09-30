@@ -74,6 +74,16 @@ source = "taxonomy"
 ["bidding_conventions/ogust"]
 name = "Ogust"
 source = "taxonomy"
+level = 5
+names = ["Ogust", "Ogust 2NT"]
+summary = """
+After partner's weak two, responder's 2NT asks about the hand in steps: 3♣
+bad hand bad suit, 3♦ bad hand good suit, 3♥ good hand bad suit, 3♠ good
+hand good suit, 3NT a solid suit.
+"""
+see = [
+  { title = "Ogust", site = "Bridge Bum", url = "https://www.bridgebum.com/ogust.php" },
+]
 
 ["bidding_conventions/preemptive_bids"]
 name = "Preemptive Bids"
@@ -122,6 +132,18 @@ see = [
 ["bidding_conventions/strong_2c"]
 name = "Strong 2♣"
 source = "taxonomy"
+level = 3
+names = ["Strong 2♣", "2♣ strong", "Strong artificial 2♣", "2♣ forcing"]
+summary = """
+An opening 2♣, artificial and forcing, for the strongest hands: game-forcing
+or nearly so, balanced or not. Responder usually bids 2♦ to wait, and opener
+then describes the hand.
+"""
+see = [
+  { title = "Strong 2♣", site = "Bridge Bum", url = "https://www.bridgebum.com/strong_2c.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 6 },
+  { title = "2C Opening Bids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/415" },
+]
 
 ["bidding_conventions/two_over_one"]
 name = "2/1 Game Force"
@@ -140,6 +162,18 @@ see = [
 ["bidding_conventions/weak_2s"]
 name = "Weak Twos"
 source = "taxonomy"
+level = 3
+names = ["Weak twos", "Weak two", "Weak 2", "Weak two-bids"]
+summary = """
+An opening 2♦, 2♥ or 2♠ shows a good six-card suit and less than an opening
+bid, as a preempt. Responder's 2NT usually asks for more, and a raise
+continues the preempt.
+"""
+see = [
+  { title = "Weak Two", site = "Bridge Bum", url = "https://www.bridgebum.com/weak_two.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 5 },
+  { title = "Modern 2-Level Preemptive Openings", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/411" },
+]
 
 ["competitive_bidding/dont"]
 name = "DONT"
@@ -667,4 +701,172 @@ can accept the transfer, so the 1♣ hand often declares.
 """
 see = [
   { title = "Transfer Walsh", site = "Wikipedia", url = "https://en.wikipedia.org/wiki/Transfer_Walsh" },
+]
+
+["bidding_conventions/kokish"]
+name = "Kokish relay"
+source = "proposed"
+level = 8
+names = ["Kokish", "Kokish relay"]
+summary = """
+After 2♣–2♦, opener's 2♥ is a relay: either hearts or a strong balanced
+hand. Responder must bid 2♠, and opener's next bid says which, which keeps
+the strong 2NT rebid out of the way.
+"""
+see = [
+  { title = "Kokish Relay", site = "Bridge Bum", url = "https://www.bridgebum.com/kokish_relay.php" },
+  { title = "Kokish Over Strong 2C", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/576" },
+]
+
+["bidding_conventions/two_heart_bust"]
+name = "2♥ bust over 2♣"
+source = "proposed"
+level = 7
+names = ["Parrish", "2♥ bust", "Parrish 2♥ bust", "Double negative", "Second negative"]
+summary = """
+After 2♣–2♦ and opener's natural rebid, a cheapest-suit reply shows a very
+weak hand, so opener knows when to stop short of game. The Parrish form uses
+2♥ as the bust in some auctions.
+"""
+see = [
+  { title = "Todd Busts over 2C Opening Bids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/593" },
+]
+
+["bidding_conventions/mccabe"]
+name = "McCabe adjunct"
+source = "proposed"
+level = 8
+names = ["McCabe", "McCabe adjunct"]
+summary = """
+After partner's weak two is doubled, responder's new suits and 2NT say what
+to lead rather than show length, so the partnership can compete and direct
+the defence at once.
+"""
+see = [
+  { title = "McCabe Responses to Preempts", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/468" },
+  { title = "Transfer McCabe Responses to Preempts", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/606" },
+]
+
+["bidding_conventions/multi_2d"]
+name = "Multi 2♦"
+source = "proposed"
+level = 8
+names = ["Multi", "Multi 2♦", "Multi-colored 2♦", "Multi 2D"]
+summary = """
+An opening 2♦ that shows a weak two in either major, or one of a few strong
+hands. Responder bids to cater for either major, and opener's rebid resolves
+which.
+"""
+see = [
+  { title = "Multi 2♦", site = "Bridge Bum", url = "https://www.bridgebum.com/multi_2d.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 25 },
+]
+
+["bidding_conventions/mini_roman_2d"]
+name = "Mini-Roman 2♦"
+source = "proposed"
+level = 7
+names = ["Mini-Roman", "Mini Roman", "Roman 2♦", "Mini-Maxi Roman"]
+summary = """
+An opening 2♦ showing a three-suited hand (4-4-4-1 or 5-4-4-0) of opening
+strength; responder bids the cheapest suit to play or 2NT to ask for the
+short suit.
+"""
+see = [
+  { title = "Mini-Roman 2♦", site = "ACBL Unit 390", url = "https://www.acblunit390.org/Simon/mini-roman.htm" },
+]
+
+["bidding_conventions/flannery"]
+name = "Flannery 2♦"
+source = "proposed"
+level = 6
+names = ["Flannery", "Flannery 2♦"]
+summary = """
+An opening 2♦ showing a minimum opening with five hearts and four spades, so
+responder can find a spade fit without opener having to reverse or rebid
+awkwardly.
+"""
+see = [
+  { title = "Flannery 2♦", site = "Bridge Bum", url = "https://www.bridgebum.com/flannery_2d.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 2 },
+]
+
+["bidding_conventions/reverse_flannery"]
+name = "Reverse Flannery"
+source = "proposed"
+level = 8
+names = ["Reverse Flannery"]
+summary = """
+An opening of 2♥ (or 2♦) showing five or more spades and four or more hearts
+with less than an opening, a two-suited preempt in the majors.
+"""
+see = [
+  { title = "Reverse Flannery", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/590" },
+  { title = "Flannery and Reverse Flannery", site = "Dural Bridge", url = "http://www.duralbridge.com/flannery.ing.htm" },
+]
+
+["bidding_conventions/benjamin_2d"]
+name = "Benjamin 2♦"
+source = "proposed"
+level = 8
+names = ["Benjamin", "Benjamin twos", "Benjamin 2♦"]
+summary = """
+Openings in which 2♣ shows a strong two in any suit, 2♦ is the game-forcing
+hand, and 2♥ and 2♠ are weak twos, so there is no weak 2♦.
+"""
+see = [
+  { title = "Benjamin Twos", site = "Wikipedia", url = "https://en.wikipedia.org/wiki/Benjamin_Twos" },
+]
+
+["bidding_conventions/french_2d"]
+name = "French 2♦"
+source = "proposed"
+level = 8
+names = ["French 2♦"]
+summary = """
+An opening 2♦ with an artificial meaning in the French style; details vary
+by partnership, so the card's notes say which.
+"""
+
+["bidding_conventions/precision_2d"]
+name = "Precision 2♦"
+source = "proposed"
+level = 7
+names = ["Precision 2♦"]
+summary = """
+In Precision, an opening 2♦ shows a limited opening short in diamonds,
+usually 4-4-1-4 or 4-4-0-5 with 11-15 points.
+"""
+
+["bidding_conventions/polish_two_suiters"]
+name = "Polish two-suiters"
+source = "proposed"
+level = 9
+names = ["Polish two-suiters", "Polish 2♥/2♠"]
+summary = """
+Weak openings at the two level that show two-suited hands, with the second
+suit unknown or limited, as used in Polish Club.
+"""
+
+["bidding_conventions/wilkosz"]
+name = "Wilkosz 2♦"
+source = "proposed"
+level = 9
+names = ["Wilkosz"]
+summary = """
+An opening 2♦ showing a weak two-suited hand with at least five cards in
+each of two suits, one of them a major.
+"""
+
+["bidding_conventions/namyats"]
+name = "Namyats"
+source = "proposed"
+level = 6
+names = ["Namyats", "4♣/4♦ transfer to 4♥/4♠", "South African Texas"]
+summary = """
+Openings of 4♣ and 4♦ show a strong four-level preempt in hearts and spades
+respectively, so a direct 4♥ or 4♠ opening is weaker.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 8 },
 ]
