@@ -6,30 +6,31 @@ What's settled, and what's still open. Newest first within each list.
 
 **2026-09-30: difficulty levels** (Rick Wilson)
 
-1. **One scale, 1 to 10,** for skills and conventions, bidding and cardplay.
-   Advancing in Bridge moved from a compressed 1–6 to 1–10 as its lessons grew;
-   four named tiers are too coarse to rate a card.
-2. **Named bands are derived** from the number, for the editor's filter and
-   lesson front matter, and never stored. For now, Bridge Classroom's four
-   names: basic 1–3, intermediate 4–6, advanced 7–8, expert 9–10. "Basic" is not
-   a recognised bridge level, so the names may change; since only the number is
-   stored, that changes no data. Under this split DONT, Lebensohl, Drury, Jacoby
-   2NT and splinters move from advanced to intermediate.
-3. **A convention's level is the lowest level at which it is taught.** Later
-   material (slam sequences, bidding after interference, responses with a void)
-   is an extension of the same convention, with its own higher level. See
-   DESIGN.md, "Difficulty levels".
+11. **One scale, 1 to 10,** for skills and conventions, bidding and cardplay.
+    Advancing in Bridge moved from a compressed 1–6 to 1–10 as its lessons grew;
+    four named tiers are too coarse to rate a card.
+12. **Named bands are derived** from the number, for the editor's filter and
+    lesson front matter, and never stored. For now, Bridge Classroom's four
+    names: basic 1–3, intermediate 4–6, advanced 7–8, expert 9–10. "Basic" is not
+    a recognised bridge level, so the names may change; since only the number is
+    stored, that changes no data. Under this split DONT, Lebensohl, Drury, Jacoby
+    2NT and splinters move from advanced to intermediate.
+13. **A convention's level is the lowest level at which it is taught.** Later
+    material (slam sequences, bidding after interference, responses with a void)
+    is an extension of the same convention, with its own higher level. See
+    DESIGN.md, "Difficulty levels".
 
-**2026-09-30: the field vocabulary lives here** (Rick Wilson; open question 1)
+**2026-09-30: how conventions are named** (Rick Wilson)
 
-The standard vocabulary (`spec/fields.toml`, `spec/formats/bbsa-map.toml`) lives
-in this repo's `spec/`, and a new field is a pull request here. This reverses
-rusty-bidding-bot's 2026-09-28 decision that the vocabulary belongs to the rules:
-the editor, the converters and Bridge Classroom need the same list, and none of
-them has anything to do with the bot's rules. Rule sets name the vocabulary
-version they were checked against. The crate keeps loading its vocabulary at run
-time, so a rule set can still add fields only a bot uses (such as
-`general.style`) on top of the standard list.
+9. **A standard convention list, plus namespaced conventions anyone can
+   publish.** See [ADR-0001](adr/0001-standard-and-namespaced-conventions.md).
+   Standard IDs are the existing skill paths. Custom conventions take an ID under
+   a domain the author owns. Cards carry them in an `other_agreements` list. This
+   resolves what was open question 1.
+10. **Host the ACBL PDF templates ourselves for now.** They ship with the editor
+    as they do from Bridge Classroom today. Redistribution terms can be sorted
+    out later if they ever need to be; that's easier to fix afterwards than to
+    wait on now. This resolves what was open question 5.
 
 **2026-09-30: the repo, and its terms** (Rick Wilson)
 
@@ -54,7 +55,7 @@ time, so a rule set can still add fields only a bot uses (such as
 
 ## Open
 
-**1. Who owns the field vocabulary.** Decided 2026-09-30; see above.
+**1. ~~Who owns the field vocabulary~~** Resolved by [ADR-0001](adr/0001-standard-and-namespaced-conventions.md).
 
 **2. Reconciling the field lists.** There are two lists (the bot's
 `fields.toml` and Bridge Classroom's `conventionCatalog.js`), and Bridge
@@ -78,13 +79,7 @@ see DESIGN.md). Options: open Bridge Classroom with the card in the URL fragment
 (simple, but there's a size limit), or open it and pass the card with
 `postMessage`.
 
-**5. Can the ACBL convention card PDFs be redistributed?** The PDF export fills
-ACBL's own fillable forms (`acbl-classic-2023.pdf`, `acbl-new.pdf`), which are
-served from Bridge Classroom's `public/templates/` today. A public, MIT/Apache
-repo is a different setting. Either confirm that ACBL permits redistribution, or
-keep the templates out of the repo and fetch them at run time from ACBL or a
-Bridge Classroom URL. (The substitute condensed font, Barlow Condensed, is SIL
-OFL and fine to ship with its licence.)
+**5. ~~Can the ACBL PDF templates be redistributed?~~** Decided for now: host them ourselves (decision 10).
 
 **6. What `reference.txt` contains.** Per site issue #3, each tool publishes a
 machine-readable reference. For this tool the natural content is the spec: every

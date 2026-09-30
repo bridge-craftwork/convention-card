@@ -57,7 +57,11 @@ Language-neutral files that every other part reads:
   bot's `bbsa-map.toml`. BBO, bridgeodex and the ACBL PDF field maps are tables
   inside JavaScript today and move into data over time, not on day one.
 - **Skills**: the teaching-skill vocabulary (path, display name, level). See
-  [The skill taxonomy](#the-skill-taxonomy).
+  [The skill taxonomy](#the-skill-taxonomy). A convention is a skill that can
+  appear on a card, and this is the **standard list** of them. Conventions
+  outside it are named under their author's own namespace and carried in the
+  card's `other_agreements` list: see
+  [ADR-0001](adr/0001-standard-and-namespaced-conventions.md).
 
 **The interchange format is Bridge Classroom's existing nested `card_data`
 JSON.** Cards already saved in Bridge Classroom must keep loading unchanged. A
@@ -72,21 +76,22 @@ treatment the card has no checkbox for. Rick's partnership cards (2026-09-30)
 name Exclusion Blackwood, Minorwood, Spiral, Sandwich NT, SOS redouble, Kokish,
 Mini-Roman, Suction, Ingberman and more, all in notes. Those are agreements that
 differ between partners, that a bot needs, and that a lesson teaches, so the
-spec treats them as agreements:
+spec treats them as agreements, named by their convention IDs
+([ADR-0001](adr/0001-standard-and-namespaced-conventions.md)):
 
-1. **Every convention is a field, checkbox or not.** A field can carry
-   **names**: the ways people write it ("Exclusion Blackwood", "Exclusion
-   RKC"). The field list is the convention vocabulary, not the ACBL card's
-   layout; the format maps decide what gets a box on a printed card, and the
-   rest prints in the text areas.
+1. **A convention carries names**: the ways people write it ("Exclusion
+   Blackwood", "Exclusion RKC"). Standard conventions get them in `spec/`; a
+   namespaced convention's come from its `convention.toml`.
 2. **The library and the crate recognise names in text.** "Exclusion
    Blackwood, 5NT Pick-a-slam" yields two conventions. The typed text is never
    rewritten.
 3. **A person confirms before a match becomes an agreement.** The editor
-   suggests ("This mentions Exclusion Blackwood: add it?"); confirming sets the
-   field and keeps the text. Importers may apply matches and report them, as
-   they report other guesses. A bot reads fields, never raw matches: a wrong
-   guess there changes its bidding.
+   suggests ("This mentions Exclusion Blackwood: add it?"). Confirming sets the
+   convention's fixed field if it has one, and otherwise adds an
+   `other_agreements` entry with its ID and the text (ADR-0001 D5); either way
+   the typed text stays. Importers may apply matches and report them, as
+   they report other guesses. A bot reads fields and `other_agreements` IDs,
+   never raw matches: a wrong guess there changes its bidding.
 4. **Text that matches nothing is the vocabulary's to-do list.** Unmatched
    phrases from real cards and imports show which conventions to add next.
 
@@ -137,8 +142,8 @@ rusty-bidding-bot's crate, moved here with its history: the field registry,
 and `.bbsa` import/export. It has **no built-in vocabulary**: a caller loads one
 at run time, and the crate refuses a card from a different vocabulary. That
 stays. What changes is where the standard vocabulary comes from (this repo's
-`spec/`). How that squares with the bot's decision to keep the vocabulary with
-its rules is the first open question in [DECISIONS.md](DECISIONS.md).
+`spec/`), with namespaced conventions covering anything a rule author adds
+([ADR-0001](adr/0001-standard-and-namespaced-conventions.md)).
 
 ## Accounts and storage: local first
 
@@ -198,8 +203,9 @@ staying part of the same convention:
   it shows three-card support or a stopper in the doubled suit, so responder
   can invite with 2NT. That is more Jacoby, not a new convention.
 
-The model: every field names the **convention** it belongs to (an id such as
-`stayman`) and has its own **level**. The convention's level is its base
+The model: every field names the **convention** it belongs to, by its ID
+(ADR-0001: `bidding_conventions/stayman`, which is also its skill path), and
+has its own **level**. The convention's level is its base
 field's, the lowest. The editor shows an extension as part of its convention
 ("Stayman › slam tries"); a card's difficulty counts it as more of an agreement
 it already has, not as one more convention. Grouping is an attribute, not the
