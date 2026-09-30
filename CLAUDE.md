@@ -8,7 +8,9 @@ maps, the skill vocabulary), a **JavaScript library** (converters, PDF), the
 `bridge-card` crate**.
 
 **Read [docs/DESIGN.md](docs/DESIGN.md) first**, then
-[docs/DECISIONS.md](docs/DECISIONS.md) for what's settled and what's open.
+[docs/DECISIONS.md](docs/DECISIONS.md) for what's settled and what's open, and
+the ADRs in [docs/adr/](docs/adr/). ADR-0001 (standard vs namespaced convention
+IDs) shapes every tool that names a convention.
 [docs/MIGRATION.md](docs/MIGRATION.md) tracks the move from Bridge-Classroom and
 rusty-bidding-bot. **As of 2026-09-30 nothing has moved yet**: the code still
 lives in those repos, and Phase 0 (finishing the PDF legibility work in
@@ -53,8 +55,8 @@ can't install a GitHub dependency from a subfolder.
 
 MIT OR Apache-2.0 (`LICENSE-MIT`, `LICENSE-APACHE`). This differs from the
 Unlicense tool repos on purpose: it matches the Rust crate's existing terms.
-Watch what gets bundled. The ACBL PDF templates' redistribution terms are an
-open question (DECISIONS.md). Barlow Condensed is SIL OFL; ship its `OFL.txt`
+Watch what gets bundled. The ACBL PDF templates are hosted here by decision
+(DECISIONS.md, decision 10), with their terms to be revisited later. Barlow Condensed is SIL OFL; ship its `OFL.txt`
 alongside it.
 
 ## Git

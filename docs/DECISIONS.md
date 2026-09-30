@@ -4,6 +4,18 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: how conventions are named** (Rick Wilson)
+
+9. **A standard convention list, plus namespaced conventions anyone can
+   publish.** See [ADR-0001](adr/0001-standard-and-namespaced-conventions.md).
+   Standard IDs are the existing skill paths. Custom conventions take an ID under
+   a domain the author owns. Cards carry them in an `other_agreements` list. This
+   resolves what was open question 1.
+10. **Host the ACBL PDF templates ourselves for now.** They ship with the editor
+    as they do from Bridge Classroom today. Redistribution terms can be sorted
+    out later if they ever need to be; that's easier to fix afterwards than to
+    wait on now. This resolves what was open question 5.
+
 **2026-09-30: the repo, and its terms** (Rick Wilson)
 
 1. **Its own repo, `bridge-craftwork/convention-card`**, public.
@@ -27,16 +39,7 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Open
 
-**1. Who owns the field vocabulary: this repo, or the bidding rules?**
-rusty-bidding-bot decided on 2026-09-28 that the card vocabulary (`fields.toml`,
-`bbsa-map.toml`) "belongs to the rules, not to the engine", so a rule author can
-add a field without an engine release. The editor, the converters and Bridge
-Classroom need the same list, though, and none of them has anything to do with
-the bot's rules.
-*Recommendation:* the standard vocabulary lives here. Rule sets name the
-vocabulary version they were checked against, and a new field is a pull request
-here. The crate keeps loading its vocabulary at run time, so a rule set can still
-bring extra fields if that turns out to be needed.
+**1. ~~Who owns the field vocabulary~~** Resolved by [ADR-0001](adr/0001-standard-and-namespaced-conventions.md).
 
 **2. Reconciling the field lists.** There are two lists (the bot's
 `fields.toml` and Bridge Classroom's `conventionCatalog.js`), and Bridge
@@ -60,13 +63,7 @@ see DESIGN.md). Options: open Bridge Classroom with the card in the URL fragment
 (simple, but there's a size limit), or open it and pass the card with
 `postMessage`.
 
-**5. Can the ACBL convention card PDFs be redistributed?** The PDF export fills
-ACBL's own fillable forms (`acbl-classic-2023.pdf`, `acbl-new.pdf`), which are
-served from Bridge Classroom's `public/templates/` today. A public, MIT/Apache
-repo is a different setting. Either confirm that ACBL permits redistribution, or
-keep the templates out of the repo and fetch them at run time from ACBL or a
-Bridge Classroom URL. (The substitute condensed font, Barlow Condensed, is SIL
-OFL and fine to ship with its licence.)
+**5. ~~Can the ACBL PDF templates be redistributed?~~** Decided for now: host them ourselves (decision 10).
 
 **6. What `reference.txt` contains.** Per site issue #3, each tool publishes a
 machine-readable reference. For this tool the natural content is the spec: every

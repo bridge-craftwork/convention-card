@@ -25,7 +25,7 @@ explain why each line is the way it is.
 | `src/composables/useConventionCard.js` | 481 | `web/` | Split: editing state moves; the Bridge Classroom API calls become BC's storage adapter and stay |
 | `src/views/ConventionCardView.vue` | 844 | `web/` | |
 | `src/components/conventionCard/*.vue` (13 files) | 2,787 | `web/` | |
-| `public/templates/acbl-*.pdf` | | `web/public/` or fetched | Blocked on DECISIONS open question 5 (redistribution) |
+| `public/templates/acbl-*.pdf` | | `web/public/templates/` | Hosted here (DECISIONS decision 10) |
 | `public/fonts/BarlowCondensed-Regular.ttf` + `OFL.txt` | | `web/public/fonts/` | Uncommitted in BC today; arrives with the PDF work |
 
 **Copied, not moved:** `src/utils/cardFormatting.js` (289 lines). Bridge
@@ -80,8 +80,9 @@ Bridge-Classroom.
 ### Phase 1: the spec and the Rust crate
 
 - Move `crates/bridge-card` and `conventions/card/*.toml` here with history.
-- Settle DECISIONS open questions 1–3 (who owns the vocabulary, reconciling the
-  field lists, the taxonomy file).
+- Settle DECISIONS open questions 2–3 (reconciling the field lists, the
+  taxonomy file). Question 1 is settled by ADR-0001.
+- Add `other_agreements` to the spec (ADR-0001 D5).
 - Merge `conventionCatalog.js`'s fields into `spec/fields.toml`. Every path any
   saved Bridge Classroom card uses must load, directly or through an alias.
 - Point rusty-bidding-bot at this repo (git dependency, pinned tag).
