@@ -1,6 +1,7 @@
 # ADR-0001 — A Standard Convention List, Plus Namespaced Conventions Anyone Can Publish
 
-**Status:** Accepted 2026-09-30 (Rick Wilson). Resolves open question 1 in
+**Status:** Accepted 2026-09-30 (Rick Wilson); D3 amended the same day (see
+[Amendment 1](#amendment-1-2026-09-30-the-standard-list-starts-large)). Resolves open question 1 in
 [DECISIONS.md](../DECISIONS.md) ("who owns the field vocabulary").
 
 **Affects:** this repo's spec, the editor and PDF export; rusty-bidding-bot
@@ -13,7 +14,7 @@ Practice-Bidding-Scenarios).
 ## 0. The one-paragraph version
 
 Conventions are named the way the web names pages. A **standard list**, kept
-in this repo and deliberately small, holds the conventions our tools support
+in this repo (large from the start: Amendment 1), holds the conventions our tools support
 together (card, lessons, bot). Their IDs are the **skill paths** already in use
 (`bidding_conventions/stayman`). Anyone can define a new convention **without
 asking anyone**, under a namespace they own: its ID starts with a domain, e.g.
@@ -87,7 +88,7 @@ conventions (Stayman). Some aren't (`declarer_play/holdup`); they just never
 appear on a card. Lessons, cards, `.bid` modules and dealer scripts all use the
 same ID for the same thing.
 
-### D3 — The standard list lives here, and stays small
+### D3 — The standard list lives here, and stays small *(amended: see Amendment 1)*
 
 The standard list lives in this repo's `spec/` and replaces the copies in
 Bridge Classroom and the bot. Its admission rule is **"our tools support it
@@ -207,6 +208,27 @@ joins the standard list with a skill-path ID, and its namespaced ID becomes an
   rule set for a list that has nothing to do with bidding logic. Rejected in
   favour of D1–D3, which keep that decision's goal of adding conventions without
   a release.
+
+## Amendment 1 (2026-09-30): the standard list starts large
+
+*Rick Wilson.* D3's admission rule stands: a convention is standard when our
+tools support it together. What changes is the expectation that the list stays
+small. rusty-bidding-bot is to support most of BBA's treatments and most of the
+Practice-Bidding-Scenarios scenarios, so by that same rule the list starts large:
+
+- every treatment BBA's `.bbsa` cards can switch (about 170 keys);
+- the convention behind every PBS scenario (350 scenarios);
+- the conventions Bridge Classroom's editor, the lesson collections and the
+  books and articles we cite already cover.
+
+A first cross-reference (2026-09-30) finds about 130 conventions with a card
+field today and about 40 more with none yet, before splitting grouped entries.
+Scenarios that practise natural bidding, judgment rules (Rule of 16, the Law of
+Total Tricks, misfits) or cardplay tag skills rather than card conventions; D2
+already covers that, since a skill need not appear on a card.
+
+Namespaced IDs are unchanged: they remain the way to add anything beyond the
+standard list without asking anyone.
 
 ## 5. References
 
