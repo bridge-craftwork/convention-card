@@ -362,6 +362,17 @@ see = [
 ["bidding_conventions/inverted_minors"]
 name = "Inverted Minor Raises"
 source = "proposed"
+level = 5
+names = ["Inverted minors", "Inverted minor raises", "Inverted raises"]
+summary = """
+Over partner's 1♣ or 1♦, the single raise is strong (invitational or better,
+forcing one round) and the jump raise is weak, the reverse of the natural
+meanings. It denies a four-card major.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 17 },
+  { title = "Inverted Minors and 1D-2C Auctions with Structure", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/591" },
+]
 
 ["bidding_conventions/minor_suit_transfers"]
 name = "Minor-Suit Transfers over 1NT"
@@ -627,4 +638,33 @@ hands at the two level.
 """
 see = [
   { title = "Constructive Bidding: Modern Gazzilli", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/488" },
+]
+
+["bidding_conventions/walsh"]
+name = "Walsh"
+source = "proposed"
+level = 4
+names = ["Walsh", "Walsh style", "Walsh responses"]
+summary = """
+Over partner's 1♣, responder with a weak or moderate hand bids a four-card
+major ahead of longer diamonds, so opener can rebid 1NT with any balanced
+hand knowing no 4-4 major fit is lost.
+"""
+see = [
+  { title = "Walsh Style", by = "Larry Cohen", url = "https://www.larryco.com/bridge-articles/walsh-style" },
+  { title = "Thinking and Responding: Walsh and Extended Walsh", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/511" },
+]
+
+["bidding_conventions/transfer_walsh"]
+name = "Transfer Walsh"
+source = "proposed"
+level = 9
+names = ["Transfer Walsh", "Transfer responses to 1♣", "transfer responses"]
+summary = """
+Over partner's 1♣, responder's 1♦ and 1♥ are transfers to the next suit,
+showing four or more cards in it, and 1♠ denies a four-card major. Opener
+can accept the transfer, so the 1♣ hand often declares.
+"""
+see = [
+  { title = "Transfer Walsh", site = "Wikipedia", url = "https://en.wikipedia.org/wiki/Transfer_Walsh" },
 ]
