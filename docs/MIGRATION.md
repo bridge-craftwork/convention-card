@@ -83,7 +83,7 @@ Bridge-Classroom.
 
 **Under way.** Done: the crate and the vocabulary moved here with history
 (`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/conventions.toml`), building
-and passing its tests against `spec/`; the notrump and major-openings sections merged (levels,
+and passing its tests against `spec/`; the notrump, major- and minor-openings sections merged (levels,
 convention entries, the paths real cards use); all 11 saved Bridge Classroom cards
 (2026-09-30 backup) load and write back without loss.
 
