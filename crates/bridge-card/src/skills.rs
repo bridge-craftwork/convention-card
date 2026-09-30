@@ -137,6 +137,28 @@ impl Skills {
         })
     }
 
+    /// Parse the combined `conventions.json` (`{schema, conventions: {id:
+    /// entry}}`), as `scripts/build_conventions.py` writes it.
+    pub fn from_json(text: &str) -> Result<Skills, Error> {
+        let doc: serde_json::Value =
+            serde_json::from_str(text).map_err(|e| Error::new(e.to_string()))?;
+        if doc["schema"] != "conventions/v1" {
+            return Err(Error::new(format!(
+                "schema {}: expected \"conventions/v1\"",
+                doc["schema"]
+            )));
+        }
+        let entries = doc["conventions"]
+            .as_object()
+            .ok_or_else(|| Error::new("conventions: expected an object"))?;
+        let mut skills = Vec::new();
+        for (id, entry) in entries {
+            let text = toml::to_string(entry).map_err(|e| Error::new(format!("{id}: {e}")))?;
+            skills.push(Skills::parse_entry(id, &text).map_err(|e| e.in_file(id))?);
+        }
+        Ok(Skills::from_entries(skills))
+    }
+
     /// Collect parsed entries into a list.
     pub fn from_entries(entries: impl IntoIterator<Item = Skill>) -> Skills {
         Skills {

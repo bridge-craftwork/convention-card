@@ -188,11 +188,15 @@ adapters:
 
 rusty-bidding-bot's crate, moved here with its history: the field registry,
 `Card` (load, resolve aliases and defaults, write back), JSON Schema generation,
-and `.bbsa` import/export. It has **no built-in vocabulary**: a caller loads one
-at run time, and the crate refuses a card from a different vocabulary. That
-stays. What changes is where the standard vocabulary comes from (this repo's
-`spec/`), with namespaced conventions covering anything a rule author adds
-([ADR-0001](adr/0001-standard-and-namespaced-conventions.md)).
+and `.bbsa` import/export. A caller chooses the vocabulary, and the crate
+refuses a card from a different one. The standard vocabulary is this repo's
+`spec/`: `bridge_card::standard` carries its text as of the tag a program
+depends on, and `Vocabulary::load_spec` reads a spec directory. Namespaced
+conventions cover anything a rule author adds
+([ADR-0001](adr/0001-standard-and-namespaced-conventions.md)). A card's
+`other_agreements` are typed (`OtherAgreement`), and `Card::names_convention`
+says whether a card plays a convention, by a fixed field or an
+`other_agreements` entry.
 
 ## Accounts and storage: local first
 
@@ -296,8 +300,13 @@ Most of the noise comes from things the spec can fix:
 - **References to other fields.** "Same" in the defence to a weak notrump means
   the defence to a strong one.
 
-Choice groups will also serve a planned difficulty rating for cards: a
-card's load is counted in agreements, not checkboxes.
+Choice groups are the spec's `choice` attribute (`fields.toml`), 23 of them
+from 2026-09-30. Loading reports a card that sets two alternatives as a
+conflict, which kept the grouping honest: four first guesses (negative and
+penalty doubles of interference over 1NT, DOPI and DEPO, NMF and two-way NMF,
+the direct cue-bid boxes) are combined on real cards, so they are not groups.
+Choice groups also serve a planned difficulty rating for cards: a card's load
+is counted in agreements, not checkboxes.
 
 ## Deployment
 

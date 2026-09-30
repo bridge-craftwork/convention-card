@@ -17,9 +17,10 @@ mod error;
 mod registry;
 pub mod schema;
 pub mod skills;
+pub mod standard;
 mod vocabulary;
 
-pub use card::{Card, CardMetadata, LoadReport, EXPORT_SCHEMA};
+pub use card::{Card, CardMetadata, LoadReport, OtherAgreement, EXPORT_SCHEMA};
 pub use error::Error;
 pub use registry::{FieldDef, FieldKind, Registry, Value};
 pub use skills::{Skill, SkillSource, Skills};

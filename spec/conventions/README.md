@@ -24,10 +24,19 @@ list (D7) is moving one file.
 
 See `docs/DESIGN.md`, "Describing a convention" and "Difficulty levels".
 
-## The combined file
+`categories.toml` gives each category (an ID's first segment) its display name.
 
-`../conventions.json` holds every entry in one file, for readers that cannot
-list a directory (the JS library in a browser, lesson-studio). It is
-**generated**: never edit it by hand. `scripts/build_conventions.py` writes it,
-and CI runs that on every push to `main` that changes a file here, committing
-the result. To check it locally, run `python3 scripts/build_conventions.py`.
+## The generated files
+
+Never edit these by hand. `scripts/build_conventions.py` writes them, and CI
+runs it on every push to `main` that changes a file here, committing the
+result. To check locally: `python3 scripts/build_conventions.py --check`.
+
+- `../conventions.json`: every entry in one file, for readers that cannot list
+  a directory (the JS library in a browser). The Rust crate has it built in
+  (`bridge_card::standard`).
+- `../taxonomy.json`: lesson-studio's Contract 4 (`taxonomy/v1`): each skill's
+  path, name, category and its level as a band (basic 1–3, intermediate 4–6,
+  advanced 7–8, expert 9–10). Entries without a level (`practice_deals`, which
+  is content rather than a skill) are left out. Its `version` is the repo's
+  (`Cargo.toml`); its `generated` date changes only when its content does.

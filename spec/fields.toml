@@ -27,6 +27,15 @@
 #            fields carry its level (its file in conventions/); an extension, such as
 #            Texas under Jacoby transfers or transfers after a double, carries
 #            its own higher level (docs/DESIGN.md, "Difficulty levels")
+#   choice   a choice group: yes/no fields with the same choice are
+#            alternatives, at most one on (standard or upside-down count).
+#            Only for true alternatives: a card that sets two of them is
+#            reported as a conflict, so boxes partnerships combine (negative
+#            and penalty doubles at different levels, DOPI and DEPO) are not
+#            grouped
+#
+# Conventions with no field here go in the card's other_agreements list,
+# [{ id?, section?, text }], by their ID (ADR-0001 D5).
 #
 # Adding a convention: add its file to conventions/ and its fields here.
 
@@ -42,11 +51,11 @@
 "forcing_opening_2c"       = { kind = "bool", label = "Forcing 2♣ opening" }
 "forcing_opening_other"    = { kind = "text", label = "Forcing opening (other)" }
 "bids_requiring_prep"      = { kind = "text", label = "Bids that may require preparation" }
-"jump_shifts.strong_2"     = { kind = "bool", label = "Strong jump shifts (2-level)", level = 3 }
-"jump_shifts.strong_3"     = { kind = "bool", label = "Strong jump shifts (3-level)", level = 3 }
-"jump_shifts.weak_2"       = { kind = "bool", label = "Weak jump shifts (2-level)", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
-"jump_shifts.weak_3"       = { kind = "bool", label = "Weak jump shifts (3-level)", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
-"jump_shifts.invitational" = { kind = "bool", label = "Invitational jump shifts", level = 5 }
+"jump_shifts.strong_2"     = { kind = "bool", label = "Strong jump shifts (2-level)", level = 3, choice = "general.jump_shifts_2" }
+"jump_shifts.strong_3"     = { kind = "bool", label = "Strong jump shifts (3-level)", level = 3, choice = "general.jump_shifts_3" }
+"jump_shifts.weak_2"       = { kind = "bool", label = "Weak jump shifts (2-level)", skill = "bidding_conventions/weak_jump_shifts", level = 5, choice = "general.jump_shifts_2" }
+"jump_shifts.weak_3"       = { kind = "bool", label = "Weak jump shifts (3-level)", skill = "bidding_conventions/weak_jump_shifts", level = 5, choice = "general.jump_shifts_3" }
+"jump_shifts.invitational" = { kind = "bool", label = "Invitational jump shifts", level = 5, choice = "general.jump_shifts_2" }
 "jump_shifts.soloway"      = { kind = "bool", label = "Soloway jump shifts", skill = "bidding_conventions/soloway", level = 8 }
 "jump_shifts.soloway_extended" = { kind = "bool", label = "Soloway jump shifts (extended)", skill = "bidding_conventions/soloway", level = 9 }
 "forcing_opening"          = { kind = "text", label = "Forcing opening (as written)", desc = "The card's forcing-opening line as an importer wrote it (\"2C\"); forcing_opening_1c/2c/other are the structured form" }
@@ -135,22 +144,22 @@
 "five_card_majors"         = { kind = "bool", label = "Five-card majors", default = true }
 "min_length_1st_2nd"       = { kind = "enum", label = "Min length 1st/2nd seat", options = ["4", "5"], default = "5" }
 "min_length_3rd_4th"       = { kind = "enum", label = "Min length 3rd/4th seat", options = ["4", "5"], default = "5" }
-"one_nt_response.forcing"  = { kind = "bool", label = "Forcing 1NT response", skill = "bidding_conventions/forcing_1nt", level = 4 }
-"one_nt_response.semi_forcing" = { kind = "bool", label = "Semi-forcing 1NT response", skill = "bidding_conventions/semi_forcing_1nt", level = 5 }
+"one_nt_response.forcing"  = { kind = "bool", label = "Forcing 1NT response", skill = "bidding_conventions/forcing_1nt", level = 4, choice = "major_openings.one_nt_response" }
+"one_nt_response.semi_forcing" = { kind = "bool", label = "Semi-forcing 1NT response", skill = "bidding_conventions/semi_forcing_1nt", level = 5, choice = "major_openings.one_nt_response" }
 "one_nt_response.bypass_1s" = { kind = "bool", label = "1NT may bypass 1♠ over 1♥", level = 4 }
 "two_over_one.game_force"  = { kind = "bool", label = "2/1 game force", skill = "bidding_conventions/two_over_one", level = 4 }
 "three_nt_raise.play"      = { kind = "bool", label = "3NT artificial raise (4-3-3-3)", level = 6 }
 "art_raises_other"         = { kind = "text", label = "Other artificial raises" }
-"jump_raise.weak"          = { kind = "bool", label = "Jump raise: weak", level = 4 }
-"jump_raise.mixed"         = { kind = "bool", label = "Jump raise: mixed", level = 6 }
-"jump_raise.inv"           = { kind = "bool", label = "Jump raise: invitational", level = 3 }
-"jump_raise_after_overcall.weak"  = { kind = "bool", label = "Jump raise after overcall: weak", level = 4 }
-"jump_raise_after_overcall.mixed" = { kind = "bool", label = "Jump raise after overcall: mixed", level = 6 }
-"jump_raise_after_overcall.inv"   = { kind = "bool", label = "Jump raise after overcall: invitational", level = 4 }
+"jump_raise.weak"          = { kind = "bool", label = "Jump raise: weak", level = 4, choice = "major_openings.jump_raise" }
+"jump_raise.mixed"         = { kind = "bool", label = "Jump raise: mixed", level = 6, choice = "major_openings.jump_raise" }
+"jump_raise.inv"           = { kind = "bool", label = "Jump raise: invitational", level = 3, choice = "major_openings.jump_raise" }
+"jump_raise_after_overcall.weak"  = { kind = "bool", label = "Jump raise after overcall: weak", level = 4, choice = "major_openings.jump_raise_after_overcall" }
+"jump_raise_after_overcall.mixed" = { kind = "bool", label = "Jump raise after overcall: mixed", level = 6, choice = "major_openings.jump_raise_after_overcall" }
+"jump_raise_after_overcall.inv"   = { kind = "bool", label = "Jump raise after overcall: invitational", level = 4, choice = "major_openings.jump_raise_after_overcall" }
 "jacoby_2nt.play"          = { kind = "bool", label = "Jacoby 2NT", skill = ["bidding_conventions/jacoby_2nt", "bidding_conventions/jacoby_2nt_splinters"], level = 4 }
 "jacoby_2nt.modified"      = { kind = "bool", label = "Modified Jacoby 2NT", skill = ["bidding_conventions/modified_jacoby_2nt", "bidding_conventions/jacoby_2nt_splinters"], level = 6 }
-"bergen_raises.play"       = { kind = "bool", label = "Bergen raises", skill = "bidding_conventions/bergen_raises", level = 5 }
-"bergen_raises.reverse"    = { kind = "bool", label = "Reverse Bergen raises", skill = "bidding_conventions/reverse_bergen_raises", level = 6 }
+"bergen_raises.play"       = { kind = "bool", label = "Bergen raises", skill = "bidding_conventions/bergen_raises", level = 5, choice = "major_openings.bergen" }
+"bergen_raises.reverse"    = { kind = "bool", label = "Reverse Bergen raises", skill = "bidding_conventions/reverse_bergen_raises", level = 6, choice = "major_openings.bergen" }
 "splinters.play"           = { kind = "bool", label = "Splinters", skill = ["bidding_conventions/splinters", "bidding_conventions/jacoby_2nt_splinters"], level = 5 }
 "splinters.by_responder"   = { kind = "bool", label = "Splinters by responder", skill = ["bidding_conventions/splinters", "bidding_conventions/jacoby_2nt_splinters"], level = 5 }
 "splinters.by_opener"      = { kind = "bool", label = "Splinters by opener", skill = ["bidding_conventions/splinters", "bidding_conventions/jacoby_2nt_splinters"], level = 6 }
@@ -171,9 +180,9 @@
 [minor_openings]
 "one_club.min_length"      = { kind = "enum", label = "1♣ min length", options = ["2", "3", "4", "5"], default = "3" }
 "one_club.unbalanced"      = { kind = "bool", label = "1♣ unbalanced" }
-"one_club.nf2"             = { kind = "bool", label = "1♣ NF2" }
-"one_club.nf1"             = { kind = "bool", label = "1♣ NF1" }
-"one_club.nf0"             = { kind = "bool", label = "1♣ NF0" }
+"one_club.nf2"             = { kind = "bool", label = "1♣ NF2", choice = "minor_openings.one_club_forcing" }
+"one_club.nf1"             = { kind = "bool", label = "1♣ NF1", choice = "minor_openings.one_club_forcing" }
+"one_club.nf0"             = { kind = "bool", label = "1♣ NF0", choice = "minor_openings.one_club_forcing" }
 "one_club.art_forcing"     = { kind = "bool", label = "1♣ artificial forcing" }
 "one_club.transfer_resp"   = { kind = "bool", label = "Transfer responses to 1♣", skill = "bidding_conventions/transfer_walsh", level = 9 }
 "one_club.one_nt_range_min" = { kind = "int", label = "1♣–1NT range: minimum", min = 0, max = 20 }
@@ -183,12 +192,12 @@
 "one_club.single_raise.nf" = { kind = "bool", label = "1♣ single raise: non-forcing", level = 2 }
 "one_club.single_raise.inv" = { kind = "bool", label = "1♣ single raise: invitational+", skill = "bidding_conventions/inverted_minors", level = 5 }
 "one_club.single_raise.gf" = { kind = "bool", label = "1♣ single raise: game forcing", skill = "bidding_conventions/inverted_minors", level = 5 }
-"one_club.jump_raise.weak" = { kind = "bool", label = "1♣ jump raise: weak", level = 4 }
-"one_club.jump_raise.mixed" = { kind = "bool", label = "1♣ jump raise: mixed", level = 6 }
-"one_club.jump_raise.inv"  = { kind = "bool", label = "1♣ jump raise: invitational", level = 3 }
-"one_club.jump_raise_after_overcall.weak"  = { kind = "bool", label = "1♣ jump raise after overcall: weak", level = 4 }
-"one_club.jump_raise_after_overcall.mixed" = { kind = "bool", label = "1♣ jump raise after overcall: mixed", level = 6 }
-"one_club.jump_raise_after_overcall.inv"   = { kind = "bool", label = "1♣ jump raise after overcall: invitational", level = 4 }
+"one_club.jump_raise.weak" = { kind = "bool", label = "1♣ jump raise: weak", level = 4, choice = "minor_openings.jump_raise" }
+"one_club.jump_raise.mixed" = { kind = "bool", label = "1♣ jump raise: mixed", level = 6, choice = "minor_openings.jump_raise" }
+"one_club.jump_raise.inv"  = { kind = "bool", label = "1♣ jump raise: invitational", level = 3, choice = "minor_openings.jump_raise" }
+"one_club.jump_raise_after_overcall.weak"  = { kind = "bool", label = "1♣ jump raise after overcall: weak", level = 4, choice = "minor_openings.jump_raise_after_overcall" }
+"one_club.jump_raise_after_overcall.mixed" = { kind = "bool", label = "1♣ jump raise after overcall: mixed", level = 6, choice = "minor_openings.jump_raise_after_overcall" }
+"one_club.jump_raise_after_overcall.inv"   = { kind = "bool", label = "1♣ jump raise after overcall: invitational", level = 4, choice = "minor_openings.jump_raise_after_overcall" }
 "one_diamond.min_length"   = { kind = "enum", label = "1♦ min length", options = ["2", "3", "4", "5"], default = "3" }
 "one_diamond.unbalanced"   = { kind = "bool", label = "1♦ unbalanced" }
 "one_diamond.nf2_4432_only" = { kind = "bool", label = "1♦ NF2 (4-4-3-2 only)" }
@@ -275,14 +284,14 @@
 "notes"                    = { kind = "text", label = "Preempt notes", note = true }
 
 [slam]
-"blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood", level = 2 }
-"blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"], skill = "bidding_conventions/roman_keycard", level = 4 }
-"blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"], skill = "bidding_conventions/roman_keycard", level = 4 }
+"blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood", level = 2, choice = "slam.keycard_responses" }
+"blackwood.rkcb_1430"      = { kind = "bool", label = "RKCB 1430", aliases = ["other_conventions.blackwood.rkcb_1430"], skill = "bidding_conventions/roman_keycard", level = 4, choice = "slam.keycard_responses" }
+"blackwood.rkcb_0314"      = { kind = "bool", label = "RKCB 0314", aliases = ["other_conventions.blackwood.rkcb_0314"], skill = "bidding_conventions/roman_keycard", level = 4, choice = "slam.keycard_responses" }
 "blackwood.minor_0314"     = { kind = "bool", label = "RKCB 0314 with a minor as trumps (1430 in the majors)", skill = "bidding_conventions/roman_keycard", level = 6 }
 "blackwood.queen_ask"      = { kind = "bool", label = "Queen ask", aliases = ["other_conventions.blackwood.queen_ask"], skill = "bidding_conventions/roman_keycard", level = 6 }
 "blackwood.notes"          = { kind = "text", label = "4NT notes", aliases = ["other_conventions.blackwood.notes"] }
-"king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT", skill = "bidding_conventions/roman_keycard", level = 5 }
-"king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid", skill = "bidding_conventions/roman_keycard", level = 7 }
+"king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT", skill = "bidding_conventions/roman_keycard", level = 5, choice = "slam.king_ask" }
+"king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid", skill = "bidding_conventions/roman_keycard", level = 7, choice = "slam.king_ask" }
 "quantitative_4nt.play"    = { kind = "bool", label = "Quantitative 4NT", level = 3 }
 "four_nt_opening.play"     = { kind = "bool", label = "4NT opening (specific aces)", level = 8 }
 "gerber.play"              = { kind = "bool", label = "Gerber", aliases = ["other_conventions.gerber.play"], skill = "bidding_conventions/gerber", level = 3 }
@@ -292,8 +301,8 @@
 "gerber.over_nt_seq"       = { kind = "bool", label = "Gerber over NT sequence", aliases = ["other_conventions.gerber.over_nt_seq"] }
 "gerber.non_nt_seq"        = { kind = "bool", label = "Gerber in non-NT sequence", aliases = ["other_conventions.gerber.non_nt_seq"] }
 "kickback.play"            = { kind = "bool", label = "Kickback", aliases = ["other_conventions.kickback.play"], skill = "bidding_conventions/kickback", level = 9 }
-"kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430", skill = "bidding_conventions/kickback", level = 9 }
-"kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314", skill = "bidding_conventions/kickback", level = 9 }
+"kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430", skill = "bidding_conventions/kickback", level = 9, choice = "slam.kickback_responses" }
+"kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314", skill = "bidding_conventions/kickback", level = 9, choice = "slam.kickback_responses" }
 "minorwood.play"           = { kind = "bool", label = "Minorwood", skill = "bidding_conventions/minorwood", level = 7 }
 "exclusion_blackwood.play" = { kind = "bool", label = "Exclusion Blackwood", skill = "bidding_conventions/exclusion_blackwood", level = 7 }
 "pick_a_slam_5nt.play"     = { kind = "bool", label = "Pick-a-slam 5NT", skill = "bidding_conventions/pick_a_slam_5nt", level = 7 }
@@ -359,8 +368,8 @@
 [competitive]
 "michaels.play"            = { kind = "bool", label = "Michaels cuebid", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "michaels.strength"        = { kind = "enum", label = "Michaels strength", options = ["wide_range", "weak_or_strong"], default = "wide_range", desc = "wide_range: any strength from about 7 HCP with five-five (BBA: 8+ total points, 12+ vulnerable). weak_or_strong (mini-maxi): weak, or 16+ and bids again; an intermediate hand overcalls instead. Bridge-Classroom's seed card writes weak_or_strong" }
-"leaping_michaels.play"    = { kind = "bool", label = "Leaping Michaels", skill = "competitive_bidding/leaping_michaels", level = 7 }
-"non_leaping_michaels.play" = { kind = "bool", label = "Non-leaping Michaels", skill = "competitive_bidding/non_leaping_michaels", level = 8 }
+"leaping_michaels.play"    = { kind = "bool", label = "Leaping Michaels", skill = "competitive_bidding/leaping_michaels", level = 7, choice = "competitive.michaels_over_preempts" }
+"non_leaping_michaels.play" = { kind = "bool", label = "Non-leaping Michaels", skill = "competitive_bidding/non_leaping_michaels", level = 8, choice = "competitive.michaels_over_preempts" }
 "unusual_1nt.play"         = { kind = "bool", label = "Unusual 1NT", skill = "competitive_bidding/michaels_unusual", level = 6 }
 "unusual_2nt.play"         = { kind = "bool", label = "Unusual 2NT", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "unusual_2nt.shows"        = { kind = "text", label = "Unusual 2NT shows" }
@@ -441,12 +450,12 @@
 "declarer_lead.attitude"   = { kind = "bool", label = "Signal on declarer's lead: attitude", skill = "defense/defensive_signals", level = 4 }
 "declarer_lead.count"      = { kind = "bool", label = "Signal on declarer's lead: count", skill = "defense/defensive_signals", level = 4 }
 "declarer_lead.suit_preference" = { kind = "bool", label = "Signal on declarer's lead: suit preference", skill = "defense/defensive_signals", level = 5 }
-"first_discard.standard"   = { kind = "bool", label = "First discard: standard", skill = "defense/defensive_signals", level = 3 }
-"first_discard.upside_down" = { kind = "bool", label = "First discard: upside-down", skill = "defense/upside_down_signals", level = 6 }
-"first_discard.lavinthal"  = { kind = "bool", label = "First discard: Lavinthal", skill = "defense/lavinthal", level = 6 }
+"first_discard.standard"   = { kind = "bool", label = "First discard: standard", skill = "defense/defensive_signals", level = 3, choice = "carding.first_discard" }
+"first_discard.upside_down" = { kind = "bool", label = "First discard: upside-down", skill = "defense/upside_down_signals", level = 6, choice = "carding.first_discard" }
+"first_discard.lavinthal"  = { kind = "bool", label = "First discard: Lavinthal", skill = "defense/lavinthal", level = 6, choice = "carding.first_discard" }
 "first_discard.lavinthal_suits" = { kind = "bool", label = "First discard: Lavinthal vs suits", skill = "defense/lavinthal", level = 6 }
 "first_discard.lavinthal_nt" = { kind = "bool", label = "First discard: Lavinthal vs NT", skill = "defense/lavinthal", level = 6 }
-"first_discard.odd_even"   = { kind = "bool", label = "First discard: odd/even", skill = "defense/odd_even_discards", level = 6 }
+"first_discard.odd_even"   = { kind = "bool", label = "First discard: odd/even", skill = "defense/odd_even_discards", level = 6, choice = "carding.first_discard" }
 "first_discard.odd_even_suits" = { kind = "bool", label = "First discard: odd/even vs suits", skill = "defense/odd_even_discards", level = 6 }
 "first_discard.odd_even_nt" = { kind = "bool", label = "First discard: odd/even vs NT", skill = "defense/odd_even_discards", level = 6 }
 "first_discard.other_suits" = { kind = "text", label = "First discard: other, vs suits" }
@@ -455,17 +464,17 @@
 "exceptions"               = { kind = "text", label = "Carding exceptions" }
 "smith_echo_reverse"       = { kind = "bool", label = "Reverse Smith echo", skill = "defense/reverse_smith_echo", level = 8 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
-"suits.standard_attitude"  = { kind = "bool", label = "Standard attitude vs suits", skill = "defense/defensive_signals", level = 2 }
-"suits.standard_count"     = { kind = "bool", label = "Standard count vs suits", skill = "defense/defensive_signals", level = 3 }
-"suits.upside_down_attitude" = { kind = "bool", label = "Upside-down attitude vs suits", skill = "defense/upside_down_signals", level = 6 }
-"suits.upside_down_count"  = { kind = "bool", label = "Upside-down count vs suits", skill = "defense/upside_down_signals", level = 6 }
-"nt.standard_attitude"     = { kind = "bool", label = "Standard attitude vs NT", skill = "defense/defensive_signals", level = 2 }
-"nt.standard_count"        = { kind = "bool", label = "Standard count vs NT", skill = "defense/defensive_signals", level = 3 }
-"nt.upside_down_attitude"  = { kind = "bool", label = "Upside-down attitude vs NT", skill = "defense/upside_down_signals", level = 6 }
-"nt.upside_down_count"     = { kind = "bool", label = "Upside-down count vs NT", skill = "defense/upside_down_signals", level = 6 }
-"partner_lead.attitude"    = { kind = "bool", label = "Primary signal to partner's lead: attitude", skill = "defense/defensive_signals", level = 2 }
-"partner_lead.count"       = { kind = "bool", label = "Primary signal to partner's lead: count", skill = "defense/defensive_signals", level = 3 }
-"partner_lead.suit_preference" = { kind = "bool", label = "Primary signal to partner's lead: suit preference", skill = "defense/defensive_signals", level = 5 }
+"suits.standard_attitude"  = { kind = "bool", label = "Standard attitude vs suits", skill = "defense/defensive_signals", level = 2, choice = "carding.suits.attitude" }
+"suits.standard_count"     = { kind = "bool", label = "Standard count vs suits", skill = "defense/defensive_signals", level = 3, choice = "carding.suits.count" }
+"suits.upside_down_attitude" = { kind = "bool", label = "Upside-down attitude vs suits", skill = "defense/upside_down_signals", level = 6, choice = "carding.suits.attitude" }
+"suits.upside_down_count"  = { kind = "bool", label = "Upside-down count vs suits", skill = "defense/upside_down_signals", level = 6, choice = "carding.suits.count" }
+"nt.standard_attitude"     = { kind = "bool", label = "Standard attitude vs NT", skill = "defense/defensive_signals", level = 2, choice = "carding.nt.attitude" }
+"nt.standard_count"        = { kind = "bool", label = "Standard count vs NT", skill = "defense/defensive_signals", level = 3, choice = "carding.nt.count" }
+"nt.upside_down_attitude"  = { kind = "bool", label = "Upside-down attitude vs NT", skill = "defense/upside_down_signals", level = 6, choice = "carding.nt.attitude" }
+"nt.upside_down_count"     = { kind = "bool", label = "Upside-down count vs NT", skill = "defense/upside_down_signals", level = 6, choice = "carding.nt.count" }
+"partner_lead.attitude"    = { kind = "bool", label = "Primary signal to partner's lead: attitude", skill = "defense/defensive_signals", level = 2, choice = "carding.partner_lead" }
+"partner_lead.count"       = { kind = "bool", label = "Primary signal to partner's lead: count", skill = "defense/defensive_signals", level = 3, choice = "carding.partner_lead" }
+"partner_lead.suit_preference" = { kind = "bool", label = "Primary signal to partner's lead: suit preference", skill = "defense/defensive_signals", level = 5, choice = "carding.partner_lead" }
 "smith_echo_suits"         = { kind = "bool", label = "Smith echo vs suits", skill = "defense/smith_echo", level = 8 }
 "smith_echo_nt"            = { kind = "bool", label = "Smith echo vs NT", skill = "defense/smith_echo", level = 8 }
 "trump_signals"            = { kind = "text", label = "Trump signals" }
@@ -474,8 +483,8 @@
 
 [other_conventions]
 "fourth_suit_forcing.play"       = { kind = "bool", label = "Fourth suit forcing", desc = "We play fourth suit forcing (Bridge-Classroom's card); one_round / game_force say how far it forces. Turns off responder's natural two-level fourth suit (1♦–1♥–1♠–2♣)", skill = "bidding_conventions/fourth_suit_forcing", level = 5 }
-"fourth_suit_forcing.one_round"  = { kind = "bool", label = "Fourth suit forcing (1 round)", skill = "bidding_conventions/fourth_suit_forcing", level = 5 }
-"fourth_suit_forcing.game_force" = { kind = "bool", label = "Fourth suit forcing (game force)", aliases = ["other_conventions.fourth_suit_forcing.game_forcing"], skill = "bidding_conventions/fourth_suit_forcing", level = 5 }
+"fourth_suit_forcing.one_round"  = { kind = "bool", label = "Fourth suit forcing (1 round)", skill = "bidding_conventions/fourth_suit_forcing", level = 5, choice = "other_conventions.fourth_suit_forcing" }
+"fourth_suit_forcing.game_force" = { kind = "bool", label = "Fourth suit forcing (game force)", aliases = ["other_conventions.fourth_suit_forcing.game_forcing"], skill = "bidding_conventions/fourth_suit_forcing", level = 5, choice = "other_conventions.fourth_suit_forcing" }
 "help_suit_game_tries.play" = { kind = "bool", label = "Help suit game tries", skill = "bidding_conventions/help_suit_game_try", level = 5 }
 "two_way_game_tries.play"  = { kind = "bool", label = "Two-way game tries", skill = "bidding_conventions/two_way_game_tries", level = 8 }
 "reverse_bids.forcing"     = { kind = "bool", label = "Reverses forcing", skill = "bidding_conventions/reverse_bids", level = 4 }
@@ -492,6 +501,7 @@
 "jump_shift_response"      = { kind = "text", label = "Jump shift responses (as written)", desc = "The card's jump-shift line as an importer wrote it (\"Weak\")" }
 "notes"                    = { kind = "text", label = "Other conventions notes", note = true }
 "vs_strong_open"           = { kind = "text", label = "Defense vs strong openings" }
+"wolff_signoff.play"       = { kind = "bool", label = "Wolff sign-off", desc = "After 1x–1y–2NT, responder's 3♣ asks opener to bid 3♦, to pass or sign off in a suit; every other call but pass forces to game. No .bbsa key (BBA does not play it)", skill = "bidding_conventions/wolff_signoff", level = 7 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "weak_jump_shifts_not_in_comp" = { kind = "bool", label = "Weak jump shifts (not in competition)", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
 "weak_jump_shifts_in_comp" = { kind = "bool", label = "Weak jump shifts in competition", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
@@ -518,22 +528,22 @@
 "redouble.denies_fit"      = { kind = "bool", label = "Vs takeout double: redouble implies no fit", level = 4 }
 "redouble.conv_desc"       = { kind = "text", label = "Vs takeout double: redouble notes", note = true }
 "two_nt_raise_majors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major", skill = "competitive_bidding/jordan_2nt", level = 5 }
-"two_nt_raise_majors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, limit", skill = "competitive_bidding/jordan_2nt", level = 5 }
-"two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak", skill = "competitive_bidding/jordan_2nt", level = 7 }
+"two_nt_raise_majors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, limit", skill = "competitive_bidding/jordan_2nt", level = 5, choice = "vs_to_double.two_nt_raise_majors" }
+"two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_majors" }
 "two_nt_raise_majors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a major, minimum", min = 0, max = 25 }
 "two_nt_raise_majors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a major, maximum", min = 0, max = 25 }
 "two_nt_raise_minors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor", skill = "competitive_bidding/jordan_2nt", level = 6 }
-"two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better", skill = "competitive_bidding/jordan_2nt", level = 6 }
-"two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit", skill = "competitive_bidding/jordan_2nt", level = 6 }
-"two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak", skill = "competitive_bidding/jordan_2nt", level = 7 }
+"two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
+"two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
+"two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a minor, minimum", min = 0, max = 25 }
 "two_nt_raise_minors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a minor, maximum", min = 0, max = 25 }
 "notes"                    = { kind = "text", label = "Vs takeout double notes (card write-in)", note = true }
 
 [vs_preempts]
-"takeout_double"           = { kind = "bool", label = "Vs preempts: double is takeout", skill = "competitive_bidding/takeout_doubles", level = 3 }
+"takeout_double"           = { kind = "bool", label = "Vs preempts: double is takeout", skill = "competitive_bidding/takeout_doubles", level = 3, choice = "vs_preempts.double" }
 "takeout_double_thru"      = { kind = "text", label = "Vs preempts: takeout double through" }
-"takeout_double_penalty"   = { kind = "bool", label = "Vs preempts: double is penalty", level = 5 }
+"takeout_double_penalty"   = { kind = "bool", label = "Vs preempts: double is penalty", level = 5, choice = "vs_preempts.double" }
 "conv_takeout"             = { kind = "text", label = "Vs preempts: conventional takeout" }
 "two_nt_overcall"          = { kind = "text", label = "Vs preempts: 2NT overcall" }
 "cuebid"                   = { kind = "text", label = "Vs preempts: cuebid" }

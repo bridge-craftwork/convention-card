@@ -1,9 +1,10 @@
-name: Build conventions.json
+name: Build conventions.json and taxonomy.json
 
 # spec/conventions/<category>/<name>.toml is the source, one file per
 # convention; spec/conventions.json combines them for readers that cannot list
-# a directory (the JS library in a browser, lesson-studio). Regenerates whenever
-# the source changes, as Practice-Bidding-Scenarios does for its manifest.
+# a directory (the JS library in a browser), and spec/taxonomy.json is
+# lesson-studio's Contract 4. Regenerates whenever the source changes, as
+# Practice-Bidding-Scenarios does for its manifest.
 
 on:
   push:
@@ -11,10 +12,11 @@ on:
     paths:
       - 'spec/conventions/**'
       - 'scripts/build_conventions.py'
+      - 'Cargo.toml'
       - '.github/workflows/build-conventions.yml'
   workflow_dispatch:
 
-# GITHUB_TOKEN pushes do not re-trigger workflows, and spec/conventions.json is
+# GITHUB_TOKEN pushes do not re-trigger workflows, and the generated files are
 # outside the push paths above, so the commit-back below cannot cause a loop.
 permissions:
   contents: write
@@ -33,17 +35,17 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Generate conventions.json
+      - name: Generate conventions.json and taxonomy.json
         run: python3 scripts/build_conventions.py
 
-      - name: Commit conventions.json if changed
+      - name: Commit the generated files if changed
         run: |
-          if [ -z "$(git status --porcelain spec/conventions.json)" ]; then
-            echo "conventions.json unchanged — nothing to commit."
+          if [ -z "$(git status --porcelain spec/conventions.json spec/taxonomy.json)" ]; then
+            echo "Generated files unchanged — nothing to commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add spec/conventions.json
-          git commit -m "conventions.json: rebuild from spec/conventions (${GITHUB_SHA::7}) [skip ci]"
+          git add spec/conventions.json spec/taxonomy.json
+          git commit -m "conventions.json, taxonomy.json: rebuild from spec/conventions (${GITHUB_SHA::7}) [skip ci]"
           git push
