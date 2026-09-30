@@ -82,10 +82,15 @@ Bridge-Classroom.
 ### Phase 1: the spec and the Rust crate
 
 **Under way.** Done: the crate and the vocabulary moved here with history
-(`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/conventions.toml`), building
-and passing its tests against `spec/`; the notrump, major- and minor-openings sections merged (levels,
-convention entries, the paths real cards use); all 11 saved Bridge Classroom cards
-(2026-09-30 backup) load and write back without loss.
+(`spec/fields.toml`, `spec/formats/bbsa-map.toml`, `spec/conventions.toml`),
+building and passing its tests against `spec/`. The field lists are merged
+section by section (PRs #5, #7–#13): every convention field has a level and
+names its convention, `conventions.toml` has 173 entries with summaries and
+citations, every editor-catalog and importer path resolves, and all 11 saved
+Bridge Classroom cards (2026-09-30 backup) load with no unknown path or invalid
+value and write back without loss. Still to do: choice groups; generating
+`taxonomy.json`; `other_agreements` (ADR-0001 D5); `Vocabulary::load` reading
+`spec/`; pointing rusty-bidding-bot at a tag.
 
 - Move `crates/bridge-card` and `conventions/card/*.toml` here with history.
 - Settle DECISIONS open questions 2–3 (reconciling the field lists, the

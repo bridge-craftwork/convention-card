@@ -42,13 +42,14 @@
 "forcing_opening_2c"       = { kind = "bool", label = "Forcing 2♣ opening" }
 "forcing_opening_other"    = { kind = "text", label = "Forcing opening (other)" }
 "bids_requiring_prep"      = { kind = "text", label = "Bids that may require preparation" }
-"jump_shifts.strong_2"     = { kind = "bool", label = "Strong jump shifts (2-level)" }
-"jump_shifts.strong_3"     = { kind = "bool", label = "Strong jump shifts (3-level)" }
-"jump_shifts.weak_2"       = { kind = "bool", label = "Weak jump shifts (2-level)" }
-"jump_shifts.weak_3"       = { kind = "bool", label = "Weak jump shifts (3-level)" }
-"jump_shifts.invitational" = { kind = "bool", label = "Invitational jump shifts" }
-"jump_shifts.soloway"      = { kind = "bool", label = "Soloway jump shifts" }
-"jump_shifts.soloway_extended" = { kind = "bool", label = "Soloway jump shifts (extended)" }
+"jump_shifts.strong_2"     = { kind = "bool", label = "Strong jump shifts (2-level)", level = 3 }
+"jump_shifts.strong_3"     = { kind = "bool", label = "Strong jump shifts (3-level)", level = 3 }
+"jump_shifts.weak_2"       = { kind = "bool", label = "Weak jump shifts (2-level)", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
+"jump_shifts.weak_3"       = { kind = "bool", label = "Weak jump shifts (3-level)", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
+"jump_shifts.invitational" = { kind = "bool", label = "Invitational jump shifts", level = 5 }
+"jump_shifts.soloway"      = { kind = "bool", label = "Soloway jump shifts", skill = "bidding_conventions/soloway", level = 8 }
+"jump_shifts.soloway_extended" = { kind = "bool", label = "Soloway jump shifts (extended)", skill = "bidding_conventions/soloway", level = 9 }
+"forcing_opening"          = { kind = "text", label = "Forcing opening (as written)", desc = "The card's forcing-opening line as an importer wrote it (\"2C\"); forcing_opening_1c/2c/other are the structured form" }
 
 [notrump]
 "one_nt.range_min"         = { kind = "int", label = "1NT range: minimum", min = 8, max = 25, default = 15 }
@@ -125,6 +126,10 @@
 "responses.3h"             = { kind = "text", label = "3♥ response" }
 "responses.3s"             = { kind = "text", label = "3♠ response" }
 "notes"                    = { kind = "text", label = "Notrump notes", note = true }
+"one_nt.range_min_plus"    = { kind = "bool", label = "1NT range: minimum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt.range_max_plus"    = { kind = "bool", label = "1NT range: maximum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_min_plus" = { kind = "bool", label = "Alternate 1NT range: minimum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_max_plus" = { kind = "bool", label = "Alternate 1NT range: maximum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
 
 [major_openings]
 "five_card_majors"         = { kind = "bool", label = "Five-card majors", default = true }
@@ -152,7 +157,7 @@
 "mini_splinters.play"      = { kind = "bool", label = "Mini splinters", skill = "bidding_conventions/splinters", level = 7 }
 "drury.play"               = { kind = "bool", label = "Drury", skill = "bidding_conventions/drury", level = 5 }
 "drury.reverse"            = { kind = "bool", label = "Reverse Drury", skill = "bidding_conventions/reverse_drury", level = 5 }
-"drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)", skill = "bidding_conventions/two_way_drury", level = 6 }
+"drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)", skill = "bidding_conventions/two_way_drury", level = 6, aliases = ["major_openings.drury.two_way"] }
 "drury.in_comp"            = { kind = "bool", label = "Drury in competition", skill = "bidding_conventions/drury", level = 6 }
 "gazzilli.play"            = { kind = "bool", label = "Gazzilli", skill = "bidding_conventions/gazzilli", level = 9 }
 "impossible_2s.play"       = { kind = "bool", label = "Impossible 2♠", desc = "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor", skill = "bidding_conventions/impossible_2s", level = 7 }
@@ -267,6 +272,7 @@
 "four_level_response"      = { kind = "text", label = "4-level responses" }
 "transfer_4_minor"         = { kind = "bool", label = "4♣/4♦ transfer to major", skill = "bidding_conventions/namyats", level = 6 }
 "namyats.play"             = { kind = "bool", label = "Namyats", skill = "bidding_conventions/namyats", level = 6 }
+"notes"                    = { kind = "text", label = "Preempt notes", note = true }
 
 [slam]
 "blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood", level = 2 }
@@ -426,50 +432,69 @@
 # ── end of the direct cue bid block ──────────────────────────────────
 
 [carding]
-"inverted_count"           = { kind = "bool", label = "Inverted (upside-down) count" }
-"smith_echo"               = { kind = "bool", label = "Smith echo" }
-"lavinthal.from_void"      = { kind = "bool", label = "Lavinthal from void" }
-"lavinthal.on_ace"         = { kind = "bool", label = "Lavinthal on ace" }
-"lavinthal.on_trump"       = { kind = "bool", label = "Lavinthal on trump" }
-"lavinthal.to_void"        = { kind = "bool", label = "Lavinthal to void" }
+"inverted_count"           = { kind = "bool", label = "Inverted (upside-down) count", skill = "defense/upside_down_signals", level = 6 }
+"smith_echo"               = { kind = "bool", label = "Smith echo", skill = "defense/smith_echo", level = 8 }
+"lavinthal.from_void"      = { kind = "bool", label = "Lavinthal from void", skill = "defense/lavinthal", level = 6 }
+"lavinthal.on_ace"         = { kind = "bool", label = "Lavinthal on ace", skill = "defense/lavinthal", level = 6 }
+"lavinthal.on_trump"       = { kind = "bool", label = "Lavinthal on trump", skill = "defense/lavinthal", level = 6 }
+"lavinthal.to_void"        = { kind = "bool", label = "Lavinthal to void", skill = "defense/lavinthal", level = 6 }
+"declarer_lead.attitude"   = { kind = "bool", label = "Signal on declarer's lead: attitude", skill = "defense/defensive_signals", level = 4 }
+"declarer_lead.count"      = { kind = "bool", label = "Signal on declarer's lead: count", skill = "defense/defensive_signals", level = 4 }
+"declarer_lead.suit_preference" = { kind = "bool", label = "Signal on declarer's lead: suit preference", skill = "defense/defensive_signals", level = 5 }
+"first_discard.standard"   = { kind = "bool", label = "First discard: standard", skill = "defense/defensive_signals", level = 3 }
+"first_discard.upside_down" = { kind = "bool", label = "First discard: upside-down", skill = "defense/upside_down_signals", level = 6 }
+"first_discard.lavinthal"  = { kind = "bool", label = "First discard: Lavinthal", skill = "defense/lavinthal", level = 6 }
+"first_discard.lavinthal_suits" = { kind = "bool", label = "First discard: Lavinthal vs suits", skill = "defense/lavinthal", level = 6 }
+"first_discard.lavinthal_nt" = { kind = "bool", label = "First discard: Lavinthal vs NT", skill = "defense/lavinthal", level = 6 }
+"first_discard.odd_even"   = { kind = "bool", label = "First discard: odd/even", skill = "defense/odd_even_discards", level = 6 }
+"first_discard.odd_even_suits" = { kind = "bool", label = "First discard: odd/even vs suits", skill = "defense/odd_even_discards", level = 6 }
+"first_discard.odd_even_nt" = { kind = "bool", label = "First discard: odd/even vs NT", skill = "defense/odd_even_discards", level = 6 }
+"first_discard.other_suits" = { kind = "text", label = "First discard: other, vs suits" }
+"first_discard.other_nt"   = { kind = "text", label = "First discard: other, vs NT" }
+"first_discard.notes"      = { kind = "text", label = "First discard: notes", note = true }
+"exceptions"               = { kind = "text", label = "Carding exceptions" }
+"smith_echo_reverse"       = { kind = "bool", label = "Reverse Smith echo", skill = "defense/reverse_smith_echo", level = 8 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
-"suits.standard_attitude"  = { kind = "bool", label = "Standard attitude vs suits" }
-"suits.standard_count"     = { kind = "bool", label = "Standard count vs suits" }
-"suits.upside_down_attitude" = { kind = "bool", label = "Upside-down attitude vs suits" }
-"suits.upside_down_count"  = { kind = "bool", label = "Upside-down count vs suits" }
-"nt.standard_attitude"     = { kind = "bool", label = "Standard attitude vs NT" }
-"nt.standard_count"        = { kind = "bool", label = "Standard count vs NT" }
-"nt.upside_down_attitude"  = { kind = "bool", label = "Upside-down attitude vs NT" }
-"nt.upside_down_count"     = { kind = "bool", label = "Upside-down count vs NT" }
-"partner_lead.attitude"    = { kind = "bool", label = "Primary signal to partner's lead: attitude" }
-"partner_lead.count"       = { kind = "bool", label = "Primary signal to partner's lead: count" }
-"partner_lead.suit_preference" = { kind = "bool", label = "Primary signal to partner's lead: suit preference" }
-"smith_echo_suits"         = { kind = "bool", label = "Smith echo vs suits" }
-"smith_echo_nt"            = { kind = "bool", label = "Smith echo vs NT" }
+"suits.standard_attitude"  = { kind = "bool", label = "Standard attitude vs suits", skill = "defense/defensive_signals", level = 2 }
+"suits.standard_count"     = { kind = "bool", label = "Standard count vs suits", skill = "defense/defensive_signals", level = 3 }
+"suits.upside_down_attitude" = { kind = "bool", label = "Upside-down attitude vs suits", skill = "defense/upside_down_signals", level = 6 }
+"suits.upside_down_count"  = { kind = "bool", label = "Upside-down count vs suits", skill = "defense/upside_down_signals", level = 6 }
+"nt.standard_attitude"     = { kind = "bool", label = "Standard attitude vs NT", skill = "defense/defensive_signals", level = 2 }
+"nt.standard_count"        = { kind = "bool", label = "Standard count vs NT", skill = "defense/defensive_signals", level = 3 }
+"nt.upside_down_attitude"  = { kind = "bool", label = "Upside-down attitude vs NT", skill = "defense/upside_down_signals", level = 6 }
+"nt.upside_down_count"     = { kind = "bool", label = "Upside-down count vs NT", skill = "defense/upside_down_signals", level = 6 }
+"partner_lead.attitude"    = { kind = "bool", label = "Primary signal to partner's lead: attitude", skill = "defense/defensive_signals", level = 2 }
+"partner_lead.count"       = { kind = "bool", label = "Primary signal to partner's lead: count", skill = "defense/defensive_signals", level = 3 }
+"partner_lead.suit_preference" = { kind = "bool", label = "Primary signal to partner's lead: suit preference", skill = "defense/defensive_signals", level = 5 }
+"smith_echo_suits"         = { kind = "bool", label = "Smith echo vs suits", skill = "defense/smith_echo", level = 8 }
+"smith_echo_nt"            = { kind = "bool", label = "Smith echo vs NT", skill = "defense/smith_echo", level = 8 }
 "trump_signals"            = { kind = "text", label = "Trump signals" }
-"notes"                    = { kind = "text", label = "Carding notes (card write-in)" }
+"notes"                    = { kind = "text", label = "Carding notes (card write-in)", note = true }
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [other_conventions]
-"fourth_suit_forcing.play"       = { kind = "bool", label = "Fourth suit forcing", desc = "We play fourth suit forcing (Bridge-Classroom's card); one_round / game_force say how far it forces. Turns off responder's natural two-level fourth suit (1♦–1♥–1♠–2♣)", skill = "bidding_conventions/fourth_suit_forcing" }
-"fourth_suit_forcing.one_round"  = { kind = "bool", label = "Fourth suit forcing (1 round)", skill = "bidding_conventions/fourth_suit_forcing" }
-"fourth_suit_forcing.game_force" = { kind = "bool", label = "Fourth suit forcing (game force)", aliases = ["other_conventions.fourth_suit_forcing.game_forcing"], skill = "bidding_conventions/fourth_suit_forcing" }
-"help_suit_game_tries.play" = { kind = "bool", label = "Help suit game tries", skill = "bidding_conventions/help_suit_game_try" }
-"two_way_game_tries.play"  = { kind = "bool", label = "Two-way game tries" }
-"reverse_bids.forcing"     = { kind = "bool", label = "Reverses forcing", skill = "bidding_conventions/reverse_bids" }
-"new_minor_forcing.play"   = { kind = "bool", label = "New minor forcing", skill = "bidding_conventions/new_minor_forcing" }
-"new_minor_forcing.after_2nt_rebid" = { kind = "bool", label = "NMF after a 2NT rebid" }
-"new_minor_forcing.by_passed_hand"  = { kind = "bool", label = "NMF by a passed hand" }
-"two_way_nmf"              = { kind = "bool", label = "Two-way new minor forcing", skill = "bidding_conventions/new_minor_forcing" }
-"two_way_nmf_by_passed_hand" = { kind = "bool", label = "Two-way NMF by a passed hand" }
-"checkback.play"           = { kind = "bool", label = "Checkback" }
-"roudi.play"               = { kind = "bool", label = "Roudi" }
-"xyz"                      = { kind = "bool", label = "XYZ" }
-"sos_redouble.play"        = { kind = "bool", label = "SOS redouble" }
-"ingberman_2nt.play"       = { kind = "bool", label = "Ingberman 2NT" }
+"fourth_suit_forcing.play"       = { kind = "bool", label = "Fourth suit forcing", desc = "We play fourth suit forcing (Bridge-Classroom's card); one_round / game_force say how far it forces. Turns off responder's natural two-level fourth suit (1♦–1♥–1♠–2♣)", skill = "bidding_conventions/fourth_suit_forcing", level = 5 }
+"fourth_suit_forcing.one_round"  = { kind = "bool", label = "Fourth suit forcing (1 round)", skill = "bidding_conventions/fourth_suit_forcing", level = 5 }
+"fourth_suit_forcing.game_force" = { kind = "bool", label = "Fourth suit forcing (game force)", aliases = ["other_conventions.fourth_suit_forcing.game_forcing"], skill = "bidding_conventions/fourth_suit_forcing", level = 5 }
+"help_suit_game_tries.play" = { kind = "bool", label = "Help suit game tries", skill = "bidding_conventions/help_suit_game_try", level = 5 }
+"two_way_game_tries.play"  = { kind = "bool", label = "Two-way game tries", skill = "bidding_conventions/two_way_game_tries", level = 8 }
+"reverse_bids.forcing"     = { kind = "bool", label = "Reverses forcing", skill = "bidding_conventions/reverse_bids", level = 4 }
+"new_minor_forcing.play"   = { kind = "bool", label = "New minor forcing", skill = "bidding_conventions/new_minor_forcing", level = 5 }
+"new_minor_forcing.after_2nt_rebid" = { kind = "bool", label = "NMF after a 2NT rebid", skill = "bidding_conventions/new_minor_forcing", level = 6 }
+"new_minor_forcing.by_passed_hand"  = { kind = "bool", label = "NMF by a passed hand", skill = "bidding_conventions/new_minor_forcing", level = 6 }
+"two_way_nmf"              = { kind = "bool", label = "Two-way new minor forcing", skill = "bidding_conventions/two_way_nmf", level = 8 }
+"two_way_nmf_by_passed_hand" = { kind = "bool", label = "Two-way NMF by a passed hand", skill = "bidding_conventions/two_way_nmf", level = 8 }
+"checkback.play"           = { kind = "bool", label = "Checkback", skill = "bidding_conventions/checkback", level = 6 }
+"roudi.play"               = { kind = "bool", label = "Roudi", skill = "bidding_conventions/roudi", level = 8 }
+"xyz"                      = { kind = "bool", label = "XYZ", skill = "bidding_conventions/xyz", level = 9 }
+"sos_redouble.play"        = { kind = "bool", label = "SOS redouble", skill = "competitive_bidding/sos_redouble", level = 7 }
+"ingberman_2nt.play"       = { kind = "bool", label = "Ingberman 2NT", skill = "bidding_conventions/ingberman", level = 7 }
+"jump_shift_response"      = { kind = "text", label = "Jump shift responses (as written)", desc = "The card's jump-shift line as an importer wrote it (\"Weak\")" }
+"notes"                    = { kind = "text", label = "Other conventions notes", note = true }
+"vs_strong_open"           = { kind = "text", label = "Defense vs strong openings" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
-"weak_jump_shifts_not_in_comp" = { kind = "bool", label = "Weak jump shifts (not in competition)" }
-"weak_jump_shifts_in_comp" = { kind = "bool", label = "Weak jump shifts in competition" }
+"weak_jump_shifts_not_in_comp" = { kind = "bool", label = "Weak jump shifts (not in competition)", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
+"weak_jump_shifts_in_comp" = { kind = "bool", label = "Weak jump shifts in competition", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
 "weak_jump_shifts_notes"   = { kind = "text", label = "Weak jump shift notes", note = true }
 "nmf_notes"                = { kind = "text", label = "New minor forcing notes", note = true }
 "fourth_suit_forcing.notes" = { kind = "text", label = "Fourth suit forcing notes", note = true }
@@ -516,10 +541,40 @@
 "notes"                    = { kind = "text", label = "Vs preempts notes (card write-in)", note = true }
 
 [leads]
-"vs_suits.length.fourth_best" = { kind = "bool", label = "Length leads vs suits: fourth best" }
-"vs_nt.length.fourth_best" = { kind = "bool", label = "Length leads vs NT: fourth best" }
-"vs_suits.honors.lead_choice_akx" = { kind = "int", label = "Lead vs suits from AKx", min = 1, max = 3, desc = "The card led, by its place in the holding: 1 the ace, 2 the king" }
+"vs_suits.length.fourth_best" = { kind = "bool", label = "Length leads vs suits: fourth best", skill = "defense/opening_leads", level = 2 }
+"vs_nt.length.fourth_best" = { kind = "bool", label = "Length leads vs NT: fourth best", skill = "defense/opening_leads", level = 2 }
+"vs_suits.honors.lead_choice_akx" = { kind = "int", label = "Lead vs suits from AKx", min = 1, max = 3, desc = "The card led, by its place in the holding: 1 the ace, 2 the king", aliases = ["leads.vs_suits.honors.lead_choice_AKx"] }
 # --- end: Bridge-Classroom card fields (bc-export) ---
+"vs_suits.length.lead_choice_xx" = { kind = "int", label = "Lead vs suits from xx", min = 1, max = 2, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.length.lead_choice_xxx" = { kind = "int", label = "Lead vs suits from xxx", min = 1, max = 3, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.length.lead_choice_xxxx" = { kind = "int", label = "Lead vs suits from xxxx", min = 1, max = 4, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.length.lead_choice_xxxxx" = { kind = "int", label = "Lead vs suits from xxxxx", min = 1, max = 5, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.length.lead_choice_hxx" = { kind = "int", label = "Lead vs suits from Hxx", min = 1, max = 3, aliases = ["leads.vs_suits.length.lead_choice_Hxx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.length.lead_choice_hxxx" = { kind = "int", label = "Lead vs suits from Hxxx", min = 1, max = 4, aliases = ["leads.vs_suits.length.lead_choice_Hxxx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.length.lead_choice_hxxxx" = { kind = "int", label = "Lead vs suits from Hxxxx", min = 1, max = 5, aliases = ["leads.vs_suits.length.lead_choice_Hxxxx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.lead_choice_kqx" = { kind = "int", label = "Lead vs suits from KQx", min = 1, max = 3, aliases = ["leads.vs_suits.honors.lead_choice_KQx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.lead_choice_qjx" = { kind = "int", label = "Lead vs suits from QJx", min = 1, max = 3, aliases = ["leads.vs_suits.honors.lead_choice_QJx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.lead_choice_jtx" = { kind = "int", label = "Lead vs suits from JTx", min = 1, max = 3, aliases = ["leads.vs_suits.honors.lead_choice_JTx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.lead_choice_t9x" = { kind = "int", label = "Lead vs suits from T9x", min = 1, max = 3, aliases = ["leads.vs_suits.honors.lead_choice_T9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.lead_choice_kjtx" = { kind = "int", label = "Lead vs suits from KJTx", min = 1, max = 4, aliases = ["leads.vs_suits.honors.lead_choice_KJTx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.lead_choice_kt9x" = { kind = "int", label = "Lead vs suits from KT9x", min = 1, max = 4, aliases = ["leads.vs_suits.honors.lead_choice_KT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.lead_choice_qt9x" = { kind = "int", label = "Lead vs suits from QT9x", min = 1, max = 4, aliases = ["leads.vs_suits.honors.lead_choice_QT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.length.lead_choice_xx" = { kind = "int", label = "Lead vs NT from xx", min = 1, max = 2, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.length.lead_choice_xxx" = { kind = "int", label = "Lead vs NT from xxx", min = 1, max = 3, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.length.lead_choice_xxxx" = { kind = "int", label = "Lead vs NT from xxxx", min = 1, max = 4, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.length.lead_choice_xxxxx" = { kind = "int", label = "Lead vs NT from xxxxx", min = 1, max = 5, desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.length.lead_choice_hxx" = { kind = "int", label = "Lead vs NT from Hxx", min = 1, max = 3, aliases = ["leads.vs_nt.length.lead_choice_Hxx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.length.lead_choice_hxxx" = { kind = "int", label = "Lead vs NT from Hxxx", min = 1, max = 4, aliases = ["leads.vs_nt.length.lead_choice_Hxxx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.length.lead_choice_hxxxx" = { kind = "int", label = "Lead vs NT from Hxxxx", min = 1, max = 5, aliases = ["leads.vs_nt.length.lead_choice_Hxxxx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_akxx" = { kind = "int", label = "Lead vs NT from AKxx", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_AKxx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_kqjx" = { kind = "int", label = "Lead vs NT from KQJx", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_KQJx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_kqt9" = { kind = "int", label = "Lead vs NT from KQT9", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_KQT9"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_qjtx" = { kind = "int", label = "Lead vs NT from QJTx", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_QJTx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_jt9x" = { kind = "int", label = "Lead vs NT from JT9x", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_JT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_aqjx" = { kind = "int", label = "Lead vs NT from AQJx", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_AQJx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_ajtx" = { kind = "int", label = "Lead vs NT from AJTx", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_AJTx"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_kt9x" = { kind = "int", label = "Lead vs NT from KT9x", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_KT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.lead_choice_qt9x" = { kind = "int", label = "Lead vs NT from QT9x", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_QT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
 
 [notes]
 "general"                  = { kind = "text", label = "General notes" }
