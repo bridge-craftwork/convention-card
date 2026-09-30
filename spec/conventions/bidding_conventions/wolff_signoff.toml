@@ -1,0 +1,14 @@
+id = "bidding_conventions/wolff_signoff"
+name = "Wolff signoff"
+source = "proposed"
+level = 7
+names = ["Wolff", "Wolff signoff", "Transfer Wolff"]
+summary = """
+After opener's 2NT rebid (1m–1M–2NT), responder's 3♣ forces opener to bid
+3♦, so responder can sign off in a suit or show weaker hands; other three-
+level bids force.
+"""
+see = [
+  { title = "2-Way New Minor Forcing and Wolff Signoff", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/586" },
+  { title = "Transfer Wolff Over 2NT Rebids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/595" },
+]

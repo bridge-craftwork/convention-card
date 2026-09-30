@@ -1,0 +1,13 @@
+id = "competitive_bidding/good_bad_2nt"
+name = "Good/bad 2NT"
+source = "proposed"
+level = 9
+names = ["Good/bad 2NT", "Good-bad 2NT", "Good bad 2NT"]
+summary = """
+In a competitive auction where the opponents have just bid at the two level,
+2NT is artificial and shows a weak hand that wants to compete to the three
+level; bidding the three level directly is stronger.
+"""
+see = [
+  { title = "Competitive Auctions: Good/Bad 2NT in Competition", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/554" },
+]

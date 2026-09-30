@@ -1,0 +1,14 @@
+id = "competitive_bidding/maximal_doubles"
+name = "Maximal doubles"
+source = "proposed"
+level = 6
+names = ["Maximal double", "Maximal doubles"]
+summary = """
+When the opponents have competed to the three level just below your suit, a
+double is a game try rather than penalty, since there is no room for another
+try.
+"""
+see = [
+  { title = "Maximal Double", site = "Bridge Bum", url = "https://www.bridgebum.com/maximal_double.php" },
+  { title = "Non-Takeout Doubles: Card-Showing, Maximal, Penalty, Lead-Directing", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/357" },
+]

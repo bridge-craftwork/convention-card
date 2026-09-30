@@ -1,0 +1,14 @@
+id = "bidding_conventions/multi_2d"
+name = "Multi 2♦"
+source = "proposed"
+level = 8
+names = ["Multi", "Multi 2♦", "Multi-colored 2♦", "Multi 2D"]
+summary = """
+An opening 2♦ that shows a weak two in either major, or one of a few strong
+hands. Responder bids to cater for either major, and opener's rebid resolves
+which.
+"""
+see = [
+  { title = "Multi 2♦", site = "Bridge Bum", url = "https://www.bridgebum.com/multi_2d.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 25 },
+]

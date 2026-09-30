@@ -1,0 +1,14 @@
+id = "competitive_bidding/rosenkranz"
+name = "Rosenkranz double"
+source = "proposed"
+level = 9
+names = ["Rosenkranz", "Rosenkranz double", "Rosenkranz redouble"]
+summary = """
+When the opponents overcall partner's opening and advancer raises partner's
+overcall, a double or redouble shows a top honour in partner's suit, and a
+raise denies one.
+"""
+see = [
+  { title = "Rosenkranz Double", site = "Bridge Bum", url = "https://www.bridgebum.com/rosenkranz_double.php" },
+  { title = "Rosenkrantz Redoubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/569" },
+]

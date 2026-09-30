@@ -1,0 +1,15 @@
+id = "bidding_conventions/jacoby_transfers"
+name = "Jacoby Transfers"
+source = "taxonomy"
+level = 3
+names = ["Jacoby transfers", "Jacoby", "transfers", "Texas", "Texas transfers", "4-level transfers"]
+summary = """
+Over partner's 1NT, 2♦ shows five or more hearts and 2♥ five or more spades;
+opener bids the next suit, so the strong hand declares. Texas does the same
+at the four level (4♦ for hearts, 4♥ for spades) with game values.
+"""
+see = [
+  { title = "Texas Transfer", site = "Bridge Bum", url = "https://www.bridgebum.com/texas_transfer.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 2 },
+  { title = "NT Auctions: Opponents' Doubles of Our Stayman and Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/520" },
+]

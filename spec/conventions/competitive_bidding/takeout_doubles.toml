@@ -1,0 +1,15 @@
+id = "competitive_bidding/takeout_doubles"
+name = "Takeout Doubles"
+source = "taxonomy"
+level = 2
+names = ["Takeout double", "Takeout doubles", "Double for takeout"]
+summary = """
+A double of an opening bid, when partner has not bid, asks partner to bid:
+it shows opening values, shortness in their suit and support for the unbid
+suits, or a hand too strong to overcall.
+"""
+see = [
+  { title = "Takeout Double", site = "Bridge Bum", url = "https://www.bridgebum.com/takeout_double.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 4 },
+  { title = "Takeout Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/352" },
+]

@@ -1,0 +1,14 @@
+id = "competitive_bidding/responsive_doubles"
+name = "Responsive Doubles"
+source = "proposed"
+level = 5
+names = ["Responsive double", "Responsive doubles"]
+summary = """
+After partner doubles for takeout and the next player raises, advancer's
+double is for takeout too, showing values and usually both unbid suits of a
+kind (the majors or the minors).
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 23 },
+  { title = "Responsive Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/354" },
+]

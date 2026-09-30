@@ -1,0 +1,13 @@
+id = "bidding_conventions/serious_3nt"
+name = "Serious 3NT"
+source = "proposed"
+level = 9
+names = ["Serious 3NT", "Non-serious 3NT", "Frivolous 3NT"]
+summary = """
+In a game-forcing auction with a major agreed at the three level, 3NT is
+artificial and says whether the bidder is serious about slam (serious or
+non-serious by agreement), before control bids begin.
+"""
+see = [
+  { title = "Slam Bidding: Non-Serious 3NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/539" },
+]

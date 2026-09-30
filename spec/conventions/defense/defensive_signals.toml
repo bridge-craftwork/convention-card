@@ -1,0 +1,15 @@
+id = "defense/defensive_signals"
+name = "Defensive Signals"
+source = "taxonomy"
+level = 2
+names = ["Standard signals", "Attitude", "Count", "Suit preference", "High encourages"]
+summary = """
+Defenders' agreements on what their cards say: attitude (like this suit or
+not), count (odd or even length) and suit preference (which other suit to
+play), and which applies when.
+"""
+see = [
+  { title = "Defensive Carding: Attitude Signals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/471" },
+  { title = "Defensive Carding: Count Signals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/472" },
+  { title = "Defensive Carding: Suit Preference Signals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/476" },
+]

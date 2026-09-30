@@ -1,0 +1,13 @@
+id = "competitive_bidding/exit_transfers"
+name = "Exit transfers"
+source = "proposed"
+level = 8
+names = ["Exit transfers", "Runout after 1NT doubled"]
+summary = """
+When the opponents double partner's 1NT, redouble and suit bids are
+transfers to the next suit to escape, and pass forces a redouble for two-
+suited runouts.
+"""
+see = [
+  { title = "Exit Transfers", site = "Bridge Bum", url = "https://www.bridgebum.com/exit_transfers.php" },
+]

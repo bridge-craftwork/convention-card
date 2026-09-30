@@ -1,0 +1,9 @@
+id = "bidding_conventions/checkback"
+name = "Checkback"
+source = "proposed"
+level = 6
+names = ["Checkback", "Checkback Stayman"]
+summary = """
+Played instead of NMF: after opener's notrump rebid, a fixed suit (usually
+2♣) asks about support and majors, whichever minor was bid.
+"""

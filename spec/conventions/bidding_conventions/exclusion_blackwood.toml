@@ -1,0 +1,14 @@
+id = "bidding_conventions/exclusion_blackwood"
+name = "Exclusion Blackwood"
+source = "proposed"
+level = 7
+names = ["Exclusion Blackwood", "Exclusion", "Exclusion RKC", "Voidwood"]
+summary = """
+A jump to the five level in a new suit after agreeing trumps shows a void
+there and asks for keycards outside it, so the ace in the void suit does not
+count.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 10 },
+  { title = "Exclusion Keycard", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/584" },
+]

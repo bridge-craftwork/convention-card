@@ -1,0 +1,12 @@
+id = "bidding_conventions/benjamin_2d"
+name = "Benjamin 2♦"
+source = "proposed"
+level = 8
+names = ["Benjamin", "Benjamin twos", "Benjamin 2♦"]
+summary = """
+Openings in which 2♣ shows a strong two in any suit, 2♦ is the game-forcing
+hand, and 2♥ and 2♠ are weak twos, so there is no weak 2♦.
+"""
+see = [
+  { title = "Benjamin Twos", site = "Wikipedia", url = "https://en.wikipedia.org/wiki/Benjamin_Twos" },
+]

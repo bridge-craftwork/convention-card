@@ -1,0 +1,15 @@
+id = "bidding_conventions/strong_2c"
+name = "Strong 2♣"
+source = "taxonomy"
+level = 3
+names = ["Strong 2♣", "2♣ strong", "Strong artificial 2♣", "2♣ forcing"]
+summary = """
+An opening 2♣, artificial and forcing, for the strongest hands: game-forcing
+or nearly so, balanced or not. Responder usually bids 2♦ to wait, and opener
+then describes the hand.
+"""
+see = [
+  { title = "Strong 2♣", site = "Bridge Bum", url = "https://www.bridgebum.com/strong_2c.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 6 },
+  { title = "2C Opening Bids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/415" },
+]

@@ -1,0 +1,12 @@
+id = "bidding_conventions/namyats"
+name = "Namyats"
+source = "proposed"
+level = 6
+names = ["Namyats", "4♣/4♦ transfer to 4♥/4♠", "South African Texas"]
+summary = """
+Openings of 4♣ and 4♦ show a strong four-level preempt in hearts and spades
+respectively, so a direct 4♥ or 4♠ opening is weaker.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 8 },
+]

@@ -1,0 +1,14 @@
+id = "bidding_conventions/minor_suit_transfers"
+name = "Minor-Suit Transfers over 1NT"
+source = "proposed"
+level = 5
+names = ["minor suit transfers", "minor-suit transfers", "four-suit transfers", "4-way transfers", "four way transfers", "2♠ relay"]
+summary = """
+Over partner's 1NT, responder's 2♠ and 2NT (or 3♣) are transfers or relays
+to the minors, so a long minor can be shown weak to play or strong with slam
+interest.
+"""
+see = [
+  { title = "Minor Suit Transfers", site = "Bridge Bum", url = "https://www.bridgebum.com/minor_suit_transfers.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 5 },
+]

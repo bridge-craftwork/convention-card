@@ -1,0 +1,13 @@
+id = "competitive_bidding/mathe"
+name = "Mathe"
+source = "proposed"
+level = 7
+names = ["Mathe", "Mathe over 1♣"]
+summary = """
+A defence to a strong 1♣ opening: double shows the majors, 1NT the minors,
+and suit bids are natural.
+"""
+see = [
+  { title = "Mathe", site = "Bridge Bum", url = "https://www.bridgebum.com/mathe_1c.php" },
+  { title = "Competitive Bidding: Bidding Over Strong 2C (and 1C) Openings - Mathe", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/191" },
+]

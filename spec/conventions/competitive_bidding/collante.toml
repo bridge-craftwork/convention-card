@@ -1,0 +1,9 @@
+id = "competitive_bidding/collante"
+name = "Collante"
+source = "proposed"
+level = 8
+names = ["Collante"]
+summary = """
+After partner's 1♣ and their 1♦ (or 1♦ and 1♥), a double shows four cards in
+the next suit up and a bid of it shows five or more.
+"""

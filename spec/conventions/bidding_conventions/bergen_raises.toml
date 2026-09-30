@@ -1,0 +1,16 @@
+id = "bidding_conventions/bergen_raises"
+name = "Bergen raises"
+source = "proposed"
+level = 5
+names = ["Bergen", "Bergen raises", "Bergen raise"]
+summary = """
+Over partner's 1♥ or 1♠, responder's jumps to 3♣ and 3♦ show four-card
+raises of different strength (usually 3♣ constructive, 3♦ limit) and 3M is
+preemptive, so opener knows the fit and strength at once.
+"""
+see = [
+  { title = "Bergen Raises", site = "Bridge Bum", url = "https://www.bridgebum.com/bergen_raises.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 13 },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 3 },
+  { title = "Bergen Raises", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/572" },
+]

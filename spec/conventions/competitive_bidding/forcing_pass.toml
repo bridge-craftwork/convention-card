@@ -1,0 +1,13 @@
+id = "competitive_bidding/forcing_pass"
+name = "Forcing pass"
+source = "proposed"
+level = 6
+names = ["Forcing pass"]
+summary = """
+When the partnership has shown game-invitational or better values and an
+opponent bids, a pass is forcing: it asks partner to double or bid, and
+shows interest in continuing.
+"""
+see = [
+  { title = "Slam Bidding: Forcing Pass Auctions", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/532" },
+]

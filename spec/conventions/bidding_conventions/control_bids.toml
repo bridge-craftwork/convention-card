@@ -1,0 +1,16 @@
+id = "bidding_conventions/control_bids"
+name = "Control (Cue) Bids"
+source = "proposed"
+level = 5
+names = ["Control bids", "Cue bids", "Cuebids", "Control-showing bids", "Italian cuebids", "Ace-and-king cuebids"]
+summary = """
+With a trump suit agreed and slam possible, bidding a new suit below game
+shows a control there (an ace or void, and in many styles a king or
+singleton), so the partnership can find out whether a suit is unguarded
+before asking for keycards.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 20 },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 20 },
+  { title = "Slam Bidding: Control-Showing Bids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/406" },
+]

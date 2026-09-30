@@ -1,0 +1,12 @@
+id = "competitive_bidding/spear"
+name = "Spear"
+source = "proposed"
+level = 9
+names = ["Spear"]
+summary = """
+How to intervene after the opponents' 1♣ or 1♦ opening and 1NT response:
+suit bids and double describe both-majors, one-major and strong hands.
+"""
+see = [
+  { title = "Spear", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/571" },
+]

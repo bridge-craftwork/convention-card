@@ -1,0 +1,13 @@
+id = "bidding_conventions/ogust"
+name = "Ogust"
+source = "taxonomy"
+level = 5
+names = ["Ogust", "Ogust 2NT"]
+summary = """
+After partner's weak two, responder's 2NT asks about the hand in steps: 3♣
+bad hand bad suit, 3♦ bad hand good suit, 3♥ good hand bad suit, 3♠ good
+hand good suit, 3NT a solid suit.
+"""
+see = [
+  { title = "Ogust", site = "Bridge Bum", url = "https://www.bridgebum.com/ogust.php" },
+]

@@ -1,0 +1,12 @@
+id = "bidding_conventions/kokish_game_tries"
+name = "Kokish game tries"
+source = "proposed"
+level = 9
+names = ["Kokish game tries"]
+summary = """
+A structure of game tries after a major-suit raise that uses the next step
+as a relay, so opener can make several kinds of try.
+"""
+see = [
+  { title = "Kokish Game Tries", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/588" },
+]

@@ -1,0 +1,13 @@
+id = "bidding_conventions/reverse_flannery"
+name = "Reverse Flannery"
+source = "proposed"
+level = 8
+names = ["Reverse Flannery"]
+summary = """
+An opening of 2♥ (or 2♦) showing five or more spades and four or more hearts
+with less than an opening, a two-suited preempt in the majors.
+"""
+see = [
+  { title = "Reverse Flannery", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/590" },
+  { title = "Flannery and Reverse Flannery", site = "Dural Bridge", url = "http://www.duralbridge.com/flannery.ing.htm" },
+]

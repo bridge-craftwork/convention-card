@@ -1,0 +1,13 @@
+id = "bidding_conventions/two_way_game_tries"
+name = "Two-way game tries"
+source = "proposed"
+level = 8
+names = ["Two-way game tries", "Two-way game try"]
+summary = """
+After a major raise, opener's 2NT (or the next step) is a relay for one kind
+of game try and new suits are another, so opener can make short-suit and
+long-suit tries.
+"""
+see = [
+  { title = "Two-way Game Try", site = "BBO GIB system notes", url = "https://www.bridgebase.com/doc/gib_system_notes.php#Two-way_Game_Try" },
+]

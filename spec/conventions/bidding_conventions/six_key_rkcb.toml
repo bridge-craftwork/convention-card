@@ -1,0 +1,13 @@
+id = "bidding_conventions/six_key_rkcb"
+name = "Six-key Roman Keycard"
+source = "proposed"
+level = 9
+names = ["Six-key RKCB", "6-key RKC", "Six key Blackwood"]
+summary = """
+Roman Keycard with two trump suits: six keycards, the four aces and both
+trump kings, plus both trump queens, when the partnership has a fit in two
+suits.
+"""
+see = [
+  { title = "6-Key Roman Key Card", site = "Long Beach Bridge", url = "https://longbeachbridge.com/6-key-roman-key-card/" },
+]

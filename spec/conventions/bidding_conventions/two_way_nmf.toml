@@ -1,0 +1,13 @@
+id = "bidding_conventions/two_way_nmf"
+name = "Two-way new minor forcing"
+source = "proposed"
+level = 8
+names = ["Two-way NMF", "Two-way new minor forcing", "xyNT"]
+summary = """
+Played instead of NMF: after opener's 1NT rebid, responder's 2♣ relays to 2♦
+(to sign off or invite) and 2♦ is game forcing.
+"""
+see = [
+  { title = "Two-Way New Minor Forcing aka xyNT", site = "Bridge Winners", url = "https://bridgewinners.com/article/view/two-way-new-minor-forcing-aka-xynt" },
+  { title = "2-Way New Minor Forcing and Wolff Signoff", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/586" },
+]

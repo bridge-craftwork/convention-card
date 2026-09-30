@@ -1,0 +1,13 @@
+id = "bidding_conventions/ingberman"
+name = "Ingberman 2NT"
+source = "proposed"
+level = 7
+names = ["Ingberman", "Ingberman 2NT", "Lebensohl after a reverse"]
+summary = """
+After opener reverses, responder's 2NT relays to 3♣ to show a weak hand, so
+other bids by responder show values.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 11 },
+  { title = "Lebensohl over Reverses", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/417" },
+]

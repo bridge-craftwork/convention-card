@@ -1,0 +1,13 @@
+id = "defense/upside_down_signals"
+name = "Upside-down signals"
+source = "proposed"
+level = 6
+names = ["UDCA", "Upside-down count and attitude", "Upside-down signals", "Upside down count", "Low encourages"]
+summary = """
+Played instead of standard signals: a low card encourages and a high one
+discourages, and count is shown upside down too, so the defenders keep their
+high cards.
+"""
+see = [
+  { title = "Defensive Carding: Upside-Down Count and Attitude (UDCA)", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/474" },
+]

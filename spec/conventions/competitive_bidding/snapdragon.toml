@@ -1,0 +1,14 @@
+id = "competitive_bidding/snapdragon"
+name = "Snapdragon doubles"
+source = "proposed"
+level = 8
+names = ["Snapdragon", "Snapdragon double"]
+summary = """
+When three suits have been bid, one by each of three players, fourth hand's
+double shows the unbid suit and tolerance for partner's.
+"""
+see = [
+  { title = "Snapdragon Double", site = "Bridge Bum", url = "https://www.bridgebum.com/snapdragon_double.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 24 },
+  { title = "Snapdragon Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/568" },
+]

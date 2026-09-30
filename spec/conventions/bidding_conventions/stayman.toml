@@ -1,0 +1,16 @@
+id = "bidding_conventions/stayman"
+name = "Stayman"
+source = "taxonomy"
+level = 3
+names = ["Stayman", "Regular Stayman", "Non-forcing Stayman", "Forcing Stayman", "Garbage Stayman", "Crawling Stayman"]
+summary = """
+Over partner's 1NT, 2♣ asks opener for a four-card major: 2♦ denies one, 2♥
+or 2♠ shows it. Responder uses it to find a 4-4 major fit with invitational
+or better values; Garbage Stayman uses it weak, planning to pass any reply.
+"""
+see = [
+  { title = "Stayman", site = "Bridge Bum", url = "https://www.bridgebum.com/stayman.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 3 },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 9 },
+  { title = "Stayman Auctions After a 2NT Opening", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/633" },
+]

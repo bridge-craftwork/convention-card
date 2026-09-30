@@ -1,0 +1,13 @@
+id = "bidding_conventions/bart"
+name = "BART"
+source = "proposed"
+level = 8
+names = ["BART"]
+summary = """
+After 1♥ or 1♠, a forcing 1NT and opener's 2♣, responder's 2♦ is artificial,
+covering several stronger hands (a good club raise, a good preference,
+diamonds) that need room.
+"""
+see = [
+  { title = "BART", by = "Larry Cohen", url = "https://www.larryco.com/bridge-articles/bart" },
+]

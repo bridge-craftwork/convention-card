@@ -1,0 +1,9 @@
+id = "competitive_bidding/modified_cappelletti"
+name = "Modified Cappelletti"
+source = "proposed"
+level = 6
+names = ["Modified Cappelletti"]
+summary = """
+Played instead of Cappelletti: over their 1NT, 2♣ shows a one-suited minor
+or a major and a minor, and 2♥ and 2♠ are natural one-suiters.
+"""

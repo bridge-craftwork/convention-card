@@ -3,7 +3,7 @@
 //! `fields.toml`), a lesson's SkillPath tag and a `.bid` module (`skill`
 //! header lines) name, with what the spec says about each.
 //!
-//! The list is `conventions.toml` ([`Skills::FILE`]): one table per ID. Nothing
+//! The list is `conventions/`, one file per ID ([`Skills::DIR`]). Nothing
 //! refuses to load over an unknown ID; `rbb bid check` warns and
 //! `rbb bid skills` lists it.
 
@@ -41,7 +41,7 @@ pub enum SkillSource {
 }
 
 impl SkillSource {
-    /// How `conventions.toml` writes it (`source = "..."`).
+    /// How an entry writes it (`source = "..."`).
     pub fn table(self) -> &'static str {
         match self {
             SkillSource::Taxonomy => "taxonomy",
@@ -88,6 +88,7 @@ pub struct Skill {
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Entry {
+    id: String,
     name: String,
     source: SkillSource,
     #[serde(default)]
@@ -100,59 +101,85 @@ struct Entry {
     see: Vec<Citation>,
 }
 
-/// The standard conventions and skills (`conventions.toml`).
+/// The standard conventions and skills (`conventions/<category>/<name>.toml`).
 #[derive(Debug, Clone, Default)]
 pub struct Skills {
     skills: BTreeMap<String, Skill>,
 }
 
 impl Skills {
-    /// Where the list lives, relative to the spec directory.
-    pub const FILE: &'static str = "conventions.toml";
+    /// Where the list lives, relative to the spec directory: one file per
+    /// ID, `<category>/<name>.toml`.
+    pub const DIR: &'static str = "conventions";
 
-    /// Parse the `conventions.toml` format: one table per ID.
-    pub fn parse(text: &str) -> Result<Skills, Error> {
-        let table: toml::Table = toml::from_str(text).map_err(|e| Error::toml(&e, text))?;
-        let mut skills = BTreeMap::new();
-        for (path, entry) in table {
-            if !is_skill_path(&path) {
-                return Err(Error::new(format!(
-                    "{path:?} is not a skill path (category/name, lower case)"
-                )));
-            }
-            let e: Entry = entry
-                .try_into()
-                .map_err(|e| Error::new(format!("{path}: {e}")))?;
-            if e.level.is_some_and(|l| !(1..=10).contains(&l)) {
-                return Err(Error::new(format!("{path}: level must be 1 to 10")));
-            }
-            let summary = e.summary.map(|s| s.trim().to_string());
-            skills.insert(
-                path.clone(),
-                Skill {
-                    path,
-                    name: e.name,
-                    source: e.source,
-                    level: e.level,
-                    names: e.names,
-                    summary,
-                    see: e.see,
-                },
-            );
+    /// Parse one entry, the file for `id`. Its `id` line must match.
+    pub fn parse_entry(id: &str, text: &str) -> Result<Skill, Error> {
+        if !is_skill_path(id) {
+            return Err(Error::new(format!(
+                "{id:?} is not a skill path (category/name, lower case)"
+            )));
         }
-        Ok(Skills { skills })
+        let e: Entry = toml::from_str(text).map_err(|e| Error::toml(&e, text))?;
+        if e.id != id {
+            return Err(Error::new(format!("id is {:?}, expected {id:?}", e.id)));
+        }
+        if e.level.is_some_and(|l| !(1..=10).contains(&l)) {
+            return Err(Error::new(format!("{id}: level must be 1 to 10")));
+        }
+        Ok(Skill {
+            path: e.id,
+            name: e.name,
+            source: e.source,
+            level: e.level,
+            names: e.names,
+            summary: e.summary.map(|s| s.trim().to_string()),
+            see: e.see,
+        })
     }
 
-    /// Load `<dir>/conventions.toml`; `None` when there is none.
-    pub fn load(dir: &Path) -> Result<Option<Skills>, Error> {
-        let path = dir.join(Self::FILE);
-        match std::fs::read_to_string(&path) {
-            Ok(text) => Skills::parse(&text)
-                .map(Some)
-                .map_err(|e| e.in_file(&path.display().to_string())),
-            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
-            Err(e) => Err(Error::new(e.to_string()).in_file(&path.display().to_string())),
+    /// Collect parsed entries into a list.
+    pub fn from_entries(entries: impl IntoIterator<Item = Skill>) -> Skills {
+        Skills {
+            skills: entries.into_iter().map(|s| (s.path.clone(), s)).collect(),
         }
+    }
+
+    /// Load `<spec_dir>/conventions/<category>/<name>.toml`; `None` when
+    /// there is no such directory. Errors name the file.
+    pub fn load(spec_dir: &Path) -> Result<Option<Skills>, Error> {
+        let dir = spec_dir.join(Self::DIR);
+        let io = |e: std::io::Error, p: &Path| {
+            Error::new(e.to_string()).in_file(&p.display().to_string())
+        };
+        let categories = match std::fs::read_dir(&dir) {
+            Ok(d) => d,
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(e) => return Err(io(e, &dir)),
+        };
+        let mut skills = Vec::new();
+        for category in categories {
+            let category = category.map_err(|e| io(e, &dir))?.path();
+            if !category.is_dir() {
+                continue;
+            }
+            for file in std::fs::read_dir(&category).map_err(|e| io(e, &category))? {
+                let file = file.map_err(|e| io(e, &category))?.path();
+                if file.extension().is_none_or(|x| x != "toml") {
+                    continue;
+                }
+                let id = format!(
+                    "{}/{}",
+                    category.file_name().unwrap().to_string_lossy(),
+                    file.file_stem().unwrap().to_string_lossy()
+                );
+                let text = std::fs::read_to_string(&file).map_err(|e| io(e, &file))?;
+                skills.push(
+                    Skills::parse_entry(&id, &text)
+                        .map_err(|e| e.in_file(&file.display().to_string()))?,
+                );
+            }
+        }
+        Ok(Some(Skills::from_entries(skills)))
     }
 
     pub fn get(&self, path: &str) -> Option<&Skill> {
@@ -181,34 +208,36 @@ mod tests {
 
     #[test]
     fn parses_entries() {
-        let s = Skills::parse(
-            "[\"bidding_conventions/stayman\"]\nname = \"Stayman\"\nsource = \"taxonomy\"\nlevel = 3\n\
-             see = [{ title = \"Stayman\", url = \"https://example.org\" }]\n\
-             [\"bidding_conventions/smolen\"]\nname = \"Smolen\"\nsource = \"proposed\"\n",
-        )
-        .unwrap();
-        assert_eq!(
-            s.get("bidding_conventions/smolen").unwrap().source,
-            SkillSource::Proposed
-        );
-        assert_eq!(s.get("bidding_conventions/stayman").unwrap().level, Some(3));
-        assert!(Skills::parse("[\"Stayman\"]\nname = \"x\"\nsource = \"taxonomy\"\n").is_err());
-        assert!(Skills::parse("[\"a/b\"]\nname = \"x\"\nsource = \"other\"\n").is_err());
+        let stayman =
+            "id = \"bidding_conventions/stayman\"\nname = \"Stayman\"\nsource = \"taxonomy\"\n\
+                       level = 3\nsee = [{ title = \"Stayman\", url = \"https://example.org\" }]\n";
+        let s = Skills::parse_entry("bidding_conventions/stayman", stayman).unwrap();
+        assert_eq!(s.source, SkillSource::Taxonomy);
+        assert_eq!(s.level, Some(3));
+        let entry = |id: &str, body: &str| {
+            Skills::parse_entry(id, &format!("id = \"{id}\"\nname = \"x\"\n{body}"))
+        };
+        assert!(entry("a/b", "source = \"proposed\"\n").is_ok());
+        assert!(entry("Stayman", "source = \"taxonomy\"\n").is_err());
+        assert!(entry("a/b", "source = \"other\"\n").is_err());
+        assert!(entry("a/b", "source = \"proposed\"\nlevel = 11\n").is_err());
+        assert!(entry("a/b", "source = \"proposed\"\nlevl = 3\n").is_err());
+        // The id line must match the file.
         assert!(
-            Skills::parse("[\"a/b\"]\nname = \"x\"\nsource = \"proposed\"\nlevel = 11\n").is_err()
-        );
-        assert!(
-            Skills::parse("[\"a/b\"]\nname = \"x\"\nsource = \"proposed\"\nlevl = 3\n").is_err()
+            Skills::parse_entry("a/c", "id = \"a/b\"\nname = \"x\"\nsource = \"proposed\"\n")
+                .is_err()
         );
     }
 
-    /// `spec/conventions.toml` loads, every `skill` a field of
-    /// `fields.toml` names is in it, and a convention's level is the lowest
-    /// level among the fields that belong to it (their first `skill`).
+    /// `spec/conventions/` loads, every `skill` a field of `fields.toml`
+    /// names is in it, and a convention's level is the lowest level among
+    /// the fields that belong to it (their first `skill`).
     #[test]
     fn the_spec_list_covers_the_fields() {
-        let skills = Skills::parse(include_str!("../../../spec/conventions.toml"))
-            .expect("spec/conventions.toml is valid");
+        let spec = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../spec");
+        let skills = Skills::load(&spec)
+            .expect("spec/conventions/ is valid")
+            .expect("spec/conventions/ exists");
         assert!(
             skills
                 .iter()
@@ -223,7 +252,7 @@ mod tests {
                 tagged += 1;
                 assert!(
                     skills.get(s).is_some(),
-                    "{}: skill {s} is not in conventions.toml",
+                    "{}: skill {s} is not in spec/conventions/",
                     f.path
                 );
             }

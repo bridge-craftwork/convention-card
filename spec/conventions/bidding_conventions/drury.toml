@@ -1,0 +1,11 @@
+id = "bidding_conventions/drury"
+name = "Drury"
+source = "proposed"
+level = 5
+names = ["Drury", "Original Drury"]
+summary = """
+By a passed hand over partner's third- or fourth-seat 1♥ or 1♠, 2♣ asks
+whether opener has a full opening, with a fit for the major. In the original
+form opener's 2♦ shows a light opening; Reverse Drury swaps opener's
+replies.
+"""

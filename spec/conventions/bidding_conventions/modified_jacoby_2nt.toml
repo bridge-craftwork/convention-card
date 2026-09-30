@@ -1,0 +1,10 @@
+id = "bidding_conventions/modified_jacoby_2nt"
+name = "Modified Jacoby 2NT"
+source = "proposed"
+level = 6
+names = ["Modified Jacoby 2NT", "Modified Jacoby"]
+summary = """
+Played instead of standard Jacoby 2NT: responder's 2NT is the same raise,
+but opener's rebids are rearranged, usually so that 3♣ shows a minimum and
+responder can then ask for shortness.
+"""

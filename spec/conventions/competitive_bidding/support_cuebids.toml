@@ -1,0 +1,14 @@
+id = "competitive_bidding/support_cuebids"
+name = "Support Cuebids"
+source = "taxonomy"
+level = 4
+names = ["Cue-bid raise", "Cuebid raise", "Support cue bid", "Limit raise or better"]
+summary = """
+A cue bid of the opponents' suit in response to partner's opening or
+overcall shows a raise of partner's suit with limit-raise values or better,
+leaving direct raises weaker.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 15 },
+  { title = "Constructive Bidding Opposite 3rd Hand Openings: Cuebid as Limit Raise+ by a Passed Hand", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/116" },
+]

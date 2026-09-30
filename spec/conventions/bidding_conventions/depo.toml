@@ -1,0 +1,12 @@
+id = "bidding_conventions/depo"
+name = "DEPO"
+source = "proposed"
+level = 7
+names = ["DEPO", "Double even, pass odd"]
+summary = """
+Played instead of DOPI: when they interfere over a keycard ask, double shows
+an even number of keycards and pass an odd number.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 15 },
+]

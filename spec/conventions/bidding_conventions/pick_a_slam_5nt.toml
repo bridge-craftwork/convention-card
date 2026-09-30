@@ -1,0 +1,13 @@
+id = "bidding_conventions/pick_a_slam_5nt"
+name = "Pick-a-slam 5NT"
+source = "proposed"
+level = 7
+names = ["Pick-a-slam", "5NT pick a slam", "5NT choice of slams"]
+summary = """
+A 5NT bid, not after a keycard ask, asks partner to choose among several
+possible slams, usually in notrump or in a suit partner prefers.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 23 },
+  { title = "Slam Bidding: 5NT Choice of Slams", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/535" },
+]

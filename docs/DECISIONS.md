@@ -4,6 +4,16 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: one file per convention** (Rick Wilson)
+
+17. **Each standard convention or skill is its own file,**
+    `spec/conventions/<category>/<name>.toml`, whose path is its ID, in the same
+    format as a namespaced convention's `convention.toml` (ADR-0001 D4). Adding
+    or changing a convention touches only its file. `spec/conventions.json`
+    combines them for readers that cannot list a directory; CI regenerates and
+    commits it on every push to `main` that changes the sources, as
+    Practice-Bidding-Scenarios does for its manifest. This refines decision 14.
+
 **2026-09-30: variants and extensions** (Rick Wilson; open question 8)
 
 16. **A variant played instead of a convention gets its own ID; something

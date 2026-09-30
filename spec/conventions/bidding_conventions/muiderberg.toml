@@ -1,0 +1,12 @@
+id = "bidding_conventions/muiderberg"
+name = "Muiderberg twos"
+source = "proposed"
+level = 8
+names = ["Muiderberg", "Muiderberg twos", "Muiderberg 2♥/2♠"]
+summary = """
+Openings of 2♥ and 2♠ that show five cards in the major and four or more in
+a minor, with less than an opening bid.
+"""
+see = [
+  { title = "Muiderberg Two Bids", site = "Bridge Bum", url = "https://www.bridgebum.com/muiderberg_two_bids.php" },
+]

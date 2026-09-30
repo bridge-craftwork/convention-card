@@ -1,0 +1,14 @@
+id = "defense/opening_leads"
+name = "Opening Leads"
+source = "taxonomy"
+level = 2
+names = ["Opening leads", "Fourth best", "Top of a sequence"]
+summary = """
+The partnership's choice of card from each kind of holding on opening lead,
+such as fourth best from length and the top of a sequence, so partner can
+read the lead.
+"""
+see = [
+  { title = "Fundamentals of Trick Taking – 4th Best Leads (Attitude)", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/627" },
+  { title = "Opening Leads: Card Combinations", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/394" },
+]

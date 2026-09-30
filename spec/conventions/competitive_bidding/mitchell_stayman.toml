@@ -1,0 +1,9 @@
+id = "competitive_bidding/mitchell_stayman"
+name = "Mitchell Stayman"
+source = "proposed"
+level = 8
+names = ["Mitchell Stayman"]
+summary = """
+After partner's minor opening and their 1NT overcall, responder's 2♣ shows
+both majors (five-four) with modest values, and opener chooses.
+"""

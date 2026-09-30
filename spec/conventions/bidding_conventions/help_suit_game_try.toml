@@ -1,0 +1,15 @@
+id = "bidding_conventions/help_suit_game_try"
+name = "Help Suit Game Try"
+source = "taxonomy"
+level = 5
+names = ["Help suit game try", "Help-suit game try", "Help suit"]
+summary = """
+After a major-suit raise, opener's new suit is a game try asking for help
+there: responder bids game with honours or shortness in that suit and signs
+off without.
+"""
+see = [
+  { title = "Help Suit Game Try", site = "Bridge Bum", url = "https://www.bridgebum.com/help_suit_game_try.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 14 },
+  { title = "Help Suit Game Tries", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/465" },
+]

@@ -1,0 +1,10 @@
+id = "competitive_bidding/defense_vs_1nt"
+name = "Defending against 1NT"
+source = "proposed"
+level = 5
+names = ["Defense to 1NT", "Defence to 1NT", "Conventional defense to 1NT"]
+summary = """
+An agreement on what overcalls and doubles of the opponents' 1NT mean,
+usually a system that shows two-suited hands at the two level. The card
+names which one, against strong and weak notrumps.
+"""

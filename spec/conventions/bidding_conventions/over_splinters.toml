@@ -1,0 +1,12 @@
+id = "bidding_conventions/over_splinters"
+name = "Over-splinters"
+source = "proposed"
+level = 9
+names = ["Over-splinter", "Over-splinters"]
+summary = """
+A jump one level beyond a normal splinter, used when the normal splinter bid
+has another meaning, to show shortness and a fit.
+"""
+see = [
+  { title = "Fits and More: Over-Splinters", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/530" },
+]

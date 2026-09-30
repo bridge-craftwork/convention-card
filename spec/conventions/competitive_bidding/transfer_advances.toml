@@ -1,0 +1,14 @@
+id = "competitive_bidding/transfer_advances"
+name = "Transfer advances"
+source = "proposed"
+level = 9
+names = ["Transfer advances", "Transfer advances of overcalls", "Transfers after partner's overcall"]
+summary = """
+After partner's overcall, advancer's bids are transfers to the next suit, so
+the overcaller can accept or show more, and advancer can describe more
+hands.
+"""
+see = [
+  { title = "Transfer Advances of Overcalls", site = "Bridge Winners", url = "https://bridgewinners.com/article/view/transfer-advances-of-overcalls/" },
+  { title = "Transfer Advances Over Negative Double", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/597" },
+]

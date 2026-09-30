@@ -1,0 +1,14 @@
+id = "bidding_conventions/flannery"
+name = "Flannery 2♦"
+source = "proposed"
+level = 6
+names = ["Flannery", "Flannery 2♦"]
+summary = """
+An opening 2♦ showing a minimum opening with five hearts and four spades, so
+responder can find a spade fit without opener having to reverse or rebid
+awkwardly.
+"""
+see = [
+  { title = "Flannery 2♦", site = "Bridge Bum", url = "https://www.bridgebum.com/flannery_2d.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 2 },
+]

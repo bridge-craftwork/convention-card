@@ -1,0 +1,8 @@
+id = "bidding_conventions/lars_multi"
+name = "Lars Multi 2♦"
+source = "proposed"
+level = 9
+names = ["Lars Multi", "Lars Multi 2♦"]
+summary = """
+A Multi 2♦ that shows a weak two in either major or a 20–21 balanced hand.
+"""

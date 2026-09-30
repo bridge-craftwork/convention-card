@@ -1,0 +1,9 @@
+id = "bidding_conventions/precision_2d"
+name = "Precision 2♦"
+source = "proposed"
+level = 7
+names = ["Precision 2♦"]
+summary = """
+In Precision, an opening 2♦ shows a limited opening short in diamonds,
+usually 4-4-1-4 or 4-4-0-5 with 11-15 points.
+"""

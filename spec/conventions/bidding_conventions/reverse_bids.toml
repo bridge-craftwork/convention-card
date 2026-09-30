@@ -1,0 +1,13 @@
+id = "bidding_conventions/reverse_bids"
+name = "Reverse Bids"
+source = "taxonomy"
+level = 4
+names = ["Reverse", "Reverses", "Reverse bid"]
+summary = """
+Opener's rebid in a new suit higher than the first, at the two level, shows
+extra strength and a longer first suit; it is forcing for one round in most
+styles.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 7 },
+]

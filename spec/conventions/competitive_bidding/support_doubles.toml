@@ -1,0 +1,15 @@
+id = "competitive_bidding/support_doubles"
+name = "Support Doubles and Redoubles"
+source = "proposed"
+level = 5
+names = ["Support double", "Support doubles", "Support redouble"]
+summary = """
+After opener's one-level opening and responder's one-level suit, when the
+next player bids, opener's double shows exactly three-card support for
+responder (a redouble after their double), and a raise shows four.
+"""
+see = [
+  { title = "Support Double", site = "Bridge Bum", url = "https://www.bridgebum.com/support_double.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 13 },
+  { title = "Support Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/355" },
+]

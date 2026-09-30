@@ -1,0 +1,14 @@
+id = "bidding_conventions/weak_jump_shifts"
+name = "Weak jump shifts"
+source = "proposed"
+level = 5
+names = ["Weak jump shifts", "Weak jump shift", "WJS"]
+summary = """
+Responder's jump in a new suit over partner's one-level opening shows a long
+suit and a weak hand, rather than a strong one.
+"""
+see = [
+  { title = "Weak Jump Shifts", site = "Bridge Bum", url = "https://www.bridgebum.com/weak_jump_shifts.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 12 },
+  { title = "Thinking and Responding: Jump Shifts After 1-Level Openings - Weak and Invitational", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/512" },
+]

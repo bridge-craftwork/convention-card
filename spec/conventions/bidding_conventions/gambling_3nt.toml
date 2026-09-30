@@ -1,0 +1,15 @@
+id = "bidding_conventions/gambling_3nt"
+name = "Gambling 3NT"
+source = "proposed"
+level = 6
+names = ["Gambling 3NT", "Gambling", "Acol 3NT"]
+summary = """
+An opening 3NT showing a long, solid minor with little outside. Partner
+passes with stoppers in the other suits, and otherwise runs to four or five
+of the minor.
+"""
+see = [
+  { title = "Gambling 3NT", site = "Bridge Bum", url = "https://www.bridgebum.com/gambling_3nt.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 6 },
+  { title = "NT Auctions: Trick-Showing NT Bids - Gambling 3NT and More", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/519" },
+]

@@ -1,0 +1,13 @@
+id = "competitive_bidding/suction"
+name = "Suction"
+source = "proposed"
+level = 8
+names = ["Suction"]
+summary = """
+Over their 1NT, each two-level suit bid shows either the next suit up or the
+other two suits, so the overcall is ambiguous by design and partner bids the
+next suit to find out.
+"""
+see = [
+  { title = "Suction", site = "Bridge Bum", url = "https://www.bridgebum.com/suction.php" },
+]

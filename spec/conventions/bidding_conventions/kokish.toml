@@ -1,0 +1,14 @@
+id = "bidding_conventions/kokish"
+name = "Kokish relay"
+source = "proposed"
+level = 8
+names = ["Kokish", "Kokish relay"]
+summary = """
+After 2♣–2♦, opener's 2♥ is a relay: either hearts or a strong balanced
+hand. Responder must bid 2♠, and opener's next bid says which, which keeps
+the strong 2NT rebid out of the way.
+"""
+see = [
+  { title = "Kokish Relay", site = "Bridge Bum", url = "https://www.bridgebum.com/kokish_relay.php" },
+  { title = "Kokish Over Strong 2C", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/576" },
+]

@@ -1,0 +1,13 @@
+id = "bidding_conventions/impossible_2s"
+name = "Impossible 2♠"
+source = "proposed"
+level = 7
+names = ["Impossible 2♠", "Impossible Spade", "Impossible 2S"]
+summary = """
+After 1♥–1NT–2♣ or 2♦, responder's 2♠ cannot be natural, so it shows a good
+raise of opener's minor, forcing to three of it.
+"""
+see = [
+  { title = "The Impossible Spade Bid", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/269" },
+  { title = "Impossible 2 Spade", site = "Kiva Bridge Club", url = "http://kivabridgeclub.com/images/Impossible%202%20Spade.pdf" },
+]

@@ -1,0 +1,12 @@
+id = "competitive_bidding/sos_redouble"
+name = "SOS redouble"
+source = "proposed"
+level = 7
+names = ["SOS redouble", "SOS", "Rescue redouble"]
+summary = """
+When a low-level contract is doubled for penalty, a redouble asks partner to
+choose another suit, rather than showing strength.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 22 },
+]
