@@ -10,7 +10,11 @@ What's settled, and what's still open. Newest first within each list.
    Advancing in Bridge moved from a compressed 1–6 to 1–10 as its lessons grew;
    four named tiers are too coarse to rate a card.
 2. **Named bands are derived** from the number, for the editor's filter and
-   lesson front matter, and never stored. About five of them (open question 7).
+   lesson front matter, and never stored. For now, Bridge Classroom's four
+   names: basic 1–3, intermediate 4–6, advanced 7–8, expert 9–10. "Basic" is not
+   a recognised bridge level, so the names may change; since only the number is
+   stored, that changes no data. Under this split DONT, Lebensohl, Drury, Jacoby
+   2NT and splinters move from advanced to intermediate.
 3. **A convention's level is the lowest level at which it is taught.** Later
    material (slam sequences, bidding after interference, responses with a void)
    is an extension of the same convention, with its own higher level. See
@@ -86,14 +90,7 @@ OFL and fine to ship with its licence.)
 machine-readable reference. For this tool the natural content is the spec: every
 field with its path, kind, options and description, generated at build time.
 
-**7. The named level bands.** Stay with Bridge Classroom's four names for now
-(`basic` to `expert`), though "basic" is not a recognised bridge level; only the
-number is stored, so renaming or re-splitting later changes no data. Proposed
-split, from the evidence in DESIGN.md: basic 1–3 (fundamentals and the first
-conventions), intermediate 4–6 (most of *25 Conventions*), advanced 7–8 (most of
-*25 More Conventions*), expert 9–10 (beyond both). Under it several editor
-levels move down: DONT, Lebensohl, Drury, Jacoby 2NT and splinters are
-"advanced" today and would be intermediate.
+**7. The named level bands.** Decided 2026-09-30; see above.
 
 **8. What counts as a convention.** Named variants of a convention (Puppet
 Stayman against Stayman, 0314 against 1430) could be extensions of it or
