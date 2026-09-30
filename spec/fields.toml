@@ -126,6 +126,10 @@
 "responses.3h"             = { kind = "text", label = "3♥ response" }
 "responses.3s"             = { kind = "text", label = "3♠ response" }
 "notes"                    = { kind = "text", label = "Notrump notes", note = true }
+"one_nt.range_min_plus"    = { kind = "bool", label = "1NT range: minimum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt.range_max_plus"    = { kind = "bool", label = "1NT range: maximum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_min_plus" = { kind = "bool", label = "Alternate 1NT range: minimum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_max_plus" = { kind = "bool", label = "Alternate 1NT range: maximum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
 
 [major_openings]
 "five_card_majors"         = { kind = "bool", label = "Five-card majors", default = true }
@@ -153,7 +157,7 @@
 "mini_splinters.play"      = { kind = "bool", label = "Mini splinters", skill = "bidding_conventions/splinters", level = 7 }
 "drury.play"               = { kind = "bool", label = "Drury", skill = "bidding_conventions/drury", level = 5 }
 "drury.reverse"            = { kind = "bool", label = "Reverse Drury", skill = "bidding_conventions/reverse_drury", level = 5 }
-"drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)", skill = "bidding_conventions/two_way_drury", level = 6 }
+"drury.two_d"              = { kind = "bool", label = "Two-way Drury (2♦)", skill = "bidding_conventions/two_way_drury", level = 6, aliases = ["major_openings.drury.two_way"] }
 "drury.in_comp"            = { kind = "bool", label = "Drury in competition", skill = "bidding_conventions/drury", level = 6 }
 "gazzilli.play"            = { kind = "bool", label = "Gazzilli", skill = "bidding_conventions/gazzilli", level = 9 }
 "impossible_2s.play"       = { kind = "bool", label = "Impossible 2♠", desc = "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor", skill = "bidding_conventions/impossible_2s", level = 7 }
@@ -268,6 +272,7 @@
 "four_level_response"      = { kind = "text", label = "4-level responses" }
 "transfer_4_minor"         = { kind = "bool", label = "4♣/4♦ transfer to major", skill = "bidding_conventions/namyats", level = 6 }
 "namyats.play"             = { kind = "bool", label = "Namyats", skill = "bidding_conventions/namyats", level = 6 }
+"notes"                    = { kind = "text", label = "Preempt notes", note = true }
 
 [slam]
 "blackwood.standard"       = { kind = "bool", label = "Standard Blackwood", aliases = ["other_conventions.blackwood.standard"], skill = "bidding_conventions/blackwood", level = 2 }
@@ -447,6 +452,8 @@
 "first_discard.other_suits" = { kind = "text", label = "First discard: other, vs suits" }
 "first_discard.other_nt"   = { kind = "text", label = "First discard: other, vs NT" }
 "first_discard.notes"      = { kind = "text", label = "First discard: notes", note = true }
+"exceptions"               = { kind = "text", label = "Carding exceptions" }
+"smith_echo_reverse"       = { kind = "bool", label = "Reverse Smith echo", skill = "defense/reverse_smith_echo", level = 8 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "suits.standard_attitude"  = { kind = "bool", label = "Standard attitude vs suits", skill = "defense/defensive_signals", level = 2 }
 "suits.standard_count"     = { kind = "bool", label = "Standard count vs suits", skill = "defense/defensive_signals", level = 3 }
@@ -484,6 +491,7 @@
 "ingberman_2nt.play"       = { kind = "bool", label = "Ingberman 2NT", skill = "bidding_conventions/ingberman", level = 7 }
 "jump_shift_response"      = { kind = "text", label = "Jump shift responses (as written)", desc = "The card's jump-shift line as an importer wrote it (\"Weak\")" }
 "notes"                    = { kind = "text", label = "Other conventions notes", note = true }
+"vs_strong_open"           = { kind = "text", label = "Defense vs strong openings" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "weak_jump_shifts_not_in_comp" = { kind = "bool", label = "Weak jump shifts (not in competition)", skill = "bidding_conventions/weak_jump_shifts", level = 5 }
 "weak_jump_shifts_in_comp" = { kind = "bool", label = "Weak jump shifts in competition", skill = "bidding_conventions/weak_jump_shifts", level = 5 }

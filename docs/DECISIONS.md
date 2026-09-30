@@ -82,20 +82,19 @@ What's settled, and what's still open. Newest first within each list.
 
 **1. ~~Who owns the field vocabulary~~** Resolved by [ADR-0001](adr/0001-standard-and-namespaced-conventions.md).
 
-**2. Reconciling the field lists.** There are two lists (the bot's
-`fields.toml` and Bridge Classroom's `conventionCatalog.js`), and Bridge
-Classroom's seed card and editor catalog already disagree on some paths (RKCB:
-`slam.blackwood.*` vs `other_conventions.blackwood.*`; fourth-suit forcing:
-`game_forcing` vs `game_force`). The bot's registry picked one path for each and
-made the other an alias. Merging the lists means settling every such case: pick
-one path, alias the other. Check against the cards actually saved in Bridge
-Classroom's database before choosing, since the paths real cards use are the
-ones that must not break.
+**2. Reconciling the field lists.** Done for paths (PRs #5, #7–#13, 2026-09-30):
+every path Bridge Classroom's editor catalog uses (180) and every literal path
+its bridgeodex and BBO importers write resolves in `spec/fields.toml`, directly
+or through an alias, and all 11 saved cards load with no unknown path and no
+invalid value. Every convention field has a level and names its convention.
+Still to do: choice groups (fields that are alternatives to one another, for
+the comparison matrix and the difficulty rating).
 
-**3. The convention and skill list file.** Format decided (14). Still open: what
-becomes of the bot's `[lessons]` skills (lesson tags missing from Bridge
-Classroom's list) and `[proposed]` ones (conventions the bot plays that have no
-skill yet), and levels for the 28 skills that have none.
+**3. The convention and skill list file.** Format decided (14). The bot's three
+tables became each entry's `source` ("taxonomy", "lessons", "proposed"), and
+every entry except the two `practice_deals` ones has a level. Still open:
+whether `practice_deals` entries (content, not skills) stay in the list, as
+lesson-studio's Contract 4 asks; and generating Contract 4's `taxonomy.json`.
 
 **4. How "Save to Bridge Classroom" hands the card over.** The standalone editor
 can't call Bridge Classroom's API with the user's session (third-party cookie;

@@ -26,14 +26,17 @@
 ["basic_bidding/major_suit_openings"]
 name = "Major Suit Openings"
 source = "taxonomy"
+level = 1
 
 ["basic_bidding/minor_suit_openings"]
 name = "Minor Suit Openings"
 source = "taxonomy"
+level = 1
 
 ["basic_bidding/notrump_openings"]
 name = "Notrump Openings"
 source = "taxonomy"
+level = 1
 
 ["bidding_conventions/blackwood"]
 name = "Blackwood"
@@ -83,6 +86,7 @@ see = [
 ["bidding_conventions/jacoby_2nt_splinters"]
 name = "Jacoby 2NT & Splinters"
 source = "taxonomy"
+level = 4
 
 ["bidding_conventions/jacoby_transfers"]
 name = "Jacoby Transfers"
@@ -132,6 +136,7 @@ see = [
 ["bidding_conventions/preemptive_bids"]
 name = "Preemptive Bids"
 source = "taxonomy"
+level = 3
 
 ["bidding_conventions/reverse_bids"]
 name = "Reverse Bids"
@@ -309,6 +314,7 @@ see = [
 ["competitive_bidding/overcalls"]
 name = "Overcalls"
 source = "taxonomy"
+level = 2
 
 ["competitive_bidding/support_cuebids"]
 name = "Support Cuebids"
@@ -344,30 +350,37 @@ see = [
 ["declarer_play/elimination_plays"]
 name = "Elimination Plays"
 source = "taxonomy"
+level = 7
 
 ["declarer_play/entry_management"]
 name = "Entry Management"
 source = "taxonomy"
+level = 4
 
 ["declarer_play/finessing"]
 name = "Finessing"
 source = "taxonomy"
+level = 2
 
 ["declarer_play/holdup_plays"]
 name = "Holdup Plays"
 source = "taxonomy"
+level = 3
 
 ["declarer_play/squeeze_plays"]
 name = "Squeeze Plays"
 source = "taxonomy"
+level = 7
 
 ["declarer_play/suit_establishment"]
 name = "Suit Establishment"
 source = "taxonomy"
+level = 2
 
 ["declarer_play/trump_management"]
 name = "Trump Management"
 source = "taxonomy"
+level = 3
 
 ["defense/defensive_signals"]
 name = "Defensive Signals"
@@ -403,58 +416,72 @@ see = [
 ["defense/second_hand_play"]
 name = "Second Hand Play"
 source = "taxonomy"
+level = 4
 
 ["defense/third_hand_play"]
 name = "Third Hand Play"
 source = "taxonomy"
+level = 3
 
 ["partnership_bidding/advanced_forcing"]
 name = "Advanced Forcing (Partnership)"
 source = "taxonomy"
+level = 6
 
 ["partnership_bidding/basic_bidding"]
 name = "Basic Bidding (Partnership)"
 source = "taxonomy"
+level = 1
 
 ["partnership_bidding/basic_major"]
 name = "Basic Major (Partnership)"
 source = "taxonomy"
+level = 1
 
 ["partnership_bidding/basic_notrump"]
 name = "Basic Notrump (Partnership)"
 source = "taxonomy"
+level = 2
 
 ["partnership_bidding/blackwood"]
 name = "Blackwood (Partnership)"
 source = "taxonomy"
+level = 2
 
 ["partnership_bidding/jacoby_2nt"]
 name = "Jacoby 2NT (Partnership)"
 source = "taxonomy"
+level = 4
 
 ["partnership_bidding/negative_doubles"]
 name = "Negative Doubles (Partnership)"
 source = "taxonomy"
+level = 3
 
 ["partnership_bidding/overcalls"]
 name = "Overcalls (Partnership)"
 source = "taxonomy"
+level = 2
 
 ["partnership_bidding/roman_key_card"]
 name = "Roman Key Card (Partnership)"
 source = "taxonomy"
+level = 4
 
 ["partnership_bidding/stayman_transfers"]
 name = "Stayman & Transfers (Partnership)"
 source = "taxonomy"
+level = 3
 
 ["partnership_bidding/two_club"]
 name = "Two Club (Partnership)"
 source = "taxonomy"
+level = 3
 
 ["partnership_bidding/weak_twos"]
 name = "Weak Twos (Partnership)"
 source = "taxonomy"
+level = 3
 
 ["practice_deals/100_miscellaneous"]
 name = "100 Miscellaneous Deals"
@@ -467,46 +494,57 @@ source = "taxonomy"
 ["basic_bidding/hand_evaluation"]
 name = "Hand Evaluation"
 source = "lessons"
+level = 1
 
 ["competitive_bidding/advancing_overcalls"]
 name = "Responding to Overcalls"
 source = "lessons"
+level = 3
 
 ["competitive_bidding/balancing"]
 name = "Balancing"
 source = "lessons"
+level = 4
 
 ["partnership_bidding/miscellaneous"]
 name = "Miscellaneous Auctions"
 source = "lessons"
+level = 4
 
 ["partnership_bidding/passed_hand_bidding"]
 name = "Passed Hand Bidding"
 source = "lessons"
+level = 6
 
 ["partnership_bidding/rebids"]
 name = "Rebids by Opener or Responder"
 source = "lessons"
+level = 3
 
 ["partnership_bidding/responders_rebid"]
 name = "Responder's Rebid"
 source = "lessons"
+level = 5
 
 ["partnership_bidding/slam_bidding"]
 name = "Slam Bidding"
 source = "lessons"
+level = 5
 
 ["precision/1c_mixed"]
 name = "Precision 1♣ (Mixed)"
 source = "lessons"
+level = 7
 
 ["precision/1c_opener"]
 name = "Precision 1♣ (Opener)"
 source = "lessons"
+level = 7
 
 ["precision/1c_responder"]
 name = "Precision 1♣ (Responder)"
 source = "lessons"
+level = 7
 
 ["bidding_conventions/control_bids"]
 name = "Control (Cue) Bids"
@@ -652,10 +690,12 @@ names which one, against strong and weak notrumps.
 ["competitive_bidding/defense_vs_preempts"]
 name = "Defending against Preempts"
 source = "proposed"
+level = 4
 
 ["competitive_bidding/law_of_total_tricks"]
 name = "The Law of Total Tricks"
 source = "proposed"
+level = 4
 
 ["competitive_bidding/meckwell"]
 name = "Meckwell over 1NT"
@@ -1611,4 +1651,385 @@ other bids by responder show values.
 see = [
   { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 11 },
   { title = "Lebensohl over Reverses", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/417" },
+]
+
+["bidding_conventions/grand_slam_force"]
+name = "Grand slam force"
+source = "proposed"
+level = 6
+names = ["Grand slam force", "GSF", "Josephine", "5NT grand slam force"]
+summary = """
+A jump to 5NT (not after a keycard ask) asks partner to bid the grand slam
+in the agreed suit holding two of the top three trump honours.
+"""
+see = [
+  { title = "Grand Slam Force", site = "Bridge Bum", url = "https://www.bridgebum.com/grand_slam_force.php" },
+]
+
+["bidding_conventions/picture_3nt"]
+name = "1M–3NT picture raise"
+source = "proposed"
+level = 7
+names = ["Picture 3NT", "1M-3NT", "3NT picture bid", "Picture bid"]
+summary = """
+Over partner's 1♥ or 1♠, responder's 3NT is a game-forcing raise with a
+balanced hand and good trumps, better than a direct raise to four.
+"""
+see = [
+  { title = "1-Major – 3NT", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/628" },
+]
+
+["bidding_conventions/preempt_keycard"]
+name = "Keycard over preempts"
+source = "proposed"
+level = 9
+names = ["Preempt keycard", "Keycard over preempts", "4♣ keycard over a weak two"]
+summary = """
+After partner's preempt, an agreed bid (often 4♣) asks for keycards in
+partner's suit, since 4NT would take the auction too high.
+"""
+see = [
+  { title = "Preempt Keycard", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/578" },
+]
+
+["bidding_conventions/six_key_rkcb"]
+name = "Six-key Roman Keycard"
+source = "proposed"
+level = 9
+names = ["Six-key RKCB", "6-key RKC", "Six key Blackwood"]
+summary = """
+Roman Keycard with two trump suits: six keycards, the four aces and both
+trump kings, plus both trump queens, when the partnership has a fit in two
+suits.
+"""
+see = [
+  { title = "6-Key Roman Key Card", site = "Long Beach Bridge", url = "https://longbeachbridge.com/6-key-roman-key-card/" },
+]
+
+["competitive_bidding/rosenkranz"]
+name = "Rosenkranz double"
+source = "proposed"
+level = 9
+names = ["Rosenkranz", "Rosenkranz double", "Rosenkranz redouble"]
+summary = """
+When the opponents overcall partner's opening and advancer raises partner's
+overcall, a double or redouble shows a top honour in partner's suit, and a
+raise denies one.
+"""
+see = [
+  { title = "Rosenkranz Double", site = "Bridge Bum", url = "https://www.bridgebum.com/rosenkranz_double.php" },
+  { title = "Rosenkrantz Redoubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/569" },
+]
+
+["competitive_bidding/good_bad_2nt"]
+name = "Good/bad 2NT"
+source = "proposed"
+level = 9
+names = ["Good/bad 2NT", "Good-bad 2NT", "Good bad 2NT"]
+summary = """
+In a competitive auction where the opponents have just bid at the two level,
+2NT is artificial and shows a weak hand that wants to compete to the three
+level; bidding the three level directly is stronger.
+"""
+see = [
+  { title = "Competitive Auctions: Good/Bad 2NT in Competition", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/554" },
+]
+
+["competitive_bidding/crash"]
+name = "CRASH"
+source = "proposed"
+level = 9
+names = ["CRASH"]
+summary = """
+A defence to a strong 1♣ opening: overcalls show two-suited hands by colour,
+rank and shape (CRASH: Colour, RAnk, SHape).
+"""
+see = [
+  { title = "CRASH", site = "Bridge Bum", url = "https://www.bridgebum.com/crash.php" },
+]
+
+["competitive_bidding/mathe"]
+name = "Mathe"
+source = "proposed"
+level = 7
+names = ["Mathe", "Mathe over 1♣"]
+summary = """
+A defence to a strong 1♣ opening: double shows the majors, 1NT the minors,
+and suit bids are natural.
+"""
+see = [
+  { title = "Mathe", site = "Bridge Bum", url = "https://www.bridgebum.com/mathe_1c.php" },
+  { title = "Competitive Bidding: Bidding Over Strong 2C (and 1C) Openings - Mathe", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/191" },
+]
+
+["competitive_bidding/spear"]
+name = "Spear"
+source = "proposed"
+level = 9
+names = ["Spear"]
+summary = """
+How to intervene after the opponents' 1♣ or 1♦ opening and 1NT response:
+suit bids and double describe both-majors, one-major and strong hands.
+"""
+see = [
+  { title = "Spear", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/571" },
+]
+
+["bidding_conventions/muiderberg"]
+name = "Muiderberg twos"
+source = "proposed"
+level = 8
+names = ["Muiderberg", "Muiderberg twos", "Muiderberg 2♥/2♠"]
+summary = """
+Openings of 2♥ and 2♠ that show five cards in the major and four or more in
+a minor, with less than an opening bid.
+"""
+see = [
+  { title = "Muiderberg Two Bids", site = "Bridge Bum", url = "https://www.bridgebum.com/muiderberg_two_bids.php" },
+]
+
+["bidding_conventions/wolff_signoff"]
+name = "Wolff signoff"
+source = "proposed"
+level = 7
+names = ["Wolff", "Wolff signoff", "Transfer Wolff"]
+summary = """
+After opener's 2NT rebid (1m–1M–2NT), responder's 3♣ forces opener to bid
+3♦, so responder can sign off in a suit or show weaker hands; other three-
+level bids force.
+"""
+see = [
+  { title = "2-Way New Minor Forcing and Wolff Signoff", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/586" },
+  { title = "Transfer Wolff Over 2NT Rebids", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/595" },
+]
+
+["bidding_conventions/last_train"]
+name = "Last Train"
+source = "proposed"
+level = 9
+names = ["Last Train", "Last train to Clarksville"]
+summary = """
+When the only bid left between a fit and game in the agreed major is one
+step below it, that bid is a general slam try rather than showing anything
+in its suit.
+"""
+see = [
+  { title = "Last Train", site = "Wikipedia", url = "https://en.wikipedia.org/wiki/Last_Train_(bridge)" },
+  { title = "Slam Bidding: Last Train Slam Try", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/540" },
+]
+
+["defense/rusinow_leads"]
+name = "Rusinow leads"
+source = "proposed"
+level = 8
+names = ["Rusinow", "Rusinow leads"]
+summary = """
+Played instead of standard honour leads: from touching honours lead the
+second highest (the king from KQ, the queen from QJ), usually only at trick
+one against suit contracts.
+"""
+see = [
+  { title = "Rusinow Opening Leads", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/276" },
+]
+
+["bidding_conventions/bart"]
+name = "BART"
+source = "proposed"
+level = 8
+names = ["BART"]
+summary = """
+After 1♥ or 1♠, a forcing 1NT and opener's 2♣, responder's 2♦ is artificial,
+covering several stronger hands (a good club raise, a good preference,
+diamonds) that need room.
+"""
+see = [
+  { title = "BART", by = "Larry Cohen", url = "https://www.larryco.com/bridge-articles/bart" },
+]
+
+["bidding_conventions/range_stayman"]
+name = "Range Stayman"
+source = "proposed"
+level = 6
+names = ["Range Stayman", "Size ask", "2♠ size ask"]
+summary = """
+Over partner's 1NT, a bid (often 2♠, or 2♣ then 2♠) asks whether opener is
+minimum or maximum, for responder with an invitation to 2NT or a minor-suit
+hand.
+"""
+see = [
+  { title = "NT and Balancing Auctions: Range Stayman", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/560" },
+  { title = "NT Auctions: 2S Size Ask Response", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/522" },
+]
+
+["bidding_conventions/kokish_game_tries"]
+name = "Kokish game tries"
+source = "proposed"
+level = 9
+names = ["Kokish game tries"]
+summary = """
+A structure of game tries after a major-suit raise that uses the next step
+as a relay, so opener can make several kinds of try.
+"""
+see = [
+  { title = "Kokish Game Tries", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/588" },
+]
+
+["bidding_conventions/over_splinters"]
+name = "Over-splinters"
+source = "proposed"
+level = 9
+names = ["Over-splinter", "Over-splinters"]
+summary = """
+A jump one level beyond a normal splinter, used when the normal splinter bid
+has another meaning, to show shortness and a fit.
+"""
+see = [
+  { title = "Fits and More: Over-Splinters", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/530" },
+]
+
+["competitive_bidding/anti_lead_directing_doubles"]
+name = "Anti-lead-directing doubles"
+source = "proposed"
+level = 9
+names = ["Anti-lead-directing double", "Anti lead directing"]
+summary = """
+When a lead-directing double of an artificial bid is expected, a double asks
+partner not to lead that suit, and a pass says nothing.
+"""
+see = [
+  { title = "Competitive Auctions: Anti-Lead Directing Doubles", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/556" },
+]
+
+["competitive_bidding/forcing_pass"]
+name = "Forcing pass"
+source = "proposed"
+level = 6
+names = ["Forcing pass"]
+summary = """
+When the partnership has shown game-invitational or better values and an
+opponent bids, a pass is forcing: it asks partner to double or bid, and
+shows interest in continuing.
+"""
+see = [
+  { title = "Slam Bidding: Forcing Pass Auctions", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/532" },
+]
+
+["competitive_bidding/equal_level_conversion"]
+name = "Equal level conversion"
+source = "proposed"
+level = 6
+names = ["Equal level conversion", "ELC"]
+summary = """
+After a takeout double and partner's forced response, the doubler's bid of
+another suit at the same level shows a two-suited hand without extra
+strength, rather than a strong one.
+"""
+see = [
+  { title = "Equal Level Conversion", site = "Bridge Bum", url = "https://www.bridgebum.com/equal_level_conversion.php" },
+]
+
+["competitive_bidding/transfer_advances"]
+name = "Transfer advances"
+source = "proposed"
+level = 9
+names = ["Transfer advances", "Transfer advances of overcalls", "Transfers after partner's overcall"]
+summary = """
+After partner's overcall, advancer's bids are transfers to the next suit, so
+the overcaller can accept or show more, and advancer can describe more
+hands.
+"""
+see = [
+  { title = "Transfer Advances of Overcalls", site = "Bridge Winners", url = "https://bridgewinners.com/article/view/transfer-advances-of-overcalls/" },
+  { title = "Transfer Advances Over Negative Double", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/597" },
+]
+
+["competitive_bidding/thrump_double"]
+name = "Thrump double"
+source = "proposed"
+level = 8
+names = ["Thrump double", "Thrump X", "Bergen Thrump"]
+summary = """
+After partner opens and the opponents preempt at the three level,
+responder's double asks opener to bid 3NT with a stopper, for a hand with
+values and no fit or long suit.
+"""
+see = [
+  { title = "Thrump Double", site = "Bridge Bum", url = "https://www.bridgebum.com/thrump_double.php" },
+]
+
+["competitive_bidding/exit_transfers"]
+name = "Exit transfers"
+source = "proposed"
+level = 8
+names = ["Exit transfers", "Runout after 1NT doubled"]
+summary = """
+When the opponents double partner's 1NT, redouble and suit bids are
+transfers to the next suit to escape, and pass forces a redouble for two-
+suited runouts.
+"""
+see = [
+  { title = "Exit Transfers", site = "Bridge Bum", url = "https://www.bridgebum.com/exit_transfers.php" },
+]
+
+["competitive_bidding/mitchell_stayman"]
+name = "Mitchell Stayman"
+source = "proposed"
+level = 8
+names = ["Mitchell Stayman"]
+summary = """
+After partner's minor opening and their 1NT overcall, responder's 2♣ shows
+both majors (five-four) with modest values, and opener chooses.
+"""
+
+["bidding_conventions/tislevoll"]
+name = "Tislevoll slam try"
+source = "proposed"
+level = 9
+names = ["Tislevoll"]
+summary = """
+After partner opens a major and the opponents preempt, responder's 4♣ and 4♦
+are slam tries in partner's major that show or deny a control in the
+opponents' suit.
+"""
+
+["bidding_conventions/lars_multi"]
+name = "Lars Multi 2♦"
+source = "proposed"
+level = 9
+names = ["Lars Multi", "Lars Multi 2♦"]
+summary = """
+A Multi 2♦ that shows a weak two in either major or a 20–21 balanced hand.
+"""
+
+["competitive_bidding/collante"]
+name = "Collante"
+source = "proposed"
+level = 8
+names = ["Collante"]
+summary = """
+After partner's 1♣ and their 1♦ (or 1♦ and 1♥), a double shows four cards in
+the next suit up and a bid of it shows five or more.
+"""
+
+["competitive_bidding/rodrigue"]
+name = "Rodrigue"
+source = "proposed"
+level = 8
+names = ["Rodrigue"]
+summary = """
+After partner's minor and their 1♠, a double shows four hearts, and five or
+more hearts are shown by 2m with 8–10 points or 2♥ with 11 or more.
+"""
+
+["defense/reverse_smith_echo"]
+name = "Reverse Smith echo"
+source = "proposed"
+level = 8
+names = ["Reverse Smith", "Reverse Smith echo"]
+summary = """
+Played instead of the Smith echo: on declarer's first suit, a defender's
+high-low says they did not like partner's opening lead.
+"""
+see = [
+  { title = "Defensive Carding: Smith Echo (Reverse)", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/475" },
 ]
