@@ -51,10 +51,34 @@ see = [
 ["bidding_conventions/fourth_suit_forcing"]
 name = "Fourth Suit Forcing"
 source = "taxonomy"
+level = 5
+names = ["Fourth suit forcing", "4th suit forcing", "FSF", "Fourth suit game force"]
+summary = """
+When three suits have been bid, responder's bid of the fourth suit is
+artificial and forcing (for one round, or to game by agreement), asking
+opener to describe the hand further.
+"""
+see = [
+  { title = "Fourth Suit Forcing", site = "Bridge Bum", url = "https://www.bridgebum.com/fourth_suit_forcing.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 21 },
+  { title = "2/1: Bidding the 4th Suit", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/424" },
+]
 
 ["bidding_conventions/help_suit_game_try"]
 name = "Help Suit Game Try"
 source = "taxonomy"
+level = 5
+names = ["Help suit game try", "Help-suit game try", "Help suit"]
+summary = """
+After a major-suit raise, opener's new suit is a game try asking for help
+there: responder bids game with honours or shortness in that suit and signs
+off without.
+"""
+see = [
+  { title = "Help Suit Game Try", site = "Bridge Bum", url = "https://www.bridgebum.com/help_suit_game_try.php" },
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 14 },
+  { title = "Help Suit Game Tries", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/465" },
+]
 
 ["bidding_conventions/jacoby_2nt_splinters"]
 name = "Jacoby 2NT & Splinters"
@@ -79,6 +103,17 @@ see = [
 ["bidding_conventions/new_minor_forcing"]
 name = "New Minor Forcing"
 source = "taxonomy"
+level = 5
+names = ["New minor forcing", "NMF"]
+summary = """
+After opener's 1NT rebid, responder's bid of the unbid minor is artificial
+and forcing, asking opener about three-card support for responder's major or
+a four-card other major.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 22 },
+  { title = "New Minor Forcing Fundamentals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/227" },
+]
 
 ["bidding_conventions/ogust"]
 name = "Ogust"
@@ -101,6 +136,16 @@ source = "taxonomy"
 ["bidding_conventions/reverse_bids"]
 name = "Reverse Bids"
 source = "taxonomy"
+level = 4
+names = ["Reverse", "Reverses", "Reverse bid"]
+summary = """
+Opener's rebid in a new suit higher than the first, at the two level, shows
+extra strength and a longer first suit; it is forcing for one round in most
+styles.
+"""
+see = [
+  { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 7 },
+]
 
 ["bidding_conventions/reverse_drury"]
 name = "Reverse Drury"
@@ -327,10 +372,33 @@ source = "taxonomy"
 ["defense/defensive_signals"]
 name = "Defensive Signals"
 source = "taxonomy"
+level = 2
+names = ["Standard signals", "Attitude", "Count", "Suit preference", "High encourages"]
+summary = """
+Defenders' agreements on what their cards say: attitude (like this suit or
+not), count (odd or even length) and suit preference (which other suit to
+play), and which applies when.
+"""
+see = [
+  { title = "Defensive Carding: Attitude Signals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/471" },
+  { title = "Defensive Carding: Count Signals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/472" },
+  { title = "Defensive Carding: Suit Preference Signals", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/476" },
+]
 
 ["defense/opening_leads"]
 name = "Opening Leads"
 source = "taxonomy"
+level = 2
+names = ["Opening leads", "Fourth best", "Top of a sequence"]
+summary = """
+The partnership's choice of card from each kind of holding on opening lead,
+such as fourth best from length and the top of a sequence, so partner can
+read the lead.
+"""
+see = [
+  { title = "Fundamentals of Trick Taking – 4th Best Leads (Attitude)", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/627" },
+  { title = "Opening Leads: Card Combinations", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/394" },
+]
 
 ["defense/second_hand_play"]
 name = "Second Hand Play"
@@ -1379,4 +1447,168 @@ responder can describe more hands.
 see = [
   { title = "1-Major (X) Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/598" },
   { title = "1-minor (X) Transfers", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/599" },
+]
+
+["defense/upside_down_signals"]
+name = "Upside-down signals"
+source = "proposed"
+level = 6
+names = ["UDCA", "Upside-down count and attitude", "Upside-down signals", "Upside down count", "Low encourages"]
+summary = """
+Played instead of standard signals: a low card encourages and a high one
+discourages, and count is shown upside down too, so the defenders keep their
+high cards.
+"""
+see = [
+  { title = "Defensive Carding: Upside-Down Count and Attitude (UDCA)", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/474" },
+]
+
+["defense/smith_echo"]
+name = "Smith echo"
+source = "proposed"
+level = 8
+names = ["Smith echo", "Smith signal", "Reverse Smith"]
+summary = """
+On declarer's first suit, a defender's high-low says whether they liked
+partner's opening lead, rather than giving count.
+"""
+see = [
+  { title = "Defensive Carding: Smith Echo (Reverse)", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/475" },
+]
+
+["defense/lavinthal"]
+name = "Lavinthal"
+source = "proposed"
+level = 6
+names = ["Lavinthal", "McKenney", "Suit-preference discards"]
+summary = """
+A discard is suit preference: a high card asks for the higher of the other
+two suits, a low card for the lower.
+"""
+
+["defense/odd_even_discards"]
+name = "Odd-even discards"
+source = "proposed"
+level = 6
+names = ["Odd-even", "Odd/even discards", "Roman discards"]
+summary = """
+A defender's first discard says something by being odd or even: an odd card
+encourages that suit, an even card discourages and its size points to
+another suit.
+"""
+
+["bidding_conventions/weak_jump_shifts"]
+name = "Weak jump shifts"
+source = "proposed"
+level = 5
+names = ["Weak jump shifts", "Weak jump shift", "WJS"]
+summary = """
+Responder's jump in a new suit over partner's one-level opening shows a long
+suit and a weak hand, rather than a strong one.
+"""
+see = [
+  { title = "Weak Jump Shifts", site = "Bridge Bum", url = "https://www.bridgebum.com/weak_jump_shifts.php" },
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 12 },
+  { title = "Thinking and Responding: Jump Shifts After 1-Level Openings - Weak and Invitational", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/512" },
+]
+
+["bidding_conventions/soloway"]
+name = "Soloway jump shifts"
+source = "proposed"
+level = 8
+names = ["Soloway", "Soloway jump shifts"]
+summary = """
+Responder's jump shifts are strong and describe the hand by type: a one-
+suiter, a fit for opener, or a balanced hand, as GIB plays them.
+"""
+see = [
+  { title = "Soloway Jump Shift", site = "BBO GIB system notes", url = "https://www.bridgebase.com/doc/gib_system_notes.php#Soloway_Jump_Shift" },
+]
+
+["bidding_conventions/two_way_game_tries"]
+name = "Two-way game tries"
+source = "proposed"
+level = 8
+names = ["Two-way game tries", "Two-way game try"]
+summary = """
+After a major raise, opener's 2NT (or the next step) is a relay for one kind
+of game try and new suits are another, so opener can make short-suit and
+long-suit tries.
+"""
+see = [
+  { title = "Two-way Game Try", site = "BBO GIB system notes", url = "https://www.bridgebase.com/doc/gib_system_notes.php#Two-way_Game_Try" },
+]
+
+["bidding_conventions/two_way_nmf"]
+name = "Two-way new minor forcing"
+source = "proposed"
+level = 8
+names = ["Two-way NMF", "Two-way new minor forcing", "xyNT"]
+summary = """
+Played instead of NMF: after opener's 1NT rebid, responder's 2♣ relays to 2♦
+(to sign off or invite) and 2♦ is game forcing.
+"""
+see = [
+  { title = "Two-Way New Minor Forcing aka xyNT", site = "Bridge Winners", url = "https://bridgewinners.com/article/view/two-way-new-minor-forcing-aka-xynt" },
+  { title = "2-Way New Minor Forcing and Wolff Signoff", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/586" },
+]
+
+["bidding_conventions/checkback"]
+name = "Checkback"
+source = "proposed"
+level = 6
+names = ["Checkback", "Checkback Stayman"]
+summary = """
+Played instead of NMF: after opener's notrump rebid, a fixed suit (usually
+2♣) asks about support and majors, whichever minor was bid.
+"""
+
+["bidding_conventions/roudi"]
+name = "Roudi"
+source = "proposed"
+level = 8
+names = ["Roudi"]
+summary = """
+A checkback used in Acol and similar systems after opener's 1NT rebid, with
+2♣ asking about support and strength.
+"""
+
+["bidding_conventions/xyz"]
+name = "XYZ"
+source = "proposed"
+level = 9
+names = ["XYZ", "xyz"]
+summary = """
+After any three one-level bids, responder's 2♣ relays to 2♦ and 2♦ is game
+forcing, extending two-way checkback to every such auction.
+"""
+see = [
+  { title = "XYZ", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/587" },
+]
+
+["competitive_bidding/sos_redouble"]
+name = "SOS redouble"
+source = "proposed"
+level = 7
+names = ["SOS redouble", "SOS", "Rescue redouble"]
+summary = """
+When a low-level contract is doubled for penalty, a redouble asks partner to
+choose another suit, rather than showing strength.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 22 },
+]
+
+["bidding_conventions/ingberman"]
+name = "Ingberman 2NT"
+source = "proposed"
+level = 7
+names = ["Ingberman", "Ingberman 2NT", "Lebensohl after a reverse"]
+summary = """
+After opener reverses, responder's 2NT relays to 3♣ to show a weak hand, so
+other bids by responder show values.
+"""
+see = [
+  { title = "25 More Bridge Conventions You Should Know", kind = "book", chapter = 11 },
+  { title = "Lebensohl over Reverses", by = "Robert S. Todd", site = "Advancing in Bridge", url = "https://www.advinbridge.com/this-week-in-bridge/417" },
 ]
