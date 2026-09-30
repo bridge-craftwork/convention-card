@@ -104,6 +104,11 @@ loads through the crate without error.
 - Move the converters, the PDF code and their tests here with history.
 - The library reads its field list from `spec/`.
 - Bridge Classroom depends on the tag and deletes its copies.
+- Once moved, fix the bridgeodex importer's Puppet Stayman path (found
+  2026-09-30, PR #5). It writes bridgeodex's **1NT** Puppet box (`2c_puppet`)
+  to `notrump.stayman.puppet`, which the spec aliases to **2NT** Puppet
+  (`notrump.two_nt.puppet`). Write `notrump.stayman.puppet_1nt` instead, and
+  decide how to read cards already saved with the old path.
 
 **Done when:** Bridge Classroom's Convention Card tab behaves exactly as before
 (import each format, export each PDF, re-import a PDF), and its test suite
