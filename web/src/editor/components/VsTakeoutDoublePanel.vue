@@ -142,7 +142,7 @@
 
 <script setup>
 import RichSuitField from './RichSuitField.vue'
-import { colorizeSuits } from '../../utils/cardFormatting.js'
+import { colorizeSuits } from '../suits.js'
 
 const JUMP_SHIFT_OPTIONS = [
   { value: 'weak',    label: 'Weak' },

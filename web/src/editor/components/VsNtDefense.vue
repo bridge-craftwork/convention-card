@@ -68,8 +68,8 @@ import {
   KNOWN_NT_DEFENSES,
   NT_DEFENSE_BIDS,
   findKnownDefense
-} from '@bridge-craftwork/convention-card/js/ntDefenses.js'
-import { colorizeSuits } from '../../utils/cardFormatting.js'
+} from '../../../../js/ntDefenses.js'
+import { colorizeSuits } from '../suits.js'
 import RichSuitField from './RichSuitField.vue'
 
 const openMenu = ref(null)

@@ -4,6 +4,15 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-10-01: handing a card to Bridge Classroom** (Rick Wilson; open question 4)
+
+20. **The card travels in the URL's fragment.** The standalone editor opens
+    `bridge-classroom.com/#/convention-card?import=v1.<data>`: the card record,
+    deflated and base64url-encoded (`js/handoff.js`). Bridge Classroom asks the
+    user to sign in if need be and saves it under its own session. A fragment
+    never reaches a server, and a dense real card is about 5,000 characters,
+    well within what browsers accept.
+
 **2026-09-30: `.bbsa` in the JS library** (Rick Wilson)
 
 19. **A plain-JavaScript `.bbsa` converter, in parallel with the Rust crate's,**
@@ -123,11 +132,7 @@ lesson-studio: Contract 4's path pattern requires a name to start with a letter,
 which the lesson tags `precision/1c_opener`, `1c_responder` and `1c_mixed` do
 not; the pattern should allow a leading digit.
 
-**4. How "Save to Bridge Classroom" hands the card over.** The standalone editor
-can't call Bridge Classroom's API with the user's session (third-party cookie;
-see DESIGN.md). Options: open Bridge Classroom with the card in the URL fragment
-(simple, but there's a size limit), or open it and pass the card with
-`postMessage`.
+**4. ~~How "Save to Bridge Classroom" hands the card over~~** Decided 2026-10-01 (20).
 
 **5. ~~Can the ACBL PDF templates be redistributed?~~** Decided for now: host them ourselves (decision 10).
 

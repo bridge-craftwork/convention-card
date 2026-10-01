@@ -208,8 +208,8 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { SECTION_META, STRUCTURED_FIELDS, getCatalogEntries } from '../../utils/conventionCatalog.js'
-import { colorizeSuits } from '../../utils/cardFormatting.js'
+import { SECTION_META, STRUCTURED_FIELDS, getCatalogEntries } from '../conventionCatalog.js'
+import { colorizeSuits } from '../suits.js'
 import ConventionRow from './ConventionRow.vue'
 import VsNtDefense from './VsNtDefense.vue'
 import DirectCuebidsMatrix from './DirectCuebidsMatrix.vue'

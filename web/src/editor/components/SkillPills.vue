@@ -17,7 +17,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { SKILL_LEVELS } from '../../utils/bakerBridgeTaxonomy.js'
+import { SKILL_LEVELS } from '../levels.js'
 
 const props = defineProps({
   // Set of all levels at-or-below the threshold (kept as a Set so

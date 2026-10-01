@@ -37,7 +37,7 @@
 
 <script setup>
 import { ref, nextTick } from 'vue'
-import { colorizeSuits, normalizeSuitShorthand } from '../../utils/cardFormatting.js'
+import { colorizeSuits, normalizeSuitShorthand } from '../suits.js'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },

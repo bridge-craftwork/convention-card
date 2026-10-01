@@ -26,7 +26,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { colorizeSuits } from '../../utils/cardFormatting.js'
+import { colorizeSuits } from '../suits.js'
 
 const props = defineProps({
   entry: { type: Object, required: true },

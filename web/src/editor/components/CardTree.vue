@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { SECTION_META, ICON_SVG } from '../../utils/conventionCatalog.js'
+import { SECTION_META, ICON_SVG } from '../conventionCatalog.js'
 
 const props = defineProps({
   activeSection: { type: String, required: true },

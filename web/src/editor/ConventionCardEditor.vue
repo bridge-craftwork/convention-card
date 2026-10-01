@@ -73,7 +73,7 @@
         <input
           ref="importInput"
           type="file"
-          accept="application/json,.json,application/pdf,.pdf"
+          accept="application/json,.json,application/pdf,.pdf,.bbsa"
           style="display:none"
           @change="onImportFile"
         />
@@ -166,8 +166,8 @@
         <span class="control-label">SHOW</span>
         <SkillPills v-model="visibleLevelsLocal" />
       </div>
-      <div class="control-divider"></div>
-      <div class="control-group">
+      <div v-if="overlays" class="control-divider"></div>
+      <div v-if="overlays" class="control-group">
         <span class="control-label">OVERLAYS</span>
         <label class="overlay-toggle">
           <input type="checkbox" v-model="showCoverage" />
@@ -181,7 +181,7 @@
       </div>
     </div>
 
-    <OverlayLegend :show-coverage="showCoverage" :show-prof="showProf" />
+    <OverlayLegend v-if="overlays" :show-coverage="showCoverage" :show-prof="showProf" />
 
     <!-- Main grid -->
     <div class="main-grid">
@@ -216,22 +216,30 @@
 
 <script setup>
 import { computed, onMounted, watch, ref } from 'vue'
-import { useUserStore } from '../composables/useUserStore.js'
-import { useConventionCard } from '../composables/useConventionCard.js'
-import { importBridgeodexJson } from '@bridge-craftwork/convention-card/js/bridgeodexImport.js'
-import { importBboJson, isBboCard } from '@bridge-craftwork/convention-card/js/bboImport.js'
-import { loadAcblPdf } from '../utils/conventionCardLibrary.js'
-import SkillPills from '../components/conventionCard/SkillPills.vue'
-import OverlayLegend from '../components/conventionCard/OverlayLegend.vue'
-import CardTree from '../components/conventionCard/CardTree.vue'
-import CardDetail from '../components/conventionCard/CardDetail.vue'
+import { useCardEditor } from './useCardEditor.js'
+import { importBridgeodexJson } from '../../../js/bridgeodexImport.js'
+import { importBboJson, isBboCard } from '../../../js/bboImport.js'
+import { importBbsa, exportBbsa } from '../../../js/bbsa.js'
+import SkillPills from './components/SkillPills.vue'
+import OverlayLegend from './components/OverlayLegend.vue'
+import CardTree from './components/CardTree.vue'
+import CardDetail from './components/CardDetail.vue'
 
-defineProps({
-  embedded: { type: Boolean, default: false }
+// The convention card editor. Where cards live, and who may edit them, is
+// the host's: `storage` and `overlays` are the adapters useCardEditor.js
+// describes. The PDF export needs its template and font: the host tells the
+// library where they are (setAssetLoader) before the user exports.
+const props = defineProps({
+  embedded: { type: Boolean, default: false },
+  storage: { type: Object, required: true },
+  overlays: { type: Object, default: null }
 })
 
-const userStore = useUserStore()
-const cc = useConventionCard()
+const cc = useCardEditor(props.storage, props.overlays || undefined)
+const currentUser = computed(() => props.storage.user?.value || null)
+
+/** The PDF module, loaded only when it is needed (it brings pdf-lib). */
+const loadAcblPdf = () => import('../../../js/acblClassicFillPdf.js')
 
 const currentCard = cc.currentCard
 const editedCardData = cc.editedCardData
@@ -326,6 +334,14 @@ const CONTENT_FORMATS = [
     mime: 'application/json'
   },
   {
+    id: 'bbsa',
+    name: 'BBA (.bbsa)',
+    desc: 'Bridge Bidding Analyser’s convention file. Settings the card has no field for are kept from an imported .bbsa.',
+    ready: true,
+    ext: 'bbsa',
+    mime: 'text/plain'
+  },
+  {
     id: 'bridgeodex',
     name: 'Bridgeodex JSON',
     desc: 'Compatible with bridgeodex.com. Useful for sharing with partners who use that site.',
@@ -390,6 +406,8 @@ function doContentExport(formatId) {
         exportedAt: new Date().toISOString(),
         card_data: card.card_data || {}
       }, null, 2)
+    } else if (formatId === 'bbsa') {
+      payload = exportBbsa(card.card_data || {}).text
     } else {
       throw new Error(`No exporter wired up for "${fmt.name}" yet`)
     }
@@ -424,7 +442,12 @@ async function onImportFile(event) {
   const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
   try {
     let name, description, card_data
-    if (isPdf) {
+    const isBbsa = /\.bbsa$/i.test(file.name)
+    if (isBbsa) {
+      name = file.name.replace(/\.bbsa$/i, '')
+      description = 'Imported from BBA (.bbsa)'
+      ;({ card_data } = importBbsa(await file.text(), name))
+    } else if (isPdf) {
       const mod = await loadAcblPdf()
       const bytes = await file.arrayBuffer()
       const extracted = await mod.extractCardDataFromPdf(bytes)
@@ -493,12 +516,12 @@ async function onDelete() {
 const visibleLevelsLocal = ref(visibleLevels.value)
 watch(visibleLevelsLocal, (next) => { visibleLevels.value = next })
 
-const isAuthed = computed(() => !!userStore.currentUser.value?.id)
+const isAuthed = computed(() => !!currentUser.value?.id)
 
 const subtitle = computed(() => {
   const card = currentCard.value
   if (!card) return ''
-  const user = userStore.currentUser.value
+  const user = currentUser.value
   if (user?.firstName) {
     return `${user.firstName} · ${card.name}`
   }
@@ -520,10 +543,6 @@ function relativeTime(iso) {
 }
 
 onMounted(async () => {
-  // The standalone /convention-card route doesn't go through
-  // MainLayout, so the user store may not have been hydrated yet.
-  // initialize() is idempotent.
-  userStore.initialize()
   if (!currentCard.value) {
     await cc.loadCardForCurrentUser()
   }
@@ -533,7 +552,7 @@ onMounted(async () => {
 })
 
 // When the user signs in mid-session, refresh
-watch(() => userStore.currentUser.value?.id, async (uid) => {
+watch(() => currentUser.value?.id, async (uid) => {
   await cc.loadCardForCurrentUser()
   if (uid) await cc.loadMasteryForCurrentUser()
 })

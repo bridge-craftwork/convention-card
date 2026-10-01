@@ -30,12 +30,12 @@ GitHub, pinned to a tag:
 
 ```toml
 # Cargo.toml
-bridge-card = { git = "https://github.com/bridge-craftwork/convention-card", tag = "v0.2.1" }
+bridge-card = { git = "https://github.com/bridge-craftwork/convention-card", tag = "v0.3.0" }
 ```
 
 ```jsonc
 // package.json (the JavaScript library: ES modules, Node 22 or later, or a bundler)
-"@bridge-craftwork/convention-card": "github:bridge-craftwork/convention-card#v0.2.1"
+"@bridge-craftwork/convention-card": "github:bridge-craftwork/convention-card#v0.3.0"
 ```
 
 ```js
@@ -51,6 +51,11 @@ setAssetLoader({
 
 The template PDFs and the font are in `assets/` (the font under the SIL OFL,
 `assets/fonts/OFL.txt`).
+
+The editor is a Vue 3 component (`web/src/editor/ConventionCardEditor.vue`)
+that takes a `storage` adapter and, optionally, an `overlays` adapter
+(described in `web/src/editor/useCardEditor.js`). To run the standalone
+editor locally: `npm install`, then `npm run dev`.
 
 The spec files in `spec/` are plain TOML/JSON, so a program in any language can
 read them without either library.

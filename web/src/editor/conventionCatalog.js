@@ -17,7 +17,7 @@
  * Puppet Stayman).
  */
 
-import { getLevelForSkill } from './bakerBridgeTaxonomy.js'
+import { getLevelForSkill } from './levels.js'
 
 /**
  * Top-level sections in display order. `icon` is a key into ICON_SVG

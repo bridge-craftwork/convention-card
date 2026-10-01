@@ -36,7 +36,7 @@
 
 <script setup>
 import RichSuitField from './RichSuitField.vue'
-import { colorizeSuits } from '../../utils/cardFormatting.js'
+import { colorizeSuits } from '../suits.js'
 
 // Each column corresponds to a category of opponent opening + a
 // suit pair, matching the ACBL card layout.
