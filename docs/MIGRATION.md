@@ -157,6 +157,12 @@ actually exercised, not just loaded.
 **Done when:** no repo keeps its own copy of the field list or the skill
 vocabulary.
 
+### Later: a card wizard for newer players
+
+A short question list (`spec/wizard.toml`) and a wizard in the editor that
+writes a card to finish in the regular editor. Not started until the migration
+is done. See DESIGN.md, "A card wizard for newer players".
+
 ### Later: "practice our card" *(a Bridge Classroom feature)*
 
 card → its fields → their skills → collection manifests → a practice set. See
