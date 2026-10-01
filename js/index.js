@@ -8,6 +8,8 @@ export { readPath, writePath } from './paths.js'
 export { normalizeSuitShorthand } from './suits.js'
 export { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from './assets.js'
 export { encodeCardForUrl, decodeCardFromUrl } from './handoff.js'
+export { checkCard, checkValue, EXPORT_SCHEMA } from './checkCard.js'
+export { importCard, detectFormat, IMPORT_FORMATS } from './importCard.js'
 
 export { isBboCard, importBboJson } from './bboImport.js'
 export { importBridgeodexJson } from './bridgeodexImport.js'
