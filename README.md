@@ -30,13 +30,27 @@ GitHub, pinned to a tag:
 
 ```toml
 # Cargo.toml
-bridge-card = { git = "https://github.com/bridge-craftwork/convention-card", tag = "v0.1.0" }
+bridge-card = { git = "https://github.com/bridge-craftwork/convention-card", tag = "v0.2.0" }
 ```
 
 ```jsonc
-// package.json
-"@bridge-craftwork/convention-card": "github:bridge-craftwork/convention-card#v0.1.0"
+// package.json (the JavaScript library: ES modules, Node 22 or later, or a bundler)
+"@bridge-craftwork/convention-card": "github:bridge-craftwork/convention-card#v0.2.0"
 ```
+
+```js
+import { importBbsa, exportBbsa, importBboJson, renderAcblPdfBytes, setAssetLoader }
+  from '@bridge-craftwork/convention-card'
+
+// The PDF export's template and font: the library never fetches them itself.
+setAssetLoader({
+  template: name => fetch(`/templates/${name === 'new' ? 'acbl-new.pdf' : 'acbl-classic-2023.pdf'}`).then(r => r.arrayBuffer()),
+  font: () => fetch('/fonts/BarlowCondensed-Regular.ttf').then(r => r.arrayBuffer()),
+})
+```
+
+The template PDFs and the font are in `assets/` (the font under the SIL OFL,
+`assets/fonts/OFL.txt`).
 
 The spec files in `spec/` are plain TOML/JSON, so a program in any language can
 read them without either library.

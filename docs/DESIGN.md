@@ -154,10 +154,19 @@ ID to pick up the shared summary and links.
 ### 2. The JavaScript library (repo root + `js/`)
 
 Reads and writes cards against the spec, and holds the converters: BBO,
-bridgeodex, `.bbsa` (later), the ACBL fillable-PDF export
-(`acblClassicFillPdf.js`), the drawn PDF (`acblCardPdf.js`), and PDF re-import
-(the source card is embedded in the PDF's Info dictionary). No framework and no
-network: it runs in a page, a browser extension or Node.
+bridgeodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
+the drawn PDF (`acblCardPdf.js`), and PDF re-import (the source card is
+embedded in the PDF's Info dictionary). No framework and no network: it runs
+in a page, a browser extension or Node.
+
+- **The spec, as generated JSON** (`js/spec.js`): `FIELDS`, `field(path)`
+  (aliases resolved), `BBSA_MAP`, `BBSA_LAYOUT`, `CONVENTIONS`. A test checks
+  every card path the converters and the PDF maps name against it.
+- **Assets from the caller.** The PDF export needs the ACBL template PDFs and
+  the Barlow Condensed font (`assets/`). The library never fetches them: the
+  caller says how to get them, once, with `setAssetLoader({ template, font })`
+  (a page fetches them from wherever it serves them; Node reads them from
+  disk).
 
 **`.bbsa` in JavaScript, in parallel with the Rust crate.** The crate already
 reads and writes BBA's `.bbsa` files; the library gets its own converter,

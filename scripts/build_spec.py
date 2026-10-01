@@ -7,6 +7,8 @@
   vocabulary with a four-band level.
 - spec/fields.json and spec/formats/bbsa-map.json: fields.toml and
   bbsa-map.toml as JSON, for readers with no TOML parser (the JS library).
+  bbsa-map.json also carries BBA's file layout (bbsa-layout.txt) as
+  `layout`, the key order an export writes.
 
 One file per convention is the source (spec/conventions/README.md); readers
 that cannot list a directory (the JS library in a browser, lesson-studio) read
@@ -33,6 +35,7 @@ FIELDS_TOML = ROOT / "spec" / "fields.toml"
 FIELDS_JSON = ROOT / "spec" / "fields.json"
 BBSA_TOML = ROOT / "spec" / "formats" / "bbsa-map.toml"
 BBSA_JSON = ROOT / "spec" / "formats" / "bbsa-map.json"
+BBSA_LAYOUT = ROOT / "spec" / "formats" / "bbsa-layout.txt"
 CATEGORIES = SOURCE / "categories.toml"
 
 # DECISIONS.md, 12: the named bands are ranges of the 1-10 level.
@@ -97,10 +100,10 @@ def build_taxonomy(conventions: dict) -> str:
     return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
 
 
-def as_json(source: pathlib.Path, schema: str) -> str:
+def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str:
     """A TOML file as JSON, with its tables and keys in the file's order."""
     data = tomllib.loads(source.read_text(encoding="utf-8"))
-    doc = {"schema": schema, "generated_from": f"{source.relative_to(ROOT)} (do not edit)", **data}
+    doc = {"schema": schema, "generated_from": f"{source.relative_to(ROOT)} (do not edit)", **(extra or {}), **data}
     return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
 
 
@@ -110,7 +113,8 @@ def main() -> None:
         OUT: build(conventions),
         TAXONOMY: build_taxonomy(conventions),
         FIELDS_JSON: as_json(FIELDS_TOML, "fields/v1"),
-        BBSA_JSON: as_json(BBSA_TOML, "bbsa-map/v1"),
+        BBSA_JSON: as_json(BBSA_TOML, "bbsa-map/v1",
+                           {"layout": BBSA_LAYOUT.read_text(encoding="utf-8").splitlines()}),
     }
     if "--check" in sys.argv[1:]:
         stale = [p.name for p, text in outputs.items()

@@ -6,15 +6,15 @@
 //! rules directory), with the `[[derived]]` rules that expand a card's
 //! system into the structural fields it implies; keys it does not cover are
 //! kept on the card in [`Card::bba_passthrough`] so that export reproduces
-//! them. BBA's file layout (`data/bbsa-layout.txt`) is the file format's,
-//! not the vocabulary's, so it stays here.
+//! them. BBA's file layout (`spec/formats/bbsa-layout.txt`) is the file
+//! format's, not the vocabulary's: it is built in, beside the map it orders.
 
 use std::collections::HashMap;
 
 use crate::registry::{Registry, Value};
 use crate::{Card, Error, Vocabulary};
 
-const LAYOUT: &str = include_str!("../data/bbsa-layout.txt");
+const LAYOUT: &str = include_str!("../../../spec/formats/bbsa-layout.txt");
 const PADDING: &str = "Not defined";
 
 /// How one `.bbsa` key maps onto the card.

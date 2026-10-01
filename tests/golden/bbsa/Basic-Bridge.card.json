@@ -1,0 +1,332 @@
+{
+  "schema_version": "1.0",
+  "format": "bridge_classroom",
+  "metadata": {
+    "name": "Basic-Bridge"
+  },
+  "carding": {
+    "inverted_count": false,
+    "lavinthal": {
+      "from_void": false,
+      "on_ace": false,
+      "on_trump": false,
+      "to_void": false
+    },
+    "smith_echo": false
+  },
+  "competitive": {
+    "bromad": {
+      "play": false
+    },
+    "fit_showing_jumps": {
+      "play": false
+    },
+    "ghestem": {
+      "play": false
+    },
+    "jordan_2nt": {
+      "play": false
+    },
+    "jump_shift_after_overcall": "strong",
+    "leaping_michaels": {
+      "play": false
+    },
+    "lebensohl_weak_twos": {
+      "play": false
+    },
+    "new_suit_after_overcall_forcing": false,
+    "non_leaping_michaels": {
+      "play": false
+    },
+    "raptor_1nt": {
+      "play": false
+    },
+    "rubensohl_after_double": {
+      "play": false
+    },
+    "scrambling_2nt": {
+      "play": false
+    },
+    "snapdragon": {
+      "play": false
+    },
+    "unusual_1nt": {
+      "play": false
+    },
+    "unusual_2nt": {
+      "play": false
+    },
+    "unusual_3nt": {
+      "play": false
+    },
+    "unusual_4nt": {
+      "play": false
+    },
+    "unusual_vs_unusual": {
+      "play": false
+    }
+  },
+  "doubles": {
+    "maximal": false,
+    "responsive": {
+      "play": false
+    }
+  },
+  "general": {
+    "forcing_opening_1c": false,
+    "forcing_opening_2c": true,
+    "jump_shifts": {
+      "invitational": true,
+      "soloway": false,
+      "soloway_extended": false,
+      "strong_2": true,
+      "strong_3": false,
+      "weak_2": false,
+      "weak_3": false
+    },
+    "system_category": "sayc"
+  },
+  "major_openings": {
+    "bergen_raises": {
+      "play": false,
+      "reverse": false
+    },
+    "drury": {
+      "play": false,
+      "reverse": false
+    },
+    "five_card_majors": true,
+    "gazzilli": {
+      "play": false
+    },
+    "impossible_2s": {
+      "play": false
+    },
+    "jacoby_2nt": {
+      "play": false
+    },
+    "jump_raise": {
+      "inv": true,
+      "mixed": false,
+      "weak": false
+    },
+    "min_length_1st_2nd": "5",
+    "mini_splinters": {
+      "play": false
+    },
+    "one_nt_response": {
+      "forcing": false,
+      "semi_forcing": false
+    },
+    "splinters": {
+      "play": false
+    },
+    "two_over_one": {
+      "game_force": false
+    }
+  },
+  "minor_openings": {
+    "inverted_minors": {
+      "play": false
+    },
+    "may_hold_5_card_major": true,
+    "one_club": {
+      "art_forcing": false
+    },
+    "walsh": {
+      "play": true
+    }
+  },
+  "notrump": {
+    "lebensohl": {
+      "over_interference": false
+    },
+    "minor_suit_stayman": {
+      "play": false
+    },
+    "minor_transfers": "none",
+    "one_nt": {
+      "allow_4441": false,
+      "allow_5422": false,
+      "allow_6_minor": false,
+      "allow_one_less": false,
+      "five_card_major": "sometimes",
+      "range_max": 17,
+      "range_min": 15
+    },
+    "rubensohl": {
+      "over_interference": false
+    },
+    "smolen": {
+      "play": false
+    },
+    "stayman": {
+      "garbage": false,
+      "play": true,
+      "puppet_1nt": false
+    },
+    "three_d_response": "natural",
+    "three_major_splinter": false,
+    "three_nt": {
+      "one_suit": false
+    },
+    "transfers": {
+      "jacoby": true,
+      "super_accept": false,
+      "super_accept_doubleton": false,
+      "texas": false,
+      "three_c_diamonds": false,
+      "two_nt_clubs": false,
+      "two_nt_diamonds": false,
+      "two_s_clubs": false,
+      "vs_2c": true,
+      "vs_double": true
+    },
+    "two_nt": {
+      "minor_slam_try": false,
+      "minor_stayman": false,
+      "minor_transfers": false,
+      "puppet": false,
+      "three_c_3nt_both_majors": false,
+      "transfer_3s_clubs": false,
+      "transfer_4c_diamonds": false
+    }
+  },
+  "other_conventions": {
+    "checkback": {
+      "play": false
+    },
+    "fourth_suit_forcing": {
+      "game_force": false,
+      "one_round": false
+    },
+    "new_minor_forcing": {
+      "after_2nt_rebid": false,
+      "by_passed_hand": false,
+      "play": false
+    },
+    "roudi": {
+      "play": false
+    },
+    "two_way_game_tries": {
+      "play": false
+    },
+    "two_way_nmf": false,
+    "two_way_nmf_by_passed_hand": false
+  },
+  "overcalls": {
+    "responses": {
+      "natural_in_responders_suit": false
+    }
+  },
+  "preempts": {
+    "namyats": {
+      "play": false
+    }
+  },
+  "slam": {
+    "blackwood": {
+      "rkcb_0314": false,
+      "rkcb_1430": false,
+      "standard": true
+    },
+    "cue_bids": {
+      "play": false
+    },
+    "depo": false,
+    "dopi": false,
+    "exclusion_blackwood": {
+      "play": false
+    },
+    "four_nt_opening": {
+      "play": false
+    },
+    "gerber": {
+      "only_over_nt_openings": false,
+      "play": false
+    },
+    "kickback": {
+      "rkcb_0314": false,
+      "rkcb_1430": false
+    },
+    "king_ask": {
+      "five_nt": true,
+      "next_step": false
+    },
+    "pick_a_slam_5nt": {
+      "play": false
+    },
+    "quantitative_4nt": {
+      "play": true
+    },
+    "ropi": true
+  },
+  "two_level": {
+    "benjamin": {
+      "play": false
+    },
+    "flannery": {
+      "play": false
+    },
+    "french_2d": {
+      "play": false
+    },
+    "ogust": {
+      "play": false
+    },
+    "polish_two_suiters": {
+      "play": false
+    },
+    "precision_2d": {
+      "play": false
+    },
+    "reverse_flannery": {
+      "two_h": false,
+      "two_s": false
+    },
+    "two_clubs": {
+      "kokish": false
+    },
+    "two_diamonds": {
+      "meaning": "weak",
+      "multi": false
+    },
+    "two_hearts": {
+      "meaning": "weak"
+    },
+    "two_spades": {
+      "meaning": "weak"
+    },
+    "wilkosz": {
+      "play": false
+    }
+  },
+  "bba_passthrough": {
+    "1NT opening NT style": 1,
+    "1NT opening natural": 0,
+    "5431 after 1NT": 0,
+    "Blackwood without K and Q": 0,
+    "Collante": 0,
+    "Crosswood 0123": 0,
+    "Crosswood 0314": 0,
+    "Crosswood 1430": 0,
+    "Extended Stayman": 0,
+    "Fitted 2NT": 0,
+    "Jordan Truscott 2NT defence": 0,
+    "Kickback 0123": 0,
+    "King ask by 5NT inviting": 0,
+    "Lebensohl after 1m": 0,
+    "Mark on king": 0,
+    "Mark on queen": 0,
+    "Natural 3N entering style": 0,
+    "Niemeijer": 0,
+    "Opponent type": 0,
+    "Rodrigue": 0,
+    "Rubensohl after 1m": 0,
+    "Shape Bergen structure": 1,
+    "Strength Lawrence structure": 0,
+    "Support 1NT": 0,
+    "Surplus pass": 0,
+    "Two suit takeout double": 0
+  }
+}

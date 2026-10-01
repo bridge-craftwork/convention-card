@@ -110,6 +110,14 @@ loads through the crate without error.
 
 ### Phase 2: the JavaScript library
 
+**Under way.** Done in this repo: the converters, the PDF code, their tests,
+the template PDFs and the font moved here with history (`js/`, `assets/`);
+the library reads the spec as generated JSON and takes its assets from the
+caller; a test checks every card path the converters name against the spec
+(it found 52 Classic-PDF boxes the spec lacked, now fields); the JS `.bbsa`
+converter matches the crate's golden files; the Puppet path is fixed in the
+spec (below). Still to do: tag `v0.2.0`, and switch Bridge Classroom to it.
+
 - Move the converters, the PDF code and their tests here with history.
 - The library reads its field list from `spec/`.
 - Bridge Classroom depends on the tag and deletes its copies.
@@ -119,11 +127,11 @@ loads through the crate without error.
   golden files the crate writes (card JSON and `.bbsa` for each test card)
   that the JS tests must match; "Import .bbsa" and "Export .bbsa" in the
   editor in Phase 3.
-- Once moved, fix the bridgeodex importer's Puppet Stayman path (found
-  2026-09-30, PR #5). It writes bridgeodex's **1NT** Puppet box (`2c_puppet`)
-  to `notrump.stayman.puppet`, which the spec aliases to **2NT** Puppet
-  (`notrump.two_nt.puppet`). Write `notrump.stayman.puppet_1nt` instead, and
-  decide how to read cards already saved with the old path.
+- ~~Fix the bridgeodex importer's Puppet Stayman path.~~ Done, in the spec
+  rather than the importer: the editor, both PDFs and the BBO and bridgeodex
+  importers all mean **1NT** Puppet by `notrump.stayman.puppet`, so that path
+  is now an alias of `notrump.stayman.puppet_1nt`, not of 2NT Puppet. No saved
+  card used it.
 
 **Done when:** Bridge Classroom's Convention Card tab behaves exactly as before
 (import each format, export each PDF, re-import a PDF), its test suite

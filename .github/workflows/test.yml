@@ -1,7 +1,8 @@
 name: Test
 
-# The spec and the Rust crate: the crate's tests load and check every spec
-# file (fields, the .bbsa map, one file per convention). On pull requests the
+# The spec, the Rust crate and the JS library: the crate's tests load and
+# check every spec file (fields, the .bbsa map, one file per convention); the
+# JS tests check the converters against the spec and the crate's golden files. On pull requests the
 # generator also runs, to catch a convention file that does not parse or whose
 # id does not match its path. A PR need not update the generated files:
 # build-spec.yml regenerates them after the merge.
@@ -23,6 +24,17 @@ jobs:
       - run: cargo fmt --check
       - run: cargo clippy --all-targets -- -D warnings
       - run: cargo test
+
+  js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
 
   conventions-json:
     if: github.event_name == 'pull_request'
