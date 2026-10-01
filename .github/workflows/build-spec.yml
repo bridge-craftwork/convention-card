@@ -1,0 +1,55 @@
+name: Build the spec's generated JSON
+
+# The spec's TOML is the source. scripts/build_spec.py writes its JSON:
+# conventions.json (every spec/conventions/ file in one), taxonomy.json
+# (lesson-studio's Contract 4), and fields.json and formats/bbsa-map.json, for
+# readers with no TOML parser (the JS library). Regenerates whenever a source
+# changes, as Practice-Bidding-Scenarios does for its manifest.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'spec/conventions/**'
+      - 'spec/fields.toml'
+      - 'spec/formats/bbsa-map.toml'
+      - 'spec/formats/bbsa-layout.txt'
+      - 'scripts/build_spec.py'
+      - 'Cargo.toml'
+      - '.github/workflows/build-spec.yml'
+  workflow_dispatch:
+
+# GITHUB_TOKEN pushes do not re-trigger workflows, and the generated files are
+# outside the push paths above, so the commit-back below cannot cause a loop.
+permissions:
+  contents: write
+
+concurrency:
+  group: build-spec
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate the JSON
+        run: python3 scripts/build_spec.py
+
+      - name: Commit the generated files if changed
+        run: |
+          GENERATED="spec/conventions.json spec/taxonomy.json spec/fields.json spec/formats/bbsa-map.json"
+          if [ -z "$(git status --porcelain $GENERATED)" ]; then
+            echo "Generated files unchanged — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $GENERATED
+          git commit -m "spec: rebuild the generated JSON (${GITHUB_SHA::7}) [skip ci]"
+          git push

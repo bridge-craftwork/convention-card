@@ -59,6 +59,11 @@
 "jump_shifts.soloway"      = { kind = "bool", label = "Soloway jump shifts", skill = "bidding_conventions/soloway", level = 8 }
 "jump_shifts.soloway_extended" = { kind = "bool", label = "Soloway jump shifts (extended)", skill = "bidding_conventions/soloway", level = 9 }
 "forcing_opening"          = { kind = "text", label = "Forcing opening (as written)", desc = "The card's forcing-opening line as an importer wrote it (\"2C\"); forcing_opening_1c/2c/other are the structured form" }
+"very_light.openings"      = { kind = "bool", label = "Very light: openings" }
+"very_light.third_hand"    = { kind = "bool", label = "Very light: 3rd hand" }
+"very_light.overcalls"     = { kind = "bool", label = "Very light: overcalls" }
+"very_light.preempts"      = { kind = "bool", label = "Very light: preempts" }
+"forcing_opening_natural_2" = { kind = "bool", label = "Natural 2 bids" }
 
 [notrump]
 "one_nt.range_min"         = { kind = "int", label = "1NT range: minimum", min = 8, max = 25, default = 15 }
@@ -81,7 +86,7 @@
 "stayman.play"             = { kind = "bool", label = "Stayman", skill = "bidding_conventions/stayman", level = 3 }
 "stayman.forcing"          = { kind = "bool", label = "Stayman is forcing", skill = "bidding_conventions/stayman", level = 3 }
 "stayman.garbage"          = { kind = "bool", label = "Garbage Stayman", skill = "bidding_conventions/stayman", level = 3 }
-"stayman.puppet_1nt"       = { kind = "bool", label = "Puppet Stayman over 1NT (3♣)", skill = "bidding_conventions/puppet_stayman", level = 7 }
+"stayman.puppet_1nt"       = { kind = "bool", label = "Puppet Stayman over 1NT (3♣)", aliases = ["notrump.stayman.puppet"], desc = "Bridge Classroom's editor, its PDFs and the BBO and bridgeodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)", skill = "bidding_conventions/puppet_stayman", level = 7 }
 "smolen.play"              = { kind = "bool", label = "Smolen", skill = "bidding_conventions/smolen", level = 4 }
 "minor_suit_stayman.play"  = { kind = "bool", label = "Minor Suit Stayman (1NT–2♠)", level = 6, skill = "bidding_conventions/minor_suit_stayman" }
 "transfers.jacoby"         = { kind = "bool", label = "Jacoby transfers", skill = "bidding_conventions/jacoby_transfers", level = 3 }
@@ -109,7 +114,7 @@
 "rubensohl.over_interference" = { kind = "bool", label = "Rubensohl over interference to 1NT", level = 9, skill = "competitive_bidding/rubensohl" }
 "two_nt.range_min"         = { kind = "int", label = "2NT range: minimum", min = 15, max = 30, default = 20 }
 "two_nt.range_max"         = { kind = "int", label = "2NT range: maximum", min = 15, max = 30, default = 21 }
-"two_nt.puppet"            = { kind = "bool", label = "2NT: Puppet Stayman (3♣)", aliases = ["notrump.stayman.puppet"], desc = "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major", skill = "bidding_conventions/puppet_stayman", level = 7 }
+"two_nt.puppet"            = { kind = "bool", label = "2NT: Puppet Stayman (3♣)", desc = "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major", skill = "bidding_conventions/puppet_stayman", level = 7 }
 "two_nt.three_s"           = { kind = "bool", label = "2NT: 3♠ relay", level = 8 }
 "two_nt.three_s_desc"      = { kind = "text", label = "2NT 3♠ relay notes" }
 "two_nt.transfers_3level"  = { kind = "bool", label = "2NT: transfers at 3-level", level = 4, skill = "bidding_conventions/jacoby_transfers" }
@@ -172,6 +177,12 @@
 "impossible_2s.play"       = { kind = "bool", label = "Impossible 2♠", desc = "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor", skill = "bidding_conventions/impossible_2s", level = 7 }
 "notes"                    = { kind = "text", label = "Major opening notes", note = true }
 "bergen_raises_notes"      = { kind = "text", label = "Bergen raises notes", note = true }
+"two_nt_response_forcing"  = { kind = "bool", label = "1M–2NT forcing" }
+"two_nt_response_inv"      = { kind = "bool", label = "1M–2NT invitational" }
+"two_nt_response_range_min" = { kind = "int", label = "1M–2NT range: minimum", min = 0, max = 30 }
+"two_nt_response_range_max" = { kind = "int", label = "1M–2NT range: maximum", min = 0, max = 30 }
+"drury.fit"                = { kind = "bool", label = "Drury: fit" }
+"two_over_one.game_forcing_except" = { kind = "bool", label = "2/1 game forcing except when suit rebid", skill = "bidding_conventions/two_over_one", level = 5 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "three_nt_raise.range_min" = { kind = "int", label = "3NT artificial raise: minimum", min = 0, max = 25 }
 "three_nt_raise.range_max" = { kind = "int", label = "3NT artificial raise: maximum", min = 0, max = 25 }
@@ -209,6 +220,21 @@
 "one_club_responses"       = { kind = "enum", label = "1♣ responses with diamonds and a major", options = ["up_the_line", "walsh"], default = "up_the_line", desc = "up_the_line: 1♦ with four diamonds and a four-card major (as BBA). walsh: bypass diamonds for the major unless game forcing" }
 "two_nt_response"          = { kind = "enum", label = "1m–2NT response", options = ["invitational", "game_forcing"], default = "invitational", desc = "invitational: 11-12 (as BBA). game_forcing: 13-15, and 1m–3NT 16-17" }
 "notes"                    = { kind = "text", label = "Minor opening notes", note = true }
+"one_diamond.art_forcing"  = { kind = "bool", label = "1♦ artificial forcing" }
+"one_club.single_raise.other" = { kind = "text", label = "1♣ single raise: other" }
+"one_diamond.one_nt_range_min" = { kind = "int", label = "1♦–1NT range: minimum", min = 0, max = 30 }
+"one_diamond.one_nt_range_max" = { kind = "int", label = "1♦–1NT range: maximum", min = 0, max = 30 }
+"one_diamond.two_nt_range_min" = { kind = "int", label = "1♦–2NT range: minimum", min = 0, max = 30 }
+"one_diamond.two_nt_range_max" = { kind = "int", label = "1♦–2NT range: maximum", min = 0, max = 30 }
+"one_diamond.single_raise.nf" = { kind = "bool", label = "1♦ single raise: non-forcing", level = 2 }
+"one_diamond.single_raise.inv" = { kind = "bool", label = "1♦ single raise: invitational+", skill = "bidding_conventions/inverted_minors", level = 5 }
+"one_diamond.single_raise.gf" = { kind = "bool", label = "1♦ single raise: game forcing", skill = "bidding_conventions/inverted_minors", level = 5 }
+"one_diamond.jump_raise.weak" = { kind = "bool", label = "1♦ jump raise: weak", level = 4, choice = "minor_openings.one_diamond.jump_raise" }
+"one_diamond.jump_raise.mixed" = { kind = "bool", label = "1♦ jump raise: mixed", level = 6, choice = "minor_openings.one_diamond.jump_raise" }
+"one_diamond.jump_raise.inv" = { kind = "bool", label = "1♦ jump raise: invitational", level = 3, choice = "minor_openings.one_diamond.jump_raise" }
+"one_diamond.jump_raise_after_overcall.weak" = { kind = "bool", label = "1♦ jump raise after overcall: weak", level = 4, choice = "minor_openings.one_diamond.jump_raise_after_overcall" }
+"one_diamond.jump_raise_after_overcall.mixed" = { kind = "bool", label = "1♦ jump raise after overcall: mixed", level = 6, choice = "minor_openings.one_diamond.jump_raise_after_overcall" }
+"one_diamond.jump_raise_after_overcall.inv" = { kind = "bool", label = "1♦ jump raise after overcall: invitational", level = 4, choice = "minor_openings.one_diamond.jump_raise_after_overcall" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "one_club.three_nt_range_min" = { kind = "int", label = "1♣–3NT range: minimum", min = 0, max = 25 }
 "one_club.three_nt_range_max" = { kind = "int", label = "1♣–3NT range: maximum", min = 0, max = 25 }
@@ -332,6 +358,7 @@
 "responses.cuebids_text"   = { kind = "text", label = "Cuebid response" }
 "responses.support_cuebid" = { kind = "bool", label = "Support cuebid", skill = "competitive_bidding/support_cuebids", level = 4 }
 "responses.natural_in_responders_suit" = { kind = "bool", label = "Advancer's bid of responder's suit is natural", desc = "(1♣) 1♦ (1♥) 2♥ is natural: RHO's 1♥ promises only 4, so advancer shows 5+. 2♣ would be the cue-bid raise", level = 6 }
+"very_light"               = { kind = "bool", label = "Very light overcalls" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "notes"                    = { kind = "text", label = "Overcall notes (card write-in)", note = true }
 # --- end: Bridge-Classroom card fields (bc-export) ---
@@ -345,6 +372,7 @@
 "balance.systems_on"       = { kind = "bool", label = "Balancing 1NT: systems on", level = 4 }
 "jump_2nt_lowest_unbid"    = { kind = "bool", label = "Jump 2NT = two lowest unbid", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "conv_text"                = { kind = "text", label = "Other treatments" }
+"jump_2nt_minors"          = { kind = "bool", label = "Jump 2NT: minors" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "direct.conv_text"         = { kind = "text", label = "Direct 1NT: conventional" }
 "balance.conv_text"        = { kind = "text", label = "Balancing 1NT: conventional" }
@@ -361,6 +389,10 @@
 "support.through"          = { kind = "text", label = "Support doubles through", desc = "The highest call by RHO over which the double still shows three-card support, as a bid (2♥, 2S). Unset: two of responder's major" }
 "support.rdbl"             = { kind = "bool", label = "Support redouble", skill = "competitive_bidding/support_doubles", level = 5 }
 "maximal"                  = { kind = "bool", label = "Maximal doubles", skill = "competitive_bidding/maximal_doubles", level = 6 }
+"after_overcall_penalty"   = { kind = "bool", label = "Double after overcall: penalty" }
+"after_overcall_penalty_notes" = { kind = "text", label = "Special doubles", note = true }
+"card_showing"             = { kind = "bool", label = "Card-showing doubles" }
+"min_offshape_to"          = { kind = "bool", label = "Minimum off-shape takeout doubles" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "notes"                    = { kind = "text", label = "Double notes (card write-in)", note = true }
 # --- end: Bridge-Classroom card fields (bc-export) ---
@@ -463,6 +495,13 @@
 "first_discard.notes"      = { kind = "text", label = "First discard: notes", note = true }
 "exceptions"               = { kind = "text", label = "Carding exceptions" }
 "smith_echo_reverse"       = { kind = "bool", label = "Reverse Smith echo", skill = "defense/reverse_smith_echo", level = 8 }
+"exceptions_present"       = { kind = "bool", label = "Carding exceptions" }
+"exception_suits"          = { kind = "text", label = "Carding exceptions vs suits" }
+"exception_nt"             = { kind = "text", label = "Carding exceptions vs NT" }
+"upside_down_notes"        = { kind = "text", label = "Upside-down signals notes", note = true }
+"foster_echo_suits"        = { kind = "bool", label = "Foster echo vs suits" }
+"foster_echo_nt"           = { kind = "bool", label = "Foster echo vs NT" }
+"special_carding"          = { kind = "bool", label = "Special carding" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "suits.standard_attitude"  = { kind = "bool", label = "Standard attitude vs suits", skill = "defense/defensive_signals", level = 2, choice = "carding.suits.attitude" }
 "suits.standard_count"     = { kind = "bool", label = "Standard count vs suits", skill = "defense/defensive_signals", level = 3, choice = "carding.suits.count" }
@@ -585,6 +624,19 @@
 "vs_nt.honors.lead_choice_ajtx" = { kind = "int", label = "Lead vs NT from AJTx", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_AJTx"], desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_nt.honors.lead_choice_kt9x" = { kind = "int", label = "Lead vs NT from KT9x", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_KT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_nt.honors.lead_choice_qt9x" = { kind = "int", label = "Lead vs NT from QT9x", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_QT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.length.third_fifth" = { kind = "bool", label = "Length leads vs suits: 3rd/5th", skill = "defense/opening_leads", level = 4 }
+"vs_suits.length.third_low" = { kind = "bool", label = "Length leads vs suits: 3rd from even, low from odd", skill = "defense/opening_leads", level = 4 }
+"vs_suits.length.attitude" = { kind = "bool", label = "Length leads vs suits: attitude", skill = "defense/opening_leads", level = 4 }
+"vs_suits.length.small_from_xx" = { kind = "bool", label = "Leads vs suits: small from xx", skill = "defense/opening_leads", level = 4 }
+"vs_suits.after_first_trick" = { kind = "text", label = "Leads vs suits: after the first trick" }
+"vs_suits.exceptions"      = { kind = "text", label = "Leads vs suits: exceptions" }
+"vs_nt.length.third_fifth" = { kind = "bool", label = "Length leads vs NT: 3rd/5th", skill = "defense/opening_leads", level = 4 }
+"vs_nt.length.third_low"   = { kind = "bool", label = "Length leads vs NT: 3rd from even, low from odd", skill = "defense/opening_leads", level = 4 }
+"vs_nt.length.second_from_4plus" = { kind = "bool", label = "Length leads vs NT: 2nd from 4 small", skill = "defense/opening_leads", level = 4 }
+"vs_nt.length.attitude"    = { kind = "bool", label = "Length leads vs NT: attitude", skill = "defense/opening_leads", level = 4 }
+"vs_nt.length.attitude_text" = { kind = "text", label = "Length leads vs NT: attitude notes" }
+"vs_nt.after_first_trick"  = { kind = "text", label = "Leads vs NT: after the first trick" }
+"vs_nt.exceptions"         = { kind = "text", label = "Leads vs NT: exceptions" }
 
 [notes]
 "general"                  = { kind = "text", label = "General notes" }

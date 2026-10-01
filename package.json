@@ -1,0 +1,34 @@
+{
+  "name": "@bridge-craftwork/convention-card",
+  "version": "0.2.0",
+  "description": "Bridge convention cards: the spec, converters (BBO, bridgeodex, .bbsa) and the ACBL PDFs",
+  "license": "MIT OR Apache-2.0",
+  "repository": "github:bridge-craftwork/convention-card",
+  "type": "module",
+  "main": "./js/index.js",
+  "exports": {
+    ".": "./js/index.js",
+    "./spec/*": "./spec/*",
+    "./assets/*": "./assets/*"
+  },
+  "files": [
+    "js/*.js",
+    "spec/*.json",
+    "spec/formats/*.json",
+    "assets/"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
+    "jspdf": "^4.2.1",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.17"
+  }
+}

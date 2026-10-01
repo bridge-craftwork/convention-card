@@ -1,0 +1,579 @@
+{
+ "name": "Pat Example, Sam Sample",
+ "card_data": {
+  "_bridgeodex_raw": {
+   "1_no_trump": {
+    "2c_stayman": "on",
+    "2d_tfr": "on",
+    "2h_tfr": "on",
+    "2nt_other": "3C superaccept",
+    "2nt_tfr": "on",
+    "2s_other": "Range ask: 2NT rebid shows min, 3!C shows max",
+    "3c": "Puppet, opener shows 5 or responds 3D",
+    "3d": "minors, GF, slam interest",
+    "3h": "splinter, GF, slam interest",
+    "3s": "splinter, GF, slam interest",
+    "5_card_major": "on",
+    "a_range_max": "17 Vul",
+    "a_range_min": "14+",
+    "b_range_max": "14 NV",
+    "b_range_min": "11+",
+    "b_range_same_resp": "on",
+    "dbl_neg": "on",
+    "dbl_neg_desc": "at 3-level or higher",
+    "dbl_other": "Penalty at 2-level",
+    "dbl_pen": "on",
+    "lebensohl": "on",
+    "lebensohl_desc": "fast denies",
+    "more": "Superaccept doubleton after transfer; Baze after 2M response to 2C",
+    "smolen": "on",
+    "sys_on_vs": "X, 2C",
+    "tfr_4c": "on",
+    "tfr_4d": "on",
+    "tfr_4h": "on"
+   },
+   "2_no_trump": {
+    "3s": "on",
+    "3s_desc": "relay to 3NT; 4m (minor), 4M (both minors)",
+    "neg_dbl": "on",
+    "other": "Miller Superaccepts after transfers",
+    "puppet": "on",
+    "range_max": "21",
+    "range_min": "20",
+    "tfr_3lvl": "on",
+    "tfr_4lvl": "on"
+   },
+   "3_no_trump": {
+    "one_suit": "on",
+    "one_suit_desc": "Long minor: 7 with AKQ, or 8 with AK, no outside A or K"
+   },
+   "carding": {
+    "nt_ud_att": "on",
+    "nt_ud_count": "on",
+    "smith_echo_nt": "on",
+    "suits_ud_att": "on",
+    "suits_ud_count": "on",
+    "trump_signals": "Trump suit preference"
+   },
+   "direct_cuebids": {
+    "art_natural": "on",
+    "art_other": "on",
+    "describe": "Michaels minimax; suction over strong 1C,2C",
+    "nat_majors_michaels": "on",
+    "nat_minors_michaels": "on",
+    "quasi_natural": "on",
+    "quasi_other": "on"
+   },
+   "doubles": {
+    "maximal": "on",
+    "negative": "on",
+    "negative_thru": "4!h",
+    "other": "Snapdragon",
+    "responsive": "on",
+    "responsive_thru": "3!s",
+    "support": "on",
+    "support_rdbl": "on",
+    "support_thru": "2!h",
+    "to_style": "Moderate"
+   },
+   "leads_vs_nt": {
+    "honor_leads_AKxx": 1,
+    "length_4th": "on",
+    "length_leads_Hxx": 3,
+    "length_leads_Hxxx": 4,
+    "length_leads_Hxxxx": 4,
+    "length_leads_xx": 1,
+    "length_leads_xxx": 1,
+    "length_leads_xxxx": 4,
+    "length_leads_xxxxx": 4
+   },
+   "leads_vs_suits": {
+    "honor_leads_AKx": 1,
+    "length_4th": "on",
+    "length_leads_Hxx": 3,
+    "length_leads_Hxxx": 4,
+    "length_leads_Hxxxx": 4,
+    "length_leads_xx": 1,
+    "length_leads_xxx": 3,
+    "length_leads_xxxx": 4,
+    "length_leads_xxxxx": 4
+   },
+   "majors": {
+    "1nt_semi_forcing": "on",
+    "art_raises_2nt": "on",
+    "art_raises_other": "2NT is Modified Jacoby, 1NT/2M=Schuler Shift",
+    "art_raises_splinter": "on",
+    "drury_2c": "on",
+    "drury_in_comp": "on",
+    "drury_other": "Drury on over X, 1!s",
+    "jump_raise_overcall_weak": "on",
+    "jump_raise_weak": "on",
+    "min_len_1st_2nd_5": "on",
+    "min_len_3rd_4th_5": "on",
+    "more": "3NT shows 4333 with 3 of major, 13-15 HCP",
+    "other": "Bergen raises: 3!C 7-9, 3!d 10-12"
+   },
+   "minors": {
+    "1c_1d": "6+ points",
+    "1c_1d_bypass_5": "on",
+    "1c_1nt_max": "10",
+    "1c_1nt_min": "6",
+    "1c_2nt_max": "12",
+    "1c_2nt_min": "11",
+    "1c_jump_raise_overcall_weak": "on",
+    "1c_jump_raise_weak": "on",
+    "1c_min_len_3": "on",
+    "1c_single_raise_inv": "on",
+    "1d_min_len_3": "on",
+    "1d_same_as_1c": "on"
+   },
+   "names": {
+    "names": "Pat Example, Sam Sample"
+   },
+   "nt_overcalls": {
+    "balance_1nt_max": "14",
+    "balance_1nt_min": "11",
+    "balance_systems_on": "on",
+    "direct_1nt_max": "18",
+    "direct_1nt_min": "14+",
+    "direct_systems_on": "on",
+    "jump_2nt_2_lowest_unbid": "on",
+    "other": "19-21 in balancing position"
+   },
+   "other": {
+    "2_way_nmf": "on",
+    "fsf_gf": "on",
+    "jump_shift_resp": "Weak",
+    "more1": "Spiral, Kokish 3-way game tries, Non-serious 3NT, mini-maxi splinter, McCabe",
+    "more2": " SOS xx, Sandwich NT, UvsU, Ingberman 2NT, Suction, Leap Mich, ELCx",
+    "nmf": "on",
+    "xyz": "on"
+   },
+   "overcalls": {
+    "1_lvl_max": "16",
+    "1_lvl_min": "8",
+    "2_lvl_max": "16",
+    "2_lvl_min": "11",
+    "cue_support": "on",
+    "cuebids": "of opener shows 3 card, of responder shows 4+ card support",
+    "jump_raise_wk": "on",
+    "jump_weak": "on",
+    "new_suit_nf_const": "on",
+    "other": "Mixed Raises"
+   },
+   "overview": {
+    "1nt_open_variable": "on",
+    "forcing_2c": "on",
+    "general_approach": "2/1",
+    "min_exp_hcp_bal_opening": "12",
+    "min_exp_hcp_bal_responding": "6"
+   },
+   "preempts": {
+    "3_lvl_style": "Light",
+    "4_lvl_style": "Light"
+   },
+   "signals": {
+    "declarer_lead_count": "on",
+    "first_discard_ud": "on",
+    "partner_lead_att": "on"
+   },
+   "slams": {
+    "4nt_more": "0314 if used for minor suit (rare)",
+    "4nt_rkc_1430": "on",
+    "control_bids": "First/second round control; First round above game level",
+    "gerber_directly_over_nt": "on",
+    "other": "Minorwood (1430), Exclusion (0314), 5NT Pick-A-Slam, Spec. kings, DOPI, ROPI, DEPO (above 5 of trump)",
+    "vs_interference": "Western Cue"
+   },
+   "two_level": {
+    "2c_2d_waiting": "on",
+    "2c_2h_neg": "on",
+    "2c_min": "22+",
+    "2c_other": "Kokish relay; Parrish 2!H Bust (2!S is relay to 2NT)",
+    "2c_very_str": "on",
+    "2d_desc": "4441 or 5440, unspec. shortness",
+    "2d_max": "15",
+    "2d_min": "11",
+    "2d_nsnf": "on",
+    "2d_other": "Mini-Roman 2!d",
+    "2d_rebids_2nt": "Singleton/void",
+    "2h_max": "10",
+    "2h_min": "5",
+    "2h_rebids_2nt": "Ogust",
+    "2h_weak": "on",
+    "2s_max": "10",
+    "2s_min": "5",
+    "2s_rebids_2nt": "Ogust",
+    "2s_weak": "on"
+   },
+   "vs_1nt_opening": {
+    "vs_a": "Strong 14+ (Meckwell)",
+    "vs_a_2c": "!C and major",
+    "vs_a_2d": "!D and major",
+    "vs_a_2h": "Natural",
+    "vs_a_2nt": "Minors",
+    "vs_a_2s": "Natural",
+    "vs_a_dbl": "!C, !D, !H+!S or !S with good hand",
+    "vs_b": "Weak (Cappelletti)",
+    "vs_b_2c": "Long suit",
+    "vs_b_2d": "Majors",
+    "vs_b_2h": "!H and minor",
+    "vs_b_2nt": "Minors",
+    "vs_b_2s": "!S and minor",
+    "vs_b_dbl": "Penalty"
+   },
+   "vs_preempts": {
+    "2nt_lebensohl_resp": "on",
+    "2nt_overcall": "15-18",
+    "to_dbl_thru": "4!H"
+   },
+   "vs_to_double": {
+    "2nt_over_majors_min": "10+",
+    "2nt_over_majors_raise": "on",
+    "2nt_over_minors_min": "10+",
+    "2nt_over_minors_raise": "on",
+    "jump_shift_weak": "on",
+    "redouble_10_plus": "on",
+    "redouble_conv_desc": "Denies fit"
+   }
+  },
+  "carding": {
+   "declarer_lead": {
+    "count": true
+   },
+   "first_discard": {
+    "upside_down": true
+   },
+   "nt": {
+    "upside_down_attitude": true,
+    "upside_down_count": true
+   },
+   "partner_lead": {
+    "attitude": true
+   },
+   "smith_echo_nt": true,
+   "suits": {
+    "upside_down_attitude": true,
+    "upside_down_count": true
+   },
+   "trump_signals": "Trump suit preference"
+  },
+  "competitive": {
+   "vs_1nt_strong": {
+    "2c": "♣ and major",
+    "2d": "♦ and major",
+    "2h": "Natural",
+    "2nt": "Minors",
+    "2s": "Natural",
+    "dbl": "♣, ♦, ♥+♠ or ♠ with good hand",
+    "system": "Strong 14+ (Meckwell)"
+   },
+   "vs_1nt_weak": {
+    "2c": "Long suit",
+    "2d": "Majors",
+    "2h": "♥ and minor",
+    "2nt": "Minors",
+    "2s": "♠ and minor",
+    "dbl": "Penalty",
+    "system": "Weak (Cappelletti)"
+   }
+  },
+  "direct_cuebids": {
+   "art_natural": true,
+   "art_other": true,
+   "description": "Michaels minimax; suction over strong 1♣,2♣",
+   "nat_majors_michaels": true,
+   "nat_minors_michaels": true,
+   "quasi_natural": true,
+   "quasi_other": true
+  },
+  "doubles": {
+   "maximal": true,
+   "negative": {
+    "play": true,
+    "through": "4♥"
+   },
+   "notes": "Snapdragon",
+   "responsive": {
+    "play": true,
+    "through": "3♠"
+   },
+   "support": {
+    "play": true,
+    "rdbl": true,
+    "through": "2♥"
+   },
+   "takeout_style": "Moderate"
+  },
+  "format": "bridge_classroom",
+  "general": {
+   "forcing_opening": "2C",
+   "min_hcp_open": 12,
+   "min_hcp_respond": 6,
+   "nt_open_style": "variable",
+   "system": "2/1"
+  },
+  "leads": {
+   "vs_nt": {
+    "honors": {
+     "lead_choice_AKxx": 1
+    },
+    "length": {
+     "fourth_best": true,
+     "lead_choice_Hxx": 3,
+     "lead_choice_Hxxx": 4,
+     "lead_choice_Hxxxx": 4,
+     "lead_choice_xx": 1,
+     "lead_choice_xxx": 1,
+     "lead_choice_xxxx": 4,
+     "lead_choice_xxxxx": 4
+    }
+   },
+   "vs_suits": {
+    "honors": {
+     "lead_choice_AKx": 1
+    },
+    "length": {
+     "fourth_best": true,
+     "lead_choice_Hxx": 3,
+     "lead_choice_Hxxx": 4,
+     "lead_choice_Hxxxx": 4,
+     "lead_choice_xx": 1,
+     "lead_choice_xxx": 3,
+     "lead_choice_xxxx": 4,
+     "lead_choice_xxxxx": 4
+    }
+   }
+  },
+  "major_openings": {
+   "art_raises_other": "2NT is Modified Jacoby, 1NT/2M=Schuler Shift",
+   "bergen_raises_notes": "Bergen raises: 3♣ 7-9, 3♦ 10-12",
+   "drury": {
+    "in_comp": true,
+    "reverse": true
+   },
+   "jacoby_2nt": {
+    "play": true
+   },
+   "jump_raise": {
+    "weak": true
+   },
+   "jump_raise_after_overcall": {
+    "weak": true
+   },
+   "min_length_1st_2nd": 5,
+   "min_length_3rd_4th": 5,
+   "notes": "3NT shows 4333 with 3 of major, 13-15 HCP",
+   "one_nt_response": {
+    "semi_forcing": true
+   },
+   "splinters": {
+    "play": true
+   }
+  },
+  "metadata": {
+   "name": "Pat Example, Sam Sample",
+   "partner_names": "Pat Example, Sam Sample",
+   "source": "bridgeodex"
+  },
+  "minor_openings": {
+   "bypass_5_plus": true,
+   "notes": "6+ points",
+   "one_club": {
+    "jump_raise": {
+     "weak": true
+    },
+    "jump_raise_after_overcall": {
+     "weak": true
+    },
+    "min_length": 3,
+    "one_nt_range_max": 10,
+    "one_nt_range_min": 6,
+    "single_raise": {
+     "inv": true
+    },
+    "two_nt_range_max": 12,
+    "two_nt_range_min": 11
+   },
+   "one_diamond": {
+    "min_length": 3,
+    "same_as_1c": true
+   }
+  },
+  "notes": {
+   "competitive_notes": "Redouble: Denies fit\nVs preempts — 2NT overcall: 15-18\nDirect cuebids: Michaels minimax; suction over strong 1♣,2♣\nNT overcalls: 19-21 in balancing position\nTakeout-double style: Moderate\nDoubles: Snapdragon\nCuebid responses: of opener shows 3 card, of responder shows 4+ card support\nOvercalls: Mixed Raises",
+   "major_notes": "Artificial raises: 2NT is Modified Jacoby, 1NT/2M=Schuler Shift\nDrury: Drury on over X, 1♠\n3NT shows 4333 with 3 of major, 13-15 HCP\nBergen raises: 3♣ 7-9, 3♦ 10-12",
+   "minor_notes": "1♣/1♦ responses: 6+ points",
+   "notrump_notes": "1NT systems on vs: X, 2♣\n2♠ rebid: Range ask: 2NT rebid shows min, 3♣ shows max\n2NT rebid: 3♣ superaccept\nNegative double: at 3-level or higher\nDouble: Penalty at 2-level\nLebensohl: fast denies\n3♣ response: Puppet, opener shows 5 or responds 3♦\n3♦ response: minors, GF, slam interest\n3♥ response: splinter, GF, slam interest\n3♠ response: splinter, GF, slam interest\nSuperaccept doubleton after transfer; Baze after 2M response to 2♣\n2NT 3♠ relay: relay to 3NT; 4m (minor), 4M (both minors)\n2NT: Miller Superaccepts after transfers\n3NT gambling: Long minor: 7 with AKQ, or 8 with AK, no outside A or K",
+   "other_notes": "Jump-shift response: Weak\nSpiral, Kokish 3-way game tries, Non-serious 3NT, mini-maxi splinter, McCabe\n SOS xx, Sandwich NT, UvsU, Ingberman 2NT, Suction, Leap Mich, ELCx\nTrump signals: Trump suit preference",
+   "slam_notes": "Control bids: First/second round control; First round above game level\nVs interference: Western Cue\n4NT: 0314 if used for minor suit (rare)\nMinorwood (1430), Exclusion (0314), 5NT Pick-A-Slam, Spec. kings, DOPI, ROPI, DEPO (above 5 of trump)",
+   "two_level_notes": "2♣: Kokish relay; Parrish 2♥ Bust (2♠ is relay to 2NT)\n2♦ description: 4441 or 5440, unspec. shortness\n2♦: Mini-Roman 2♦\n2♦ rebid 2NT: Singleton/void\n2♥ rebid 2NT: Ogust\n2♠ rebid 2NT: Ogust"
+  },
+  "notrump": {
+   "dbl": {
+    "negative": true,
+    "negative_desc": "at 3-level or higher",
+    "other": "Penalty at 2-level",
+    "penalty": true
+   },
+   "lebensohl": {
+    "description": "fast denies",
+    "over_interference": true
+   },
+   "notes": "Superaccept doubleton after transfer; Baze after 2M response to 2♣",
+   "one_nt": {
+    "five_card_major": "sometimes",
+    "range_max": 17,
+    "range_min": 14,
+    "seat_vul": "Vul",
+    "sys_on_vs": "X, 2♣"
+   },
+   "one_nt_alt": {
+    "range_max": 14,
+    "range_min": 11,
+    "same_responses": true,
+    "seat_vul": "NV"
+   },
+   "responses": {
+    "2nt_other": "3♣ superaccept",
+    "2s_other": "Range ask: 2NT rebid shows min, 3♣ shows max",
+    "3c": "Puppet, opener shows 5 or responds 3♦",
+    "3d": "minors, GF, slam interest",
+    "3h": "splinter, GF, slam interest",
+    "3s": "splinter, GF, slam interest"
+   },
+   "smolen": {
+    "play": true
+   },
+   "stayman": {
+    "forcing": true
+   },
+   "transfers": {
+    "jacoby": true,
+    "texas": true,
+    "two_nt": true
+   },
+   "two_nt": {
+    "neg_dbl": true,
+    "notes": "Miller Superaccepts after transfers",
+    "puppet": true,
+    "range_max": 21,
+    "range_min": 20,
+    "three_s": true,
+    "three_s_desc": "relay to 3NT; 4m (minor), 4M (both minors)",
+    "transfers_3level": true,
+    "transfers_4level": true
+   }
+  },
+  "nt_overcalls": {
+   "balance": {
+    "range_max": 14,
+    "range_min": 11,
+    "systems_on": true
+   },
+   "direct": {
+    "range_max": 18,
+    "range_min": 14,
+    "systems_on": true
+   },
+   "jump_2nt_lowest_unbid": true,
+   "notes": "19-21 in balancing position"
+  },
+  "other_conventions": {
+   "blackwood": {
+    "notes": "0314 if used for minor suit (rare)",
+    "rkcb_1430": true
+   },
+   "fourth_suit_forcing": {
+    "game_force": true
+   },
+   "gerber": {
+    "directly_over_nt": true
+   },
+   "jump_shift_response": "Weak",
+   "new_minor_forcing": {
+    "play": true
+   },
+   "notes": "Spiral, Kokish 3-way game tries, Non-serious 3NT, mini-maxi splinter, McCabe\n SOS xx, Sandwich NT, UvsU, Ingberman 2NT, Suction, Leap Mich, ELCx",
+   "two_way_nmf": true,
+   "xyz": true
+  },
+  "overcalls": {
+   "jump": "weak",
+   "notes": "Mixed Raises",
+   "one_level_max": 16,
+   "one_level_min": 8,
+   "responses": {
+    "cuebids_text": "of opener shows 3 card, of responder shows 4+ card support",
+    "jump_raise": "weak",
+    "new_suit": "nf_constructive",
+    "support_cuebid": true
+   },
+   "two_level_max": 16,
+   "two_level_min": 11
+  },
+  "preempts": {
+   "four_level_style": "Light",
+   "three_level_style": "Light"
+  },
+  "schema_version": "1.0",
+  "slam": {
+   "control_bids": "First/second round control; First round above game level",
+   "notes": "Minorwood (1430), Exclusion (0314), 5NT Pick-A-Slam, Spec. kings, DOPI, ROPI, DEPO (above 5 of trump)",
+   "vs_interference": "Western Cue"
+  },
+  "three_nt": {
+   "one_suit": true,
+   "one_suit_desc": "Long minor: 7 with AKQ, or 8 with AK, no outside A or K"
+  },
+  "two_level": {
+   "two_clubs": {
+    "2d_response": "waiting",
+    "2h_response": "negative",
+    "meaning": "strong",
+    "min_hcp_str": "22+",
+    "notes": "Kokish relay; Parrish 2♥ Bust (2♠ is relay to 2NT)"
+   },
+   "two_diamonds": {
+    "description": "4441 or 5440, unspec. shortness",
+    "max_hcp": 15,
+    "min_hcp": 11,
+    "new_suit_nf": true,
+    "notes": "Mini-Roman 2♦",
+    "rebids_2nt": "Singleton/void"
+   },
+   "two_hearts": {
+    "max_hcp": 10,
+    "meaning": "weak",
+    "min_hcp": 5,
+    "rebids_2nt": "Ogust"
+   },
+   "two_spades": {
+    "max_hcp": 10,
+    "meaning": "weak",
+    "min_hcp": 5,
+    "rebids_2nt": "Ogust"
+   }
+  },
+  "vs_preempts": {
+   "lebensohl_response": true,
+   "takeout_double_thru": "4♥",
+   "two_nt_overcall": "15-18"
+  },
+  "vs_to_double": {
+   "jump_shift": "weak",
+   "redouble": {
+    "conv_desc": "Denies fit",
+    "ten_plus": true
+   },
+   "two_nt_raise_majors": {
+    "play": true,
+    "range_min": 10
+   },
+   "two_nt_raise_minors": {
+    "play": true,
+    "range_min": 10
+   }
+  }
+ }
+}

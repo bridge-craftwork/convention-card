@@ -1,0 +1,622 @@
+{
+ "schema": "bbsa-map/v1",
+ "generated_from": "spec/formats/bbsa-map.toml (do not edit)",
+ "layout": [
+  "System type",
+  "1D opening with 4 cards",
+  "1D opening with 5 cards",
+  "1m opening allows 5M",
+  "1M-3M blocking",
+  "1M-3M inviting",
+  "1N-2S Minor Suit Stayman",
+  "1N-2S transfer to clubs",
+  "1N-2N transfer to clubs",
+  "1N-2N transfer to diamonds",
+  "1N-3C transfer to diamonds",
+  "1N-3C Puppet Stayman",
+  "1N-3D majors",
+  "1N-3D minors",
+  "1N-3D natural",
+  "1N-3D splinter",
+  "1N-3M splinter",
+  "1NT opening allows less 1HCP",
+  "1NT opening natural",
+  "1NT opening NT style",
+  "1NT opening range 12-14",
+  "1NT opening range 13-15",
+  "1NT opening range 14-16",
+  "1NT opening range 15-17",
+  "1NT opening shape 4441",
+  "1NT opening shape 5422",
+  "1NT opening shape 5 major",
+  "1NT opening shape 6 minor",
+  "(1X)-1Y-(1Z)-2Z natural",
+  "1X-(Y)-2Z forcing",
+  "1X-(1Y)-2Z strong",
+  "1X-(1Y)-2Z weak",
+  "2N-3C-3N both majors",
+  "2N-3C Puppet Stayman",
+  "2N-3S transfer to clubs",
+  "2N-4C transfer to diamonds",
+  "4NT opening",
+  "5431 after 1NT",
+  "5NT pick a slam",
+  "Benjamin 2D",
+  "Bergen",
+  "Blackwood 0123",
+  "Blackwood 0314",
+  "Blackwood 1430",
+  "Blackwood without K and Q",
+  "BROMAD",
+  "Cappelletti",
+  "Checkback",
+  "Collante",
+  "Crosswood 0123",
+  "Crosswood 0314",
+  "Crosswood 1430",
+  "Cue bid",
+  "DEPO",
+  "DOPI",
+  "Drury",
+  "Exclusion",
+  "Extended Stayman",
+  "Extended acceptance after NT",
+  "Flannery",
+  "Fit showing jumps",
+  "Fitted 2NT",
+  "Forcing 1NT",
+  "Fourth suit",
+  "Fourth suit game force",
+  "French 2D",
+  "Gambling",
+  "Garbage Stayman",
+  "Gazzilli",
+  "Gerber",
+  "Gerber only for NT openings",
+  "Ghestem",
+  "Imposible 2S",
+  "Inverted count signals",
+  "Inverted minors",
+  "Inviting Jump Shifts",
+  "Jacoby 2NT",
+  "Jordan Truscott 2NT",
+  "Jordan Truscott 2NT defence",
+  "Kickback 0123",
+  "Kickback 0314",
+  "Kickback 1430",
+  "King ask by 5NT",
+  "King ask by 5NT inviting",
+  "King ask by available bid",
+  "Kokish Relay",
+  "Landy",
+  "Lavinthal from void",
+  "Lavinthal on ace",
+  "Lavinthal on trump",
+  "Lavinthal to void",
+  "Leaping Michaels",
+  "Lebensohl after 1NT",
+  "Lebensohl after 1m",
+  "Lebensohl after double",
+  "Major Direct Jump Cuebid Gambling",
+  "Major Direct Jump Cuebid Minor",
+  "Major Direct Jump Cuebid Strong",
+  "Mark on queen",
+  "Mark on king",
+  "Minor Direct Jump Cuebid Gambling",
+  "Minor Direct Jump Cuebid Majors",
+  "Minor Direct Jump Cuebid Preempt",
+  "Maximal Doubles",
+  "Michaels Cuebid",
+  "Mini Splinter",
+  "Minor Suit Slam Try after 2NT",
+  "Minor Suit Stayman after 2NT",
+  "Minor Suit Transfers after 2NT",
+  "Mixed raise",
+  "Multi",
+  "Multi-Landy",
+  "Namyats",
+  "Natural 3N entering style",
+  "Niemeijer",
+  "New Minor Forcing",
+  "NMF after 2NT rebid",
+  "NMF by passed hand",
+  "Non-Leaping Michaels",
+  "Ogust",
+  "Polish two suiters",
+  "Precision 2D",
+  "Quantitative 4NT",
+  "Raptor 1NT",
+  "Responsive double",
+  "Reverse Bergen",
+  "Reverse drury",
+  "Reverse Flannery 2H",
+  "Reverse Flannery 2S",
+  "Rodrigue",
+  "ROPI",
+  "Roudi",
+  "Rubensohl after 1NT",
+  "Rubensohl after 1m",
+  "Rubensohl after double",
+  "Scrambling 2NT",
+  "Semi forcing 1NT",
+  "Shape Bergen structure",
+  "Smith Echo",
+  "SMOLEN",
+  "Snapdragon Double",
+  "Soloway Jump Shifts",
+  "Soloway Jump Shifts Extended",
+  "Splinter",
+  "Strength Lawrence structure",
+  "Strong natural 2D",
+  "Strong natural 2M",
+  "Strong jump shifts 2",
+  "Strong jump shifts 3",
+  "Super acceptance after NT",
+  "Support 1NT",
+  "Support double redouble",
+  "Surplus pass",
+  "Texas",
+  "Transfers if RHO doubles",
+  "Transfers if RHO bids clubs",
+  "Two suit takeout double",
+  "Two way game tries",
+  "Two Way New Minor Forcing",
+  "TWNMF by passed hand",
+  "Unusual 1NT",
+  "Unusual 2NT",
+  "Unusual 3NT",
+  "Unusual 4NT",
+  "Unusual vs. Unusual",
+  "Weak Jump Shifts 2",
+  "Weak Jump Shifts 3",
+  "Weak natural 2D",
+  "Weak natural 2M",
+  "Walsh style",
+  "Wilkosz",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Not defined",
+  "Opponent type"
+ ],
+ "System type": {
+  "index": "general.system_category",
+  "values": [
+   "two_over_one",
+   "sayc",
+   "polish_club",
+   "precision",
+   "acol"
+  ]
+ },
+ "1NT opening range 12-14": {
+  "set": {
+   "notrump.one_nt.range_min": 12,
+   "notrump.one_nt.range_max": 14
+  }
+ },
+ "1NT opening range 13-15": {
+  "set": {
+   "notrump.one_nt.range_min": 13,
+   "notrump.one_nt.range_max": 15
+  }
+ },
+ "1NT opening range 14-16": {
+  "set": {
+   "notrump.one_nt.range_min": 14,
+   "notrump.one_nt.range_max": 16
+  }
+ },
+ "1NT opening range 15-17": {
+  "set": {
+   "notrump.one_nt.range_min": 15,
+   "notrump.one_nt.range_max": 17
+  }
+ },
+ "1NT opening shape 4441": "notrump.one_nt.allow_4441",
+ "1NT opening shape 5422": "notrump.one_nt.allow_5422",
+ "1NT opening shape 6 minor": "notrump.one_nt.allow_6_minor",
+ "1NT opening shape 5 major": {
+  "set": {
+   "notrump.one_nt.five_card_major": "sometimes"
+  }
+ },
+ "1NT opening allows less 1HCP": "notrump.one_nt.allow_one_less",
+ "Garbage Stayman": "notrump.stayman.garbage",
+ "SMOLEN": "notrump.smolen.play",
+ "1N-2S Minor Suit Stayman": "notrump.minor_suit_stayman.play",
+ "1N-2S transfer to clubs": "notrump.transfers.two_s_clubs",
+ "1N-2N transfer to clubs": "notrump.transfers.two_nt_clubs",
+ "1N-2N transfer to diamonds": "notrump.transfers.two_nt_diamonds",
+ "1N-3C transfer to diamonds": "notrump.transfers.three_c_diamonds",
+ "1N-3C Puppet Stayman": "notrump.stayman.puppet_1nt",
+ "1N-3D natural": {
+  "set": {
+   "notrump.three_d_response": "natural"
+  }
+ },
+ "1N-3D majors": {
+  "set": {
+   "notrump.three_d_response": "majors"
+  }
+ },
+ "1N-3D minors": {
+  "set": {
+   "notrump.three_d_response": "minors"
+  }
+ },
+ "1N-3D splinter": {
+  "set": {
+   "notrump.three_d_response": "splinter"
+  }
+ },
+ "1N-3M splinter": "notrump.three_major_splinter",
+ "Texas": "notrump.transfers.texas",
+ "Super acceptance after NT": "notrump.transfers.super_accept",
+ "Extended acceptance after NT": "notrump.transfers.super_accept_doubleton",
+ "Transfers if RHO doubles": "notrump.transfers.vs_double",
+ "Transfers if RHO bids clubs": "notrump.transfers.vs_2c",
+ "Lebensohl after 1NT": "notrump.lebensohl.over_interference",
+ "Rubensohl after 1NT": "notrump.rubensohl.over_interference",
+ "2N-3C Puppet Stayman": "notrump.two_nt.puppet",
+ "2N-3S transfer to clubs": "notrump.two_nt.transfer_3s_clubs",
+ "2N-4C transfer to diamonds": "notrump.two_nt.transfer_4c_diamonds",
+ "Minor Suit Slam Try after 2NT": "notrump.two_nt.minor_slam_try",
+ "Minor Suit Stayman after 2NT": "notrump.two_nt.minor_stayman",
+ "Minor Suit Transfers after 2NT": "notrump.two_nt.minor_transfers",
+ "2N-3C-3N both majors": "notrump.two_nt.three_c_3nt_both_majors",
+ "Gambling": "notrump.three_nt.one_suit",
+ "Strong jump shifts 2": "general.jump_shifts.strong_2",
+ "Strong jump shifts 3": "general.jump_shifts.strong_3",
+ "Weak Jump Shifts 2": "general.jump_shifts.weak_2",
+ "Weak Jump Shifts 3": "general.jump_shifts.weak_3",
+ "Inviting Jump Shifts": "general.jump_shifts.invitational",
+ "Soloway Jump Shifts": "general.jump_shifts.soloway",
+ "Soloway Jump Shifts Extended": "general.jump_shifts.soloway_extended",
+ "Forcing 1NT": "major_openings.one_nt_response.forcing",
+ "Semi forcing 1NT": "major_openings.one_nt_response.semi_forcing",
+ "1M-3M blocking": "major_openings.jump_raise.weak",
+ "1M-3M inviting": "major_openings.jump_raise.inv",
+ "Mixed raise": "major_openings.jump_raise.mixed",
+ "Jacoby 2NT": "major_openings.jacoby_2nt.play",
+ "Bergen": "major_openings.bergen_raises.play",
+ "Reverse Bergen": "major_openings.bergen_raises.reverse",
+ "Splinter": "major_openings.splinters.play",
+ "Mini Splinter": "major_openings.mini_splinters.play",
+ "Drury": "major_openings.drury.play",
+ "Reverse drury": "major_openings.drury.reverse",
+ "Gazzilli": "major_openings.gazzilli.play",
+ "Imposible 2S": "major_openings.impossible_2s.play",
+ "1D opening with 4 cards": {
+  "set": {
+   "minor_openings.one_diamond.min_length": "4"
+  }
+ },
+ "1D opening with 5 cards": {
+  "set": {
+   "minor_openings.one_diamond.min_length": "5"
+  }
+ },
+ "1m opening allows 5M": "minor_openings.may_hold_5_card_major",
+ "Inverted minors": "minor_openings.inverted_minors.play",
+ "Walsh style": "minor_openings.walsh.play",
+ "Weak natural 2D": {
+  "set": {
+   "two_level.two_diamonds.meaning": "weak"
+  }
+ },
+ "Strong natural 2D": {
+  "set": {
+   "two_level.two_diamonds.meaning": "strong"
+  }
+ },
+ "Weak natural 2M": {
+  "set": {
+   "two_level.two_hearts.meaning": "weak",
+   "two_level.two_spades.meaning": "weak"
+  }
+ },
+ "Strong natural 2M": {
+  "set": {
+   "two_level.two_hearts.meaning": "strong",
+   "two_level.two_spades.meaning": "strong"
+  }
+ },
+ "Multi": "two_level.two_diamonds.multi",
+ "Flannery": "two_level.flannery.play",
+ "Reverse Flannery 2H": "two_level.reverse_flannery.two_h",
+ "Reverse Flannery 2S": "two_level.reverse_flannery.two_s",
+ "Benjamin 2D": "two_level.benjamin.play",
+ "French 2D": "two_level.french_2d.play",
+ "Precision 2D": "two_level.precision_2d.play",
+ "Polish two suiters": "two_level.polish_two_suiters.play",
+ "Wilkosz": "two_level.wilkosz.play",
+ "Ogust": "two_level.ogust.play",
+ "Kokish Relay": "two_level.two_clubs.kokish",
+ "Namyats": "preempts.namyats.play",
+ "Cue bid": "slam.cue_bids.play",
+ "Blackwood 1430": "slam.blackwood.rkcb_1430",
+ "Blackwood 0314": "slam.blackwood.rkcb_0314",
+ "Blackwood 0123": "slam.blackwood.standard",
+ "Kickback 1430": "slam.kickback.rkcb_1430",
+ "Kickback 0314": "slam.kickback.rkcb_0314",
+ "King ask by 5NT": "slam.king_ask.five_nt",
+ "King ask by available bid": "slam.king_ask.next_step",
+ "Quantitative 4NT": "slam.quantitative_4nt.play",
+ "4NT opening": "slam.four_nt_opening.play",
+ "5NT pick a slam": "slam.pick_a_slam_5nt.play",
+ "Exclusion": "slam.exclusion_blackwood.play",
+ "Gerber": "slam.gerber.play",
+ "Gerber only for NT openings": "slam.gerber.only_over_nt_openings",
+ "DOPI": "slam.dopi",
+ "DEPO": "slam.depo",
+ "ROPI": "slam.ropi",
+ "Responsive double": "doubles.responsive.play",
+ "Support double redouble": {
+  "set": {
+   "doubles.support.play": true,
+   "doubles.support.rdbl": true
+  }
+ },
+ "Maximal Doubles": "doubles.maximal",
+ "Michaels Cuebid": {
+  "set": {
+   "direct_cuebids.nat_minors_michaels": true,
+   "direct_cuebids.nat_majors_michaels": true
+  }
+ },
+ "Leaping Michaels": "competitive.leaping_michaels.play",
+ "Non-Leaping Michaels": "competitive.non_leaping_michaels.play",
+ "Unusual 1NT": "competitive.unusual_1nt.play",
+ "Unusual 2NT": "competitive.unusual_2nt.play",
+ "Unusual 3NT": "competitive.unusual_3nt.play",
+ "Unusual 4NT": "competitive.unusual_4nt.play",
+ "Unusual vs. Unusual": "competitive.unusual_vs_unusual.play",
+ "Cappelletti": {
+  "set": {
+   "competitive.vs_1nt_strong.system": "cappelletti"
+  }
+ },
+ "Landy": {
+  "set": {
+   "competitive.vs_1nt_strong.system": "landy"
+  }
+ },
+ "Multi-Landy": {
+  "set": {
+   "competitive.vs_1nt_strong.system": "multi_landy"
+  }
+ },
+ "Lebensohl after double": "competitive.lebensohl_weak_twos.play",
+ "Rubensohl after double": "competitive.rubensohl_after_double.play",
+ "Snapdragon Double": "competitive.snapdragon.play",
+ "BROMAD": "competitive.bromad.play",
+ "Ghestem": "competitive.ghestem.play",
+ "Raptor 1NT": "competitive.raptor_1nt.play",
+ "Scrambling 2NT": "competitive.scrambling_2nt.play",
+ "Fit showing jumps": "competitive.fit_showing_jumps.play",
+ "Jordan Truscott 2NT": "competitive.jordan_2nt.play",
+ "1X-(Y)-2Z forcing": "competitive.new_suit_after_overcall_forcing",
+ "(1X)-1Y-(1Z)-2Z natural": "overcalls.responses.natural_in_responders_suit",
+ "1X-(1Y)-2Z weak": {
+  "set": {
+   "competitive.jump_shift_after_overcall": "weak"
+  }
+ },
+ "1X-(1Y)-2Z strong": {
+  "set": {
+   "competitive.jump_shift_after_overcall": "strong"
+  }
+ },
+ "Major Direct Jump Cuebid Gambling": {
+  "set": {
+   "competitive.direct_jump_cuebid_major": "gambling"
+  }
+ },
+ "Major Direct Jump Cuebid Minor": {
+  "set": {
+   "competitive.direct_jump_cuebid_major": "minor"
+  }
+ },
+ "Major Direct Jump Cuebid Strong": {
+  "set": {
+   "competitive.direct_jump_cuebid_major": "strong"
+  }
+ },
+ "Minor Direct Jump Cuebid Gambling": {
+  "set": {
+   "competitive.direct_jump_cuebid_minor": "gambling"
+  }
+ },
+ "Minor Direct Jump Cuebid Majors": {
+  "set": {
+   "competitive.direct_jump_cuebid_minor": "majors"
+  }
+ },
+ "Minor Direct Jump Cuebid Preempt": {
+  "set": {
+   "competitive.direct_jump_cuebid_minor": "preempt"
+  }
+ },
+ "Inverted count signals": "carding.inverted_count",
+ "Smith Echo": "carding.smith_echo",
+ "Lavinthal from void": "carding.lavinthal.from_void",
+ "Lavinthal on ace": "carding.lavinthal.on_ace",
+ "Lavinthal on trump": "carding.lavinthal.on_trump",
+ "Lavinthal to void": "carding.lavinthal.to_void",
+ "Fourth suit": "other_conventions.fourth_suit_forcing.one_round",
+ "Fourth suit game force": "other_conventions.fourth_suit_forcing.game_force",
+ "Two way game tries": "other_conventions.two_way_game_tries.play",
+ "New Minor Forcing": "other_conventions.new_minor_forcing.play",
+ "NMF after 2NT rebid": "other_conventions.new_minor_forcing.after_2nt_rebid",
+ "NMF by passed hand": "other_conventions.new_minor_forcing.by_passed_hand",
+ "Two Way New Minor Forcing": "other_conventions.two_way_nmf",
+ "TWNMF by passed hand": "other_conventions.two_way_nmf_by_passed_hand",
+ "Checkback": "other_conventions.checkback.play",
+ "Roudi": "other_conventions.roudi.play",
+ "implied": {
+  "notrump.stayman.play": true,
+  "notrump.transfers.jacoby": true
+ },
+ "derived": [
+  {
+   "when": {
+    "notrump.transfers.two_s_clubs": true,
+    "notrump.transfers.three_c_diamonds": true,
+    "notrump.minor_suit_stayman.play": false,
+    "notrump.transfers.two_nt_clubs": false,
+    "notrump.transfers.two_nt_diamonds": false
+   },
+   "set": {
+    "notrump.minor_transfers": "bba"
+   }
+  },
+  {
+   "set": {
+    "notrump.minor_transfers": "none"
+   }
+  },
+  {
+   "when": {
+    "two_level.ogust.play": true
+   },
+   "set": {
+    "two_level.weak_two_2nt_response": "ogust"
+   }
+  },
+  {
+   "when": {
+    "general.system_category": "two_over_one"
+   },
+   "default": {
+    "general.forcing_opening_1c": false,
+    "general.forcing_opening_2c": true,
+    "minor_openings.one_club.art_forcing": false,
+    "major_openings.five_card_majors": true,
+    "major_openings.min_length_1st_2nd": "5",
+    "major_openings.two_over_one.game_force": true
+   }
+  },
+  {
+   "when": {
+    "general.system_category": "sayc"
+   },
+   "default": {
+    "general.forcing_opening_1c": false,
+    "general.forcing_opening_2c": true,
+    "minor_openings.one_club.art_forcing": false,
+    "major_openings.five_card_majors": true,
+    "major_openings.min_length_1st_2nd": "5",
+    "major_openings.two_over_one.game_force": false
+   }
+  },
+  {
+   "when": {
+    "general.system_category": "acol"
+   },
+   "default": {
+    "general.forcing_opening_1c": false,
+    "general.forcing_opening_2c": true,
+    "minor_openings.one_club.art_forcing": false,
+    "major_openings.five_card_majors": false,
+    "major_openings.min_length_1st_2nd": "4",
+    "major_openings.min_length_3rd_4th": "4",
+    "major_openings.two_over_one.game_force": false
+   }
+  },
+  {
+   "when": {
+    "general.system_category": "precision"
+   },
+   "default": {
+    "general.forcing_opening_1c": true,
+    "general.forcing_opening_2c": false,
+    "minor_openings.one_club.art_forcing": true,
+    "major_openings.five_card_majors": true,
+    "major_openings.min_length_1st_2nd": "5"
+   }
+  }
+ ]
+}
