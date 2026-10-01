@@ -1,0 +1,29 @@
+/* The design tokens the editor uses, as Bridge Classroom defines them
+   (src/assets/design-tokens.css, copied 2026-10-01), so the standalone
+   editor looks the same. */
+
+:root {
+  --font-heading: 'Source Serif 4', serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --green-dark: #2d6a4f;
+  --green-mid: #40916c;
+  --green-pale: #d8f3dc;
+
+  --bg-warm: #f5f3ef;
+  --card-border: #e0ddd7;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+
+  --radius-card: 10px;
+  --radius-button: 6px;
+  --max-width: 1200px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-warm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}

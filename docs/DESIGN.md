@@ -189,24 +189,40 @@ separate app with its own `package.json`.
 
 ### 3. The editor (`web/`)
 
-The Vue 3 editor that Bridge Classroom has today: a section tree, a detail
-panel, purpose-built panels (carding, leads, defense to notrump, …), skill-level
-filters and overlays. It builds twice:
+The Vue 3 editor Bridge Classroom had: a section tree, a detail panel,
+purpose-built panels (carding, leads, defense to notrump, …), skill-level
+filters and overlays (`web/src/editor/`). It is used two ways:
 
-- **As a component** that Bridge Classroom embeds, handing it two adapters (see
-  below).
-- **As a standalone app**, deployed at `bridge-craftwork.com/card/`.
+- **As a component** that Bridge Classroom embeds
+  (`@bridge-craftwork/convention-card/web/src/editor/ConventionCardEditor.vue`,
+  compiled by the host's own Vite; Vue is a peer dependency), handing it two
+  adapters.
+- **As a standalone app** (`web/`; `npm run dev`, `npm run build`), deployed
+  at `bridge-craftwork.com/card/`.
 
 It never talks to a server itself. Everything outside the card goes through
-adapters:
+the adapters, whose full shape is in `web/src/editor/useCardEditor.js`:
 
 ```js
-// storage: where cards live
-{ list(), load(id), save(card), remove(id) }
+// storage: where cards live, and who may edit them
+{ user /* ref */, loadDefault(), load(id), listLinks(), save(card, cardData),
+  overwrite(id, …), create(…), remove(id), canEdit(card, user) }
 
-// overlays (optional): extra per-field information to show beside each field
-{ proficiency(fieldPaths) }   // e.g. Bridge Classroom's lesson mastery
+// overlays (optional): extra information beside each convention
+{ covered(skillPath), mastery(user) }   // e.g. Bridge Classroom's practice deals and lesson mastery
 ```
+
+One editor state is kept per storage adapter, so a host that unmounts and
+remounts the editor (a lobby tab) finds the card it left. The overlay
+controls appear only when the host gives overlays.
+
+**The standalone app** keeps cards in the browser's IndexedDB with no
+account (`web/src/browserStorage.js`); the starter card (Bridge Classroom's
+"2/1 Intermediate") is read-only, and Duplicate makes an editable copy. It
+imports BBO, bridgeodex, `.bbsa` and its own PDFs, and exports PDFs, its JSON
+and `.bbsa`. **Save to Bridge Classroom** opens Bridge Classroom with the card
+compressed into the URL's fragment (`js/handoff.js`; DECISIONS, 20), where it
+is saved under Bridge Classroom's own session.
 
 ### 4. The Rust crate (`crates/bridge-card`)
 

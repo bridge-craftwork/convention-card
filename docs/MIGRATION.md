@@ -141,6 +141,15 @@ passes, and the JS `.bbsa` converter matches the crate's golden files.
 
 ### Phase 3: the editor
 
+**Under way.** Done here: the view, components, editing state and catalog
+moved with history (`web/src/editor/`), split from Bridge Classroom's API and
+user store into storage and overlay adapters; the standalone app (`web/`)
+with IndexedDB storage, `.bbsa` import and export, and the hand-off to Bridge
+Classroom (decision 20); checked in a browser (duplicate, edit, save, reload,
+export a PDF and read it back, import and re-export a `.bbsa` byte for byte).
+Still to do: tag, and switch Bridge Classroom to embed the editor (with its
+adapters and the hand-off's receiving end).
+
 - Move the view and components here; split `useConventionCard.js` into editor
   state (moves) and Bridge Classroom's storage and overlay adapters (stay).
 - Bridge Classroom embeds the editor component from the tag.
