@@ -23,7 +23,7 @@
  * We keep the original card blob under `card_data._bbo_raw`.
  */
 
-import { normalizeSuitShorthand } from './cardFormatting.js'
+import { normalizeSuitShorthand } from './suits.js'
 
 function suits(text) {
   if (text == null) return text

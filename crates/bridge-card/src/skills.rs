@@ -138,7 +138,7 @@ impl Skills {
     }
 
     /// Parse the combined `conventions.json` (`{schema, conventions: {id:
-    /// entry}}`), as `scripts/build_conventions.py` writes it.
+    /// entry}}`), as `scripts/build_spec.py` writes it.
     pub fn from_json(text: &str) -> Result<Skills, Error> {
         let doc: serde_json::Value =
             serde_json::from_str(text).map_err(|e| Error::new(e.to_string()))?;

@@ -2,8 +2,9 @@
  * Old ACBL Classic convention card PDF export — fills the official
  * ACBL fillable PDF (2023 revision) with values from `card_data`.
  *
- * The template ships at `public/templates/acbl-classic-2023.pdf` and
- * is fetched on demand when the user clicks Export. We use pdf-lib to
+ * The template ships at `assets/templates/acbl-classic-2023.pdf` and
+ * is loaded on demand, through the caller's asset loader (assets.js),
+ * when the user clicks Export. We use pdf-lib to
  * walk the form fields and apply checkbox / text values from a static
  * FIELD_MAP that pairs the PDF field name with the corresponding
  * `card_data` path.
@@ -18,19 +19,15 @@
 
 import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFDict, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
-import { readPath } from './conventionCatalog.js'
+import { readPath } from './paths.js'
 import { TEMPLATE_INK } from './acblTemplateInk.js'
+import { loadTemplate, loadFont } from './assets.js'
 
 // Custom Info-dict key under which we embed the source card_data as
 // JSON, so a generated PDF can be re-imported into the editor with
 // full fidelity. Namespaced so other PDF tools ignore it.
 const EMBED_INFO_KEY = 'BridgeClassroomCard'
 
-const BASE = import.meta.env.BASE_URL || '/'
-const TEMPLATE_URLS = {
-  classic: `${BASE}templates/acbl-classic-2023.pdf`,
-  new:     `${BASE}templates/acbl-new.pdf`
-}
 
 // ─── Condensed field font ─────────────────────────────────────
 // The ACBL card's own printed text is set in HelveticaLTStd-Cond /
@@ -46,17 +43,13 @@ const TEMPLATE_URLS = {
 // embedded for the printed boilerplate only, and its width table has
 // zero-width entries for `6 7 8 X Y Z z` and most punctuation. Nor can
 // we ship Helvetica Condensed itself (not redistributable). Barlow
-// Condensed is an OFL grotesque of similar proportion, ~102KB, fetched
-// on demand at export time exactly like the template — so it costs
-// nothing on initial page load and only its used glyphs are embedded.
-const NARROW_FONT_URL = `${BASE}fonts/BarlowCondensed-Regular.ttf`
-
+// Condensed is an OFL grotesque of similar proportion, ~102KB, loaded
+// on demand at export time exactly like the template (through the
+// caller's asset loader: assets.js) — so it costs nothing on initial
+// page load and only its used glyphs are embedded.
 let _cachedNarrowBytes = null
 async function loadNarrowFontBytes() {
-  if (_cachedNarrowBytes) return _cachedNarrowBytes
-  const res = await fetch(NARROW_FONT_URL)
-  if (!res.ok) throw new Error(`Failed to load condensed font (${res.status}) from ${NARROW_FONT_URL}`)
-  _cachedNarrowBytes = await res.arrayBuffer()
+  if (!_cachedNarrowBytes) _cachedNarrowBytes = await loadFont()
   return _cachedNarrowBytes
 }
 
@@ -111,14 +104,7 @@ const GROWN_WIDGETS = new WeakSet()
 
 const _cachedBytes = {}
 async function loadTemplateBytes(templateName = 'classic') {
-  if (_cachedBytes[templateName]) return _cachedBytes[templateName]
-  const url = TEMPLATE_URLS[templateName]
-  if (!url) throw new Error(`Unknown ACBL template "${templateName}"`)
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(`Failed to load ACBL template (${res.status}). Expected at ${url}.`)
-  }
-  _cachedBytes[templateName] = await res.arrayBuffer()
+  if (!_cachedBytes[templateName]) _cachedBytes[templateName] = await loadTemplate(templateName)
   return _cachedBytes[templateName]
 }
 

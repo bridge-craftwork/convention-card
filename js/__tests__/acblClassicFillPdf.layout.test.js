@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 import fs from 'fs'
 import path from 'path'
 import { PDFDocument, PDFTextField, PDFName, PDFRawStream, decodePDFRawStream } from 'pdf-lib'
 import { renderAcblPdfBytes } from '../acblClassicFillPdf.js'
+import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { TEMPLATE_INK } from '../acblTemplateInk.js'
 
 // Fills the Classic ACBL card with a dense real-world card and checks what
@@ -14,7 +15,7 @@ import { TEMPLATE_INK } from '../acblTemplateInk.js'
 //   3. grown boxes tracing a white hairline round their edge, cutting
 //      through the printed art they crossed.
 
-const PUBLIC = path.resolve(__dirname, '../../../public')
+const ASSETS = path.resolve(__dirname, '../../assets')
 const CARD = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/dense-convention-card.json'), 'utf8'))
 
 // Where Barlow Condensed's glyphs really reach, in em, measured from the
@@ -25,10 +26,9 @@ const TRUE_ASCENT = 0.763
 const TRUE_DESCENT = 0.208
 const EPS = 0.05
 
-const TEMPLATES = {
-  classic: 'templates/acbl-classic-2023.pdf',
-  new: 'templates/acbl-new.pdf',
-}
+const TEMPLATES = Object.fromEntries(
+  Object.entries(TEMPLATE_FILES).map(([name, file]) => [name, `templates/${file}`])
+)
 const docs = {}
 
 const num = '(-?[\\d.]+)'
@@ -54,14 +54,14 @@ function filledTextFields(doc) {
 }
 
 beforeAll(async () => {
-  vi.stubGlobal('fetch', async (url) => {
-    const buf = fs.readFileSync(path.join(PUBLIC, String(url).replace(/^\//, '')))
-    return { ok: true, status: 200, arrayBuffer: async () => buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) }
+  setAssetLoader({
+    template: name => fs.readFileSync(path.join(ASSETS, TEMPLATES[name])),
+    font: () => fs.readFileSync(path.join(ASSETS, 'fonts', FONT_FILE)),
   })
   for (const [name, file] of Object.entries(TEMPLATES)) {
     docs[name] = {
       out: await PDFDocument.load(await renderAcblPdfBytes(CARD, name)),
-      template: await PDFDocument.load(fs.readFileSync(path.join(PUBLIC, file))),
+      template: await PDFDocument.load(fs.readFileSync(path.join(ASSETS, file))),
     }
   }
 }, 60000)

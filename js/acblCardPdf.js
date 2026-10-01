@@ -16,7 +16,7 @@
  */
 
 import { jsPDF } from 'jspdf'
-import { readPath } from './conventionCatalog.js'
+import { readPath } from './paths.js'
 
 // ─── Page constants (mm) ───────────────────────────────────────
 const PAGE_W = 215.9   // letter portrait

@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Build spec/conventions.json and spec/taxonomy.json from spec/conventions/.
+"""Build the spec's generated JSON from its TOML sources.
 
-spec/conventions/<category>/<name>.toml, one file per convention, is the
-source. conventions.json combines every entry; taxonomy.json is lesson-studio's
-Contract 4 (taxonomy/v1): the skill vocabulary with a four-band level.
+- spec/conventions.json: every entry of spec/conventions/<category>/<name>.toml
+  (one file per convention) in one file.
+- spec/taxonomy.json: lesson-studio's Contract 4 (taxonomy/v1), the skill
+  vocabulary with a four-band level.
+- spec/fields.json and spec/formats/bbsa-map.json: fields.toml and
+  bbsa-map.toml as JSON, for readers with no TOML parser (the JS library).
 
 One file per convention is the source (spec/conventions/README.md); readers
 that cannot list a directory (the JS library in a browser, lesson-studio) read
 the combined file. CI runs this on every push to main that changes the source
-and commits the result (.github/workflows/build-conventions.yml).
+and commits the result (.github/workflows/build-spec.yml).
 
-    python3 scripts/build_conventions.py           # write both files
-    python3 scripts/build_conventions.py --check   # exit 1 if either is out of date
+    python3 scripts/build_spec.py           # write every generated file
+    python3 scripts/build_spec.py --check   # exit 1 if any is out of date
 
 Standard library only (Python 3.11+, for tomllib).
 """
@@ -26,6 +29,10 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SOURCE = ROOT / "spec" / "conventions"
 OUT = ROOT / "spec" / "conventions.json"
 TAXONOMY = ROOT / "spec" / "taxonomy.json"
+FIELDS_TOML = ROOT / "spec" / "fields.toml"
+FIELDS_JSON = ROOT / "spec" / "fields.json"
+BBSA_TOML = ROOT / "spec" / "formats" / "bbsa-map.toml"
+BBSA_JSON = ROOT / "spec" / "formats" / "bbsa-map.json"
 CATEGORIES = SOURCE / "categories.toml"
 
 # DECISIONS.md, 12: the named bands are ranges of the 1-10 level.
@@ -90,14 +97,26 @@ def build_taxonomy(conventions: dict) -> str:
     return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
 
 
+def as_json(source: pathlib.Path, schema: str) -> str:
+    """A TOML file as JSON, with its tables and keys in the file's order."""
+    data = tomllib.loads(source.read_text(encoding="utf-8"))
+    doc = {"schema": schema, "generated_from": f"{source.relative_to(ROOT)} (do not edit)", **data}
+    return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
+
+
 def main() -> None:
     conventions = load()
-    outputs = {OUT: build(conventions), TAXONOMY: build_taxonomy(conventions)}
+    outputs = {
+        OUT: build(conventions),
+        TAXONOMY: build_taxonomy(conventions),
+        FIELDS_JSON: as_json(FIELDS_TOML, "fields/v1"),
+        BBSA_JSON: as_json(BBSA_TOML, "bbsa-map/v1"),
+    }
     if "--check" in sys.argv[1:]:
         stale = [p.name for p, text in outputs.items()
                  if not p.exists() or p.read_text(encoding="utf-8") != text]
         if stale:
-            sys.exit(f"out of date: {', '.join(stale)}: run python3 scripts/build_conventions.py")
+            sys.exit(f"out of date: {', '.join(stale)}: run python3 scripts/build_spec.py")
         return
     for path, text in outputs.items():
         path.write_text(text, encoding="utf-8")

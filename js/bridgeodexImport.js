@@ -18,8 +18,8 @@
  *   - Most "X_thru" fields use the same shortcodes (e.g. "4!H" = 4♥).
  */
 
-import { writePath } from './conventionCatalog.js'
-import { normalizeSuitShorthand } from './cardFormatting.js'
+import { writePath } from './paths.js'
+import { normalizeSuitShorthand } from './suits.js'
 
 function on(v) { return v === 'on' || v === true }
 

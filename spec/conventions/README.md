@@ -28,9 +28,9 @@ See `docs/DESIGN.md`, "Describing a convention" and "Difficulty levels".
 
 ## The generated files
 
-Never edit these by hand. `scripts/build_conventions.py` writes them, and CI
+Never edit these by hand. `scripts/build_spec.py` writes them, and CI
 runs it on every push to `main` that changes a file here, committing the
-result. To check locally: `python3 scripts/build_conventions.py --check`.
+result. To check locally: `python3 scripts/build_spec.py --check`.
 
 - `../conventions.json`: every entry in one file, for readers that cannot list
   a directory (the JS library in a browser). The Rust crate has it built in

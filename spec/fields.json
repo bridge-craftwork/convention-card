@@ -1,0 +1,3384 @@
+{
+ "schema": "fields/v1",
+ "generated_from": "spec/fields.toml (do not edit)",
+ "general": {
+  "system": {
+   "kind": "text",
+   "label": "System"
+  },
+  "system_category": {
+   "kind": "enum",
+   "label": "System category",
+   "options": [
+    "two_over_one",
+    "sayc",
+    "polish_club",
+    "precision",
+    "acol"
+   ],
+   "default": "two_over_one"
+  },
+  "style": {
+   "kind": "enum",
+   "label": "Bidding style",
+   "options": [
+    "standard",
+    "bba"
+   ],
+   "desc": "Unset: our default (modern where we have one, else standard). standard: the textbook treatment where the default is modern. bba: what BBA does, as far as probes and the corpus show; for A/B tests"
+  },
+  "min_hcp_open": {
+   "kind": "int",
+   "label": "Min HCP to open",
+   "min": 0,
+   "max": 20,
+   "default": 12
+  },
+  "min_hcp_respond": {
+   "kind": "int",
+   "label": "Min HCP to respond",
+   "min": 0,
+   "max": 20,
+   "default": 6
+  },
+  "third_fourth_light": {
+   "kind": "bool",
+   "label": "Light openings in 3rd/4th seat"
+  },
+  "nt_open_style": {
+   "kind": "enum",
+   "label": "1NT opening style",
+   "options": [
+    "strong",
+    "weak",
+    "variable"
+   ],
+   "default": "strong"
+  },
+  "forcing_opening_1c": {
+   "kind": "bool",
+   "label": "Forcing 1♣ opening"
+  },
+  "forcing_opening_2c": {
+   "kind": "bool",
+   "label": "Forcing 2♣ opening"
+  },
+  "forcing_opening_other": {
+   "kind": "text",
+   "label": "Forcing opening (other)"
+  },
+  "bids_requiring_prep": {
+   "kind": "text",
+   "label": "Bids that may require preparation"
+  },
+  "jump_shifts.strong_2": {
+   "kind": "bool",
+   "label": "Strong jump shifts (2-level)",
+   "level": 3,
+   "choice": "general.jump_shifts_2"
+  },
+  "jump_shifts.strong_3": {
+   "kind": "bool",
+   "label": "Strong jump shifts (3-level)",
+   "level": 3,
+   "choice": "general.jump_shifts_3"
+  },
+  "jump_shifts.weak_2": {
+   "kind": "bool",
+   "label": "Weak jump shifts (2-level)",
+   "skill": "bidding_conventions/weak_jump_shifts",
+   "level": 5,
+   "choice": "general.jump_shifts_2"
+  },
+  "jump_shifts.weak_3": {
+   "kind": "bool",
+   "label": "Weak jump shifts (3-level)",
+   "skill": "bidding_conventions/weak_jump_shifts",
+   "level": 5,
+   "choice": "general.jump_shifts_3"
+  },
+  "jump_shifts.invitational": {
+   "kind": "bool",
+   "label": "Invitational jump shifts",
+   "level": 5,
+   "choice": "general.jump_shifts_2"
+  },
+  "jump_shifts.soloway": {
+   "kind": "bool",
+   "label": "Soloway jump shifts",
+   "skill": "bidding_conventions/soloway",
+   "level": 8
+  },
+  "jump_shifts.soloway_extended": {
+   "kind": "bool",
+   "label": "Soloway jump shifts (extended)",
+   "skill": "bidding_conventions/soloway",
+   "level": 9
+  },
+  "forcing_opening": {
+   "kind": "text",
+   "label": "Forcing opening (as written)",
+   "desc": "The card's forcing-opening line as an importer wrote it (\"2C\"); forcing_opening_1c/2c/other are the structured form"
+  },
+  "very_light.openings": {
+   "kind": "bool",
+   "label": "Very light: openings"
+  },
+  "very_light.third_hand": {
+   "kind": "bool",
+   "label": "Very light: 3rd hand"
+  },
+  "very_light.overcalls": {
+   "kind": "bool",
+   "label": "Very light: overcalls"
+  },
+  "very_light.preempts": {
+   "kind": "bool",
+   "label": "Very light: preempts"
+  },
+  "forcing_opening_natural_2": {
+   "kind": "bool",
+   "label": "Natural 2 bids"
+  }
+ },
+ "notrump": {
+  "one_nt.range_min": {
+   "kind": "int",
+   "label": "1NT range: minimum",
+   "min": 8,
+   "max": 25,
+   "default": 15
+  },
+  "one_nt.range_max": {
+   "kind": "int",
+   "label": "1NT range: maximum",
+   "min": 8,
+   "max": 25,
+   "default": 17
+  },
+  "one_nt.five_card_major": {
+   "kind": "enum",
+   "label": "1NT may contain a 5-card major",
+   "options": [
+    "never",
+    "sometimes",
+    "always"
+   ],
+   "default": "sometimes"
+  },
+  "one_nt.allow_4441": {
+   "kind": "bool",
+   "label": "1NT may be 4-4-4-1"
+  },
+  "one_nt.allow_5422": {
+   "kind": "bool",
+   "label": "1NT may be 5-4-2-2"
+  },
+  "one_nt.allow_6_minor": {
+   "kind": "bool",
+   "label": "1NT may contain a 6-card minor"
+  },
+  "one_nt.allow_one_less": {
+   "kind": "bool",
+   "label": "1NT may be 1 HCP light",
+   "desc": "e.g. 14-17 for a 15-17 range: 14 good HCP with a 5-card suit (a length point)"
+  },
+  "one_nt.seat_vul": {
+   "kind": "text",
+   "label": "1NT seat / vulnerability"
+  },
+  "one_nt.sys_on_vs": {
+   "kind": "text",
+   "label": "Systems on vs"
+  },
+  "one_nt_alt.range_min": {
+   "kind": "int",
+   "label": "Alternate 1NT range: minimum",
+   "min": 8,
+   "max": 25
+  },
+  "one_nt_alt.range_max": {
+   "kind": "int",
+   "label": "Alternate 1NT range: maximum",
+   "min": 8,
+   "max": 25
+  },
+  "one_nt_alt.seat_vul": {
+   "kind": "text",
+   "label": "Alternate 1NT seat / vulnerability"
+  },
+  "one_nt_alt.same_responses": {
+   "kind": "bool",
+   "label": "Alternate 1NT uses same responses"
+  },
+  "dbl.negative": {
+   "kind": "bool",
+   "label": "Double of 1NT interference: negative"
+  },
+  "dbl.penalty": {
+   "kind": "bool",
+   "label": "Double of 1NT interference: penalty"
+  },
+  "dbl.negative_desc": {
+   "kind": "text",
+   "label": "Negative double notes"
+  },
+  "dbl.other": {
+   "kind": "text",
+   "label": "Other double notes"
+  },
+  "stayman.play": {
+   "kind": "bool",
+   "label": "Stayman",
+   "skill": "bidding_conventions/stayman",
+   "level": 3
+  },
+  "stayman.forcing": {
+   "kind": "bool",
+   "label": "Stayman is forcing",
+   "skill": "bidding_conventions/stayman",
+   "level": 3
+  },
+  "stayman.garbage": {
+   "kind": "bool",
+   "label": "Garbage Stayman",
+   "skill": "bidding_conventions/stayman",
+   "level": 3
+  },
+  "stayman.puppet_1nt": {
+   "kind": "bool",
+   "label": "Puppet Stayman over 1NT (3♣)",
+   "aliases": [
+    "notrump.stayman.puppet"
+   ],
+   "desc": "Bridge Classroom's editor, its PDFs and the BBO and bridgeodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)",
+   "skill": "bidding_conventions/puppet_stayman",
+   "level": 7
+  },
+  "smolen.play": {
+   "kind": "bool",
+   "label": "Smolen",
+   "skill": "bidding_conventions/smolen",
+   "level": 4
+  },
+  "minor_suit_stayman.play": {
+   "kind": "bool",
+   "label": "Minor Suit Stayman (1NT–2♠)",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_stayman"
+  },
+  "transfers.jacoby": {
+   "kind": "bool",
+   "label": "Jacoby transfers",
+   "skill": "bidding_conventions/jacoby_transfers",
+   "level": 3
+  },
+  "transfers.texas": {
+   "kind": "bool",
+   "label": "Texas transfers",
+   "skill": "bidding_conventions/jacoby_transfers",
+   "level": 4
+  },
+  "transfers.texas_4c": {
+   "kind": "bool",
+   "label": "Texas 4♣",
+   "level": 6,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "transfers.texas_4d": {
+   "kind": "bool",
+   "label": "Texas 4♦",
+   "level": 6,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "transfers.texas_4h": {
+   "kind": "bool",
+   "label": "Texas 4♥",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "transfers.texas_4s": {
+   "kind": "bool",
+   "label": "Texas 4♠",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "minor_transfers": {
+   "kind": "enum",
+   "label": "Minor-suit responses to 1NT",
+   "options": [
+    "relay",
+    "four_way",
+    "four_way_reversed",
+    "bba",
+    "none"
+   ],
+   "default": "relay",
+   "desc": "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). none: not played",
+   "skill": "bidding_conventions/minor_suit_transfers",
+   "level": 5
+  },
+  "transfers.spades_relay": {
+   "kind": "bool",
+   "label": "1NT–2♠ transfer",
+   "desc": "The card's 2♠ transfer box, as bridgeodex marks it; what it transfers to is in the card's notes",
+   "skill": "bidding_conventions/minor_suit_transfers",
+   "level": 5
+  },
+  "transfers.two_s_clubs": {
+   "kind": "bool",
+   "label": "1NT–2♠ transfer to clubs",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "transfers.two_nt": {
+   "kind": "bool",
+   "label": "1NT–2NT transfer",
+   "desc": "The card's 2NT transfer box, as bridgeodex marks it",
+   "skill": "bidding_conventions/minor_suit_transfers",
+   "level": 5
+  },
+  "two_nt_natural": {
+   "kind": "bool",
+   "label": "1NT–2NT natural (invitational)"
+  },
+  "transfers.two_nt_clubs": {
+   "kind": "bool",
+   "label": "1NT–2NT transfer to clubs",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "transfers.two_nt_diamonds": {
+   "kind": "bool",
+   "label": "1NT–2NT transfer to diamonds",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "transfers.three_c_diamonds": {
+   "kind": "bool",
+   "label": "1NT–3♣ transfer to diamonds",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "transfers.super_accept": {
+   "kind": "bool",
+   "label": "Super-acceptance of transfers",
+   "skill": "bidding_conventions/super_accept",
+   "level": 5
+  },
+  "transfers.super_accept_doubleton": {
+   "kind": "bool",
+   "label": "Super-accept by bidding a doubleton",
+   "desc": "With 4+ trumps and a maximum, bid the doubleton suit (or 2NT when it cannot be shown below it). BBA: Extended acceptance after NT",
+   "skill": "bidding_conventions/super_accept",
+   "level": 7
+  },
+  "transfers.vs_double": {
+   "kind": "bool",
+   "label": "Transfers on if RHO doubles",
+   "level": 6,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "transfers.vs_2c": {
+   "kind": "bool",
+   "label": "Transfers on if RHO bids clubs",
+   "level": 6,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "three_d_response": {
+   "kind": "enum",
+   "label": "1NT–3♦ response",
+   "options": [
+    "natural",
+    "majors",
+    "minors",
+    "splinter"
+   ]
+  },
+  "three_major_splinter": {
+   "kind": "bool",
+   "label": "1NT–3♥/3♠ splinter",
+   "level": 6
+  },
+  "lebensohl.over_interference": {
+   "kind": "bool",
+   "label": "Lebensohl over interference to 1NT",
+   "skill": "competitive_bidding/lebensohl",
+   "level": 5
+  },
+  "lebensohl.description": {
+   "kind": "text",
+   "label": "Lebensohl notes"
+  },
+  "rubensohl.over_interference": {
+   "kind": "bool",
+   "label": "Rubensohl over interference to 1NT",
+   "level": 9,
+   "skill": "competitive_bidding/rubensohl"
+  },
+  "two_nt.range_min": {
+   "kind": "int",
+   "label": "2NT range: minimum",
+   "min": 15,
+   "max": 30,
+   "default": 20
+  },
+  "two_nt.range_max": {
+   "kind": "int",
+   "label": "2NT range: maximum",
+   "min": 15,
+   "max": 30,
+   "default": 21
+  },
+  "two_nt.puppet": {
+   "kind": "bool",
+   "label": "2NT: Puppet Stayman (3♣)",
+   "desc": "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major",
+   "skill": "bidding_conventions/puppet_stayman",
+   "level": 7
+  },
+  "two_nt.three_s": {
+   "kind": "bool",
+   "label": "2NT: 3♠ relay",
+   "level": 8
+  },
+  "two_nt.three_s_desc": {
+   "kind": "text",
+   "label": "2NT 3♠ relay notes"
+  },
+  "two_nt.transfers_3level": {
+   "kind": "bool",
+   "label": "2NT: transfers at 3-level",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "two_nt.transfers_4level": {
+   "kind": "bool",
+   "label": "2NT: transfers at 4-level",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "two_nt.neg_dbl": {
+   "kind": "bool",
+   "label": "2NT: negative double",
+   "level": 6
+  },
+  "two_nt.transfer_3s_clubs": {
+   "kind": "bool",
+   "label": "2NT–3♠ transfer to clubs",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "two_nt.transfer_4c_diamonds": {
+   "kind": "bool",
+   "label": "2NT–4♣ transfer to diamonds",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "two_nt.minor_slam_try": {
+   "kind": "bool",
+   "label": "Minor suit slam try after 2NT",
+   "level": 8
+  },
+  "two_nt.minor_stayman": {
+   "kind": "bool",
+   "label": "Minor Suit Stayman after 2NT",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_stayman"
+  },
+  "two_nt.minor_transfers": {
+   "kind": "bool",
+   "label": "Minor suit transfers after 2NT",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "two_nt.three_c_3nt_both_majors": {
+   "kind": "bool",
+   "label": "2NT–3♣–3NT shows both majors",
+   "desc": "Stayman-style 3♣ over 2NT; opener's 3NT shows 4-4 in the majors",
+   "level": 4,
+   "skill": "bidding_conventions/stayman"
+  },
+  "two_nt.notes": {
+   "kind": "text",
+   "label": "2NT notes",
+   "note": true
+  },
+  "three_nt.range_min": {
+   "kind": "int",
+   "label": "3NT range: minimum",
+   "min": 15,
+   "max": 30,
+   "aliases": [
+    "three_nt.range_min"
+   ]
+  },
+  "three_nt.range_max": {
+   "kind": "int",
+   "label": "3NT range: maximum",
+   "min": 15,
+   "max": 30,
+   "aliases": [
+    "three_nt.range_max"
+   ]
+  },
+  "three_nt.one_suit": {
+   "kind": "bool",
+   "label": "Gambling 3NT",
+   "aliases": [
+    "three_nt.one_suit"
+   ],
+   "level": 6,
+   "skill": "bidding_conventions/gambling_3nt"
+  },
+  "three_nt.one_suit_desc": {
+   "kind": "text",
+   "label": "Gambling 3NT notes",
+   "aliases": [
+    "three_nt.one_suit_desc"
+   ]
+  },
+  "responses.2d_other": {
+   "kind": "text",
+   "label": "2♦ response"
+  },
+  "responses.2h_other": {
+   "kind": "text",
+   "label": "2♥ response"
+  },
+  "responses.2s_other": {
+   "kind": "text",
+   "label": "2♠ response"
+  },
+  "responses.2nt_other": {
+   "kind": "text",
+   "label": "2NT response"
+  },
+  "responses.3c": {
+   "kind": "text",
+   "label": "3♣ response"
+  },
+  "responses.3d": {
+   "kind": "text",
+   "label": "3♦ response"
+  },
+  "responses.3h": {
+   "kind": "text",
+   "label": "3♥ response"
+  },
+  "responses.3s": {
+   "kind": "text",
+   "label": "3♠ response"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Notrump notes",
+   "note": true
+  },
+  "one_nt.range_min_plus": {
+   "kind": "bool",
+   "label": "1NT range: minimum has a plus",
+   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+  },
+  "one_nt.range_max_plus": {
+   "kind": "bool",
+   "label": "1NT range: maximum has a plus",
+   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+  },
+  "one_nt_alt.range_min_plus": {
+   "kind": "bool",
+   "label": "Alternate 1NT range: minimum has a plus",
+   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+  },
+  "one_nt_alt.range_max_plus": {
+   "kind": "bool",
+   "label": "Alternate 1NT range: maximum has a plus",
+   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+  }
+ },
+ "major_openings": {
+  "five_card_majors": {
+   "kind": "bool",
+   "label": "Five-card majors",
+   "default": true
+  },
+  "min_length_1st_2nd": {
+   "kind": "enum",
+   "label": "Min length 1st/2nd seat",
+   "options": [
+    "4",
+    "5"
+   ],
+   "default": "5"
+  },
+  "min_length_3rd_4th": {
+   "kind": "enum",
+   "label": "Min length 3rd/4th seat",
+   "options": [
+    "4",
+    "5"
+   ],
+   "default": "5"
+  },
+  "one_nt_response.forcing": {
+   "kind": "bool",
+   "label": "Forcing 1NT response",
+   "skill": "bidding_conventions/forcing_1nt",
+   "level": 4,
+   "choice": "major_openings.one_nt_response"
+  },
+  "one_nt_response.semi_forcing": {
+   "kind": "bool",
+   "label": "Semi-forcing 1NT response",
+   "skill": "bidding_conventions/semi_forcing_1nt",
+   "level": 5,
+   "choice": "major_openings.one_nt_response"
+  },
+  "one_nt_response.bypass_1s": {
+   "kind": "bool",
+   "label": "1NT may bypass 1♠ over 1♥",
+   "level": 4
+  },
+  "two_over_one.game_force": {
+   "kind": "bool",
+   "label": "2/1 game force",
+   "skill": "bidding_conventions/two_over_one",
+   "level": 4
+  },
+  "three_nt_raise.play": {
+   "kind": "bool",
+   "label": "3NT artificial raise (4-3-3-3)",
+   "level": 6
+  },
+  "art_raises_other": {
+   "kind": "text",
+   "label": "Other artificial raises"
+  },
+  "jump_raise.weak": {
+   "kind": "bool",
+   "label": "Jump raise: weak",
+   "level": 4,
+   "choice": "major_openings.jump_raise"
+  },
+  "jump_raise.mixed": {
+   "kind": "bool",
+   "label": "Jump raise: mixed",
+   "level": 6,
+   "choice": "major_openings.jump_raise"
+  },
+  "jump_raise.inv": {
+   "kind": "bool",
+   "label": "Jump raise: invitational",
+   "level": 3,
+   "choice": "major_openings.jump_raise"
+  },
+  "jump_raise_after_overcall.weak": {
+   "kind": "bool",
+   "label": "Jump raise after overcall: weak",
+   "level": 4,
+   "choice": "major_openings.jump_raise_after_overcall"
+  },
+  "jump_raise_after_overcall.mixed": {
+   "kind": "bool",
+   "label": "Jump raise after overcall: mixed",
+   "level": 6,
+   "choice": "major_openings.jump_raise_after_overcall"
+  },
+  "jump_raise_after_overcall.inv": {
+   "kind": "bool",
+   "label": "Jump raise after overcall: invitational",
+   "level": 4,
+   "choice": "major_openings.jump_raise_after_overcall"
+  },
+  "jacoby_2nt.play": {
+   "kind": "bool",
+   "label": "Jacoby 2NT",
+   "skill": [
+    "bidding_conventions/jacoby_2nt",
+    "bidding_conventions/jacoby_2nt_splinters"
+   ],
+   "level": 4
+  },
+  "jacoby_2nt.modified": {
+   "kind": "bool",
+   "label": "Modified Jacoby 2NT",
+   "skill": [
+    "bidding_conventions/modified_jacoby_2nt",
+    "bidding_conventions/jacoby_2nt_splinters"
+   ],
+   "level": 6
+  },
+  "bergen_raises.play": {
+   "kind": "bool",
+   "label": "Bergen raises",
+   "skill": "bidding_conventions/bergen_raises",
+   "level": 5,
+   "choice": "major_openings.bergen"
+  },
+  "bergen_raises.reverse": {
+   "kind": "bool",
+   "label": "Reverse Bergen raises",
+   "skill": "bidding_conventions/reverse_bergen_raises",
+   "level": 6,
+   "choice": "major_openings.bergen"
+  },
+  "splinters.play": {
+   "kind": "bool",
+   "label": "Splinters",
+   "skill": [
+    "bidding_conventions/splinters",
+    "bidding_conventions/jacoby_2nt_splinters"
+   ],
+   "level": 5
+  },
+  "splinters.by_responder": {
+   "kind": "bool",
+   "label": "Splinters by responder",
+   "skill": [
+    "bidding_conventions/splinters",
+    "bidding_conventions/jacoby_2nt_splinters"
+   ],
+   "level": 5
+  },
+  "splinters.by_opener": {
+   "kind": "bool",
+   "label": "Splinters by opener",
+   "skill": [
+    "bidding_conventions/splinters",
+    "bidding_conventions/jacoby_2nt_splinters"
+   ],
+   "level": 6
+  },
+  "mini_splinters.play": {
+   "kind": "bool",
+   "label": "Mini splinters",
+   "skill": "bidding_conventions/splinters",
+   "level": 7
+  },
+  "drury.play": {
+   "kind": "bool",
+   "label": "Drury",
+   "skill": "bidding_conventions/drury",
+   "level": 5
+  },
+  "drury.reverse": {
+   "kind": "bool",
+   "label": "Reverse Drury",
+   "skill": "bidding_conventions/reverse_drury",
+   "level": 5
+  },
+  "drury.two_d": {
+   "kind": "bool",
+   "label": "Two-way Drury (2♦)",
+   "skill": "bidding_conventions/two_way_drury",
+   "level": 6,
+   "aliases": [
+    "major_openings.drury.two_way"
+   ]
+  },
+  "drury.in_comp": {
+   "kind": "bool",
+   "label": "Drury in competition",
+   "skill": "bidding_conventions/drury",
+   "level": 6
+  },
+  "gazzilli.play": {
+   "kind": "bool",
+   "label": "Gazzilli",
+   "skill": "bidding_conventions/gazzilli",
+   "level": 9
+  },
+  "impossible_2s.play": {
+   "kind": "bool",
+   "label": "Impossible 2♠",
+   "desc": "1♥–1NT–2m–2♠: artificial, a good raise of opener's minor (4+, the top of the 1NT response), forcing to three of the minor",
+   "skill": "bidding_conventions/impossible_2s",
+   "level": 7
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Major opening notes",
+   "note": true
+  },
+  "bergen_raises_notes": {
+   "kind": "text",
+   "label": "Bergen raises notes",
+   "note": true
+  },
+  "two_nt_response_forcing": {
+   "kind": "bool",
+   "label": "1M–2NT forcing"
+  },
+  "two_nt_response_inv": {
+   "kind": "bool",
+   "label": "1M–2NT invitational"
+  },
+  "two_nt_response_range_min": {
+   "kind": "int",
+   "label": "1M–2NT range: minimum",
+   "min": 0,
+   "max": 30
+  },
+  "two_nt_response_range_max": {
+   "kind": "int",
+   "label": "1M–2NT range: maximum",
+   "min": 0,
+   "max": 30
+  },
+  "drury.fit": {
+   "kind": "bool",
+   "label": "Drury: fit"
+  },
+  "two_over_one.game_forcing_except": {
+   "kind": "bool",
+   "label": "2/1 game forcing except when suit rebid",
+   "skill": "bidding_conventions/two_over_one",
+   "level": 5
+  },
+  "three_nt_raise.range_min": {
+   "kind": "int",
+   "label": "3NT artificial raise: minimum",
+   "min": 0,
+   "max": 25
+  },
+  "three_nt_raise.range_max": {
+   "kind": "int",
+   "label": "3NT artificial raise: maximum",
+   "min": 0,
+   "max": 25
+  }
+ },
+ "minor_openings": {
+  "one_club.min_length": {
+   "kind": "enum",
+   "label": "1♣ min length",
+   "options": [
+    "2",
+    "3",
+    "4",
+    "5"
+   ],
+   "default": "3"
+  },
+  "one_club.unbalanced": {
+   "kind": "bool",
+   "label": "1♣ unbalanced"
+  },
+  "one_club.nf2": {
+   "kind": "bool",
+   "label": "1♣ NF2",
+   "choice": "minor_openings.one_club_forcing"
+  },
+  "one_club.nf1": {
+   "kind": "bool",
+   "label": "1♣ NF1",
+   "choice": "minor_openings.one_club_forcing"
+  },
+  "one_club.nf0": {
+   "kind": "bool",
+   "label": "1♣ NF0",
+   "choice": "minor_openings.one_club_forcing"
+  },
+  "one_club.art_forcing": {
+   "kind": "bool",
+   "label": "1♣ artificial forcing"
+  },
+  "one_club.transfer_resp": {
+   "kind": "bool",
+   "label": "Transfer responses to 1♣",
+   "skill": "bidding_conventions/transfer_walsh",
+   "level": 9
+  },
+  "one_club.one_nt_range_min": {
+   "kind": "int",
+   "label": "1♣–1NT range: minimum",
+   "min": 0,
+   "max": 20
+  },
+  "one_club.one_nt_range_max": {
+   "kind": "int",
+   "label": "1♣–1NT range: maximum",
+   "min": 0,
+   "max": 20
+  },
+  "one_club.two_nt_range_min": {
+   "kind": "int",
+   "label": "1♣–2NT range: minimum",
+   "min": 0,
+   "max": 20
+  },
+  "one_club.two_nt_range_max": {
+   "kind": "int",
+   "label": "1♣–2NT range: maximum",
+   "min": 0,
+   "max": 20
+  },
+  "one_club.single_raise.nf": {
+   "kind": "bool",
+   "label": "1♣ single raise: non-forcing",
+   "level": 2
+  },
+  "one_club.single_raise.inv": {
+   "kind": "bool",
+   "label": "1♣ single raise: invitational+",
+   "skill": "bidding_conventions/inverted_minors",
+   "level": 5
+  },
+  "one_club.single_raise.gf": {
+   "kind": "bool",
+   "label": "1♣ single raise: game forcing",
+   "skill": "bidding_conventions/inverted_minors",
+   "level": 5
+  },
+  "one_club.jump_raise.weak": {
+   "kind": "bool",
+   "label": "1♣ jump raise: weak",
+   "level": 4,
+   "choice": "minor_openings.jump_raise"
+  },
+  "one_club.jump_raise.mixed": {
+   "kind": "bool",
+   "label": "1♣ jump raise: mixed",
+   "level": 6,
+   "choice": "minor_openings.jump_raise"
+  },
+  "one_club.jump_raise.inv": {
+   "kind": "bool",
+   "label": "1♣ jump raise: invitational",
+   "level": 3,
+   "choice": "minor_openings.jump_raise"
+  },
+  "one_club.jump_raise_after_overcall.weak": {
+   "kind": "bool",
+   "label": "1♣ jump raise after overcall: weak",
+   "level": 4,
+   "choice": "minor_openings.jump_raise_after_overcall"
+  },
+  "one_club.jump_raise_after_overcall.mixed": {
+   "kind": "bool",
+   "label": "1♣ jump raise after overcall: mixed",
+   "level": 6,
+   "choice": "minor_openings.jump_raise_after_overcall"
+  },
+  "one_club.jump_raise_after_overcall.inv": {
+   "kind": "bool",
+   "label": "1♣ jump raise after overcall: invitational",
+   "level": 4,
+   "choice": "minor_openings.jump_raise_after_overcall"
+  },
+  "one_diamond.min_length": {
+   "kind": "enum",
+   "label": "1♦ min length",
+   "options": [
+    "2",
+    "3",
+    "4",
+    "5"
+   ],
+   "default": "3"
+  },
+  "one_diamond.unbalanced": {
+   "kind": "bool",
+   "label": "1♦ unbalanced"
+  },
+  "one_diamond.nf2_4432_only": {
+   "kind": "bool",
+   "label": "1♦ NF2 (4-4-3-2 only)"
+  },
+  "one_diamond.same_as_1c": {
+   "kind": "bool",
+   "label": "1♦ responses same as over 1♣"
+  },
+  "bypass_5_plus": {
+   "kind": "bool",
+   "label": "Bypass 5+ ♦ to bid 1♥/1♠"
+  },
+  "may_hold_5_card_major": {
+   "kind": "bool",
+   "label": "1♣/1♦ may hold a 5-card major",
+   "desc": "Usually a longer minor (6+) with reverse strength, planning to rebid the major"
+  },
+  "inverted_minors.play": {
+   "kind": "bool",
+   "label": "Inverted minors",
+   "skill": "bidding_conventions/inverted_minors",
+   "level": 5
+  },
+  "walsh.play": {
+   "kind": "bool",
+   "label": "Walsh responses (BBA's switch)",
+   "desc": "BBA's 'Walsh style'. With it on BBA still bids 1♦ over 1♣ with four diamonds and a four-card major, so our rules read one_club_responses instead",
+   "skill": "bidding_conventions/walsh",
+   "level": 4
+  },
+  "one_club_responses": {
+   "kind": "enum",
+   "label": "1♣ responses with diamonds and a major",
+   "options": [
+    "up_the_line",
+    "walsh"
+   ],
+   "default": "up_the_line",
+   "desc": "up_the_line: 1♦ with four diamonds and a four-card major (as BBA). walsh: bypass diamonds for the major unless game forcing"
+  },
+  "two_nt_response": {
+   "kind": "enum",
+   "label": "1m–2NT response",
+   "options": [
+    "invitational",
+    "game_forcing"
+   ],
+   "default": "invitational",
+   "desc": "invitational: 11-12 (as BBA). game_forcing: 13-15, and 1m–3NT 16-17"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Minor opening notes",
+   "note": true
+  },
+  "one_diamond.art_forcing": {
+   "kind": "bool",
+   "label": "1♦ artificial forcing"
+  },
+  "one_club.single_raise.other": {
+   "kind": "text",
+   "label": "1♣ single raise: other"
+  },
+  "one_diamond.one_nt_range_min": {
+   "kind": "int",
+   "label": "1♦–1NT range: minimum",
+   "min": 0,
+   "max": 30
+  },
+  "one_diamond.one_nt_range_max": {
+   "kind": "int",
+   "label": "1♦–1NT range: maximum",
+   "min": 0,
+   "max": 30
+  },
+  "one_diamond.two_nt_range_min": {
+   "kind": "int",
+   "label": "1♦–2NT range: minimum",
+   "min": 0,
+   "max": 30
+  },
+  "one_diamond.two_nt_range_max": {
+   "kind": "int",
+   "label": "1♦–2NT range: maximum",
+   "min": 0,
+   "max": 30
+  },
+  "one_diamond.single_raise.nf": {
+   "kind": "bool",
+   "label": "1♦ single raise: non-forcing",
+   "level": 2
+  },
+  "one_diamond.single_raise.inv": {
+   "kind": "bool",
+   "label": "1♦ single raise: invitational+",
+   "skill": "bidding_conventions/inverted_minors",
+   "level": 5
+  },
+  "one_diamond.single_raise.gf": {
+   "kind": "bool",
+   "label": "1♦ single raise: game forcing",
+   "skill": "bidding_conventions/inverted_minors",
+   "level": 5
+  },
+  "one_diamond.jump_raise.weak": {
+   "kind": "bool",
+   "label": "1♦ jump raise: weak",
+   "level": 4,
+   "choice": "minor_openings.one_diamond.jump_raise"
+  },
+  "one_diamond.jump_raise.mixed": {
+   "kind": "bool",
+   "label": "1♦ jump raise: mixed",
+   "level": 6,
+   "choice": "minor_openings.one_diamond.jump_raise"
+  },
+  "one_diamond.jump_raise.inv": {
+   "kind": "bool",
+   "label": "1♦ jump raise: invitational",
+   "level": 3,
+   "choice": "minor_openings.one_diamond.jump_raise"
+  },
+  "one_diamond.jump_raise_after_overcall.weak": {
+   "kind": "bool",
+   "label": "1♦ jump raise after overcall: weak",
+   "level": 4,
+   "choice": "minor_openings.one_diamond.jump_raise_after_overcall"
+  },
+  "one_diamond.jump_raise_after_overcall.mixed": {
+   "kind": "bool",
+   "label": "1♦ jump raise after overcall: mixed",
+   "level": 6,
+   "choice": "minor_openings.one_diamond.jump_raise_after_overcall"
+  },
+  "one_diamond.jump_raise_after_overcall.inv": {
+   "kind": "bool",
+   "label": "1♦ jump raise after overcall: invitational",
+   "level": 4,
+   "choice": "minor_openings.one_diamond.jump_raise_after_overcall"
+  },
+  "one_club.three_nt_range_min": {
+   "kind": "int",
+   "label": "1♣–3NT range: minimum",
+   "min": 0,
+   "max": 25
+  },
+  "one_club.three_nt_range_max": {
+   "kind": "int",
+   "label": "1♣–3NT range: maximum",
+   "min": 0,
+   "max": 25
+  }
+ },
+ "two_level": {
+  "two_clubs.meaning": {
+   "kind": "enum",
+   "label": "2♣ meaning",
+   "options": [
+    "very_strong",
+    "strong",
+    "natural",
+    "conventional"
+   ],
+   "default": "strong",
+   "skill": "bidding_conventions/strong_2c",
+   "level": 3
+  },
+  "two_clubs.min_hcp": {
+   "kind": "int",
+   "label": "2♣ minimum HCP",
+   "min": 0,
+   "max": 30
+  },
+  "two_clubs.min_hcp_str": {
+   "kind": "text",
+   "label": "2♣ minimum (text)"
+  },
+  "two_clubs.2d_response": {
+   "kind": "enum",
+   "label": "2♣–2♦ response",
+   "options": [
+    "negative",
+    "waiting",
+    "steps"
+   ]
+  },
+  "two_clubs.2h_response": {
+   "kind": "enum",
+   "label": "2♣–2♥ response",
+   "options": [
+    "negative",
+    "steps"
+   ]
+  },
+  "two_clubs.kokish": {
+   "kind": "bool",
+   "label": "Kokish relay",
+   "skill": "bidding_conventions/kokish",
+   "level": 8
+  },
+  "two_clubs.parrish_bust": {
+   "kind": "bool",
+   "label": "Parrish 2♥ bust",
+   "skill": "bidding_conventions/two_heart_bust",
+   "level": 7
+  },
+  "two_diamonds.meaning": {
+   "kind": "enum",
+   "label": "2♦ meaning",
+   "options": [
+    "weak",
+    "intermediate",
+    "strong",
+    "conventional"
+   ],
+   "skill": "bidding_conventions/weak_2s",
+   "level": 3
+  },
+  "two_diamonds.min_hcp": {
+   "kind": "int",
+   "label": "2♦ range: minimum",
+   "min": 0,
+   "max": 30
+  },
+  "two_diamonds.max_hcp": {
+   "kind": "int",
+   "label": "2♦ range: maximum",
+   "min": 0,
+   "max": 30
+  },
+  "two_diamonds.min_length": {
+   "kind": "int",
+   "label": "2♦ minimum length",
+   "min": 4,
+   "max": 8
+  },
+  "two_diamonds.two_suited": {
+   "kind": "bool",
+   "label": "2♦ two-suited"
+  },
+  "two_diamonds.new_suit_nf": {
+   "kind": "bool",
+   "label": "2♦: new suit non-forcing"
+  },
+  "two_diamonds.rebids_2nt": {
+   "kind": "text",
+   "label": "2♦: 2NT response",
+   "aliases": [
+    "two_level.two_diamonds.rebid_2nt"
+   ]
+  },
+  "two_diamonds.multi": {
+   "kind": "bool",
+   "label": "Multi 2♦",
+   "skill": "bidding_conventions/multi_2d",
+   "level": 8
+  },
+  "two_diamonds.mini_roman": {
+   "kind": "bool",
+   "label": "Mini-Roman 2♦",
+   "skill": "bidding_conventions/mini_roman_2d",
+   "level": 7
+  },
+  "two_diamonds.reverse_flannery": {
+   "kind": "bool",
+   "label": "Reverse Flannery 2♦",
+   "skill": "bidding_conventions/reverse_flannery",
+   "level": 8
+  },
+  "two_hearts.meaning": {
+   "kind": "enum",
+   "label": "2♥ meaning",
+   "options": [
+    "weak",
+    "intermediate",
+    "strong",
+    "conventional"
+   ],
+   "skill": "bidding_conventions/weak_2s",
+   "level": 3
+  },
+  "two_hearts.min_hcp": {
+   "kind": "int",
+   "label": "2♥ range: minimum",
+   "min": 0,
+   "max": 30
+  },
+  "two_hearts.max_hcp": {
+   "kind": "int",
+   "label": "2♥ range: maximum",
+   "min": 0,
+   "max": 30
+  },
+  "two_hearts.min_length": {
+   "kind": "int",
+   "label": "2♥ minimum length",
+   "min": 4,
+   "max": 8
+  },
+  "two_hearts.two_suited": {
+   "kind": "bool",
+   "label": "2♥ two-suited"
+  },
+  "two_hearts.new_suit_nf": {
+   "kind": "bool",
+   "label": "2♥: new suit non-forcing"
+  },
+  "two_hearts.rebids_2nt": {
+   "kind": "text",
+   "label": "2♥: 2NT response",
+   "aliases": [
+    "two_level.two_hearts.rebid_2nt"
+   ]
+  },
+  "two_spades.meaning": {
+   "kind": "enum",
+   "label": "2♠ meaning",
+   "options": [
+    "weak",
+    "intermediate",
+    "strong",
+    "conventional"
+   ],
+   "skill": "bidding_conventions/weak_2s",
+   "level": 3
+  },
+  "two_spades.min_hcp": {
+   "kind": "int",
+   "label": "2♠ range: minimum",
+   "min": 0,
+   "max": 30
+  },
+  "two_spades.max_hcp": {
+   "kind": "int",
+   "label": "2♠ range: maximum",
+   "min": 0,
+   "max": 30
+  },
+  "two_spades.min_length": {
+   "kind": "int",
+   "label": "2♠ minimum length",
+   "min": 4,
+   "max": 8
+  },
+  "two_spades.two_suited": {
+   "kind": "bool",
+   "label": "2♠ two-suited"
+  },
+  "two_spades.new_suit_nf": {
+   "kind": "bool",
+   "label": "2♠: new suit non-forcing"
+  },
+  "two_spades.rebids_2nt": {
+   "kind": "text",
+   "label": "2♠: 2NT response",
+   "aliases": [
+    "two_level.two_spades.rebid_2nt"
+   ]
+  },
+  "ogust.play": {
+   "kind": "bool",
+   "label": "Ogust",
+   "skill": "bidding_conventions/ogust",
+   "level": 5
+  },
+  "weak_two_2nt_response": {
+   "kind": "enum",
+   "label": "Weak two: 2NT response",
+   "options": [
+    "feature",
+    "ogust"
+   ],
+   "default": "feature",
+   "desc": "feature: opener bids a side ace or king with a maximum. ogust: 3♣/3♦/3♥/3♠ show minimum/maximum and suit quality",
+   "skill": "bidding_conventions/ogust",
+   "level": 5
+  },
+  "mccabe.play": {
+   "kind": "bool",
+   "label": "McCabe adjunct",
+   "skill": "bidding_conventions/mccabe",
+   "level": 8
+  },
+  "flannery.play": {
+   "kind": "bool",
+   "label": "Flannery 2♦",
+   "skill": "bidding_conventions/flannery",
+   "level": 6
+  },
+  "reverse_flannery.two_h": {
+   "kind": "bool",
+   "label": "Reverse Flannery 2♥",
+   "skill": "bidding_conventions/reverse_flannery",
+   "level": 8
+  },
+  "reverse_flannery.two_s": {
+   "kind": "bool",
+   "label": "Reverse Flannery 2♠",
+   "skill": "bidding_conventions/reverse_flannery",
+   "level": 8
+  },
+  "benjamin.play": {
+   "kind": "bool",
+   "label": "Benjamin 2♦",
+   "skill": "bidding_conventions/benjamin_2d",
+   "level": 8
+  },
+  "french_2d.play": {
+   "kind": "bool",
+   "label": "French 2♦",
+   "skill": "bidding_conventions/french_2d",
+   "level": 8
+  },
+  "precision_2d.play": {
+   "kind": "bool",
+   "label": "Precision 2♦",
+   "skill": "bidding_conventions/precision_2d",
+   "level": 7
+  },
+  "polish_two_suiters.play": {
+   "kind": "bool",
+   "label": "Polish two-suiters",
+   "skill": "bidding_conventions/polish_two_suiters",
+   "level": 9
+  },
+  "wilkosz.play": {
+   "kind": "bool",
+   "label": "Wilkosz 2♦",
+   "skill": "bidding_conventions/wilkosz",
+   "level": 9
+  },
+  "two_clubs.max_hcp": {
+   "kind": "text",
+   "label": "2♣ maximum (text)",
+   "desc": "Bridge-Classroom keeps it as written (BBO's 2CMax)"
+  },
+  "two_clubs.description": {
+   "kind": "text",
+   "label": "2♣: describe",
+   "note": true
+  },
+  "two_clubs.continuation_describe": {
+   "kind": "text",
+   "label": "2♣: describe (second line)",
+   "note": true
+  },
+  "two_clubs.notes": {
+   "kind": "text",
+   "label": "2♣: responses / rebids",
+   "note": true
+  },
+  "two_clubs.continuation_response": {
+   "kind": "text",
+   "label": "2♣: responses / rebids (second line)",
+   "note": true
+  },
+  "two_diamonds.description": {
+   "kind": "text",
+   "label": "2♦: describe",
+   "note": true
+  },
+  "two_diamonds.notes": {
+   "kind": "text",
+   "label": "2♦: responses / rebids",
+   "note": true
+  },
+  "two_diamonds.two_nt_force": {
+   "kind": "bool",
+   "label": "2♦: 2NT response forcing"
+  },
+  "two_hearts.description": {
+   "kind": "text",
+   "label": "2♥: describe",
+   "note": true
+  },
+  "two_hearts.notes": {
+   "kind": "text",
+   "label": "2♥: responses / rebids",
+   "note": true
+  },
+  "two_hearts.two_nt_force": {
+   "kind": "bool",
+   "label": "2♥: 2NT response forcing"
+  },
+  "two_spades.description": {
+   "kind": "text",
+   "label": "2♠: describe",
+   "note": true
+  },
+  "two_spades.notes": {
+   "kind": "text",
+   "label": "2♠: responses / rebids",
+   "note": true
+  },
+  "two_spades.two_nt_force": {
+   "kind": "bool",
+   "label": "2♠: 2NT response forcing"
+  }
+ },
+ "preempts": {
+  "three_level_style": {
+   "kind": "text",
+   "label": "3-level style"
+  },
+  "three_level_response": {
+   "kind": "text",
+   "label": "3-level responses"
+  },
+  "four_level_style": {
+   "kind": "text",
+   "label": "4-level style"
+  },
+  "four_level_response": {
+   "kind": "text",
+   "label": "4-level responses"
+  },
+  "transfer_4_minor": {
+   "kind": "bool",
+   "label": "4♣/4♦ transfer to major",
+   "skill": "bidding_conventions/namyats",
+   "level": 6
+  },
+  "namyats.play": {
+   "kind": "bool",
+   "label": "Namyats",
+   "skill": "bidding_conventions/namyats",
+   "level": 6
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Preempt notes",
+   "note": true
+  }
+ },
+ "slam": {
+  "blackwood.standard": {
+   "kind": "bool",
+   "label": "Standard Blackwood",
+   "aliases": [
+    "other_conventions.blackwood.standard"
+   ],
+   "skill": "bidding_conventions/blackwood",
+   "level": 2,
+   "choice": "slam.keycard_responses"
+  },
+  "blackwood.rkcb_1430": {
+   "kind": "bool",
+   "label": "RKCB 1430",
+   "aliases": [
+    "other_conventions.blackwood.rkcb_1430"
+   ],
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 4,
+   "choice": "slam.keycard_responses"
+  },
+  "blackwood.rkcb_0314": {
+   "kind": "bool",
+   "label": "RKCB 0314",
+   "aliases": [
+    "other_conventions.blackwood.rkcb_0314"
+   ],
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 4,
+   "choice": "slam.keycard_responses"
+  },
+  "blackwood.minor_0314": {
+   "kind": "bool",
+   "label": "RKCB 0314 with a minor as trumps (1430 in the majors)",
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 6
+  },
+  "blackwood.queen_ask": {
+   "kind": "bool",
+   "label": "Queen ask",
+   "aliases": [
+    "other_conventions.blackwood.queen_ask"
+   ],
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 6
+  },
+  "blackwood.notes": {
+   "kind": "text",
+   "label": "4NT notes",
+   "aliases": [
+    "other_conventions.blackwood.notes"
+   ]
+  },
+  "king_ask.five_nt": {
+   "kind": "bool",
+   "label": "King ask by 5NT",
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 5,
+   "choice": "slam.king_ask"
+  },
+  "king_ask.next_step": {
+   "kind": "bool",
+   "label": "King ask by next available bid",
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 7,
+   "choice": "slam.king_ask"
+  },
+  "quantitative_4nt.play": {
+   "kind": "bool",
+   "label": "Quantitative 4NT",
+   "level": 3
+  },
+  "four_nt_opening.play": {
+   "kind": "bool",
+   "label": "4NT opening (specific aces)",
+   "level": 8
+  },
+  "gerber.play": {
+   "kind": "bool",
+   "label": "Gerber",
+   "aliases": [
+    "other_conventions.gerber.play"
+   ],
+   "skill": "bidding_conventions/gerber",
+   "level": 3
+  },
+  "gerber.over": {
+   "kind": "text",
+   "label": "Gerber applies over"
+  },
+  "gerber.only_over_nt_openings": {
+   "kind": "bool",
+   "label": "Gerber only over NT openings"
+  },
+  "gerber.directly_over_nt": {
+   "kind": "bool",
+   "label": "Gerber directly over NT",
+   "aliases": [
+    "other_conventions.gerber.directly_over_nt"
+   ]
+  },
+  "gerber.over_nt_seq": {
+   "kind": "bool",
+   "label": "Gerber over NT sequence",
+   "aliases": [
+    "other_conventions.gerber.over_nt_seq"
+   ]
+  },
+  "gerber.non_nt_seq": {
+   "kind": "bool",
+   "label": "Gerber in non-NT sequence",
+   "aliases": [
+    "other_conventions.gerber.non_nt_seq"
+   ]
+  },
+  "kickback.play": {
+   "kind": "bool",
+   "label": "Kickback",
+   "aliases": [
+    "other_conventions.kickback.play"
+   ],
+   "skill": "bidding_conventions/kickback",
+   "level": 9
+  },
+  "kickback.rkcb_1430": {
+   "kind": "bool",
+   "label": "Kickback 1430",
+   "skill": "bidding_conventions/kickback",
+   "level": 9,
+   "choice": "slam.kickback_responses"
+  },
+  "kickback.rkcb_0314": {
+   "kind": "bool",
+   "label": "Kickback 0314",
+   "skill": "bidding_conventions/kickback",
+   "level": 9,
+   "choice": "slam.kickback_responses"
+  },
+  "minorwood.play": {
+   "kind": "bool",
+   "label": "Minorwood",
+   "skill": "bidding_conventions/minorwood",
+   "level": 7
+  },
+  "exclusion_blackwood.play": {
+   "kind": "bool",
+   "label": "Exclusion Blackwood",
+   "skill": "bidding_conventions/exclusion_blackwood",
+   "level": 7
+  },
+  "pick_a_slam_5nt.play": {
+   "kind": "bool",
+   "label": "Pick-a-slam 5NT",
+   "skill": "bidding_conventions/pick_a_slam_5nt",
+   "level": 7
+  },
+  "western_cuebid.play": {
+   "kind": "bool",
+   "label": "Western cuebid",
+   "skill": "bidding_conventions/western_cuebid",
+   "level": 4
+  },
+  "spiral_cuebids.play": {
+   "kind": "bool",
+   "label": "Spiral cuebids",
+   "skill": "bidding_conventions/spiral",
+   "level": 8
+  },
+  "non_serious_3nt.play": {
+   "kind": "bool",
+   "label": "Non-serious 3NT",
+   "skill": "bidding_conventions/serious_3nt",
+   "level": 9
+  },
+  "dopi": {
+   "kind": "bool",
+   "label": "DOPI",
+   "skill": "bidding_conventions/dopi_ropi",
+   "level": 7
+  },
+  "depo": {
+   "kind": "bool",
+   "label": "DEPO",
+   "skill": "bidding_conventions/depo",
+   "level": 7
+  },
+  "ropi": {
+   "kind": "bool",
+   "label": "ROPI",
+   "skill": "bidding_conventions/dopi_ropi",
+   "level": 7
+  },
+  "control_bids": {
+   "kind": "text",
+   "label": "Control bids (notes)"
+  },
+  "cue_bids.play": {
+   "kind": "bool",
+   "label": "Control (cue) bids",
+   "desc": "BBA's 'Cue bid'. With a trump suit agreed and slam in the air, bid a control below game instead of asking straight away",
+   "skill": "bidding_conventions/control_bids",
+   "level": 5
+  },
+  "cue_bids.style": {
+   "kind": "enum",
+   "label": "Control bids show",
+   "options": [
+    "first_round",
+    "first_or_second_round"
+   ],
+   "default": "first_or_second_round",
+   "desc": "first_round: the ace or a void only. first_or_second_round: king and singleton too, which is the more common modern treatment"
+  },
+  "vs_interference": {
+   "kind": "text",
+   "label": "Vs interference"
+  },
+  "trump_level": {
+   "kind": "text",
+   "label": "Trump-level cutover"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Slam notes",
+   "note": true
+  }
+ },
+ "overcalls": {
+  "one_level_min": {
+   "kind": "int",
+   "label": "1-level overcall: minimum",
+   "min": 0,
+   "max": 20
+  },
+  "one_level_max": {
+   "kind": "int",
+   "label": "1-level overcall: maximum",
+   "min": 0,
+   "max": 25
+  },
+  "two_level_min": {
+   "kind": "int",
+   "label": "2-level overcall: minimum",
+   "min": 0,
+   "max": 20
+  },
+  "two_level_max": {
+   "kind": "int",
+   "label": "2-level overcall: maximum",
+   "min": 0,
+   "max": 25
+  },
+  "often_4_cards": {
+   "kind": "bool",
+   "label": "Often 4-card suits at 1-level"
+  },
+  "jump": {
+   "kind": "enum",
+   "label": "Jump overcalls",
+   "options": [
+    "weak",
+    "intermediate",
+    "strong"
+   ],
+   "level": 3
+  },
+  "conv_text": {
+   "kind": "text",
+   "label": "Conventional overcalls"
+  },
+  "responses.new_suit": {
+   "kind": "enum",
+   "label": "New-suit response",
+   "options": [
+    "forcing",
+    "nf_constructive",
+    "nf",
+    "transfer"
+   ]
+  },
+  "responses.jump_raise": {
+   "kind": "enum",
+   "label": "Jump-raise response",
+   "options": [
+    "weak",
+    "mixed",
+    "invitational"
+   ]
+  },
+  "responses.cuebids_text": {
+   "kind": "text",
+   "label": "Cuebid response"
+  },
+  "responses.support_cuebid": {
+   "kind": "bool",
+   "label": "Support cuebid",
+   "skill": "competitive_bidding/support_cuebids",
+   "level": 4
+  },
+  "responses.natural_in_responders_suit": {
+   "kind": "bool",
+   "label": "Advancer's bid of responder's suit is natural",
+   "desc": "(1♣) 1♦ (1♥) 2♥ is natural: RHO's 1♥ promises only 4, so advancer shows 5+. 2♣ would be the cue-bid raise",
+   "level": 6
+  },
+  "very_light": {
+   "kind": "bool",
+   "label": "Very light overcalls"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Overcall notes (card write-in)",
+   "note": true
+  }
+ },
+ "nt_overcalls": {
+  "direct.range_min": {
+   "kind": "int",
+   "label": "Direct 1NT: minimum",
+   "min": 0,
+   "max": 25
+  },
+  "direct.range_max": {
+   "kind": "int",
+   "label": "Direct 1NT: maximum",
+   "min": 0,
+   "max": 25
+  },
+  "direct.systems_on": {
+   "kind": "bool",
+   "label": "Direct 1NT: systems on",
+   "level": 4
+  },
+  "balance.range_min": {
+   "kind": "int",
+   "label": "Balancing 1NT: minimum",
+   "min": 0,
+   "max": 25
+  },
+  "balance.range_max": {
+   "kind": "int",
+   "label": "Balancing 1NT: maximum",
+   "min": 0,
+   "max": 25
+  },
+  "balance.systems_on": {
+   "kind": "bool",
+   "label": "Balancing 1NT: systems on",
+   "level": 4
+  },
+  "jump_2nt_lowest_unbid": {
+   "kind": "bool",
+   "label": "Jump 2NT = two lowest unbid",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 4
+  },
+  "conv_text": {
+   "kind": "text",
+   "label": "Other treatments"
+  },
+  "jump_2nt_minors": {
+   "kind": "bool",
+   "label": "Jump 2NT: minors"
+  },
+  "direct.conv_text": {
+   "kind": "text",
+   "label": "Direct 1NT: conventional"
+  },
+  "balance.conv_text": {
+   "kind": "text",
+   "label": "Balancing 1NT: conventional"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "NT overcall notes (card write-in)",
+   "note": true
+  }
+ },
+ "doubles": {
+  "takeout_style": {
+   "kind": "text",
+   "label": "Takeout double style",
+   "aliases": [
+    "competitive.takeout_doubles.style"
+   ],
+   "skill": "competitive_bidding/takeout_doubles",
+   "level": 2
+  },
+  "negative.play": {
+   "kind": "bool",
+   "label": "Negative doubles",
+   "skill": "competitive_bidding/negative_doubles",
+   "level": 3
+  },
+  "negative.through": {
+   "kind": "text",
+   "label": "Negative doubles through",
+   "aliases": [
+    "competitive.negative_doubles.through"
+   ],
+   "skill": "competitive_bidding/negative_doubles"
+  },
+  "responsive.play": {
+   "kind": "bool",
+   "label": "Responsive doubles",
+   "skill": "competitive_bidding/responsive_doubles",
+   "level": 5
+  },
+  "responsive.through": {
+   "kind": "text",
+   "label": "Responsive doubles through"
+  },
+  "support.play": {
+   "kind": "bool",
+   "label": "Support doubles",
+   "skill": "competitive_bidding/support_doubles",
+   "level": 5
+  },
+  "support.through": {
+   "kind": "text",
+   "label": "Support doubles through",
+   "desc": "The highest call by RHO over which the double still shows three-card support, as a bid (2♥, 2S). Unset: two of responder's major"
+  },
+  "support.rdbl": {
+   "kind": "bool",
+   "label": "Support redouble",
+   "skill": "competitive_bidding/support_doubles",
+   "level": 5
+  },
+  "maximal": {
+   "kind": "bool",
+   "label": "Maximal doubles",
+   "skill": "competitive_bidding/maximal_doubles",
+   "level": 6
+  },
+  "after_overcall_penalty": {
+   "kind": "bool",
+   "label": "Double after overcall: penalty"
+  },
+  "after_overcall_penalty_notes": {
+   "kind": "text",
+   "label": "Special doubles",
+   "note": true
+  },
+  "card_showing": {
+   "kind": "bool",
+   "label": "Card-showing doubles"
+  },
+  "min_offshape_to": {
+   "kind": "bool",
+   "label": "Minimum off-shape takeout doubles"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Double notes (card write-in)",
+   "note": true
+  }
+ },
+ "competitive": {
+  "michaels.play": {
+   "kind": "bool",
+   "label": "Michaels cuebid",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 4
+  },
+  "michaels.strength": {
+   "kind": "enum",
+   "label": "Michaels strength",
+   "options": [
+    "wide_range",
+    "weak_or_strong"
+   ],
+   "default": "wide_range",
+   "desc": "wide_range: any strength from about 7 HCP with five-five (BBA: 8+ total points, 12+ vulnerable). weak_or_strong (mini-maxi): weak, or 16+ and bids again; an intermediate hand overcalls instead. Bridge-Classroom's seed card writes weak_or_strong"
+  },
+  "leaping_michaels.play": {
+   "kind": "bool",
+   "label": "Leaping Michaels",
+   "skill": "competitive_bidding/leaping_michaels",
+   "level": 7,
+   "choice": "competitive.michaels_over_preempts"
+  },
+  "non_leaping_michaels.play": {
+   "kind": "bool",
+   "label": "Non-leaping Michaels",
+   "skill": "competitive_bidding/non_leaping_michaels",
+   "level": 8,
+   "choice": "competitive.michaels_over_preempts"
+  },
+  "unusual_1nt.play": {
+   "kind": "bool",
+   "label": "Unusual 1NT",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 6
+  },
+  "unusual_2nt.play": {
+   "kind": "bool",
+   "label": "Unusual 2NT",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 4
+  },
+  "unusual_2nt.shows": {
+   "kind": "text",
+   "label": "Unusual 2NT shows"
+  },
+  "unusual_3nt.play": {
+   "kind": "bool",
+   "label": "Unusual 3NT",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 6
+  },
+  "unusual_4nt.play": {
+   "kind": "bool",
+   "label": "Unusual 4NT",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 5
+  },
+  "unusual_vs_unusual.play": {
+   "kind": "bool",
+   "label": "Unusual vs Unusual",
+   "skill": "competitive_bidding/unusual_vs_unusual",
+   "level": 8
+  },
+  "vs_1nt_strong.system": {
+   "kind": "enum",
+   "label": "Defense vs strong 1NT",
+   "options": [
+    "cappelletti",
+    "modified_cappelletti",
+    "landy",
+    "multi_landy",
+    "dont",
+    "meckwell",
+    "suction",
+    "other"
+   ],
+   "aliases": [
+    "competitive.defense_vs_strong_nt.convention"
+   ],
+   "value_aliases": {
+    "Hamilton": "cappelletti",
+    "Pottage": "cappelletti",
+    "Disturbing Opponents NT": "dont",
+    "Penalty": "other",
+    "Natural": "other",
+    "Standard": "other",
+    "Strong - Suction": "suction",
+    "Weak - Suction": "suction",
+    "Strong 14+ (Meckwell)": "meckwell",
+    "Weak (Cappelletti)": "cappelletti",
+    "Strong 1NT": "other",
+    "Weak 1NT": "other"
+   },
+   "desc": "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md",
+   "skill": [
+    "competitive_bidding/defense_vs_1nt",
+    "competitive_bidding/cappelletti",
+    "competitive_bidding/modified_cappelletti",
+    "competitive_bidding/dont",
+    "competitive_bidding/meckwell",
+    "competitive_bidding/landy",
+    "competitive_bidding/multi_landy",
+    "competitive_bidding/suction"
+   ],
+   "level": 5
+  },
+  "vs_1nt_strong.dbl": {
+   "kind": "text",
+   "label": "Vs strong 1NT: double"
+  },
+  "vs_1nt_strong.2c": {
+   "kind": "text",
+   "label": "Vs strong 1NT: 2♣"
+  },
+  "vs_1nt_strong.2d": {
+   "kind": "text",
+   "label": "Vs strong 1NT: 2♦"
+  },
+  "vs_1nt_strong.2h": {
+   "kind": "text",
+   "label": "Vs strong 1NT: 2♥"
+  },
+  "vs_1nt_strong.2s": {
+   "kind": "text",
+   "label": "Vs strong 1NT: 2♠"
+  },
+  "vs_1nt_strong.2nt": {
+   "kind": "text",
+   "label": "Vs strong 1NT: 2NT"
+  },
+  "vs_1nt_strong.other": {
+   "kind": "text",
+   "label": "Vs strong 1NT: other"
+  },
+  "vs_1nt_weak.system": {
+   "kind": "enum",
+   "label": "Defense vs weak 1NT",
+   "options": [
+    "cappelletti",
+    "modified_cappelletti",
+    "landy",
+    "multi_landy",
+    "dont",
+    "meckwell",
+    "suction",
+    "other"
+   ],
+   "value_aliases": {
+    "Hamilton": "cappelletti",
+    "Pottage": "cappelletti",
+    "Disturbing Opponents NT": "dont",
+    "Penalty": "other",
+    "Natural": "other",
+    "Standard": "other",
+    "Strong - Suction": "suction",
+    "Weak - Suction": "suction",
+    "Strong 14+ (Meckwell)": "meckwell",
+    "Weak (Cappelletti)": "cappelletti",
+    "Strong 1NT": "other",
+    "Weak 1NT": "other"
+   },
+   "desc": "Not read by the rules yet: vs_1nt_strong.system is played against every range",
+   "skill": [
+    "competitive_bidding/defense_vs_1nt",
+    "competitive_bidding/cappelletti",
+    "competitive_bidding/modified_cappelletti",
+    "competitive_bidding/dont",
+    "competitive_bidding/meckwell",
+    "competitive_bidding/landy",
+    "competitive_bidding/multi_landy",
+    "competitive_bidding/suction"
+   ],
+   "level": 5
+  },
+  "vs_1nt_weak.dbl": {
+   "kind": "text",
+   "label": "Vs weak 1NT: double"
+  },
+  "vs_1nt_weak.2c": {
+   "kind": "text",
+   "label": "Vs weak 1NT: 2♣"
+  },
+  "vs_1nt_weak.2d": {
+   "kind": "text",
+   "label": "Vs weak 1NT: 2♦"
+  },
+  "vs_1nt_weak.2h": {
+   "kind": "text",
+   "label": "Vs weak 1NT: 2♥"
+  },
+  "vs_1nt_weak.2s": {
+   "kind": "text",
+   "label": "Vs weak 1NT: 2♠"
+  },
+  "vs_1nt_weak.2nt": {
+   "kind": "text",
+   "label": "Vs weak 1NT: 2NT"
+  },
+  "vs_1nt_weak.other": {
+   "kind": "text",
+   "label": "Vs weak 1NT: other"
+  },
+  "dont.play": {
+   "kind": "bool",
+   "label": "DONT",
+   "desc": "Bridge-Classroom's DONT switch: plays DONT when vs_1nt_strong.system is unset or other",
+   "skill": "competitive_bidding/dont",
+   "level": 5
+  },
+  "cue_bid_raise.play": {
+   "kind": "bool",
+   "label": "Cue-bid raise",
+   "skill": "competitive_bidding/support_cuebids",
+   "level": 4
+  },
+  "lead_directing_double.play": {
+   "kind": "bool",
+   "label": "Lead-directing doubles",
+   "skill": "competitive_bidding/lead_directing_doubles",
+   "level": 5
+  },
+  "lebensohl_weak_twos.play": {
+   "kind": "bool",
+   "label": "Lebensohl after doubling a weak two",
+   "aliases": [
+    "vs_preempts.lebensohl_response"
+   ],
+   "skill": "competitive_bidding/lebensohl",
+   "level": 7
+  },
+  "rubensohl_after_double.play": {
+   "kind": "bool",
+   "label": "Rubensohl after doubling a weak two",
+   "skill": "competitive_bidding/rubensohl",
+   "level": 9
+  },
+  "sandwich_nt.play": {
+   "kind": "bool",
+   "label": "Sandwich NT",
+   "skill": "competitive_bidding/sandwich_nt",
+   "level": 7
+  },
+  "snapdragon.play": {
+   "kind": "bool",
+   "label": "Snapdragon doubles",
+   "skill": "competitive_bidding/snapdragon",
+   "level": 8
+  },
+  "bromad.play": {
+   "kind": "bool",
+   "label": "BROMAD",
+   "skill": "competitive_bidding/bromad",
+   "level": 8
+  },
+  "ghestem.play": {
+   "kind": "bool",
+   "label": "Ghestem",
+   "skill": "competitive_bidding/ghestem",
+   "level": 8
+  },
+  "raptor_1nt.play": {
+   "kind": "bool",
+   "label": "Raptor 1NT",
+   "skill": "competitive_bidding/raptor",
+   "level": 8
+  },
+  "scrambling_2nt.play": {
+   "kind": "bool",
+   "label": "Scrambling 2NT",
+   "skill": "competitive_bidding/scrambling_2nt",
+   "level": 7
+  },
+  "fit_showing_jumps.play": {
+   "kind": "bool",
+   "label": "Fit-showing jumps",
+   "skill": "competitive_bidding/fit_showing_jumps",
+   "level": 7
+  },
+  "jordan_2nt.play": {
+   "kind": "bool",
+   "label": "Jordan (Truscott) 2NT",
+   "desc": "1M–(X)–2NT shows 4+ card support and 10+ points",
+   "aliases": [
+    "vs_to_double.two_nt_raise_majors.limit_plus"
+   ],
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 5
+  },
+  "new_suit_after_overcall_forcing": {
+   "kind": "bool",
+   "label": "1X–(Y)–2Z new suit forcing",
+   "level": 4
+  },
+  "jump_shift_after_overcall": {
+   "kind": "enum",
+   "label": "1X–(1Y)–2Z jump shift",
+   "options": [
+    "weak",
+    "strong"
+   ]
+  },
+  "direct_jump_cuebid_major": {
+   "kind": "enum",
+   "label": "Direct jump cuebid over a major",
+   "options": [
+    "gambling",
+    "minor",
+    "strong"
+   ]
+  },
+  "direct_jump_cuebid_minor": {
+   "kind": "enum",
+   "label": "Direct jump cuebid over a minor",
+   "options": [
+    "gambling",
+    "majors",
+    "preempt"
+   ]
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Defense vs 1NT notes (card write-in)",
+   "note": true
+  }
+ },
+ "direct_cuebids": {
+  "art_michaels": {
+   "kind": "bool",
+   "label": "Cue of an artificial 1♣/1♦: Michaels",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 4
+  },
+  "art_natural": {
+   "kind": "bool",
+   "label": "Cue of an artificial 1♣/1♦: natural"
+  },
+  "art_other": {
+   "kind": "bool",
+   "label": "Cue of an artificial 1♣/1♦: other"
+  },
+  "quasi_michaels": {
+   "kind": "bool",
+   "label": "Cue of a possibly short 1♣/1♦: Michaels",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 4
+  },
+  "quasi_natural": {
+   "kind": "bool",
+   "label": "Cue of a possibly short 1♣/1♦: natural"
+  },
+  "quasi_other": {
+   "kind": "bool",
+   "label": "Cue of a possibly short 1♣/1♦: other"
+  },
+  "nat_minors_michaels": {
+   "kind": "bool",
+   "label": "Cue of a natural 1♣/1♦: Michaels (both majors)",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 4
+  },
+  "nat_minors_natural": {
+   "kind": "bool",
+   "label": "Cue of a natural 1♣/1♦: natural"
+  },
+  "nat_minors_other": {
+   "kind": "bool",
+   "label": "Cue of a natural 1♣/1♦: other"
+  },
+  "nat_majors_michaels": {
+   "kind": "bool",
+   "label": "Cue of 1♥/1♠: Michaels (the other major and a minor)",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 4
+  },
+  "nat_majors_natural": {
+   "kind": "bool",
+   "label": "Cue of 1♥/1♠: natural"
+  },
+  "nat_majors_other": {
+   "kind": "bool",
+   "label": "Cue of 1♥/1♠: other"
+  },
+  "description": {
+   "kind": "text",
+   "label": "Direct cuebids: notes"
+  }
+ },
+ "carding": {
+  "inverted_count": {
+   "kind": "bool",
+   "label": "Inverted (upside-down) count",
+   "skill": "defense/upside_down_signals",
+   "level": 6
+  },
+  "smith_echo": {
+   "kind": "bool",
+   "label": "Smith echo",
+   "skill": "defense/smith_echo",
+   "level": 8
+  },
+  "lavinthal.from_void": {
+   "kind": "bool",
+   "label": "Lavinthal from void",
+   "skill": "defense/lavinthal",
+   "level": 6
+  },
+  "lavinthal.on_ace": {
+   "kind": "bool",
+   "label": "Lavinthal on ace",
+   "skill": "defense/lavinthal",
+   "level": 6
+  },
+  "lavinthal.on_trump": {
+   "kind": "bool",
+   "label": "Lavinthal on trump",
+   "skill": "defense/lavinthal",
+   "level": 6
+  },
+  "lavinthal.to_void": {
+   "kind": "bool",
+   "label": "Lavinthal to void",
+   "skill": "defense/lavinthal",
+   "level": 6
+  },
+  "declarer_lead.attitude": {
+   "kind": "bool",
+   "label": "Signal on declarer's lead: attitude",
+   "skill": "defense/defensive_signals",
+   "level": 4
+  },
+  "declarer_lead.count": {
+   "kind": "bool",
+   "label": "Signal on declarer's lead: count",
+   "skill": "defense/defensive_signals",
+   "level": 4
+  },
+  "declarer_lead.suit_preference": {
+   "kind": "bool",
+   "label": "Signal on declarer's lead: suit preference",
+   "skill": "defense/defensive_signals",
+   "level": 5
+  },
+  "first_discard.standard": {
+   "kind": "bool",
+   "label": "First discard: standard",
+   "skill": "defense/defensive_signals",
+   "level": 3,
+   "choice": "carding.first_discard"
+  },
+  "first_discard.upside_down": {
+   "kind": "bool",
+   "label": "First discard: upside-down",
+   "skill": "defense/upside_down_signals",
+   "level": 6,
+   "choice": "carding.first_discard"
+  },
+  "first_discard.lavinthal": {
+   "kind": "bool",
+   "label": "First discard: Lavinthal",
+   "skill": "defense/lavinthal",
+   "level": 6,
+   "choice": "carding.first_discard"
+  },
+  "first_discard.lavinthal_suits": {
+   "kind": "bool",
+   "label": "First discard: Lavinthal vs suits",
+   "skill": "defense/lavinthal",
+   "level": 6
+  },
+  "first_discard.lavinthal_nt": {
+   "kind": "bool",
+   "label": "First discard: Lavinthal vs NT",
+   "skill": "defense/lavinthal",
+   "level": 6
+  },
+  "first_discard.odd_even": {
+   "kind": "bool",
+   "label": "First discard: odd/even",
+   "skill": "defense/odd_even_discards",
+   "level": 6,
+   "choice": "carding.first_discard"
+  },
+  "first_discard.odd_even_suits": {
+   "kind": "bool",
+   "label": "First discard: odd/even vs suits",
+   "skill": "defense/odd_even_discards",
+   "level": 6
+  },
+  "first_discard.odd_even_nt": {
+   "kind": "bool",
+   "label": "First discard: odd/even vs NT",
+   "skill": "defense/odd_even_discards",
+   "level": 6
+  },
+  "first_discard.other_suits": {
+   "kind": "text",
+   "label": "First discard: other, vs suits"
+  },
+  "first_discard.other_nt": {
+   "kind": "text",
+   "label": "First discard: other, vs NT"
+  },
+  "first_discard.notes": {
+   "kind": "text",
+   "label": "First discard: notes",
+   "note": true
+  },
+  "exceptions": {
+   "kind": "text",
+   "label": "Carding exceptions"
+  },
+  "smith_echo_reverse": {
+   "kind": "bool",
+   "label": "Reverse Smith echo",
+   "skill": "defense/reverse_smith_echo",
+   "level": 8
+  },
+  "exceptions_present": {
+   "kind": "bool",
+   "label": "Carding exceptions"
+  },
+  "exception_suits": {
+   "kind": "text",
+   "label": "Carding exceptions vs suits"
+  },
+  "exception_nt": {
+   "kind": "text",
+   "label": "Carding exceptions vs NT"
+  },
+  "upside_down_notes": {
+   "kind": "text",
+   "label": "Upside-down signals notes",
+   "note": true
+  },
+  "foster_echo_suits": {
+   "kind": "bool",
+   "label": "Foster echo vs suits"
+  },
+  "foster_echo_nt": {
+   "kind": "bool",
+   "label": "Foster echo vs NT"
+  },
+  "special_carding": {
+   "kind": "bool",
+   "label": "Special carding"
+  },
+  "suits.standard_attitude": {
+   "kind": "bool",
+   "label": "Standard attitude vs suits",
+   "skill": "defense/defensive_signals",
+   "level": 2,
+   "choice": "carding.suits.attitude"
+  },
+  "suits.standard_count": {
+   "kind": "bool",
+   "label": "Standard count vs suits",
+   "skill": "defense/defensive_signals",
+   "level": 3,
+   "choice": "carding.suits.count"
+  },
+  "suits.upside_down_attitude": {
+   "kind": "bool",
+   "label": "Upside-down attitude vs suits",
+   "skill": "defense/upside_down_signals",
+   "level": 6,
+   "choice": "carding.suits.attitude"
+  },
+  "suits.upside_down_count": {
+   "kind": "bool",
+   "label": "Upside-down count vs suits",
+   "skill": "defense/upside_down_signals",
+   "level": 6,
+   "choice": "carding.suits.count"
+  },
+  "nt.standard_attitude": {
+   "kind": "bool",
+   "label": "Standard attitude vs NT",
+   "skill": "defense/defensive_signals",
+   "level": 2,
+   "choice": "carding.nt.attitude"
+  },
+  "nt.standard_count": {
+   "kind": "bool",
+   "label": "Standard count vs NT",
+   "skill": "defense/defensive_signals",
+   "level": 3,
+   "choice": "carding.nt.count"
+  },
+  "nt.upside_down_attitude": {
+   "kind": "bool",
+   "label": "Upside-down attitude vs NT",
+   "skill": "defense/upside_down_signals",
+   "level": 6,
+   "choice": "carding.nt.attitude"
+  },
+  "nt.upside_down_count": {
+   "kind": "bool",
+   "label": "Upside-down count vs NT",
+   "skill": "defense/upside_down_signals",
+   "level": 6,
+   "choice": "carding.nt.count"
+  },
+  "partner_lead.attitude": {
+   "kind": "bool",
+   "label": "Primary signal to partner's lead: attitude",
+   "skill": "defense/defensive_signals",
+   "level": 2,
+   "choice": "carding.partner_lead"
+  },
+  "partner_lead.count": {
+   "kind": "bool",
+   "label": "Primary signal to partner's lead: count",
+   "skill": "defense/defensive_signals",
+   "level": 3,
+   "choice": "carding.partner_lead"
+  },
+  "partner_lead.suit_preference": {
+   "kind": "bool",
+   "label": "Primary signal to partner's lead: suit preference",
+   "skill": "defense/defensive_signals",
+   "level": 5,
+   "choice": "carding.partner_lead"
+  },
+  "smith_echo_suits": {
+   "kind": "bool",
+   "label": "Smith echo vs suits",
+   "skill": "defense/smith_echo",
+   "level": 8
+  },
+  "smith_echo_nt": {
+   "kind": "bool",
+   "label": "Smith echo vs NT",
+   "skill": "defense/smith_echo",
+   "level": 8
+  },
+  "trump_signals": {
+   "kind": "text",
+   "label": "Trump signals"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Carding notes (card write-in)",
+   "note": true
+  }
+ },
+ "other_conventions": {
+  "fourth_suit_forcing.play": {
+   "kind": "bool",
+   "label": "Fourth suit forcing",
+   "desc": "We play fourth suit forcing (Bridge-Classroom's card); one_round / game_force say how far it forces. Turns off responder's natural two-level fourth suit (1♦–1♥–1♠–2♣)",
+   "skill": "bidding_conventions/fourth_suit_forcing",
+   "level": 5
+  },
+  "fourth_suit_forcing.one_round": {
+   "kind": "bool",
+   "label": "Fourth suit forcing (1 round)",
+   "skill": "bidding_conventions/fourth_suit_forcing",
+   "level": 5,
+   "choice": "other_conventions.fourth_suit_forcing"
+  },
+  "fourth_suit_forcing.game_force": {
+   "kind": "bool",
+   "label": "Fourth suit forcing (game force)",
+   "aliases": [
+    "other_conventions.fourth_suit_forcing.game_forcing"
+   ],
+   "skill": "bidding_conventions/fourth_suit_forcing",
+   "level": 5,
+   "choice": "other_conventions.fourth_suit_forcing"
+  },
+  "help_suit_game_tries.play": {
+   "kind": "bool",
+   "label": "Help suit game tries",
+   "skill": "bidding_conventions/help_suit_game_try",
+   "level": 5
+  },
+  "two_way_game_tries.play": {
+   "kind": "bool",
+   "label": "Two-way game tries",
+   "skill": "bidding_conventions/two_way_game_tries",
+   "level": 8
+  },
+  "reverse_bids.forcing": {
+   "kind": "bool",
+   "label": "Reverses forcing",
+   "skill": "bidding_conventions/reverse_bids",
+   "level": 4
+  },
+  "new_minor_forcing.play": {
+   "kind": "bool",
+   "label": "New minor forcing",
+   "skill": "bidding_conventions/new_minor_forcing",
+   "level": 5
+  },
+  "new_minor_forcing.after_2nt_rebid": {
+   "kind": "bool",
+   "label": "NMF after a 2NT rebid",
+   "skill": "bidding_conventions/new_minor_forcing",
+   "level": 6
+  },
+  "new_minor_forcing.by_passed_hand": {
+   "kind": "bool",
+   "label": "NMF by a passed hand",
+   "skill": "bidding_conventions/new_minor_forcing",
+   "level": 6
+  },
+  "two_way_nmf": {
+   "kind": "bool",
+   "label": "Two-way new minor forcing",
+   "skill": "bidding_conventions/two_way_nmf",
+   "level": 8
+  },
+  "two_way_nmf_by_passed_hand": {
+   "kind": "bool",
+   "label": "Two-way NMF by a passed hand",
+   "skill": "bidding_conventions/two_way_nmf",
+   "level": 8
+  },
+  "checkback.play": {
+   "kind": "bool",
+   "label": "Checkback",
+   "skill": "bidding_conventions/checkback",
+   "level": 6
+  },
+  "roudi.play": {
+   "kind": "bool",
+   "label": "Roudi",
+   "skill": "bidding_conventions/roudi",
+   "level": 8
+  },
+  "xyz": {
+   "kind": "bool",
+   "label": "XYZ",
+   "skill": "bidding_conventions/xyz",
+   "level": 9
+  },
+  "sos_redouble.play": {
+   "kind": "bool",
+   "label": "SOS redouble",
+   "skill": "competitive_bidding/sos_redouble",
+   "level": 7
+  },
+  "ingberman_2nt.play": {
+   "kind": "bool",
+   "label": "Ingberman 2NT",
+   "skill": "bidding_conventions/ingberman",
+   "level": 7
+  },
+  "jump_shift_response": {
+   "kind": "text",
+   "label": "Jump shift responses (as written)",
+   "desc": "The card's jump-shift line as an importer wrote it (\"Weak\")"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Other conventions notes",
+   "note": true
+  },
+  "vs_strong_open": {
+   "kind": "text",
+   "label": "Defense vs strong openings"
+  },
+  "wolff_signoff.play": {
+   "kind": "bool",
+   "label": "Wolff sign-off",
+   "desc": "After 1x–1y–2NT, responder's 3♣ asks opener to bid 3♦, to pass or sign off in a suit; every other call but pass forces to game. No .bbsa key (BBA does not play it)",
+   "skill": "bidding_conventions/wolff_signoff",
+   "level": 7
+  },
+  "weak_jump_shifts_not_in_comp": {
+   "kind": "bool",
+   "label": "Weak jump shifts (not in competition)",
+   "skill": "bidding_conventions/weak_jump_shifts",
+   "level": 5
+  },
+  "weak_jump_shifts_in_comp": {
+   "kind": "bool",
+   "label": "Weak jump shifts in competition",
+   "skill": "bidding_conventions/weak_jump_shifts",
+   "level": 5
+  },
+  "weak_jump_shifts_notes": {
+   "kind": "text",
+   "label": "Weak jump shift notes",
+   "note": true
+  },
+  "nmf_notes": {
+   "kind": "text",
+   "label": "New minor forcing notes",
+   "note": true
+  },
+  "fourth_suit_forcing.notes": {
+   "kind": "text",
+   "label": "Fourth suit forcing notes",
+   "note": true
+  },
+  "notes_line_1": {
+   "kind": "text",
+   "label": "Other conventions (write-in line 1)",
+   "note": true
+  },
+  "notes_line_2": {
+   "kind": "text",
+   "label": "Other conventions (write-in line 2)",
+   "note": true
+  }
+ },
+ "vs_to_double": {
+  "new_suit_forcing_1lvl": {
+   "kind": "bool",
+   "label": "Vs takeout double: new suit forcing at the 1-level",
+   "level": 4
+  },
+  "new_suit_forcing_2lvl": {
+   "kind": "bool",
+   "label": "Vs takeout double: new suit forcing at the 2-level",
+   "level": 4
+  },
+  "new_suit_forcing_tfr": {
+   "kind": "bool",
+   "label": "Vs takeout double: transfer responses",
+   "skill": "bidding_conventions/transfers_after_double",
+   "level": 9
+  },
+  "jump_shift": {
+   "kind": "enum",
+   "label": "Vs takeout double: jump shift",
+   "options": [
+    "weak",
+    "mixed",
+    "inv",
+    "forcing",
+    "fit"
+   ]
+  },
+  "redouble.ten_plus": {
+   "kind": "bool",
+   "label": "Vs takeout double: redouble shows 10+",
+   "level": 2
+  },
+  "redouble.conv": {
+   "kind": "bool",
+   "label": "Vs takeout double: conventional redouble",
+   "level": 7
+  },
+  "redouble.denies_fit": {
+   "kind": "bool",
+   "label": "Vs takeout double: redouble implies no fit",
+   "level": 4
+  },
+  "redouble.conv_desc": {
+   "kind": "text",
+   "label": "Vs takeout double: redouble notes",
+   "note": true
+  },
+  "two_nt_raise_majors.play": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT raise of a major",
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 5
+  },
+  "two_nt_raise_majors.limit": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT raise of a major, limit",
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 5,
+   "choice": "vs_to_double.two_nt_raise_majors"
+  },
+  "two_nt_raise_majors.weak": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT raise of a major, weak",
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 7,
+   "choice": "vs_to_double.two_nt_raise_majors"
+  },
+  "two_nt_raise_majors.range_min": {
+   "kind": "int",
+   "label": "Vs takeout double: 2NT over a major, minimum",
+   "min": 0,
+   "max": 25
+  },
+  "two_nt_raise_majors.range_max": {
+   "kind": "int",
+   "label": "Vs takeout double: 2NT over a major, maximum",
+   "min": 0,
+   "max": 25
+  },
+  "two_nt_raise_minors.play": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT raise of a minor",
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 6
+  },
+  "two_nt_raise_minors.limit_plus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT raise of a minor, limit or better",
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 6,
+   "choice": "vs_to_double.two_nt_raise_minors"
+  },
+  "two_nt_raise_minors.limit": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT raise of a minor, limit",
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 6,
+   "choice": "vs_to_double.two_nt_raise_minors"
+  },
+  "two_nt_raise_minors.weak": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT raise of a minor, weak",
+   "skill": "competitive_bidding/jordan_2nt",
+   "level": 7,
+   "choice": "vs_to_double.two_nt_raise_minors"
+  },
+  "two_nt_raise_minors.range_min": {
+   "kind": "int",
+   "label": "Vs takeout double: 2NT over a minor, minimum",
+   "min": 0,
+   "max": 25
+  },
+  "two_nt_raise_minors.range_max": {
+   "kind": "int",
+   "label": "Vs takeout double: 2NT over a minor, maximum",
+   "min": 0,
+   "max": 25
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Vs takeout double notes (card write-in)",
+   "note": true
+  }
+ },
+ "vs_preempts": {
+  "takeout_double": {
+   "kind": "bool",
+   "label": "Vs preempts: double is takeout",
+   "skill": "competitive_bidding/takeout_doubles",
+   "level": 3,
+   "choice": "vs_preempts.double"
+  },
+  "takeout_double_thru": {
+   "kind": "text",
+   "label": "Vs preempts: takeout double through"
+  },
+  "takeout_double_penalty": {
+   "kind": "bool",
+   "label": "Vs preempts: double is penalty",
+   "level": 5,
+   "choice": "vs_preempts.double"
+  },
+  "conv_takeout": {
+   "kind": "text",
+   "label": "Vs preempts: conventional takeout"
+  },
+  "two_nt_overcall": {
+   "kind": "text",
+   "label": "Vs preempts: 2NT overcall"
+  },
+  "cuebid": {
+   "kind": "text",
+   "label": "Vs preempts: cuebid"
+  },
+  "jump_overcalls": {
+   "kind": "text",
+   "label": "Vs preempts: jump overcalls"
+  },
+  "notes": {
+   "kind": "text",
+   "label": "Vs preempts notes (card write-in)",
+   "note": true
+  }
+ },
+ "leads": {
+  "vs_suits.length.fourth_best": {
+   "kind": "bool",
+   "label": "Length leads vs suits: fourth best",
+   "skill": "defense/opening_leads",
+   "level": 2
+  },
+  "vs_nt.length.fourth_best": {
+   "kind": "bool",
+   "label": "Length leads vs NT: fourth best",
+   "skill": "defense/opening_leads",
+   "level": 2
+  },
+  "vs_suits.honors.lead_choice_akx": {
+   "kind": "int",
+   "label": "Lead vs suits from AKx",
+   "min": 1,
+   "max": 3,
+   "desc": "The card led, by its place in the holding: 1 the ace, 2 the king",
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_AKx"
+   ]
+  },
+  "vs_suits.length.lead_choice_xx": {
+   "kind": "int",
+   "label": "Lead vs suits from xx",
+   "min": 1,
+   "max": 2,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.length.lead_choice_xxx": {
+   "kind": "int",
+   "label": "Lead vs suits from xxx",
+   "min": 1,
+   "max": 3,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.length.lead_choice_xxxx": {
+   "kind": "int",
+   "label": "Lead vs suits from xxxx",
+   "min": 1,
+   "max": 4,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.length.lead_choice_xxxxx": {
+   "kind": "int",
+   "label": "Lead vs suits from xxxxx",
+   "min": 1,
+   "max": 5,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.length.lead_choice_hxx": {
+   "kind": "int",
+   "label": "Lead vs suits from Hxx",
+   "min": 1,
+   "max": 3,
+   "aliases": [
+    "leads.vs_suits.length.lead_choice_Hxx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.length.lead_choice_hxxx": {
+   "kind": "int",
+   "label": "Lead vs suits from Hxxx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_suits.length.lead_choice_Hxxx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.length.lead_choice_hxxxx": {
+   "kind": "int",
+   "label": "Lead vs suits from Hxxxx",
+   "min": 1,
+   "max": 5,
+   "aliases": [
+    "leads.vs_suits.length.lead_choice_Hxxxx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.honors.lead_choice_kqx": {
+   "kind": "int",
+   "label": "Lead vs suits from KQx",
+   "min": 1,
+   "max": 3,
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_KQx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.honors.lead_choice_qjx": {
+   "kind": "int",
+   "label": "Lead vs suits from QJx",
+   "min": 1,
+   "max": 3,
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_QJx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.honors.lead_choice_jtx": {
+   "kind": "int",
+   "label": "Lead vs suits from JTx",
+   "min": 1,
+   "max": 3,
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_JTx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.honors.lead_choice_t9x": {
+   "kind": "int",
+   "label": "Lead vs suits from T9x",
+   "min": 1,
+   "max": 3,
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_T9x"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.honors.lead_choice_kjtx": {
+   "kind": "int",
+   "label": "Lead vs suits from KJTx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_KJTx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.honors.lead_choice_kt9x": {
+   "kind": "int",
+   "label": "Lead vs suits from KT9x",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_KT9x"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.honors.lead_choice_qt9x": {
+   "kind": "int",
+   "label": "Lead vs suits from QT9x",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_suits.honors.lead_choice_QT9x"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.length.lead_choice_xx": {
+   "kind": "int",
+   "label": "Lead vs NT from xx",
+   "min": 1,
+   "max": 2,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.length.lead_choice_xxx": {
+   "kind": "int",
+   "label": "Lead vs NT from xxx",
+   "min": 1,
+   "max": 3,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.length.lead_choice_xxxx": {
+   "kind": "int",
+   "label": "Lead vs NT from xxxx",
+   "min": 1,
+   "max": 4,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.length.lead_choice_xxxxx": {
+   "kind": "int",
+   "label": "Lead vs NT from xxxxx",
+   "min": 1,
+   "max": 5,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.length.lead_choice_hxx": {
+   "kind": "int",
+   "label": "Lead vs NT from Hxx",
+   "min": 1,
+   "max": 3,
+   "aliases": [
+    "leads.vs_nt.length.lead_choice_Hxx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.length.lead_choice_hxxx": {
+   "kind": "int",
+   "label": "Lead vs NT from Hxxx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.length.lead_choice_Hxxx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.length.lead_choice_hxxxx": {
+   "kind": "int",
+   "label": "Lead vs NT from Hxxxx",
+   "min": 1,
+   "max": 5,
+   "aliases": [
+    "leads.vs_nt.length.lead_choice_Hxxxx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_akxx": {
+   "kind": "int",
+   "label": "Lead vs NT from AKxx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_AKxx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_kqjx": {
+   "kind": "int",
+   "label": "Lead vs NT from KQJx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_KQJx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_kqt9": {
+   "kind": "int",
+   "label": "Lead vs NT from KQT9",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_KQT9"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_qjtx": {
+   "kind": "int",
+   "label": "Lead vs NT from QJTx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_QJTx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_jt9x": {
+   "kind": "int",
+   "label": "Lead vs NT from JT9x",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_JT9x"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_aqjx": {
+   "kind": "int",
+   "label": "Lead vs NT from AQJx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_AQJx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_ajtx": {
+   "kind": "int",
+   "label": "Lead vs NT from AJTx",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_AJTx"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_kt9x": {
+   "kind": "int",
+   "label": "Lead vs NT from KT9x",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_KT9x"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_qt9x": {
+   "kind": "int",
+   "label": "Lead vs NT from QT9x",
+   "min": 1,
+   "max": 4,
+   "aliases": [
+    "leads.vs_nt.honors.lead_choice_QT9x"
+   ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_suits.length.third_fifth": {
+   "kind": "bool",
+   "label": "Length leads vs suits: 3rd/5th",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_suits.length.third_low": {
+   "kind": "bool",
+   "label": "Length leads vs suits: 3rd from even, low from odd",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_suits.length.attitude": {
+   "kind": "bool",
+   "label": "Length leads vs suits: attitude",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_suits.length.small_from_xx": {
+   "kind": "bool",
+   "label": "Leads vs suits: small from xx",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_suits.after_first_trick": {
+   "kind": "text",
+   "label": "Leads vs suits: after the first trick"
+  },
+  "vs_suits.exceptions": {
+   "kind": "text",
+   "label": "Leads vs suits: exceptions"
+  },
+  "vs_nt.length.third_fifth": {
+   "kind": "bool",
+   "label": "Length leads vs NT: 3rd/5th",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_nt.length.third_low": {
+   "kind": "bool",
+   "label": "Length leads vs NT: 3rd from even, low from odd",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_nt.length.second_from_4plus": {
+   "kind": "bool",
+   "label": "Length leads vs NT: 2nd from 4 small",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_nt.length.attitude": {
+   "kind": "bool",
+   "label": "Length leads vs NT: attitude",
+   "skill": "defense/opening_leads",
+   "level": 4
+  },
+  "vs_nt.length.attitude_text": {
+   "kind": "text",
+   "label": "Length leads vs NT: attitude notes"
+  },
+  "vs_nt.after_first_trick": {
+   "kind": "text",
+   "label": "Leads vs NT: after the first trick"
+  },
+  "vs_nt.exceptions": {
+   "kind": "text",
+   "label": "Leads vs NT: exceptions"
+  }
+ },
+ "notes": {
+  "general": {
+   "kind": "text",
+   "label": "General notes"
+  },
+  "partnership_understandings": {
+   "kind": "text",
+   "label": "Partnership understandings"
+  },
+  "special_agreements": {
+   "kind": "text",
+   "label": "Special agreements"
+  },
+  "notrump_notes": {
+   "kind": "text",
+   "label": "NT notes"
+  },
+  "major_notes": {
+   "kind": "text",
+   "label": "Major opening notes"
+  },
+  "minor_notes": {
+   "kind": "text",
+   "label": "Minor opening notes"
+  },
+  "two_level_notes": {
+   "kind": "text",
+   "label": "Two-level notes"
+  },
+  "slam_notes": {
+   "kind": "text",
+   "label": "Slam notes"
+  },
+  "preempts_notes": {
+   "kind": "text",
+   "label": "Preempt notes"
+  },
+  "overcalls_notes": {
+   "kind": "text",
+   "label": "Overcall notes"
+  },
+  "nt_overcalls_notes": {
+   "kind": "text",
+   "label": "NT overcall notes"
+  },
+  "doubles_notes": {
+   "kind": "text",
+   "label": "Double notes"
+  },
+  "competitive_notes": {
+   "kind": "text",
+   "label": "Competitive notes"
+  },
+  "carding_notes": {
+   "kind": "text",
+   "label": "Carding notes"
+  },
+  "leads_notes": {
+   "kind": "text",
+   "label": "Opening lead notes"
+  },
+  "other_notes": {
+   "kind": "text",
+   "label": "Other notes"
+  }
+ }
+}
