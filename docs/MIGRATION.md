@@ -110,13 +110,15 @@ loads through the crate without error.
 
 ### Phase 2: the JavaScript library
 
-**Under way.** Done in this repo: the converters, the PDF code, their tests,
+**Done 2026-09-30** (tags `v0.2.0`, `v0.2.1`; Bridge-Classroom #437). The converters, the PDF code, their tests,
 the template PDFs and the font moved here with history (`js/`, `assets/`);
 the library reads the spec as generated JSON and takes its assets from the
 caller; a test checks every card path the converters name against the spec
 (it found 52 Classic-PDF boxes the spec lacked, now fields); the JS `.bbsa`
 converter matches the crate's golden files; the Puppet path is fixed in the
-spec (below). Still to do: tag `v0.2.0`, and switch Bridge Classroom to it.
+spec (below). Bridge Classroom depends on `v0.2.1` and has deleted its copies;
+its tests and build pass, and in its built app both PDFs render and re-import
+to the same card.
 
 - Move the converters, the PDF code and their tests here with history.
 - The library reads its field list from `spec/`.
