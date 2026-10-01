@@ -4,6 +4,13 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-09-30: `.bbsa` in the JS library** (Rick Wilson)
+
+19. **A plain-JavaScript `.bbsa` converter, in parallel with the Rust crate's,**
+    not the crate compiled to WASM: the library stays plain JS that runs in a
+    page, an extension or Node. Golden files written by the crate keep the two
+    in step. See DESIGN.md, "The JavaScript library".
+
 **2026-09-30: shared cards** (Rick Wilson)
 
 18. **Partners share a saved card, as on BBO and bridgeodex.** Members have a

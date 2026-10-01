@@ -111,6 +111,12 @@ loads through the crate without error.
 - Move the converters, the PDF code and their tests here with history.
 - The library reads its field list from `spec/`.
 - Bridge Classroom depends on the tag and deletes its copies.
+- Generate `spec/fields.json` and `spec/formats/bbsa-map.json` in CI, as for
+  `conventions.json`, for readers with no TOML parser.
+- A JS `.bbsa` converter in parallel with the crate's (decision 19), with
+  golden files the crate writes (card JSON and `.bbsa` for each test card)
+  that the JS tests must match; "Import .bbsa" and "Export .bbsa" in the
+  editor in Phase 3.
 - Once moved, fix the bridgeodex importer's Puppet Stayman path (found
   2026-09-30, PR #5). It writes bridgeodex's **1NT** Puppet box (`2c_puppet`)
   to `notrump.stayman.puppet`, which the spec aliases to **2NT** Puppet
@@ -118,8 +124,8 @@ loads through the crate without error.
   decide how to read cards already saved with the old path.
 
 **Done when:** Bridge Classroom's Convention Card tab behaves exactly as before
-(import each format, export each PDF, re-import a PDF), and its test suite
-passes.
+(import each format, export each PDF, re-import a PDF), its test suite
+passes, and the JS `.bbsa` converter matches the crate's golden files.
 
 ### Phase 3: the editor
 
