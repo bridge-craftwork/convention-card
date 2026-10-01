@@ -218,8 +218,9 @@
 import { computed, onMounted, watch, ref } from 'vue'
 import { useUserStore } from '../composables/useUserStore.js'
 import { useConventionCard } from '../composables/useConventionCard.js'
-import { importBridgeodexJson } from '../utils/bridgeodexImport.js'
-import { importBboJson, isBboCard } from '../utils/bboImport.js'
+import { importBridgeodexJson } from '@bridge-craftwork/convention-card/js/bridgeodexImport.js'
+import { importBboJson, isBboCard } from '@bridge-craftwork/convention-card/js/bboImport.js'
+import { loadAcblPdf } from '../utils/conventionCardLibrary.js'
 import SkillPills from '../components/conventionCard/SkillPills.vue'
 import OverlayLegend from '../components/conventionCard/OverlayLegend.vue'
 import CardTree from '../components/conventionCard/CardTree.vue'
@@ -303,7 +304,7 @@ async function doExport(formatId) {
   const debug = exportDebug.value
   exportDialogOpen.value = false
   try {
-    const mod = await import('../utils/acblClassicFillPdf.js')
+    const mod = await loadAcblPdf()
     if (debug) {
       await mod.downloadAcblFieldDebugPdf(formatId)
     } else {
@@ -424,7 +425,7 @@ async function onImportFile(event) {
   try {
     let name, description, card_data
     if (isPdf) {
-      const mod = await import('../utils/acblClassicFillPdf.js')
+      const mod = await loadAcblPdf()
       const bytes = await file.arrayBuffer()
       const extracted = await mod.extractCardDataFromPdf(bytes)
       if (!extracted) {
