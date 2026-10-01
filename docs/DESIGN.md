@@ -159,6 +159,17 @@ bridgeodex, `.bbsa` (later), the ACBL fillable-PDF export
 (the source card is embedded in the PDF's Info dictionary). No framework and no
 network: it runs in a page, a browser extension or Node.
 
+**`.bbsa` in JavaScript, in parallel with the Rust crate.** The crate already
+reads and writes BBA's `.bbsa` files; the library gets its own converter,
+reading the same map (`spec/formats/bbsa-map.toml`), so the editor can import
+and export them with no WASM. The two are kept in step by golden files: for
+each test card (the 18 Practice-Bidding-Scenarios cards), the crate writes the
+card JSON it reads and the `.bbsa` it writes back, and the JS tests must
+produce the same. A change in either that the other lacks fails a test.
+Browsers read no TOML, so CI generates `spec/fields.json` and
+`spec/formats/bbsa-map.json` beside `conventions.json`, and the library reads
+those.
+
 The library's `package.json` sits at the **repository root**, because npm can
 install a GitHub dependency only from a repo's root. The editor in `web/` is a
 separate app with its own `package.json`.
