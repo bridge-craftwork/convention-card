@@ -275,6 +275,34 @@ Know* and *25 More Bridge Conventions You Should Know*, which on Advancing in
 Bridge's scale cover roughly 3–6 and 5–9. Each value is our own judgment, informed by these; the
 spec does not reproduce another source's list.
 
+## A card wizard for newer players
+
+*Planned, after the migration.* The editor filters by convention, which suits
+players who know what they play. A newer player needs something simpler: about
+twenty questions on the most common agreements (notrump range, discards,
+Stayman, transfers, Puppet, …), from which the wizard writes an ordinary card
+that they then adjust in the regular editor.
+
+Most of it comes from the spec:
+
+- **Help text**: each question shows the convention's `summary` and its level
+  band, so a newer player sees what is basic and what can wait.
+- **Question types**: a choice group is one radio question (standard or
+  upside-down count); a yes/no field a checkbox; a range a few presets (1NT
+  15–17, 14–16, 12–14).
+- **Follow-ups**: extensions share their convention's ID with a higher level,
+  so "Texas too?" appears only after "Transfers?", and "Smolen?" after
+  "Stayman?".
+- **Defaults**: `fields.toml`'s defaults fill whatever is not asked.
+
+What it adds is a short curated list, `spec/wizard.toml`: the questions in
+order, each naming its field paths, with optional preset answers, checked by a
+test that every path exists. Level alone cannot choose them: the notrump range
+and discards are settings, not conventions, and Puppet is common in places
+despite its level. The wizard can start from a template card ("Standard 2/1",
+"SAYC") and ask only what differs, and show the card's difficulty once that
+exists. One partner can run it and then share the card (below).
+
 ## Shared cards
 
 On BBO and bridgeodex, partners share one card and either can edit it. Bridge
