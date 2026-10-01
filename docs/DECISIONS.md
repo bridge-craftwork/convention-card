@@ -137,8 +137,10 @@ not; the pattern should allow a leading digit.
 **5. ~~Can the ACBL PDF templates be redistributed?~~** Decided for now: host them ourselves (decision 10).
 
 **6. What `reference.txt` contains.** Per site issue #3, each tool publishes a
-machine-readable reference. For this tool the natural content is the spec: every
-field with its path, kind, options and description, generated at build time.
+machine-readable reference. Proposed in Phase 4 (DESIGN.md, "Deployment"): the
+whole spec (every field and every convention, with summaries and citations),
+the card format, the `#import=` link and `window.card`, generated at build time.
+About 160 KB; open until Rick accepts it or asks for less.
 
 **7. The named level bands.** Decided 2026-09-30; see above.
 

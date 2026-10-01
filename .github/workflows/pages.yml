@@ -1,0 +1,86 @@
+name: Pages
+
+# Builds the standalone editor (web/) and deploys it to the Cloudflare Pages
+# project `convention-card`, which bridge-craftwork.com mounts at /card/.
+# Modelled on pbn-to-pdf's and rusty-bidding-bot's pages.yml.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      # The page bundles the library, the spec and the assets, so a change to
+      # any of them is a change to the site.
+      - 'js/**'
+      - 'web/**'
+      - 'spec/**'
+      - 'assets/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'wrangler.jsonc'
+      - '.github/workflows/pages.yml'
+  # Redeploy without a code change.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Latest wins: a superseded deploy has nothing worth finishing.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  # Named for what it can do (Account -> Cloudflare Pages -> Edit); an org
+  # secret, shared with the other tools. wrangler reads CLOUDFLARE_API_TOKEN.
+  # Read here rather than in a step so a step's `if` can test it.
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_DEPLOY_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # build-spec.yml commits the regenerated spec JSON after a push, but a
+      # commit made with GITHUB_TOKEN starts no workflow, so this run would
+      # otherwise build the page from the JSON before the change. Generate it
+      # here; the checkout's copy is then the same as the commit that follows.
+      - name: Generate the spec JSON
+        run: python3 scripts/build_spec.py
+
+      - run: npm ci
+      # Nothing is deployed that the tests would fail.
+      - run: npm test
+      # `prebuild` writes reference.txt and llms.txt, and fails if the
+      # reference misses any field or convention.
+      - run: npm run build
+
+      - name: The output is complete
+        run: |
+          for f in index.html 404.html _headers reference.txt llms.txt fonts/OFL.txt; do
+            test -s "web/dist/$f" || { echo "missing web/dist/$f" >&2; exit 1; }
+          done
+          ls web/dist/assets/*.js web/dist/assets/*.pdf web/dist/assets/*.ttf
+          du -sh web/dist
+
+      # Cloudflare is the only host, so a silent skip would go green having
+      # deployed nothing. Fail on this repo; skip elsewhere.
+      - name: Require the Cloudflare credential
+        if: github.repository == 'bridge-craftwork/convention-card' && (env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '')
+        run: |
+          echo "CLOUDFLARE_PAGES_DEPLOY_TOKEN or CLOUDFLARE_ACCOUNT_ID is not set, so the site cannot be deployed." >&2
+          exit 1
+
+      # `--commit-dirty`: the checkout carries the generated spec JSON.
+      - name: Deploy to Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        run: npx --yes wrangler@4 pages deploy --commit-dirty=true

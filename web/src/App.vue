@@ -26,6 +26,7 @@ import { useCardEditor } from './editor/useCardEditor.js'
 import { browserStorage } from './browserStorage.js'
 import { bridgeClassroomUrl } from './handoffToBridgeClassroom.js'
 import { decodeCardFromUrl } from '../../js/handoff.js'
+import { createTool, GLOBAL } from './tool.js'
 
 const editor = useCardEditor(browserStorage)
 // The card as it stands, unsaved edits included.
@@ -71,6 +72,18 @@ async function receiveFromUrl() {
     receiving = false
   }
 }
+
+// ─── The tool contract: window.card ────────────────────────────
+// The same reading and checking as the Import button (src/tool.js;
+// reference.txt describes it). setInput adds the card to this browser's
+// cards and opens it, as a hand-off does.
+window[GLOBAL] = createTool({
+  current: () => currentCard.value,
+  async open(record) {
+    await editorIdle()
+    await editor.createCard({ name: record.name, description: record.description || null, cardData: record.card_data })
+  },
+})
 
 onMounted(() => {
   receiveFromUrl()

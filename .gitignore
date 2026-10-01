@@ -3,3 +3,6 @@ dist/
 target/
 .DS_Store
 .playwright-mcp/
+# Generated before each build (scripts/emit-reference.mjs)
+web/public/reference.txt
+web/public/llms.txt
