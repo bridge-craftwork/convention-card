@@ -12,16 +12,20 @@
         @click="onSaveToBridgeClassroom"
       >Save to Bridge Classroom</button>
     </div>
+    <div v-if="arrival.message" class="arrival" :class="{ error: arrival.error }" role="status">
+      {{ arrival.message }}
+    </div>
     <ConventionCardEditor :storage="browserStorage" />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, onBeforeUnmount, reactive, watch } from 'vue'
 import ConventionCardEditor from './editor/ConventionCardEditor.vue'
 import { useCardEditor } from './editor/useCardEditor.js'
 import { browserStorage } from './browserStorage.js'
 import { bridgeClassroomUrl } from './handoffToBridgeClassroom.js'
+import { decodeCardFromUrl } from '../../js/handoff.js'
 
 const editor = useCardEditor(browserStorage)
 // The card as it stands, unsaved edits included.
@@ -34,6 +38,45 @@ async function onSaveToBridgeClassroom() {
   if (!currentCard.value) return
   window.open(await bridgeClassroomUrl(currentCard.value), '_blank', 'noopener')
 }
+
+// ─── A card handed over in the URL ─────────────────────────────
+// Another tool (the Better BBO Convention Card extension, say) opens
+// …/card/#import=v1.<data> (js/handoff.js; DECISIONS.md, 20). The card is
+// added to this browser's cards and opened; the address bar is cleared.
+const arrival = reactive({ message: '', error: false })
+let receiving = false
+
+function editorIdle() {
+  if (!editor.cardLoading.value) return Promise.resolve()
+  return new Promise(resolve => {
+    const stop = watch(editor.cardLoading, loading => { if (!loading) { stop(); resolve() } })
+  })
+}
+
+async function receiveFromUrl() {
+  const match = /^#import=(v1\.[A-Za-z0-9_-]+)$/.exec(window.location.hash)
+  if (!match || receiving) return
+  receiving = true
+  history.replaceState(null, '', window.location.pathname + window.location.search)
+  try {
+    const record = await decodeCardFromUrl(match[1])
+    // Let the editor's first load finish, so it cannot replace the new card.
+    await editorIdle()
+    const name = record.name || 'Imported convention card'
+    await editor.createCard({ name, description: record.description || null, cardData: record.card_data })
+    Object.assign(arrival, { message: `Added “${name}” to the cards in this browser.`, error: false })
+  } catch (err) {
+    Object.assign(arrival, { message: `Could not open the card you sent: ${err.message}`, error: true })
+  } finally {
+    receiving = false
+  }
+}
+
+onMounted(() => {
+  receiveFromUrl()
+  window.addEventListener('hashchange', receiveFromUrl)
+})
+onBeforeUnmount(() => window.removeEventListener('hashchange', receiveFromUrl))
 </script>
 
 <style scoped>
@@ -42,7 +85,8 @@ async function onSaveToBridgeClassroom() {
   margin: 0 auto;
   padding: 12px 16px 32px;
 }
-.local-note {
+.local-note,
+.arrival {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -56,6 +100,8 @@ async function onSaveToBridgeClassroom() {
   color: var(--text-primary);
   font-size: 14px;
 }
+.arrival { background: #fff; }
+.arrival.error { background: #fee2e2; }
 .handoff {
   font: inherit;
   font-weight: 600;
