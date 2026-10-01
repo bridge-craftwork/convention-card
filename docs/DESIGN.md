@@ -222,7 +222,10 @@ account (`web/src/browserStorage.js`); the starter card (Bridge Classroom's
 imports BBO, bridgeodex, `.bbsa` and its own PDFs, and exports PDFs, its JSON
 and `.bbsa`. **Save to Bridge Classroom** opens Bridge Classroom with the card
 compressed into the URL's fragment (`js/handoff.js`; DECISIONS, 20), where it
-is saved under Bridge Classroom's own session.
+is saved under Bridge Classroom's own session. The same hand-off works the
+other way in: another tool opens `…/card/#import=v1.<data>`, and the card is
+added to the browser's cards and opened. That is how the Better BBO
+Convention Card extension will open a BBO card here (MIGRATION.md, Phase 5).
 
 ### 4. The Rust crate (`crates/bridge-card`)
 
