@@ -1,6 +1,6 @@
 {
   "name": "@bridge-craftwork/convention-card",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Bridge convention cards: the spec, converters (BBO, bridgeodex, .bbsa) and the ACBL PDFs",
   "license": "MIT OR Apache-2.0",
   "repository": "github:bridge-craftwork/convention-card",
@@ -8,6 +8,7 @@
   "main": "./js/index.js",
   "exports": {
     ".": "./js/index.js",
+    "./js/*": "./js/*",
     "./spec/*": "./spec/*",
     "./assets/*": "./assets/*"
   },

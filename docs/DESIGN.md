@@ -167,6 +167,10 @@ in a page, a browser extension or Node.
   caller says how to get them, once, with `setAssetLoader({ template, font })`
   (a page fetches them from wherever it serves them; Node reads them from
   disk).
+- **Single modules can be imported** (`…/js/acblClassicFillPdf.js`), so a page
+  can load the PDF code, with pdf-lib and its fonts, only when the user
+  exports, as Bridge Classroom does. They share one asset loader with the
+  index.
 
 **`.bbsa` in JavaScript, in parallel with the Rust crate.** The crate already
 reads and writes BBA's `.bbsa` files; the library gets its own converter,
