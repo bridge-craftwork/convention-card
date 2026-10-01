@@ -30,12 +30,12 @@ GitHub, pinned to a tag:
 
 ```toml
 # Cargo.toml
-bridge-card = { git = "https://github.com/bridge-craftwork/convention-card", tag = "v0.3.0" }
+bridge-card = { git = "https://github.com/bridge-craftwork/convention-card", tag = "v0.3.1" }
 ```
 
 ```jsonc
 // package.json (the JavaScript library: ES modules, Node 22 or later, or a bundler)
-"@bridge-craftwork/convention-card": "github:bridge-craftwork/convention-card#v0.3.0"
+"@bridge-craftwork/convention-card": "github:bridge-craftwork/convention-card#v0.3.1"
 ```
 
 ```js

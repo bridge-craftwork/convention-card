@@ -219,7 +219,6 @@ import { computed, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importBridgeodexJson } from '../../../js/bridgeodexImport.js'
 import { importBboJson, isBboCard } from '../../../js/bboImport.js'
-import { importBbsa, exportBbsa } from '../../../js/bbsa.js'
 import SkillPills from './components/SkillPills.vue'
 import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
@@ -240,6 +239,8 @@ const currentUser = computed(() => props.storage.user?.value || null)
 
 /** The PDF module, loaded only when it is needed (it brings pdf-lib). */
 const loadAcblPdf = () => import('../../../js/acblClassicFillPdf.js')
+/** The .bbsa converter, loaded only when it is needed (it brings the spec's JSON). */
+const loadBbsa = () => import('../../../js/bbsa.js')
 
 const currentCard = cc.currentCard
 const editedCardData = cc.editedCardData
@@ -390,7 +391,7 @@ function downloadBlob(content, filename, mime) {
   URL.revokeObjectURL(url)
 }
 
-function doContentExport(formatId) {
+async function doContentExport(formatId) {
   const fmt = CONTENT_FORMATS.find(f => f.id === formatId)
   if (!fmt || !fmt.ready) return
   contentDialogOpen.value = false
@@ -407,6 +408,7 @@ function doContentExport(formatId) {
         card_data: card.card_data || {}
       }, null, 2)
     } else if (formatId === 'bbsa') {
+      const { exportBbsa } = await loadBbsa()
       payload = exportBbsa(card.card_data || {}).text
     } else {
       throw new Error(`No exporter wired up for "${fmt.name}" yet`)
@@ -446,6 +448,7 @@ async function onImportFile(event) {
     if (isBbsa) {
       name = file.name.replace(/\.bbsa$/i, '')
       description = 'Imported from BBA (.bbsa)'
+      const { importBbsa } = await loadBbsa()
       ;({ card_data } = importBbsa(await file.text(), name))
     } else if (isPdf) {
       const mod = await loadAcblPdf()
