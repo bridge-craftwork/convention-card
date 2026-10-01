@@ -68,7 +68,7 @@
           class="btn"
           @click="onImportClick"
           :disabled="saving"
-          title="Import from bridgeodex.com JSON, or a PDF previously exported from this app"
+          title="Import a card: this editor's JSON, BBO or bridgeodex JSON, a BBA .bbsa file, or a PDF exported from this editor"
         >Import</button>
         <input
           ref="importInput"
@@ -98,7 +98,7 @@
         <button
           class="btn"
           :disabled="!currentCard || cardLoading"
-          title="Export the card's structured data as JSON or XML"
+          title="Export the card's data: this editor's JSON or a BBA .bbsa file"
           @click="onExportContent"
         >Export Content</button>
       </div>
