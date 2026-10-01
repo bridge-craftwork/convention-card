@@ -68,7 +68,7 @@
           class="btn"
           @click="onImportClick"
           :disabled="saving"
-          title="Import from bridgeodex.com JSON, or a PDF previously exported from this app"
+          title="Import a card: this editor's JSON, BBO or bridgeodex JSON, a BBA .bbsa file, or a PDF exported from this editor"
         >Import</button>
         <input
           ref="importInput"
@@ -98,7 +98,7 @@
         <button
           class="btn"
           :disabled="!currentCard || cardLoading"
-          title="Export the card's structured data as JSON or XML"
+          title="Export the card's data: this editor's JSON or a BBA .bbsa file"
           @click="onExportContent"
         >Export Content</button>
       </div>
@@ -217,8 +217,7 @@
 <script setup>
 import { computed, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
-import { importBridgeodexJson } from '../../../js/bridgeodexImport.js'
-import { importBboJson, isBboCard } from '../../../js/bboImport.js'
+import { importCard } from '../../../js/importCard.js'
 import SkillPills from './components/SkillPills.vue'
 import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
@@ -441,35 +440,12 @@ async function onImportFile(event) {
   const file = event.target.files?.[0]
   event.target.value = ''  // allow re-importing the same filename later
   if (!file) return
-  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
   try {
-    let name, description, card_data
-    const isBbsa = /\.bbsa$/i.test(file.name)
-    if (isBbsa) {
-      name = file.name.replace(/\.bbsa$/i, '')
-      description = 'Imported from BBA (.bbsa)'
-      const { importBbsa } = await loadBbsa()
-      ;({ card_data } = importBbsa(await file.text(), name))
-    } else if (isPdf) {
-      const mod = await loadAcblPdf()
-      const bytes = await file.arrayBuffer()
-      const extracted = await mod.extractCardDataFromPdf(bytes)
-      if (!extracted) {
-        throw new Error('This PDF has no embedded Bridge Classroom card data. Only PDFs previously exported from this app can be re-imported.')
-      }
-      ;({ name, description, card_data } = extracted)
-    } else {
-      const text = await file.text()
-      const json = JSON.parse(text)
-      // Two JSON shapes are supported: BBO's ACBL export (`source:
-      // "bbo-acbl"`, a `cards[]` array) and bridgeodex's (`settings`
-      // block). Route by detecting the BBO shape first.
-      if (isBboCard(json)) {
-        ;({ name, description, card_data } = importBboJson(json))
-      } else {
-        ;({ name, description, card_data } = importBridgeodexJson(json))
-      }
-    }
+    // importCard tells the formats apart by their content: the editor's
+    // own JSON, BBO's, bridgeodex's, .bbsa and our PDFs.
+    const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
+    const bytes = isPdf ? await file.arrayBuffer() : await file.text()
+    const { name, description, card_data } = await importCard(bytes, { name: file.name.replace(/\.[^.]*$/, '') })
 
     // Duplicate-name check: a user often re-imports the same partnership
     // card after updating it on bridgeodex. Offer to overwrite the

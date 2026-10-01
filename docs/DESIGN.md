@@ -167,6 +167,14 @@ in a page, a browser extension or Node.
   caller says how to get them, once, with `setAssetLoader({ template, font })`
   (a page fetches them from wherever it serves them; Node reads them from
   disk).
+- **One reader for every format** (`importCard`, `js/importCard.js`): the
+  editor's own JSON, BBO, bridgeodex, `.bbsa`, our PDFs and the URL hand-off,
+  told apart by their content. The editor's Import and the standalone page's
+  `window.card` both read through it.
+- **A card check** (`checkCard`, `js/checkCard.js`): which paths came in
+  through an alias, which the spec doesn't know, which values it rejects, and
+  which choice groups have two alternatives on, as the crate's `LoadReport`
+  reports them, plus the same in sentences. It changes nothing.
 - **Single modules can be imported** (`…/js/acblClassicFillPdf.js`), so a page
   can load the PDF code, with pdf-lib and its fonts, only when the user
   exports, as Bridge Classroom does. They share one asset loader with the
