@@ -55,7 +55,8 @@ Language-neutral files that every other part reads:
   `conventionCatalog.js`.
 - **Format maps**: how each outside format lands on the fields. The first is the
   bot's `bbsa-map.toml`. BBO, bridgeodex and the ACBL PDF field maps are tables
-  inside JavaScript today and move into data over time, not on day one.
+  inside JavaScript today and move into data over time, not on day one;
+  the ACBL PDF maps move first, for [card templates of your own](#card-templates-of-your-own).
 - **Conventions and skills** (`conventions/`, one file per ID, such as
   `conventions/bidding_conventions/stayman.toml`): name, level, the names people
   write it as, a summary and sources. See
@@ -353,6 +354,44 @@ and discards are settings, not conventions, and Puppet is common in places
 despite its level. The wizard can start from a template card ("Standard 2/1",
 "SAYC") and ask only what differs, and show the card's difficulty once that
 exists. One partner can run it and then share the card (below).
+
+## Card templates of your own
+
+*Planned, not in the current version* (Rick Wilson, 2026-10-02). The editor
+fills two PDFs, the ACBL Classic and New cards, from fill maps built into
+the library. Other cards exist: clubs' own layouts, a third fillable ACBL
+layout (279 named fields, `CNegativeD`, `TNegativeD`, found on real cards),
+and national federations' cards. The editor will let a person **upload a
+card PDF with a mapping file**, then export to it and import from it as it
+does the built-in two. A person can make one for their own card, and the
+built-in cards are the same kind of thing, shipped with the editor.
+
+- **A mapping is data, not code.** Each entry names a form field in the PDF
+  and a card path (`notrump.smolen.play`), with its kind (tick or text) and,
+  for a tick that stands for one value of a choice, that value. That is the
+  shape of today's fill maps (`FIELD_MAP_CLASSIC`, `FIELD_MAP_NEW` in
+  `js/acblClassicFillPdf.js`), so the first step is moving those two into
+  `spec/formats/` as files in this format, as "Format maps" above already
+  plans. The few entries that hold code (Lebensohl's `transform`) need a
+  declarative form first.
+- **Checked against the spec.** A mapping that names a path the spec
+  doesn't have is refused with that path, as the test of the built-in maps
+  does now. A form field the mapping names that the PDF lacks is reported.
+- **Both directions from one file.** Export fills the boxes; import reads
+  them back, including hand edits (`js/acblPdfImport.js` already works this
+  way from the built-in maps).
+- **Built in the editor, not by hand.** Writing a mapping for a 279-field
+  PDF by hand is slow. The editor can list the PDF's fields and draw each
+  field's name on the page (as the debug export,
+  `downloadAcblFieldDebugPdf`, does today), so a person clicks a box and
+  picks its card field.
+- **Local first.** An uploaded template and its mapping live with the
+  person's cards (IndexedDB in the standalone editor), and can be shared as
+  a file. A good mapping can be added to the built-in set.
+- **What a PDF without a form needs is different.** Most bridgeodex PDFs
+  have no form fields (the text is printed into the page), so a mapping by
+  field name cannot read them; that would need text extraction by
+  position.
 
 ## Shared cards
 
