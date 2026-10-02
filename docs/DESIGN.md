@@ -380,11 +380,31 @@ built-in cards are the same kind of thing, shipped with the editor.
 - **Both directions from one file.** Export fills the boxes; import reads
   them back, including hand edits (`js/acblPdfImport.js` already works this
   way from the built-in maps).
-- **Built in the editor, not by hand.** Writing a mapping for a 279-field
-  PDF by hand is slow. The editor can list the PDF's fields and draw each
-  field's name on the page (as the debug export,
-  `downloadAcblFieldDebugPdf`, does today), so a person clicks a box and
-  picks its card field.
+- **Built in the editor, with an assistant, not by hand.** Writing a
+  mapping for a 279-field PDF by hand is slow, so the editor has a mapping
+  assistant (Rick Wilson, 2026-10-02):
+  1. **Two lists side by side:** the card's known fields, from the spec
+     (path, label, kind, values), and the fields scraped from the uploaded
+     PDF (name, tick or text, page, position, the field's tooltip if it has
+     one, and the printed words next to it on the page).
+  2. **A first mapping, proposed:** each PDF field matched to a card field
+     by its name (`TNegativeD` and "Negative double"), its tooltip and the
+     printed words beside it, against the spec's labels, aliases and the
+     names its conventions are written as. A built-in map that already
+     covers a field with the same name (the third ACBL layout shares a few
+     with Classic) is reused. Each proposal shows how sure it is, and
+     nothing is accepted unseen.
+  3. **An editor for the mapping:** the PDF with each field outlined and
+     named, as the debug export draws it today (`downloadAcblFieldDebugPdf`);
+     click a box to set, change or clear its card field, or mark it as one
+     value of a choice. Unmapped fields and card fields with no box are
+     listed, so the gaps are visible.
+  4. **Try it both ways before saving:** fill the PDF from a sample card
+     (the starter, or the person's own) and look at it; then read that PDF
+     back through the mapping and compare it with the card, which catches a
+     box mapped to the wrong field or one value missing from a choice.
+  The result is an ordinary mapping file under the contract, checked by
+  the same checker, with the hash written in.
 - **Local first.** An uploaded template and its mapping live with the
   person's cards (IndexedDB in the standalone editor), and can be shared as
   a file. A good mapping can be added to the built-in set.
@@ -401,7 +421,8 @@ built-in cards are the same kind of thing, shipped with the editor.
     page each field is on), the entry kinds (tick, tick-for-a-value, text,
     a value split across several boxes, a declarative text shaping in place
     of today's code `transform`), and how a PDF is recognised as this
-    template (its field names, and a hash of the blank PDF).
+    template: by its field names, with an **optional** hash of the blank
+    PDF to tell apart templates that share field names (decided 2026-10-02).
   - **Paths are the spec's:** a mapping names card paths and their aliases,
     and is checked against the spec version it declares. A newer spec still
     reads an older mapping, because paths keep their aliases (the spec's own
@@ -415,8 +436,8 @@ built-in cards are the same kind of thing, shipped with the editor.
     `spec/`, so a person building a mapping (or the editor's mapping tool)
     gets the same errors CI does. The built-in Classic and New maps are the
     first files checked against it.
-  - **Whatever the contract requires, the editor can produce.** If a
-    mapping must carry the blank PDF's hash, the standalone editor gets an
+  - **Whatever the contract asks for, the editor can produce.** For the
+    blank PDF's hash, the standalone editor gets an
     **Advanced** area with a tool that computes it: drop in the PDF, copy
     the hash (SHA-256 of the file's bytes). The editor's own mapping tool
     writes it into the file itself, so only a person writing a mapping by
