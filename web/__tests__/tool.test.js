@@ -81,7 +81,7 @@ describe('window.card', () => {
     expect(link.output).toMatch(/^https:\/\/bridge-craftwork\.com\/card\/#import=v1\./)
     expect((await decodeCardFromUrl(link.output.split('#import=')[1])).card_data).toEqual(SEED)
     const bc = await t.getOutput({ to: 'bridge-classroom' })
-    expect(bc.output).toMatch(/^https:\/\/bridge-classroom\.com\/#\/convention-card\?import=v1\./)
+    expect(bc.output).toMatch(/^https:\/\/bridge-classroom\.com\/solo-practice-app\/#\/convention-card\?import=v1\./)
     // A link reads straight back in.
     expect((await t.run(link.output, { to: 'card_data' })).output).toEqual(SEED)
   })

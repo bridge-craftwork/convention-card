@@ -7,7 +7,8 @@ What's settled, and what's still open. Newest first within each list.
 **2026-10-01: handing a card to Bridge Classroom** (Rick Wilson; open question 4)
 
 20. **The card travels in the URL's fragment.** The standalone editor opens
-    `bridge-classroom.com/#/convention-card?import=v1.<data>`: the card record,
+    `bridge-classroom.com/solo-practice-app/#/convention-card?import=v1.<data>`
+    (the app; the site's root is a landing page): the card record,
     deflated and base64url-encoded (`js/handoff.js`). Bridge Classroom asks the
     user to sign in if need be and saves it under its own session. A fragment
     never reaches a server, and a dense real card is about 5,000 characters,

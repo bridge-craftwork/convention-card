@@ -594,6 +594,32 @@
    "kind": "bool",
    "label": "Alternate 1NT range: maximum has a plus",
    "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+  },
+  "two_nt.range_min_plus": {
+   "kind": "bool",
+   "label": "2NT range: minimum has a plus",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "two_nt.range_max_plus": {
+   "kind": "bool",
+   "label": "2NT range: maximum has a plus",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "three_nt.range_min_plus": {
+   "kind": "bool",
+   "label": "3NT range: minimum has a plus",
+   "aliases": [
+    "three_nt.range_min_plus"
+   ],
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "three_nt.range_max_plus": {
+   "kind": "bool",
+   "label": "3NT range: maximum has a plus",
+   "aliases": [
+    "three_nt.range_max_plus"
+   ],
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
   }
  },
  "major_openings": {
@@ -1859,6 +1885,26 @@
    "label": "Balancing 1NT: maximum",
    "min": 0,
    "max": 25
+  },
+  "direct.range_min_plus": {
+   "kind": "bool",
+   "label": "Direct 1NT: minimum has a plus",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "direct.range_max_plus": {
+   "kind": "bool",
+   "label": "Direct 1NT: maximum has a plus",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "balance.range_min_plus": {
+   "kind": "bool",
+   "label": "Balancing 1NT: minimum has a plus",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "balance.range_max_plus": {
+   "kind": "bool",
+   "label": "Balancing 1NT: maximum has a plus",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
   },
   "balance.systems_on": {
    "kind": "bool",
