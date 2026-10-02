@@ -161,14 +161,14 @@ proficiency overlay; and the standalone build runs locally with no account.
 
 ### Phase 4: publish at `bridge-craftwork.com/card/`
 
-**Under way.** Done here: `wrangler.jsonc` and `pages.yml` (project
-`convention-card`, the org's `CLOUDFLARE_PAGES_DEPLOY_TOKEN`);
-`reference.txt` and `llms.txt` from the spec; `window.card`; a real 404 page;
-`_headers`; the font's `OFL.txt` beside the build. Checked in the built page
-served under `/card/`: validate, `setInput`, a Classic PDF that reads back to
-the same card, `.bbsa`, and a `link` that opens the card. Still to do: create
-the Pages project, the site's router entry, tile and docs, and the check
-against the live site.
+**Live 2026-10-02** (tags `v0.4.0`, `v0.4.1`; bridge-craftwork-site #6). The
+Pages project `convention-card`, deployed by `pages.yml`; `reference.txt` and
+`llms.txt` from the spec; `window.card`; real 404s; the site's `/card` route,
+tile, `/docs/card/` and apex `/llms.txt`. Exercised on the live
+`bridge-craftwork.com/card/`: duplicate, edit, save, export the Classic PDF,
+import it back to the same card, and the Save to Bridge Classroom link
+carries the card. Still to do: see the hand-off saved inside Bridge
+Classroom, which needs a signed-in account (Rick's Phase 3 test).
 
 - A Cloudflare Pages project `convention-card`, deployed by CI (copy
   `pbn-to-pdf`'s `pages.yml`).
