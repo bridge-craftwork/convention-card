@@ -105,6 +105,13 @@
     </div>
     <div v-if="saveError" class="save-error">{{ saveError }}</div>
 
+    <!-- What an import found: hand edits read from a PDF, and boxes it
+         could not read (acblPdfImport.js). Cleared by the next import. -->
+    <div v-if="importNotes.length" class="import-notes" role="status">
+      <button class="import-notes-close" title="Dismiss" @click="importNotes = []">×</button>
+      <p v-for="(d, i) in importNotes" :key="i" :class="d.severity">{{ d.message }}</p>
+    </div>
+
     <!-- What checkCard finds on the open card: the same diagnostics
          window.card.validate returns (the tool contract). Older paths are
          not problems, so only errors and warnings are shown. -->
@@ -452,9 +459,11 @@ async function onNewCard() {
 }
 
 const importInput = ref(null)
+const importNotes = ref([])
 
 function onImportClick() {
   saveError.value = null
+  importNotes.value = []
   importInput.value?.click()
 }
 
@@ -467,7 +476,10 @@ async function onImportFile(event) {
     // own JSON, BBO's, bridgeodex's, .bbsa and our PDFs.
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
     const bytes = isPdf ? await file.arrayBuffer() : await file.text()
-    const { name, description, card_data } = await importCard(bytes, { name: file.name.replace(/\.[^.]*$/, '') })
+    const { name, description, card_data, format, report } = await importCard(bytes, { name: file.name.replace(/\.[^.]*$/, '') })
+    importNotes.value = format === 'pdf'
+      ? (await import('../../../js/acblPdfImport.js')).pdfReportDiagnostics(report)
+      : []
 
     // Duplicate-name check: a user often re-imports the same partnership
     // card after updating it on bridgeodex. Offer to overwrite the
@@ -684,6 +696,22 @@ watch(() => currentUser.value?.id, async (uid) => {
   color: #92400e;
 }
 
+.import-notes {
+  position: relative;
+  margin: -4px 0 12px;
+  padding: 8px 32px 8px 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  color: #1e3a8a;
+  font-size: 13px;
+}
+.import-notes p { margin: 2px 0; }
+.import-notes p.warning { color: #92400e; }
+.import-notes-close {
+  position: absolute; top: 4px; right: 8px;
+  border: none; background: none; font-size: 16px; color: inherit; cursor: pointer;
+}
 .card-problems {
   margin: -4px 0 12px;
   padding: 8px 12px;

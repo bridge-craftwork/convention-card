@@ -117,6 +117,10 @@ export function createTool({ current = () => null, open = null } = {}) {
         format = read.format
         record = { name: read.name, description: read.description, card_data: read.card_data }
         for (const w of read.report?.warnings || []) diagnostics.push(diag('warning', `.bbsa: ${w}`))
+        if (read.format === 'pdf') {
+          const { pdfReportDiagnostics } = await import('../../js/acblPdfImport.js')
+          diagnostics.push(...pdfReportDiagnostics(read.report))
+        }
       } catch (err) {
         return { record: null, diagnostics: [...diagnostics, diag('error', err.message)] }
       }
