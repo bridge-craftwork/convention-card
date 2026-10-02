@@ -21,7 +21,10 @@ import {
 //   listLinks()   the user's cards: [{ card_id, card_name, is_primary, label }]
 //   save(card, cardData)                       write a card's card_data
 //   overwrite(id, { name, description, cardData })   (also how a card is renamed)
-//   create({ name, description, cardData, visibility }) → the new card's id
+//   create({ name, description, cardData, visibility, primary }) → the new card's id
+//                 primary: whether it becomes the card that opens first
+//   setPrimary(id)  optional: make a card the one that opens first (the
+//                   editor offers "Make primary" only when this is given)
 //   remove(id)
 //   canEdit(card, user) → boolean
 //
@@ -322,10 +325,23 @@ function createState(storage, overlays) {
 
   async function createCard({ name, description = null, cardData = {}, visibility = 'private' } = {}) {
     if (!user()) throw new Error('Must be signed in to create a card')
-    const cardId = await storage.create({ name: name || 'My convention card', description, cardData, visibility })
+    // A new card opens first only when it is the person's first card; after
+    // that, which card is primary is their choice (makePrimary).
+    const primary = !userCardLinks.value.length
+    const cardId = await storage.create({ name: name || 'My convention card', description, cardData, visibility, primary })
     await loadUserCardLinks()
     await switchCard(cardId)
     return cardId
+  }
+
+  const canSetPrimary = typeof storage.setPrimary === 'function'
+
+  /** Make the open card the one that opens first. */
+  async function makePrimary() {
+    const card = currentCard.value
+    if (!card || !canSetPrimary) return
+    await storage.setPrimary(card.id)
+    await loadUserCardLinks()
   }
 
   async function duplicateCurrentCard() {
@@ -402,6 +418,8 @@ function createState(storage, overlays) {
     revertEdits,
     overwriteCard,
     renameCard,
+    canSetPrimary,
+    makePrimary,
     createCard,
     duplicateCurrentCard,
     deleteCurrentCard,

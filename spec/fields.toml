@@ -140,14 +140,22 @@
 "responses.3h"             = { kind = "text", label = "3♥ response" }
 "responses.3s"             = { kind = "text", label = "3♠ response" }
 "notes"                    = { kind = "text", label = "Notrump notes", note = true }
-"one_nt.range_min_plus"    = { kind = "bool", label = "1NT range: minimum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
-"one_nt.range_max_plus"    = { kind = "bool", label = "1NT range: maximum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
-"one_nt_alt.range_min_plus" = { kind = "bool", label = "Alternate 1NT range: minimum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
-"one_nt_alt.range_max_plus" = { kind = "bool", label = "Alternate 1NT range: maximum has a plus", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
-"two_nt.range_min_plus"    = { kind = "bool", label = "2NT range: minimum has a plus", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
-"two_nt.range_max_plus"    = { kind = "bool", label = "2NT range: maximum has a plus", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
-"three_nt.range_min_plus"  = { kind = "bool", label = "3NT range: minimum has a plus", aliases = ["three_nt.range_min_plus"], desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
-"three_nt.range_max_plus"  = { kind = "bool", label = "3NT range: maximum has a plus", aliases = ["three_nt.range_max_plus"], desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_nt.range_min_plus"    = { kind = "bool", label = "1NT range: minimum has a plus", choice = "notrump.one_nt.range_min_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt.range_min_minus"   = { kind = "bool", label = "1NT range: minimum has a minus", choice = "notrump.one_nt.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"one_nt.range_max_plus"    = { kind = "bool", label = "1NT range: maximum has a plus", choice = "notrump.one_nt.range_max_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt.range_max_minus"   = { kind = "bool", label = "1NT range: maximum has a minus", choice = "notrump.one_nt.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"one_nt_alt.range_min_plus" = { kind = "bool", label = "Alternate 1NT range: minimum has a plus", choice = "notrump.one_nt_alt.range_min_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_min_minus" = { kind = "bool", label = "Alternate 1NT range: minimum has a minus", choice = "notrump.one_nt_alt.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"one_nt_alt.range_max_plus" = { kind = "bool", label = "Alternate 1NT range: maximum has a plus", choice = "notrump.one_nt_alt.range_max_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_max_minus" = { kind = "bool", label = "Alternate 1NT range: maximum has a minus", choice = "notrump.one_nt_alt.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"two_nt.range_min_plus"    = { kind = "bool", label = "2NT range: minimum has a plus", choice = "notrump.two_nt.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt.range_min_minus"   = { kind = "bool", label = "2NT range: minimum has a minus", choice = "notrump.two_nt.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"two_nt.range_max_plus"    = { kind = "bool", label = "2NT range: maximum has a plus", choice = "notrump.two_nt.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt.range_max_minus"   = { kind = "bool", label = "2NT range: maximum has a minus", choice = "notrump.two_nt.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"three_nt.range_min_plus"  = { kind = "bool", label = "3NT range: minimum has a plus", choice = "notrump.three_nt.range_min_qualifier", aliases = ["three_nt.range_min_plus"], desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"three_nt.range_min_minus" = { kind = "bool", label = "3NT range: minimum has a minus", choice = "notrump.three_nt.range_min_qualifier", aliases = ["three_nt.range_min_minus"], desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"three_nt.range_max_plus"  = { kind = "bool", label = "3NT range: maximum has a plus", choice = "notrump.three_nt.range_max_qualifier", aliases = ["three_nt.range_max_plus"], desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"three_nt.range_max_minus" = { kind = "bool", label = "3NT range: maximum has a minus", choice = "notrump.three_nt.range_max_qualifier", aliases = ["three_nt.range_max_minus"], desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 
 [major_openings]
 "five_card_majors"         = { kind = "bool", label = "Five-card majors", default = true }
@@ -373,10 +381,14 @@
 "direct.systems_on"        = { kind = "bool", label = "Direct 1NT: systems on", level = 4 }
 "balance.range_min"        = { kind = "int", label = "Balancing 1NT: minimum", min = 0, max = 25 }
 "balance.range_max"        = { kind = "int", label = "Balancing 1NT: maximum", min = 0, max = 25 }
-"direct.range_min_plus"    = { kind = "bool", label = "Direct 1NT: minimum has a plus", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
-"direct.range_max_plus"    = { kind = "bool", label = "Direct 1NT: maximum has a plus", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
-"balance.range_min_plus"   = { kind = "bool", label = "Balancing 1NT: minimum has a plus", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
-"balance.range_max_plus"   = { kind = "bool", label = "Balancing 1NT: maximum has a plus", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"direct.range_min_plus"    = { kind = "bool", label = "Direct 1NT: minimum has a plus", choice = "nt_overcalls.direct.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"direct.range_min_minus"   = { kind = "bool", label = "Direct 1NT: minimum has a minus", choice = "nt_overcalls.direct.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"direct.range_max_plus"    = { kind = "bool", label = "Direct 1NT: maximum has a plus", choice = "nt_overcalls.direct.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"direct.range_max_minus"   = { kind = "bool", label = "Direct 1NT: maximum has a minus", choice = "nt_overcalls.direct.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"balance.range_min_plus"   = { kind = "bool", label = "Balancing 1NT: minimum has a plus", choice = "nt_overcalls.balance.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"balance.range_min_minus"  = { kind = "bool", label = "Balancing 1NT: minimum has a minus", choice = "nt_overcalls.balance.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
+"balance.range_max_plus"   = { kind = "bool", label = "Balancing 1NT: maximum has a plus", choice = "nt_overcalls.balance.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"balance.range_max_minus"  = { kind = "bool", label = "Balancing 1NT: maximum has a minus", choice = "nt_overcalls.balance.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "balance.systems_on"       = { kind = "bool", label = "Balancing 1NT: systems on", level = 4 }
 "jump_2nt_lowest_unbid"    = { kind = "bool", label = "Jump 2NT = two lowest unbid", skill = "competitive_bidding/michaels_unusual", level = 4 }
 "conv_text"                = { kind = "text", label = "Other treatments" }

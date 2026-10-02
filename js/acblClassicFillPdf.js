@@ -1898,7 +1898,8 @@ export async function extractCardDataFromPdf(bytes) {
  */
 function plusSuffixFor(entry, cardData) {
   if (entry.kind !== 'text' || !entry.card) return ''
-  return readPath(cardData, `${entry.card}_plus`) ? '+' : ''
+  if (readPath(cardData, `${entry.card}_plus`)) return '+'
+  return readPath(cardData, `${entry.card}_minus`) ? '-' : ''
 }
 
 function applyEntry(form, entry, cardValue, cardData) {

@@ -90,15 +90,24 @@ export const browserStorage = {
     })
   },
 
-  async create({ name, description = null, cardData = {}, visibility = 'private' }) {
-    // The newest card becomes the one that opens first, as Bridge Classroom
-    // links a new card as primary.
-    for (const c of await all()) if (c.is_primary) await put({ ...c, is_primary: false })
+  /** Make `id` the card that opens first. */
+  async setPrimary(id) {
+    const cards = await all()
+    if (!cards.some(c => c.id === id)) throw new Error('That card is no longer in this browser')
+    for (const c of cards) {
+      if (c.is_primary !== (c.id === id)) await put({ ...c, is_primary: c.id === id })
+    }
+  },
+
+  async create({ name, description = null, cardData = {}, visibility = 'private', primary = true }) {
+    // `primary`: open this card first from now on (the editor asks for it
+    // only for a person's first card; Make primary does it later).
+    if (primary) for (const c of await all()) if (c.is_primary) await put({ ...c, is_primary: false })
     const id = crypto.randomUUID()
     await put({
       id, name, description, visibility,
       owner_id: LOCAL_USER.id,
-      is_primary: true,
+      is_primary: !!primary,
       card_data: cardData,
       created_at: now(),
       updated_at: now(),

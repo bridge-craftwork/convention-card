@@ -60,6 +60,10 @@ export const SECTION_META = [
  */
 export const STRUCTURED_FIELDS = {
   general: [
+    // What the PDF prints on its names line. The card's own name (the card
+    // menu, file names) is separate: Rename changes that one.
+    { label: 'Names on the card',         cardPath: 'metadata.partner_names',      kind: 'text',
+      placeholder: 'e.g. Andrew Rowberg & Rick Wilson' },
     { label: 'System',                    cardPath: 'general.system',              kind: 'text',
       placeholder: 'e.g. 2/1 Game forcing' },
     { label: 'Min HCP to open',           cardPath: 'general.min_hcp_open',        kind: 'number' },
