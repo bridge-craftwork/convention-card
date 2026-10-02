@@ -45,21 +45,25 @@ function suits(text) {
  * the qualifier alongside it as `<path>_plus`.
  */
 function parseRange(value) {
-  if (value == null || value === '') return { n: null, plus: false, suffix: null }
+  if (value == null || value === '') return { n: null, plus: false, minus: false, suffix: null }
   const s = String(value).trim()
-  const m = s.match(/^([+\-]?\d+)(\+?)\s*(.*)$/)
-  if (!m) return { n: null, plus: false, suffix: s }
+  // "14+" is a good 14 and "17-" a poor 17; the qualifier must be followed
+  // by the end of the value or a space, so "17-ish" stays text.
+  const m = s.match(/^([+\-]?\d+)([+-]?)(?=\s|$)\s*(.*)$/)
+  if (!m) return { n: null, plus: false, minus: false, suffix: s }
   const n = parseInt(m[1], 10)
   const suffix = m[3].trim() || null
-  return { n: Number.isFinite(n) ? n : null, plus: m[2] === '+', suffix }
+  return { n: Number.isFinite(n) ? n : null, plus: m[2] === '+', minus: m[2] === '-', suffix }
 }
 
 /** Write a parsed range onto `obj[key]`, carrying an open-ended `+`
- *  over to the sibling `<key>_plus` the PDF exporter looks for. */
+ *  over to the sibling `<key>_plus` (or a `-`, `<key>_minus`) the PDF
+ *  exporter looks for. */
 function assignRange(obj, key, raw) {
   const r = parseRange(raw)
   obj[key] = r.n
   if (r.plus) obj[`${key}_plus`] = true
+  if (r.minus) obj[`${key}_minus`] = true
 }
 
 function num(value) {
@@ -138,7 +142,9 @@ export function importBridgeodexJson(input) {
   if (aMin.n != null) card_data.notrump.one_nt.range_min = aMin.n
   if (aMax.n != null) card_data.notrump.one_nt.range_max = aMax.n
   if (aMin.plus) card_data.notrump.one_nt.range_min_plus = true
+  if (aMin.minus) card_data.notrump.one_nt.range_min_minus = true
   if (aMax.plus) card_data.notrump.one_nt.range_max_plus = true
+  if (aMax.minus) card_data.notrump.one_nt.range_max_minus = true
   card_data.notrump.one_nt.seat_vul = [aMin.suffix, aMax.suffix].filter(Boolean).join(' ').trim() || null
 
   const bMin = parseRange(nt.b_range_min)
@@ -146,7 +152,9 @@ export function importBridgeodexJson(input) {
   if (bMin.n != null) card_data.notrump.one_nt_alt.range_min = bMin.n
   if (bMax.n != null) card_data.notrump.one_nt_alt.range_max = bMax.n
   if (bMin.plus) card_data.notrump.one_nt_alt.range_min_plus = true
+  if (bMin.minus) card_data.notrump.one_nt_alt.range_min_minus = true
   if (bMax.plus) card_data.notrump.one_nt_alt.range_max_plus = true
+  if (bMax.minus) card_data.notrump.one_nt_alt.range_max_minus = true
   card_data.notrump.one_nt_alt.seat_vul = [bMin.suffix, bMax.suffix].filter(Boolean).join(' ').trim() || null
   if (on(nt.b_range_same_resp)) card_data.notrump.one_nt_alt.same_responses = true
 

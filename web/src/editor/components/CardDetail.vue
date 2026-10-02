@@ -54,7 +54,7 @@
               :value="rangeEnd(f.from)"
               @input="onRangeInput(f.from, $event.target.value)"
               @blur="$event.target.value = rangeEnd(f.from)"
-              :placeholder="canPlus(f.from) ? 'from (14+)' : 'from'"
+              :placeholder="canQualify(f.from) ? 'from (14+)' : 'from'"
             />
             <span class="range-dash">—</span>
             <input
@@ -64,7 +64,7 @@
               :value="rangeEnd(f.to)"
               @input="onRangeInput(f.to, $event.target.value)"
               @blur="$event.target.value = rangeEnd(f.to)"
-              placeholder="to"
+              :placeholder="canQualify(f.to) ? 'to (17-)' : 'to'"
             />
           </template>
 
@@ -244,29 +244,37 @@ function readField(path) {
   return readPath(props.card?.card_data, path)
 }
 
-// A range end is a number, with a "+" for "a good …" where the spec has a
-// `<path>_plus` field for it (the NT ranges): "14+" writes 14 and the plus.
-const canPlus = path => !!specField(`${path}_plus`)
+// A range end is a number, qualified where the spec has `<path>_plus` and
+// `<path>_minus` fields for it (the NT ranges): "14+" is a good 14 and
+// "17-" a poor 17, so "14+-17-" writes 14, 17 and both flags.
+const canQualify = path => !!specField(`${path}_plus`)
 
 function rangeEnd(path) {
   const n = readField(path)
   if (n == null || n === '') return ''
-  return `${n}${canPlus(path) && readField(`${path}_plus`) ? '+' : ''}`
+  if (!canQualify(path)) return String(n)
+  return `${n}${readField(`${path}_plus`) ? '+' : readField(`${path}_minus`) ? '-' : ''}`
 }
 
 function onRangeInput(path, raw) {
   const text = String(raw).trim()
   if (text === '') {
     props.writeField(path, null)
-    if (canPlus(path)) props.writeField(`${path}_plus`, null)
+    if (canQualify(path)) {
+      props.writeField(`${path}_plus`, null)
+      props.writeField(`${path}_minus`, null)
+    }
     return
   }
-  const m = /^(\d+)\s*(\+)?$/.exec(text)
+  const m = /^(\d+)\s*([+-])?$/.exec(text)
   // Anything else is a half-typed or mistyped value: leave the card alone,
   // and the box shows the stored value again when it loses focus.
   if (!m) return
   props.writeField(path, Number(m[1]))
-  if (canPlus(path)) props.writeField(`${path}_plus`, m[2] ? true : null)
+  if (canQualify(path)) {
+    props.writeField(`${path}_plus`, m[2] === '+' ? true : null)
+    props.writeField(`${path}_minus`, m[2] === '-' ? true : null)
+  }
 }
 
 function onFieldInput(path, raw, coerce) {
