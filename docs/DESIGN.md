@@ -419,8 +419,9 @@ built-in cards are the same kind of thing, shipped with the editor.
     refuse the file too.
   - **The schema:** the template's metadata (name, the PDF it fits, which
     page each field is on), the entry kinds (tick, tick-for-a-value, text,
-    a value split across several boxes, a declarative text shaping in place
-    of today's code `transform`), and how a PDF is recognised as this
+    a value split across several boxes, a text pattern combining card
+    paths and calculated values with fixed words, which also replaces
+    today's code `transform`), and how a PDF is recognised as this
     template: by its field names, with an **optional** hash of the blank
     PDF to tell apart templates that share field names (decided 2026-10-02).
   - **Paths are the spec's:** a mapping names card paths and their aliases,
@@ -507,12 +508,24 @@ one, and a partnership to see what it has taken on.
 - **What has no level** (a namespaced convention whose file gives none,
   free text) counts toward the load, not the level, and is listed as
   unrated.
-- **It can go on a card.** The template mapping (above) gets a second kind
-  of source beside a card path: a **calculated value**, such as
-  `difficulty.level`, `difficulty.band` or `difficulty.load`. Export fills
-  it in; import never reads it back, and a box holding one is not reported
-  as a hand edit. The names of the calculated values live in `spec/`, like
-  the fields, so the mapping checker knows them.
+- **It can go on a card, in words you choose.** A template mapping can
+  fill a box from a **text pattern** as well as from one card path: card
+  paths and calculated values in braces, with your own words around them.
+  A title box could be
+
+  ```
+  "{metadata.partner_names} ({difficulty.level:.1}/{difficulty.load:.1})"
+  ```
+
+  which prints "Rick and Art (6.5/4.3)". The calculated values
+  (`difficulty.level`, `difficulty.band`, `difficulty.load`, and any added
+  later) are named in `spec/` beside the fields, so the mapping checker
+  knows them; `:.1` is the number of decimals. Import reads such a box by
+  matching it against its pattern: the card paths in it are read back (the
+  partner names here), the calculated values are skipped, since the card
+  recomputes them, and a box that no longer fits its pattern is reported,
+  not guessed. A box holding only a calculated value is never read back
+  and never counts as a hand edit.
 - **A table of your cards.** The editor lists a person's cards (in this
   browser, or in Bridge Classroom): name, partners, last changed, level,
   load. Picking two or more opens the **comparison** (below) for them;
