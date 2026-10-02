@@ -1,0 +1,26 @@
+# Cloudflare Pages response headers. Vite copies web/public/ to the root of
+# web/dist, where Pages reads this file. bridge-craftwork.com proxies /card/*
+# here with the prefix stripped and keeps these headers (the site's router).
+
+/*
+  X-Content-Type-Options: nosniff
+  # A card can travel in the fragment (#import=v1.…). A fragment is never
+  # sent, but never hand the page's address to a third party either.
+  Referrer-Policy: no-referrer
+
+# Vite content-hashes everything under assets/ (the code, the ACBL templates,
+# the font), so a name cannot mean different bytes: cache it for good.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Not hashed: revalidate, or a deploy never reaches anyone holding the old one.
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# For readers without JavaScript (people and assistants): plain text, current.
+/reference.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
