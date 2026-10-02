@@ -1,0 +1,17 @@
+// Cloudflare Pages configuration for the standalone editor (web/).
+//
+// A static site: the editor, the converters and the PDF export all run in
+// the visitor's browser, and cards stay in it (IndexedDB). Build with
+// `npm run build` (which writes reference.txt first), then
+// `npx wrangler pages deploy`; CI does both (.github/workflows/pages.yml).
+// The project must exist first: `npx wrangler pages project create convention-card`.
+//
+// bridge-craftwork.com mounts it at /card/ through the site's router
+// (bridge-craftwork-site, src/index.js), which strips the prefix and keeps
+// this project's headers (web/public/_headers). No subdomain: subdomains are
+// machines, paths are pages.
+{
+  "name": "convention-card",
+  "compatibility_date": "2026-10-01",
+  "pages_build_output_dir": "web/dist"
+}

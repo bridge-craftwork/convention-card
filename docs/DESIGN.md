@@ -425,9 +425,23 @@ The editor follows the site conventions in `bridge-craftwork-site`:
   subdomain: *subdomains are machines, paths are pages*.
 - **Relative asset URLs** (`base: './'` in Vite), so the build works at any path
   depth, and `/card` redirects to `/card/`.
-- **Machine-readable reference** (site issue #3): `/card/reference.txt`,
-  generated from the spec by the same build (so the two can't drift), and a
-  `window.card` JavaScript API.
+- **Machine-readable reference** (site issue #3): `/card/reference.txt` and
+  `/card/llms.txt`, written from the spec before each build
+  (`scripts/emit-reference.mjs`, `web/src/referenceText.js`) and never
+  committed, so they can't drift from the editor. The reference holds every
+  field (path, kind, values, default, older paths, convention, level, choice
+  group), every convention (ID, level, names, summary, citations), the card
+  format and `window.card`; the build fails if it misses a field or a
+  convention.
+- **`window.card`** (`web/src/tool.js`), the tool contract's
+  `run / validate / getInput / setInput / getOutput`. It reads through the
+  library's `importCard` and checks with `checkCard`, as the Import button
+  does, and produces the export JSON, `card_data`, `.bbsa`, the three PDFs, a
+  `#import=` link or the Bridge Classroom hand-off. Diagnostics are
+  `{severity, message, path?, hint?}`, where `path` is the field.
+- **Real 404s** (`web/public/404.html`), and cache and referrer rules in
+  `web/public/_headers`. Deployed by `.github/workflows/pages.yml` with the
+  org's Pages token.
 - **Human docs** at `bridge-craftwork.com/docs/card/`, in the site repo.
 
 ## Versioning

@@ -25,7 +25,9 @@
   },
   "scripts": {
     "test": "vitest run",
+    "predev": "node scripts/emit-reference.mjs",
     "dev": "vite web",
+    "prebuild": "node scripts/emit-reference.mjs",
     "build": "vite build web"
   },
   "dependencies": {
