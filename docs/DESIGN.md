@@ -415,6 +415,17 @@ built-in cards are the same kind of thing, shipped with the editor.
     `spec/`, so a person building a mapping (or the editor's mapping tool)
     gets the same errors CI does. The built-in Classic and New maps are the
     first files checked against it.
+  - **Whatever the contract requires, the editor can produce.** If a
+    mapping must carry the blank PDF's hash, the standalone editor gets an
+    **Advanced** area with a tool that computes it: drop in the PDF, copy
+    the hash (SHA-256 of the file's bytes). The editor's own mapping tool
+    writes it into the file itself, so only a person writing a mapping by
+    hand needs the Advanced tool. The same area lists a PDF's form fields
+    and runs the mapping checker on a file, so nothing the contract asks
+    for needs software outside the editor. The hash identifies the blank
+    template; a filled-in card's bytes differ, so an import recognises
+    the template by its field names and uses the hash only to tell
+    apart templates that share them.
 - **What a PDF without a form needs is different.** Most bridgeodex PDFs
   have no form fields (the text is printed into the page), so a mapping by
   field name cannot read them; that would need text extraction by
