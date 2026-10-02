@@ -146,3 +146,10 @@ About 160 KB; open until Rick accepts it or asks for less.
 
 **8. What counts as a convention.** Decided 2026-09-30 (16).
 
+**9. How a card's level is drawn from its agreements.** A card's difficulty
+is a level and a load (DESIGN.md, "A card's difficulty"). The level could be
+the highest level of any agreement on the card, which is simple to explain
+but lets one exotic convention decide it; or the highest level that several
+agreements reach (say three), which describes the card as a whole. Try both
+on Rick's partnership cards and the PBS test cards before choosing.
+

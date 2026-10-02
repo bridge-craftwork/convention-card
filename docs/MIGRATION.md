@@ -207,6 +207,13 @@ like the built-in ACBL cards. First move the built-in fill maps into
 `spec/formats/` as data, under a written contract for the mapping file
 (`docs/TEMPLATE-CONTRACT.md`: format version, schema, checker). See DESIGN.md, "Card templates of your own".
 
+### Later: a card's difficulty, and the card table
+
+`cardDifficulty(card)` (level and load, with reasons), calculated values a
+template can print, and a table of a person's cards with their difficulty,
+from which several open the comparison matrix. See DESIGN.md, "A card's
+difficulty, and your cards side by side".
+
 ### Later: a card wizard for newer players
 
 A short question list (`spec/wizard.toml`) and a wizard in the editor that
