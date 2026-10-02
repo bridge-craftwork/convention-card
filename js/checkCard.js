@@ -149,7 +149,7 @@ export function checkCard(input) {
   for (const [group, on] of report.conflicts) {
     diagnostics.push({
       severity: 'warning',
-      message: `${on.join(' and ')} are all on, but they are alternatives (${group}); which does the partnership play?`,
+      message: `${on.join(' and ')} are ${on.length === 2 ? 'both' : 'all'} on, but they are alternatives (${group}): which does the partnership play?`,
       path: on[0],
     })
   }
@@ -158,7 +158,6 @@ export function checkCard(input) {
       severity: 'warning',
       message: `${path}: not a field of the card; kept as it is`,
       path,
-      hint: 'Every field is listed in reference.txt',
     })
   }
   for (const [from, to] of report.aliased) {

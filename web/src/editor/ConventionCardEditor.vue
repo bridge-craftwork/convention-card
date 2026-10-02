@@ -105,6 +105,20 @@
     </div>
     <div v-if="saveError" class="save-error">{{ saveError }}</div>
 
+    <!-- What checkCard finds on the open card: the same diagnostics
+         window.card.validate returns (the tool contract). Older paths are
+         not problems, so only errors and warnings are shown. -->
+    <details v-if="cardProblems.length" class="card-problems">
+      <summary>
+        {{ cardProblems.length === 1 ? '1 thing' : `${cardProblems.length} things` }} on this card to look at
+      </summary>
+      <ul>
+        <li v-for="(d, i) in cardProblems" :key="i" :class="d.severity">
+          {{ d.message }}<span v-if="d.hint" class="hint"> ({{ d.hint }})</span>
+        </li>
+      </ul>
+    </details>
+
     <!-- Export PDF format picker -->
     <div v-if="exportDialogOpen" class="modal-overlay" @click.self="exportDialogOpen = false">
       <div class="modal-content export-dialog">
@@ -218,6 +232,7 @@
 import { computed, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importCard } from '../../../js/importCard.js'
+import { checkCard } from '../../../js/checkCard.js'
 import SkillPills from './components/SkillPills.vue'
 import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
@@ -248,6 +263,13 @@ const cardLoading = cc.cardLoading
 const cardError = cc.cardError
 const saving = cc.saving
 const saveError = cc.saveError
+
+// The open card's problems, unsaved edits included, as checkCard reports them.
+const cardProblems = computed(() => {
+  const data = cc.editedCardData.value
+  if (!data) return []
+  return checkCard(data).diagnostics.filter(d => d.severity !== 'info')
+})
 const canEdit = cc.canEdit
 const isEditable = cc.isEditable
 const isDirty = cc.isDirty
@@ -662,6 +684,19 @@ watch(() => currentUser.value?.id, async (uid) => {
   color: #92400e;
 }
 
+.card-problems {
+  margin: -4px 0 12px;
+  padding: 8px 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 13px;
+}
+.card-problems summary { cursor: pointer; font-weight: 600; }
+.card-problems ul { margin: 6px 0 0 18px; }
+.card-problems li.error { color: #b91c1c; }
+.card-problems .hint { color: #a16207; }
 .save-error {
   margin: -4px 0 12px;
   padding: 8px 12px;
