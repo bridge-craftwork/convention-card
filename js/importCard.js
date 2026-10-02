@@ -17,7 +17,7 @@ export const IMPORT_FORMATS = {
   bbo: "BBO's ACBL card export (JSON)",
   bridgeodex: "bridgeodex's card export (JSON, with a settings block)",
   bbsa: "BBA's .bbsa convention file (Key = value lines)",
-  pdf: 'an ACBL PDF this editor exported (the card travels inside it)',
+  pdf: 'an ACBL PDF: one this editor exported (the card travels inside it, and boxes changed since are read too), or any filled-in ACBL Classic or New card',
   handoff: 'a hand-off string, v1.<data>, or a URL ending #import=v1.<data>',
 }
 
@@ -110,12 +110,12 @@ export async function importCard(input, { from = null, name = null } = {}) {
     }
     case 'pdf': {
       if (!isBytes(input)) throw new Error('A PDF is read from its bytes (an ArrayBuffer or Uint8Array)')
-      const { extractCardDataFromPdf } = await import('./acblClassicFillPdf.js')
-      const record = await extractCardDataFromPdf(bytesOf(input))
-      if (!record) {
-        throw new Error('This PDF has no card inside it. Only PDFs exported from this editor or Bridge Classroom can be read back.')
+      const { readCardFromPdf } = await import('./acblPdfImport.js')
+      const read = await readCardFromPdf(bytesOf(input))
+      if (!read) {
+        throw new Error('This PDF has no card inside it, and it is not a filled-in ACBL card.')
       }
-      return card(record)
+      return card(read, { report: read.report })
     }
     case 'handoff': {
       const match = HANDOFF.exec(text().trim())

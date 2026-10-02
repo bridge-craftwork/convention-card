@@ -172,6 +172,14 @@ in a page, a browser extension or Node.
   editor's own JSON, BBO, bridgeodex, `.bbsa`, our PDFs and the URL hand-off,
   told apart by their content. The editor's Import and the standalone page's
   `window.card` both read through it.
+- **Hand edits in our PDFs** (`js/acblPdfImport.js`): the export records
+  what it wrote into each box beside the card it embeds, and an import
+  compares the boxes with that record. Each changed box is mapped back to its
+  field through the fill map: ticks settle a yes/no or a choice, numbers are
+  parsed, and text keeps the card's own words (suit symbols the PDF's font
+  cannot show) while taking the words typed by hand. A box it cannot place
+  is reported, not guessed. A filled-in ACBL Classic or New card with no card
+  inside is read from its boxes alone.
 - **A card check** (`checkCard`, `js/checkCard.js`): which paths came in
   through an alias, which the spec doesn't know, which values it rejects, and
   which choice groups have two alternatives on, as the crate's `LoadReport`

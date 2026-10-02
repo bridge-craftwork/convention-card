@@ -1536,6 +1536,9 @@ function applyTypography(pdf, form, narrow, templateName, cardData) {
     if (fit.lines.length === 1 && fit.size < TYPO.targetSize && maxLines > 1) {
       const split = trySplitIntoTwoLines(pdf, form, boxes, box, value, narrow, fit.size)
       if (split) {
+        // The second line lands in a box of its own; the import needs to
+        // know whose text it is (acblPdfImport.js).
+        MOVED_BY_DOC.get(pdf)?.set(split.second.getName(), name)
         field.setText(split.upperLine)
         field.setFontSize(split.size)
         split.second.setText(split.lowerLine)
@@ -1679,6 +1682,7 @@ export async function buildAcblPdf(card, templateName = 'classic') {
     console.warn('Condensed field font unavailable; falling back to Helvetica:', err)
   }
 
+  MOVED_BY_DOC.set(pdf, new Map())
   const missingFields = []
   const droppedPaths = []
   for (const entry of fieldMap) {
@@ -1710,8 +1714,36 @@ export async function buildAcblPdf(card, templateName = 'classic') {
       console.warn('Typography pass failed; values keep the template default:', err)
     }
   }
-  embedCardDataInPdf(pdf, card)
+  embedCardDataInPdf(pdf, card, writtenFields(form, templateName, MOVED_BY_DOC.get(pdf)))
   return pdf
+}
+
+// Per document: box name → the box whose text it carries, for each line
+// the typography pass moved into a neighbouring empty box.
+const MOVED_BY_DOC = new WeakMap()
+
+/**
+ * What the export wrote into each box: `{ template, values, moved }`, where
+ * `values` maps a box name to its text (line breaks included) or `true` for
+ * a ticked box, and `moved` maps a box holding a line moved out of another
+ * to that other box. It travels in the PDF beside the card, so an import
+ * can tell what was typed by hand afterwards from what the export wrote
+ * (acblPdfImport.js), whatever the typography pass did to the layout.
+ */
+function writtenFields(form, templateName, moved) {
+  const values = {}
+  for (const field of form.getFields()) {
+    const name = field.getName()
+    try {
+      if (field instanceof PDFCheckBox) {
+        if (field.isChecked()) values[name] = true
+      } else if (field instanceof PDFTextField) {
+        const text = field.getText()
+        if (text && text.trim()) values[name] = text
+      }
+    } catch { /* a field pdf-lib cannot read is one we did not write */ }
+  }
+  return { template: templateName, values, moved: Object.fromEntries(moved || []) }
 }
 
 /**
@@ -1831,7 +1863,7 @@ export const buildAcblClassicPdf = (card) => buildAcblPdf(card, 'classic')
  * ones. Our namespaced `BridgeClassroomCard` key is invisible to other
  * tools but trivially readable via pdf-lib.
  */
-function embedCardDataInPdf(pdf, card) {
+function embedCardDataInPdf(pdf, card, pdfFields = null) {
   if (!card?.card_data) return
   try {
     const payload = {
@@ -1839,7 +1871,11 @@ function embedCardDataInPdf(pdf, card) {
       name: card.name || null,
       description: card.description || null,
       exportedAt: new Date().toISOString(),
-      card_data: card.card_data
+      card_data: card.card_data,
+      // What the export wrote into each box, so an import can find edits
+      // made in a PDF editor afterwards. Readers of the export wrapper
+      // ignore keys they don't know.
+      ...(pdfFields && { pdf_fields: pdfFields }),
     }
     const json = JSON.stringify(payload)
     const info = pdf.getInfoDict()
@@ -1861,6 +1897,17 @@ export async function extractCardDataFromPdf(bytes) {
   } catch (err) {
     throw new Error(`Could not parse PDF (${err?.message || err})`)
   }
+  const payload = readEmbeddedPayload(pdf)
+  if (!payload) return null
+  return {
+    name: payload.name || 'Imported convention card',
+    description: payload.description || 'Imported from PDF',
+    card_data: payload.card_data || payload // backward-compat if older PDFs stored the bare card_data
+  }
+}
+
+/** The export wrapper embedded in a loaded PDF (embedCardDataInPdf), or null. Throws if it is there but unreadable. */
+export function readEmbeddedPayload(pdf) {
   let info
   try {
     info = pdf.getInfoDict()
@@ -1881,11 +1928,7 @@ export async function extractCardDataFromPdf(bytes) {
   } catch (err) {
     throw new Error(`Embedded card_data is not valid JSON (${err?.message || err})`)
   }
-  return {
-    name: payload.name || 'Imported convention card',
-    description: payload.description || 'Imported from PDF',
-    card_data: payload.card_data || payload // backward-compat if older PDFs stored the bare card_data
-  }
+  return payload
 }
 
 /**
@@ -1896,6 +1939,11 @@ export async function extractCardDataFromPdf(bytes) {
  * this the exported card reads a flat "14" and silently changes the
  * partnership's agreement.
  */
+/** The fill maps and split groups, by template, for reading a PDF's boxes back (acblPdfImport.js). */
+export const ACBL_FIELD_MAPS = { classic: FIELD_MAP_CLASSIC, new: FIELD_MAP_NEW }
+export const ACBL_SPLIT_GROUPS = SPLIT_GROUPS
+export { isCheckOn, sanitizeForWinAnsi }
+
 function plusSuffixFor(entry, cardData) {
   if (entry.kind !== 'text' || !entry.card) return ''
   if (readPath(cardData, `${entry.card}_plus`)) return '+'
