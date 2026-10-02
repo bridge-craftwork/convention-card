@@ -200,6 +200,12 @@ actually exercised, not just loaded.
 **Done when:** no repo keeps its own copy of the field list or the skill
 vocabulary.
 
+### Later: card templates of your own
+
+Upload a card PDF with a mapping file, and export to it and import from it
+like the built-in ACBL cards. First move the built-in fill maps into
+`spec/formats/` as data. See DESIGN.md, "Card templates of your own".
+
 ### Later: a card wizard for newer players
 
 A short question list (`spec/wizard.toml`) and a wizard in the editor that
