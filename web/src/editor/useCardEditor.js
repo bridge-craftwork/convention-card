@@ -20,7 +20,7 @@ import {
 //   load(id)      one card: { id, name, description, owner_id, visibility, card_data, updated_at }
 //   listLinks()   the user's cards: [{ card_id, card_name, is_primary, label }]
 //   save(card, cardData)                       write a card's card_data
-//   overwrite(id, { name, description, cardData })
+//   overwrite(id, { name, description, cardData })   (also how a card is renamed)
 //   create({ name, description, cardData, visibility }) → the new card's id
 //   remove(id)
 //   canEdit(card, user) → boolean
@@ -299,6 +299,27 @@ function createState(storage, overlays) {
     await switchCard(cardId)
   }
 
+  /** Rename the open card. Unsaved edits stay unsaved, and edit mode stays on. */
+  async function renameCard(name) {
+    const card = currentCard.value
+    const newName = String(name ?? '').trim()
+    if (!card || !newName || newName === card.name) return
+    if (!user()) throw new Error('Must be signed in')
+    const edits = isDirty.value ? editedCardData.value : null
+    const editing = !viewMode.value
+    // The card's own metadata.name follows, where the card keeps one.
+    const cardData = JSON.parse(JSON.stringify(card.card_data || {}))
+    if (cardData.metadata?.name != null) cardData.metadata.name = newName
+    await storage.overwrite(card.id, { name: newName, description: card.description, cardData })
+    await loadUserCardLinks()
+    await switchCard(card.id)
+    if (edits) {
+      if (edits.metadata?.name != null) edits.metadata.name = newName
+      editedCardData.value = edits
+    }
+    if (editing) viewMode.value = false
+  }
+
   async function createCard({ name, description = null, cardData = {}, visibility = 'private' } = {}) {
     if (!user()) throw new Error('Must be signed in to create a card')
     const cardId = await storage.create({ name: name || 'My convention card', description, cardData, visibility })
@@ -380,6 +401,7 @@ function createState(storage, overlays) {
     enterEditMode,
     revertEdits,
     overwriteCard,
+    renameCard,
     createCard,
     duplicateCurrentCard,
     deleteCurrentCard,

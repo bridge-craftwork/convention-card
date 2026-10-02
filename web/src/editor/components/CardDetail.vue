@@ -44,21 +44,26 @@
           <!-- Read-only display -->
           <template v-if="!editable">{{ renderField(f) }}</template>
 
-          <!-- Range: from-to numeric inputs -->
+          <!-- Range: from-to. Text inputs, not type="number": a number input
+               reports "14+" (a good 14) as empty, which wiped the value. -->
           <template v-else-if="f.kind === 'range'">
             <input
-              type="number"
+              type="text"
+              inputmode="numeric"
               class="field-input range-input"
-              :value="readField(f.from) ?? ''"
-              @input="onFieldInput(f.from, $event.target.value, 'number')"
-              placeholder="from"
+              :value="rangeEnd(f.from)"
+              @input="onRangeInput(f.from, $event.target.value)"
+              @blur="$event.target.value = rangeEnd(f.from)"
+              :placeholder="canPlus(f.from) ? 'from (14+)' : 'from'"
             />
             <span class="range-dash">—</span>
             <input
-              type="number"
+              type="text"
+              inputmode="numeric"
               class="field-input range-input"
-              :value="readField(f.to) ?? ''"
-              @input="onFieldInput(f.to, $event.target.value, 'number')"
+              :value="rangeEnd(f.to)"
+              @input="onRangeInput(f.to, $event.target.value)"
+              @blur="$event.target.value = rangeEnd(f.to)"
               placeholder="to"
             />
           </template>
@@ -210,6 +215,7 @@
 import { computed, ref, watch } from 'vue'
 import { SECTION_META, STRUCTURED_FIELDS, getCatalogEntries } from '../conventionCatalog.js'
 import { colorizeSuits } from '../suits.js'
+import { field as specField } from '../../../../js/spec.js'
 import ConventionRow from './ConventionRow.vue'
 import VsNtDefense from './VsNtDefense.vue'
 import DirectCuebidsMatrix from './DirectCuebidsMatrix.vue'
@@ -236,6 +242,31 @@ defineEmits(['toggle'])
 
 function readField(path) {
   return readPath(props.card?.card_data, path)
+}
+
+// A range end is a number, with a "+" for "a good …" where the spec has a
+// `<path>_plus` field for it (the NT ranges): "14+" writes 14 and the plus.
+const canPlus = path => !!specField(`${path}_plus`)
+
+function rangeEnd(path) {
+  const n = readField(path)
+  if (n == null || n === '') return ''
+  return `${n}${canPlus(path) && readField(`${path}_plus`) ? '+' : ''}`
+}
+
+function onRangeInput(path, raw) {
+  const text = String(raw).trim()
+  if (text === '') {
+    props.writeField(path, null)
+    if (canPlus(path)) props.writeField(`${path}_plus`, null)
+    return
+  }
+  const m = /^(\d+)\s*(\+)?$/.exec(text)
+  // Anything else is a half-typed or mistyped value: leave the card alone,
+  // and the box shows the stored value again when it loses focus.
+  if (!m) return
+  props.writeField(path, Number(m[1]))
+  if (canPlus(path)) props.writeField(`${path}_plus`, m[2] ? true : null)
 }
 
 function onFieldInput(path, raw, coerce) {
@@ -414,7 +445,7 @@ function renderField(field) {
     const from = readPath(data, field.from)
     const to = readPath(data, field.to)
     if (from == null || to == null) return '—'
-    return `${from}-${to}`
+    return `${rangeEnd(field.from)}-${rangeEnd(field.to)}`
   }
   if (field.kind === 'inline_checks') {
     const on = field.paths.filter(p => !!readPath(data, p.cardPath)).map(p => p.label)
