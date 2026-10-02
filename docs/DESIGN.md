@@ -481,6 +481,44 @@ in Bridge Classroom (DECISIONS, 7); the API side is
 The standalone editor has no account, so it shares only by file or by
 handing the card to Bridge Classroom (DECISIONS, open question 4).
 
+## A card's difficulty, and your cards side by side
+
+*Planned* (Rick Wilson, 2026-10-02). Every convention and extension has a
+level (1–10), so a card's difficulty can be worked out from what it plays:
+something a newer player can use to choose a card, a teacher to suggest
+one, and a partnership to see what it has taken on.
+
+- **Worked out, never stored.** `cardDifficulty(card)` in the library, a pure
+  function of the card and the spec. A stored figure would go stale with
+  every edit and every revision of a level in `spec/`; a card records
+  agreements, and this is about them, not one of them.
+- **Two numbers, because one hides the difference** between a card with one
+  exotic convention and a card dense with intermediate ones:
+  - **Level:** how advanced the card is, on the 1–10 scale, with its band
+    name ("intermediate").
+  - **Load:** how much there is to remember, counted in agreements, not
+    checkboxes: a choice group counts once, and an extension counts as part
+    of its convention (DESIGN, "Difficulty levels") rather than as another.
+  Each comes with its reasons: which agreements set the level, so "level 7"
+  can be read as "because of Exclusion Blackwood and Kokish". How exactly
+  the level is drawn from the agreements' levels (the highest, or a level
+  several agreements reach, so that one exotic entry doesn't decide it) is
+  open (DECISIONS, open question 9).
+- **What has no level** (a namespaced convention whose file gives none,
+  free text) counts toward the load, not the level, and is listed as
+  unrated.
+- **It can go on a card.** The template mapping (above) gets a second kind
+  of source beside a card path: a **calculated value**, such as
+  `difficulty.level`, `difficulty.band` or `difficulty.load`. Export fills
+  it in; import never reads it back, and a box holding one is not reported
+  as a hand edit. The names of the calculated values live in `spec/`, like
+  the fields, so the mapping checker knows them.
+- **A table of your cards.** The editor lists a person's cards (in this
+  browser, or in Bridge Classroom): name, partners, last changed, level,
+  load. Picking two or more opens the **comparison** (below) for them;
+  the difficulty is one more row of it, so partners see whose card asks
+  for more.
+
 ## Comparing cards
 
 A player with several partners has different agreements with each, and wants a
@@ -511,8 +549,8 @@ from 2026-09-30. Loading reports a card that sets two alternatives as a
 conflict, which kept the grouping honest: four first guesses (negative and
 penalty doubles of interference over 1NT, DOPI and DEPO, NMF and two-way NMF,
 the direct cue-bid boxes) are combined on real cards, so they are not groups.
-Choice groups also serve a planned difficulty rating for cards: a card's load
-is counted in agreements, not checkboxes.
+Choice groups also serve the planned difficulty rating for cards (above): a
+card's load is counted in agreements, not checkboxes.
 
 ## Deployment
 
