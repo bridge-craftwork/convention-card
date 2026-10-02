@@ -73,7 +73,8 @@ function predictWritten(cardData, template) {
 /** An entry's text as the fill writes it, before the WinAnsi substitution. */
 function shaped(entry, value, cardData) {
   const text = entry.transform ? entry.transform(value) : String(value)
-  return text + (readPath(cardData, `${entry.card}_plus`) ? '+' : '')
+  const mark = readPath(cardData, `${entry.card}_plus`) ? '+' : readPath(cardData, `${entry.card}_minus`) ? '-' : ''
+  return text + mark
 }
 
 /**
@@ -112,10 +113,10 @@ function parseText(path, text) {
   if (!t) return { value: undefined }
   if (!def || def.kind === 'text') return { value: t }
   if (def.kind === 'int') {
-    const m = /^(\d+)\s*(\+)?$/.exec(t)
+    const m = /^(\d+)\s*([+-])?$/.exec(t)
     if (!m) return { problem: `"${t}" is not a number` }
     const checked = checkValue(def, Number(m[1]))
-    return checked.problem ? checked : { value: checked.value, plus: !!m[2] }
+    return checked.problem ? checked : { value: checked.value, plus: m[2] === '+', minus: m[2] === '-' }
   }
   return checkValue(def, t)
 }
@@ -228,7 +229,9 @@ export async function readCardFromPdf(bytes) {
       continue
     }
     set(owner, entry.card, parsed.value)
+    // "14+" is a good 14, "17-" a poor 17 (the NT ranges' _plus and _minus).
     if (field(`${entry.card}_plus`)) set(owner, `${entry.card}_plus`, parsed.plus ? true : undefined)
+    if (field(`${entry.card}_minus`)) set(owner, `${entry.card}_minus`, parsed.minus ? true : undefined)
   }
 
   // ── Checkboxes: settle each card path from all of its boxes.

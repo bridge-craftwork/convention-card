@@ -84,4 +84,14 @@ describe('importBridgeodexJson — key-name regression guards', () => {
     expect(card_data.nt_overcalls.direct.range_min_plus).toBe(true)
     expect(card_data.nt_overcalls.balance.range_min_plus).toBeUndefined()
   })
+
+  it('keeps a "17-" (a poor 17) as a number plus a _minus flag', () => {
+    const { card_data } = importBridgeodexJson(bdex({
+      '1_no_trump': { 'a_range_min': '14+', 'a_range_max': '17-' },
+    }))
+    expect(card_data.notrump.one_nt.range_max).toBe(17)
+    expect(card_data.notrump.one_nt.range_max_minus).toBe(true)
+    expect(card_data.notrump.one_nt.range_max_plus).toBeUndefined()
+    expect(card_data.notrump.one_nt.range_min_plus).toBe(true)
+  })
 })

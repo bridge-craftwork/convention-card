@@ -71,6 +71,15 @@ describe.each(TEMPLATES)('the %s card', template => {
     expect(read.card_data.notrump.one_nt.range_min_plus).toBe(true)
   })
 
+  it('reads a minus (a poor 17)', async () => {
+    const box = boxFor(template, 'notrump.one_nt.range_max')
+    const bytes = await edit(exported[template].dense, form => form.getTextField(box).setText('17-'))
+    const read = await readCardFromPdf(bytes)
+    expect(read.card_data.notrump.one_nt.range_max).toBe(17)
+    expect(read.card_data.notrump.one_nt.range_max_minus).toBe(true)
+    expect(read.card_data.notrump.one_nt.range_max_plus).toBeUndefined()
+  })
+
   it('keeps the suit symbols the box could not show, and takes the typed words', async () => {
     const box = boxFor(template, 'notrump.responses.2s_other')
     // The box reads "Range ask: 2NT rebid shows min, 3C shows max".

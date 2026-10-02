@@ -84,6 +84,13 @@
           :disabled="saving"
         >Duplicate</button>
         <button
+          v-if="canMakePrimary"
+          class="btn"
+          @click="onMakePrimary"
+          :disabled="saving || cardLoading"
+          title="Open this card first from now on"
+        >Make primary</button>
+        <button
           v-if="canEdit && !isSystemCard"
           class="btn"
           @click="onRename"
@@ -541,6 +548,23 @@ async function onDuplicate() {
 function onRevert() {
   if (isDirty.value && !window.confirm('Discard your unsaved changes?')) return
   cc.revertEdits()
+}
+
+// One of the person's own cards that isn't already the one that opens first.
+const canMakePrimary = computed(() => {
+  const card = currentCard.value
+  if (!cc.canSetPrimary || !card) return false
+  const link = userCardLinks.value.find(l => l.card_id === card.id)
+  return !!link && !link.is_primary
+})
+
+async function onMakePrimary() {
+  saveError.value = null
+  try {
+    await cc.makePrimary()
+  } catch (err) {
+    saveError.value = explain(err, 'Failed to make this card primary')
+  }
 }
 
 async function onRename() {
