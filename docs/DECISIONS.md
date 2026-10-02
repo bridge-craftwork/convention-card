@@ -7,7 +7,8 @@ What's settled, and what's still open. Newest first within each list.
 **2026-10-01: handing a card to Bridge Classroom** (Rick Wilson; open question 4)
 
 20. **The card travels in the URL's fragment.** The standalone editor opens
-    `bridge-classroom.com/#/convention-card?import=v1.<data>`: the card record,
+    `bridge-classroom.com/solo-practice-app/#/convention-card?import=v1.<data>`
+    (the app; the site's root is a landing page): the card record,
     deflated and base64url-encoded (`js/handoff.js`). Bridge Classroom asks the
     user to sign in if need be and saves it under its own session. A fragment
     never reaches a server, and a dense real card is about 5,000 characters,
@@ -145,4 +146,11 @@ About 160 KB; open until Rick accepts it or asks for less.
 **7. The named level bands.** Decided 2026-09-30; see above.
 
 **8. What counts as a convention.** Decided 2026-09-30 (16).
+
+**9. How a card's level is drawn from its agreements.** A card's difficulty
+is a level and a load (DESIGN.md, "A card's difficulty"). The level could be
+the highest level of any agreement on the card, which is simple to explain
+but lets one exotic convention decide it; or the highest level that several
+agreements reach (say three), which describes the card as a whole. Try both
+on Rick's partnership cards and the PBS test cards before choosing.
 

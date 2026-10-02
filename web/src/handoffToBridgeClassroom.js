@@ -5,7 +5,10 @@
 
 import { encodeCardForUrl } from '../../js/handoff.js'
 
-export const BRIDGE_CLASSROOM = 'https://bridge-classroom.com/'
+// The app, not the site's root: bridge-classroom.com/ is a static landing
+// page, and the Vue app (with its #/convention-card route) is served at
+// /solo-practice-app/ (Bridge-Classroom's scripts/build-site.sh).
+export const BRIDGE_CLASSROOM = 'https://bridge-classroom.com/solo-practice-app/'
 
 /** The URL that hands `card` ({ name, description, card_data }) to Bridge Classroom. */
 export async function bridgeClassroomUrl(card, base = BRIDGE_CLASSROOM) {

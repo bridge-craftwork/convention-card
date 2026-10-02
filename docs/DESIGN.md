@@ -55,7 +55,8 @@ Language-neutral files that every other part reads:
   `conventionCatalog.js`.
 - **Format maps**: how each outside format lands on the fields. The first is the
   bot's `bbsa-map.toml`. BBO, bridgeodex and the ACBL PDF field maps are tables
-  inside JavaScript today and move into data over time, not on day one.
+  inside JavaScript today and move into data over time, not on day one;
+  the ACBL PDF maps move first, for [card templates of your own](#card-templates-of-your-own).
 - **Conventions and skills** (`conventions/`, one file per ID, such as
   `conventions/bidding_conventions/stayman.toml`): name, level, the names people
   write it as, a summary and sources. See
@@ -362,6 +363,104 @@ despite its level. The wizard can start from a template card ("Standard 2/1",
 "SAYC") and ask only what differs, and show the card's difficulty once that
 exists. One partner can run it and then share the card (below).
 
+## Card templates of your own
+
+*Planned, not in the current version* (Rick Wilson, 2026-10-02). The editor
+fills two PDFs, the ACBL Classic and New cards, from fill maps built into
+the library. Other cards exist: clubs' own layouts, a third fillable ACBL
+layout (279 named fields, `CNegativeD`, `TNegativeD`, found on real cards),
+and national federations' cards. The editor will let a person **upload a
+card PDF with a mapping file**, then export to it and import from it as it
+does the built-in two. A person can make one for their own card, and the
+built-in cards are the same kind of thing, shipped with the editor.
+
+- **A mapping is data, not code.** Each entry names a form field in the PDF
+  and a card path (`notrump.smolen.play`), with its kind (tick or text) and,
+  for a tick that stands for one value of a choice, that value. That is the
+  shape of today's fill maps (`FIELD_MAP_CLASSIC`, `FIELD_MAP_NEW` in
+  `js/acblClassicFillPdf.js`), so the first step is moving those two into
+  `spec/formats/` as files in this format, as "Format maps" above already
+  plans. The few entries that hold code (Lebensohl's `transform`) need a
+  declarative form first.
+- **Checked against the spec.** A mapping that names a path the spec
+  doesn't have is refused with that path, as the test of the built-in maps
+  does now. A form field the mapping names that the PDF lacks is reported.
+- **Both directions from one file.** Export fills the boxes; import reads
+  them back, including hand edits (`js/acblPdfImport.js` already works this
+  way from the built-in maps).
+- **Built in the editor, with an assistant, not by hand.** Writing a
+  mapping for a 279-field PDF by hand is slow, so the editor has a mapping
+  assistant (Rick Wilson, 2026-10-02):
+  1. **Two lists side by side:** the card's known fields, from the spec
+     (path, label, kind, values), and the fields scraped from the uploaded
+     PDF (name, tick or text, page, position, the field's tooltip if it has
+     one, and the printed words next to it on the page).
+  2. **A first mapping, proposed:** each PDF field matched to a card field
+     by its name (`TNegativeD` and "Negative double"), its tooltip and the
+     printed words beside it, against the spec's labels, aliases and the
+     names its conventions are written as. A built-in map that already
+     covers a field with the same name (the third ACBL layout shares a few
+     with Classic) is reused. Each proposal shows how sure it is, and
+     nothing is accepted unseen.
+  3. **An editor for the mapping:** the PDF with each field outlined and
+     named, as the debug export draws it today (`downloadAcblFieldDebugPdf`);
+     click a box to set, change or clear its card field, or mark it as one
+     value of a choice. Unmapped fields and card fields with no box are
+     listed, so the gaps are visible.
+  4. **Try it both ways before saving:** fill the PDF from a sample card
+     (the starter, or the person's own) and look at it; then read that PDF
+     back through the mapping and compare it with the card, which catches a
+     box mapped to the wrong field or one value missing from a choice.
+  The result is an ordinary mapping file under the contract, checked by
+  the same checker, with the hash written in.
+- **Local first.** An uploaded template and its mapping live with the
+  person's cards (IndexedDB in the standalone editor), and can be shared as
+  a file. A good mapping can be added to the built-in set.
+- **The mapping file has a contract,** written when the maps move into
+  data and before anyone else writes one: `docs/TEMPLATE-CONTRACT.md`, on
+  the model of rusty-bidding-bot's `docs/CONTRACT.md`. Part 1 is what the
+  library promises a mapping file; part 2 is what a good mapping file does.
+  It settles:
+  - **A format version in the file** (`format = 1`), which every reader
+    checks. A file asking for a newer format is refused, naming the file and
+    the versions read ("a newer editor is needed"). Missing required keys
+    refuse the file too.
+  - **The schema:** the template's metadata (name, the PDF it fits, which
+    page each field is on), the entry kinds (tick, tick-for-a-value, text,
+    a value split across several boxes, a declarative text shaping in place
+    of today's code `transform`; and the title box with its optional
+    pattern), and how a PDF is recognised as this
+    template: by its field names, with an **optional** hash of the blank
+    PDF to tell apart templates that share field names (decided 2026-10-02).
+  - **Paths are the spec's:** a mapping names card paths and their aliases,
+    and is checked against the spec version it declares. A newer spec still
+    reads an older mapping, because paths keep their aliases (the spec's own
+    compatibility promise).
+  - **What the library does with each entry, both ways:** the export rule
+    and the import rule (the reverse mapping in `js/acblPdfImport.js`, written
+    down), including what is reported rather than guessed.
+  - **Unknown keys** are warned about and otherwise ignored, so an older
+    editor can read a newer file's known parts.
+  - **A JSON Schema and a checker,** generated and run like the rest of
+    `spec/`, so a person building a mapping (or the editor's mapping tool)
+    gets the same errors CI does. The built-in Classic and New maps are the
+    first files checked against it.
+  - **Whatever the contract asks for, the editor can produce.** For the
+    blank PDF's hash, the standalone editor gets an
+    **Advanced** area with a tool that computes it: drop in the PDF, copy
+    the hash (SHA-256 of the file's bytes). The editor's own mapping tool
+    writes it into the file itself, so only a person writing a mapping by
+    hand needs the Advanced tool. The same area lists a PDF's form fields
+    and runs the mapping checker on a file, so nothing the contract asks
+    for needs software outside the editor. The hash identifies the blank
+    template; a filled-in card's bytes differ, so an import recognises
+    the template by its field names and uses the hash only to tell
+    apart templates that share them.
+- **What a PDF without a form needs is different.** Most bridgeodex PDFs
+  have no form fields (the text is printed into the page), so a mapping by
+  field name cannot read them; that would need text extraction by
+  position.
+
 ## Shared cards
 
 On BBO and bridgeodex, partners share one card and either can edit it. Bridge
@@ -390,6 +489,56 @@ in Bridge Classroom (DECISIONS, 7); the API side is
 
 The standalone editor has no account, so it shares only by file or by
 handing the card to Bridge Classroom (DECISIONS, open question 4).
+
+## A card's difficulty, and your cards side by side
+
+*Planned* (Rick Wilson, 2026-10-02). Every convention and extension has a
+level (1–10), so a card's difficulty can be worked out from what it plays:
+something a newer player can use to choose a card, a teacher to suggest
+one, and a partnership to see what it has taken on.
+
+- **Worked out, never stored.** `cardDifficulty(card)` in the library, a pure
+  function of the card and the spec. A stored figure would go stale with
+  every edit and every revision of a level in `spec/`; a card records
+  agreements, and this is about them, not one of them.
+- **Two numbers, because one hides the difference** between a card with one
+  exotic convention and a card dense with intermediate ones:
+  - **Level:** how advanced the card is, on the 1–10 scale, with its band
+    name ("intermediate").
+  - **Load:** how much there is to remember, counted in agreements, not
+    checkboxes: a choice group counts once, and an extension counts as part
+    of its convention (DESIGN, "Difficulty levels") rather than as another.
+  Each comes with its reasons: which agreements set the level, so "level 7"
+  can be read as "because of Exclusion Blackwood and Kokish". How exactly
+  the level is drawn from the agreements' levels (the highest, or a level
+  several agreements reach, so that one exotic entry doesn't decide it) is
+  open (DECISIONS, open question 9).
+- **What has no level** (a namespaced convention whose file gives none,
+  free text) counts toward the load, not the level, and is listed as
+  unrated.
+- **It can go in the card's title.** A template mapping names its **title
+  box** (on the ACBL cards, the names line) and can give it a **title
+  pattern**: card paths and calculated values in braces, with words
+  around them.
+
+  ```
+  title = { box = "NAMES", pattern = "{metadata.partner_names} ({difficulty.level:.1}/{difficulty.load:.1})" }
+  ```
+
+  prints "Rick and Art (6.5/4.3)"; `:.1` is the number of decimals. Without
+  a pattern the title is the partner names, as today. The calculated values
+  (`difficulty.level`, `difficulty.band`, `difficulty.load`, and any added
+  later) are named in `spec/` beside the fields, so the mapping checker
+  knows them. On import the title box is matched against its pattern: the
+  partner names are read back, the calculated values are skipped (the card
+  recomputes them), and a title that no longer fits is reported, not
+  guessed. Other boxes stay one card path each; patterns are for the title
+  only (Rick Wilson, 2026-10-02).
+- **A table of your cards.** The editor lists a person's cards (in this
+  browser, or in Bridge Classroom): name, partners, last changed, level,
+  load. Picking two or more opens the **comparison** (below) for them;
+  the difficulty is one more row of it, so partners see whose card asks
+  for more.
 
 ## Comparing cards
 
@@ -421,8 +570,8 @@ from 2026-09-30. Loading reports a card that sets two alternatives as a
 conflict, which kept the grouping honest: four first guesses (negative and
 penalty doubles of interference over 1NT, DOPI and DEPO, NMF and two-way NMF,
 the direct cue-bid boxes) are combined on real cards, so they are not groups.
-Choice groups also serve a planned difficulty rating for cards: a card's load
-is counted in agreements, not checkboxes.
+Choice groups also serve the planned difficulty rating for cards (above): a
+card's load is counted in agreements, not checkboxes.
 
 ## Deployment
 

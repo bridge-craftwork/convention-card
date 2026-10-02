@@ -85,6 +85,13 @@
         >Duplicate</button>
         <button
           v-if="canEdit && !isSystemCard"
+          class="btn"
+          @click="onRename"
+          :disabled="saving || cardLoading"
+          title="Give this card a new name"
+        >Rename</button>
+        <button
+          v-if="canEdit && !isSystemCard"
           class="btn btn-danger"
           @click="onDelete"
           :disabled="saving"
@@ -103,7 +110,10 @@
         >Export Content</button>
       </div>
     </div>
-    <div v-if="saveError" class="save-error">{{ saveError }}</div>
+    <div v-if="saveError" class="save-error">
+      {{ saveError }}
+      <button v-if="pageIsStale" class="btn btn-small" @click="reloadPage">Reload</button>
+    </div>
 
     <!-- What an import found: hand edits read from a PDF, and boxes it
          could not read (acblPdfImport.js). Cleared by the next import. -->
@@ -271,6 +281,20 @@ const cardError = cc.cardError
 const saving = cc.saving
 const saveError = cc.saveError
 
+// The PDF and .bbsa code is loaded when first used, from files named by the
+// build. A deploy replaces them, so a page opened before a deploy asks for
+// files that are gone, and each browser words the failure differently.
+const pageIsStale = ref(false)
+const STALE = /dynamically imported module|Importing a module script failed|error loading dynamically imported module|Failed to load module script/i
+function explain(err, fallback) {
+  if (STALE.test(err?.message || '')) {
+    pageIsStale.value = true
+    return 'This page is older than the site: it was updated after you opened it. Reload the page and try again; your saved cards are kept.'
+  }
+  return err?.message || fallback
+}
+function reloadPage() { window.location.reload() }
+
 // The open card's problems, unsaved edits included, as checkCard reports them.
 const cardProblems = computed(() => {
   const data = cc.editedCardData.value
@@ -349,7 +373,7 @@ async function doExport(formatId) {
     }
   } catch (err) {
     console.error('PDF export failed:', err)
-    saveError.value = err.message || 'Failed to export PDF'
+    saveError.value = explain(err, 'Failed to export PDF')
   }
 }
 
@@ -445,7 +469,7 @@ async function doContentExport(formatId) {
     downloadBlob(payload, `${stem}.${fmt.ext}`, fmt.mime)
   } catch (err) {
     console.error('Content export failed:', err)
-    saveError.value = err.message || 'Failed to export content'
+    saveError.value = explain(err, 'Failed to export content')
   }
 }
 
@@ -454,7 +478,7 @@ async function onNewCard() {
     await cc.createCard({ name: 'My convention card', cardData: { metadata: { name: 'My convention card' } } })
     cc.enterEditMode()
   } catch (err) {
-    saveError.value = err.message || 'Failed to create card'
+    saveError.value = explain(err, 'Failed to create card')
   }
 }
 
@@ -501,7 +525,7 @@ async function onImportFile(event) {
     await cc.createCard({ name, description, cardData: card_data })
   } catch (err) {
     console.error('Import failed:', err)
-    saveError.value = err.message || 'Import failed'
+    saveError.value = explain(err, 'Import failed')
   }
 }
 
@@ -510,13 +534,26 @@ async function onDuplicate() {
     await cc.duplicateCurrentCard()
     cc.enterEditMode()
   } catch (err) {
-    saveError.value = err.message || 'Failed to duplicate card'
+    saveError.value = explain(err, 'Failed to duplicate card')
   }
 }
 
 function onRevert() {
   if (isDirty.value && !window.confirm('Discard your unsaved changes?')) return
   cc.revertEdits()
+}
+
+async function onRename() {
+  const card = currentCard.value
+  if (!card) return
+  const name = window.prompt('New name for this card:', card.name || '')
+  if (name == null || !name.trim() || name.trim() === card.name) return
+  saveError.value = null
+  try {
+    await cc.renameCard(name)
+  } catch (err) {
+    saveError.value = explain(err, 'Failed to rename card')
+  }
 }
 
 async function onDelete() {
@@ -725,6 +762,7 @@ watch(() => currentUser.value?.id, async (uid) => {
 .card-problems ul { margin: 6px 0 0 18px; }
 .card-problems li.error { color: #b91c1c; }
 .card-problems .hint { color: #a16207; }
+.save-error .btn { margin-left: 8px; }
 .save-error {
   margin: -4px 0 12px;
   padding: 8px 12px;
