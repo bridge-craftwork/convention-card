@@ -388,6 +388,33 @@ built-in cards are the same kind of thing, shipped with the editor.
 - **Local first.** An uploaded template and its mapping live with the
   person's cards (IndexedDB in the standalone editor), and can be shared as
   a file. A good mapping can be added to the built-in set.
+- **The mapping file has a contract,** written when the maps move into
+  data and before anyone else writes one: `docs/TEMPLATE-CONTRACT.md`, on
+  the model of rusty-bidding-bot's `docs/CONTRACT.md`. Part 1 is what the
+  library promises a mapping file; part 2 is what a good mapping file does.
+  It settles:
+  - **A format version in the file** (`format = 1`), which every reader
+    checks. A file asking for a newer format is refused, naming the file and
+    the versions read ("a newer editor is needed"). Missing required keys
+    refuse the file too.
+  - **The schema:** the template's metadata (name, the PDF it fits, which
+    page each field is on), the entry kinds (tick, tick-for-a-value, text,
+    a value split across several boxes, a declarative text shaping in place
+    of today's code `transform`), and how a PDF is recognised as this
+    template (its field names, and a hash of the blank PDF).
+  - **Paths are the spec's:** a mapping names card paths and their aliases,
+    and is checked against the spec version it declares. A newer spec still
+    reads an older mapping, because paths keep their aliases (the spec's own
+    compatibility promise).
+  - **What the library does with each entry, both ways:** the export rule
+    and the import rule (the reverse mapping in `js/acblPdfImport.js`, written
+    down), including what is reported rather than guessed.
+  - **Unknown keys** are warned about and otherwise ignored, so an older
+    editor can read a newer file's known parts.
+  - **A JSON Schema and a checker,** generated and run like the rest of
+    `spec/`, so a person building a mapping (or the editor's mapping tool)
+    gets the same errors CI does. The built-in Classic and New maps are the
+    first files checked against it.
 - **What a PDF without a form needs is different.** Most bridgeodex PDFs
   have no form fields (the text is printed into the page), so a mapping by
   field name cannot read them; that would need text extraction by

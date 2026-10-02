@@ -204,7 +204,8 @@ vocabulary.
 
 Upload a card PDF with a mapping file, and export to it and import from it
 like the built-in ACBL cards. First move the built-in fill maps into
-`spec/formats/` as data. See DESIGN.md, "Card templates of your own".
+`spec/formats/` as data, under a written contract for the mapping file
+(`docs/TEMPLATE-CONTRACT.md`: format version, schema, checker). See DESIGN.md, "Card templates of your own".
 
 ### Later: a card wizard for newer players
 
