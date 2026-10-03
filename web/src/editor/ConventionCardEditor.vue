@@ -1,5 +1,6 @@
 <template>
   <div class="convention-card" :class="{ embedded }">
+    <ChoiceDialog ref="dialog" />
     <!-- Standalone-page header. Hidden inside the lobby tab. -->
     <header v-if="!embedded" class="page-header">
       <h1>Convention card</h1>
@@ -275,6 +276,8 @@ import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportRecord } from '../../../js/cardBundle.js'
 import { mergeImported } from './importMerge.js'
+import { askInDialog, tellMatched } from './importDialogs.js'
+import ChoiceDialog from './ChoiceDialog.vue'
 import { checkCard } from '../../../js/checkCard.js'
 import { REGULATORS } from '../../../js/spec.js'
 import { cardLevel } from './cardSummary.js'
@@ -514,6 +517,7 @@ async function onNewCard() {
 }
 
 const importInput = ref(null)
+const dialog = ref(null)
 const importNotes = ref([])
 
 function onImportClick() {
@@ -538,11 +542,11 @@ async function onImportFile(event) {
     const pdfNotes = records[0]?.format === 'pdf'
       ? (await import('../../../js/acblPdfImport.js')).pdfReportDiagnostics(records[0].report)
       : []
-    const merged = await mergeImported(records, props.storage)
+    const merged = await mergeImported(records, props.storage, askInDialog(dialog.value))
     await cc.loadUserCardLinks()
     if (merged.lastId) await cc.switchCard(merged.lastId)
     importNotes.value = pdfNotes
-    if (merged.matched) window.alert(merged.matched)
+    await tellMatched(dialog.value, merged)
   } catch (err) {
     console.error('Import failed:', err)
     saveError.value = explain(err, 'Import failed')
