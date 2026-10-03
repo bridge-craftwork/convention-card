@@ -5,9 +5,11 @@
   (one file per convention) in one file.
 - spec/taxonomy.json: lesson-studio's Contract 4 (taxonomy/v1), the skill
   vocabulary with a four-band level.
-- spec/fields.json, spec/levels.json and spec/formats/bbsa-map.json:
-  fields.toml, levels.toml and bbsa-map.toml as JSON, for readers with no
-  TOML parser (the JS library).
+- spec/fields.json, spec/levels.json, spec/alerts.json and
+  spec/formats/bbsa-map.json: fields.toml, levels.toml, alerts.toml and
+  bbsa-map.toml as JSON, for readers with no TOML parser (the JS library).
+  alerts.toml is checked first: every field it names exists, and every rule
+  is one the format allows.
   bbsa-map.json also carries BBA's file layout (bbsa-layout.txt) as
   `layout`, the key order an export writes.
 
@@ -40,6 +42,9 @@ BBSA_LAYOUT = ROOT / "spec" / "formats" / "bbsa-layout.txt"
 CATEGORIES = SOURCE / "categories.toml"
 LEVELS_TOML = ROOT / "spec" / "levels.toml"
 LEVELS_JSON = ROOT / "spec" / "levels.json"
+ALERTS_TOML = ROOT / "spec" / "alerts.toml"
+ALERTS_JSON = ROOT / "spec" / "alerts.json"
+ALERT_RULES = {"alert", "announce", "delayed", "none"}
 
 # DECISIONS.md, 12: the named bands are ranges of the 1-10 level
 # (spec/levels.toml).
@@ -106,6 +111,41 @@ def build_taxonomy(conventions: dict) -> str:
     return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
 
 
+def field_paths() -> set:
+    """Every field path in fields.toml, canonical and alias."""
+    paths = set()
+    for section, entries in tomllib.loads(FIELDS_TOML.read_text(encoding="utf-8")).items():
+        for key, f in entries.items():
+            paths.add(f"{section}.{key}")
+            paths.update(f.get("aliases", []))
+    return paths
+
+
+def check_alerts() -> None:
+    """alerts.toml: known regulators, allowed rules, fields that exist."""
+    doc = tomllib.loads(ALERTS_TOML.read_text(encoding="utf-8"))
+    regulators = set(doc.get("regulators", {}))
+    paths = field_paths()
+    problems = []
+    for n, a in enumerate(doc.get("alert", []), 1):
+        where = f"alert {n} ({a.get('call', '?')} after {a.get('after', '-')})"
+        for key in ("fields", "call", "rule"):
+            if key not in a:
+                problems.append(f"{where}: no {key}")
+        if a.get("rule") not in ALERT_RULES:
+            problems.append(f"{where}: rule {a.get('rule')!r} is not one of {sorted(ALERT_RULES)}")
+        for r in regulators & a.keys():
+            if a[r] not in ALERT_RULES:
+                problems.append(f"{where}: {r} = {a[r]!r} is not one of {sorted(ALERT_RULES)}")
+            if a[r] == a.get("rule"):
+                problems.append(f"{where}: {r} repeats the rule; give a regulator only where it differs")
+        for path in a.get("fields", []):
+            if path not in paths:
+                problems.append(f"{where}: no field {path!r} in fields.toml")
+    if problems:
+        sys.exit("spec/alerts.toml:\n  " + "\n  ".join(problems))
+
+
 def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str:
     """A TOML file as JSON, with its tables and keys in the file's order."""
     data = tomllib.loads(source.read_text(encoding="utf-8"))
@@ -115,11 +155,13 @@ def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str
 
 def main() -> None:
     conventions = load()
+    check_alerts()
     outputs = {
         OUT: build(conventions),
         TAXONOMY: build_taxonomy(conventions),
         FIELDS_JSON: as_json(FIELDS_TOML, "fields/v1"),
         LEVELS_JSON: as_json(LEVELS_TOML, "levels/v1"),
+        ALERTS_JSON: as_json(ALERTS_TOML, "alerts/v1"),
         BBSA_JSON: as_json(BBSA_TOML, "bbsa-map/v1",
                            {"layout": BBSA_LAYOUT.read_text(encoding="utf-8").splitlines()}),
     }

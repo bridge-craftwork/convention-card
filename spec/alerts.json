@@ -1,0 +1,2330 @@
+{
+ "schema": "alerts/v1",
+ "generated_from": "spec/alerts.toml (do not edit)",
+ "regulators": {
+  "acbl": {
+   "name": "ACBL",
+   "summary": "Natural calls are not alerted and artificial calls are, apart from a list of exemptions such as Stayman, 4NT ace asks and a very strong 2♣. A few calls are announced instead: the 1NT opening range, a minor opening that may be short, transfers and other bids showing one named suit, and a forcing or semi-forcing 1NT response. A conventional call at 3NT or higher from opener's rebid on, and any control bid, gets a delayed alert after the auction; passes, doubles and redoubles are never delayed.",
+   "source": {
+    "title": "ACBL Alert Procedure",
+    "version": "Effective February 16, 2026 (PDF titled \"Alert Procedures Update February 2026\"; supersedes April 15, 2024 and January 1, 2021 editions)",
+    "url": "https://web2.acbl.org/documentLibrary/play/Alert-Procedures.pdf"
+   }
+  },
+  "ebu": {
+   "name": "EBU",
+   "summary": "The bidder's partner alerts any call that is not natural, or natural with a meaning the opponents would not expect. On the first round a fixed set of calls is announced instead, among them the 1NT range, short minors, natural two-level openings, Stayman and transfers. Above 3NT after the first round nothing is alerted except artificial first-round suit bids and some doubles and passes, and there is no delayed alert.",
+   "source": {
+    "title": "EBU Blue Book: EBU Player Handbook (chapter 4, Alerting and Announcing)",
+    "version": "Revised 2024, effective 1 August 2024 (current edition per ebu.co.uk/blue-book as of Oct 2026)",
+    "url": "https://www.ebu.co.uk/documents/laws-and-ethics/blue-book/blue-book.pdf"
+   }
+  },
+  "wbf": {
+   "name": "WBF",
+   "summary": "Artificial calls, and any call resting on a special partnership understanding, are alerted; natural calls are not. There are no announcements, no delayed alerts and no level cut-off, so conventional calls at the four level and above are alerted too. Non-forcing new-suit and jump-shift responses must be alerted, and behind screens each player alerts both their own calls and partner's.",
+   "source": {
+    "title": "WBF Alerting Policy",
+    "version": "Adopted July 1997, revised August 2002 and August 2022; published by the WBF Systems Committee March 2023. Screen procedure from WBF General Conditions of Contest §16 and §33.2 (2022) and 'Using Bidding Boxes with Screens' §2.2 (February 2024)",
+    "url": "https://championships.worldbridge.org/wp-content/uploads/2024/01/WBFAlertingPolicy.pdf"
+   }
+  }
+ },
+ "alert": [
+  {
+   "fields": [
+    "notrump.stayman.forcing"
+   ],
+   "call": "2♣",
+   "after": "1NT",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "wbf": "alert",
+   "note": "Asks for a four-card major. Exempt from alerting in the ACBL; the EBU announces it as \"Stayman\" and the WBF alerts it as artificial."
+  },
+  {
+   "fields": [
+    "notrump.stayman.forcing"
+   ],
+   "call": "3♣",
+   "after": "2NT",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "wbf": "alert",
+   "note": "Stayman over 2NT, treated like 2♣ over 1NT: exempt in the ACBL, announced in the EBU. The WBF does not list it; it alerts every artificial call."
+  },
+  {
+   "fields": [
+    "notrump.stayman.forcing"
+   ],
+   "call": "2♦",
+   "after": "1NT–2♣",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Denies a four-card major. Exempt in the ACBL and EBU; the WBF alerts it as artificial."
+  },
+  {
+   "fields": [
+    "notrump.stayman.forcing"
+   ],
+   "call": "2♥/2♠",
+   "after": "1NT–2♣",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural major reply. The EBU alerts a 2♠ that does not deny four hearts."
+  },
+  {
+   "fields": [
+    "notrump.stayman.forcing"
+   ],
+   "call": "2NT/3NT",
+   "after": "1NT–2♣–reply",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "alert",
+   "note": "Natural notrump rebid. The EBU alerts it when the 2♣ did not promise a major; the ACBL and WBF do not mention it and it reads as natural."
+  },
+  {
+   "fields": [
+    "notrump.transfers.jacoby"
+   ],
+   "call": "2♦/2♥",
+   "after": "1NT",
+   "by": "responder",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Transfer to the next suit up: partner names the suit (\"Hearts\", \"Spades\") in the ACBL and EBU. The WBF has no announcements and alerts it."
+  },
+  {
+   "fields": [
+    "notrump.transfers.jacoby"
+   ],
+   "call": "3♦/3♥",
+   "after": "2NT",
+   "by": "responder",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Transfer over a 2NT opening, announced like the 1NT ones. The WBF alerts it as artificial."
+  },
+  {
+   "fields": [
+    "notrump.transfers.jacoby"
+   ],
+   "call": "2♥/2♠",
+   "after": "1NT–2♦/2♥",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Plain completion of the transfer. The WBF alerts it as a call resting on a partnership understanding."
+  },
+  {
+   "fields": [
+    "notrump.transfers.jacoby"
+   ],
+   "call": "3♥/3♠",
+   "after": "1NT–2♦/2♥",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Super-accept: a jump completion promising four-card support. The EBU and WBF alert the specific holding; the ACBL does not mention it and it reads as a natural raise."
+  },
+  {
+   "fields": [
+    "notrump.transfers.jacoby"
+   ],
+   "call": "3♥",
+   "when": "responder's rebid has an agreed artificial meaning",
+   "after": "1NT–2♥–2♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted only when responder's rebid carries an agreed artificial meaning (for example a game force with long spades); a natural second suit is not."
+  },
+  {
+   "fields": [
+    "notrump.transfers.texas"
+   ],
+   "call": "4♦/4♥",
+   "after": "1NT",
+   "by": "responder",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Four-level transfer to a major, announced by naming the suit even above 3NT. The WBF alerts it as artificial."
+  },
+  {
+   "fields": [
+    "notrump.transfers.texas"
+   ],
+   "call": "4♥/4♠",
+   "after": "1NT–4♦/4♥",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Completion of the transfer. The WBF alerts it as a call based on an understanding."
+  },
+  {
+   "fields": [
+    "notrump.smolen.play"
+   ],
+   "call": "3♥/3♠",
+   "after": "1NT–2♣–2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Shows four cards in the major bid and five in the other."
+  },
+  {
+   "fields": [
+    "notrump.smolen.play"
+   ],
+   "call": "3NT/4♥/4♠",
+   "after": "1NT–2♣–2♦–3♥/3♠",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural choice of game. The WBF does not mention it; natural calls are not alerted there."
+  },
+  {
+   "fields": [
+    "notrump.stayman.puppet_1nt"
+   ],
+   "call": "2♣",
+   "after": "1NT",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Puppet Stayman over 1NT. The ACBL exempts any major-suit ask over notrump; the EBU alerts Puppet rather than announcing it, and the WBF alerts it as artificial."
+  },
+  {
+   "fields": [
+    "notrump.stayman.puppet_1nt"
+   ],
+   "call": "3♣",
+   "after": "2NT",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Asks for a four- or five-card major. Exempt in the ACBL as a major-suit ask; alerted in the EBU and WBF."
+  },
+  {
+   "fields": [
+    "notrump.stayman.puppet_1nt"
+   ],
+   "call": "3♦",
+   "after": "2NT–3♣",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Shows at least one four-card major and no five-card major."
+  },
+  {
+   "fields": [
+    "notrump.stayman.puppet_1nt"
+   ],
+   "call": "3♥/3♠",
+   "after": "2NT–3♣",
+   "by": "opener",
+   "rule": "none",
+   "acbl": "alert",
+   "note": "Shows a five-card major. The ACBL lists it as a natural reply that is still alerted; the EBU treats it as natural, and the WBF does not mention it."
+  },
+  {
+   "fields": [
+    "notrump.stayman.puppet_1nt"
+   ],
+   "call": "3NT",
+   "after": "2NT–3♣",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural: no four- or five-card major."
+  },
+  {
+   "fields": [
+    "notrump.stayman.puppet_1nt"
+   ],
+   "call": "3♥/3♠",
+   "after": "2NT–3♣–3♦",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "announce",
+   "note": "Responder bids the major he does not hold. The ACBL treats it as a one-suit showing call to announce (uncertain: some directors want an alert); the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "notrump.stayman.puppet_1nt"
+   ],
+   "call": "4♦",
+   "after": "2NT–3♣–3♦",
+   "by": "responder",
+   "rule": "alert",
+   "ebu": "none",
+   "note": "Shows both majors. The EBU does not alert it because it is above 3NT after the first round."
+  },
+  {
+   "fields": [
+    "notrump.lebensohl.over_interference"
+   ],
+   "call": "2NT",
+   "after": "1NT–(2x)",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Relay forcing opener to bid 3♣."
+  },
+  {
+   "fields": [
+    "notrump.lebensohl.over_interference"
+   ],
+   "call": "3♣",
+   "after": "1NT–(2x)–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Forced completion of the relay."
+  },
+  {
+   "fields": [
+    "notrump.lebensohl.over_interference"
+   ],
+   "call": "3 of their suit",
+   "after": "1NT–(2x)",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Stayman-like cuebid, with the route showing or denying a stopper. The ACBL exempts bids in the overcaller's suit after a notrump opening; the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "notrump.lebensohl.over_interference"
+   ],
+   "call": "3NT",
+   "after": "1NT–(2x)",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "To play, but its route shows or denies a stopper. The ACBL treats it as natural; the EBU alerts the stopper message, and the WBF's rule for special understandings points the same way."
+  },
+  {
+   "fields": [
+    "notrump.stayman.garbage"
+   ],
+   "call": "2♣",
+   "after": "1NT",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "wbf": "alert",
+   "note": "Stayman that may be weak. Still exempt in the ACBL and still announced \"Stayman\" in the EBU; the WBF alerts it as artificial."
+  },
+  {
+   "fields": [
+    "notrump.stayman.garbage"
+   ],
+   "call": "Pass",
+   "after": "1NT–2♣–2♦/2♥/2♠",
+   "by": "responder",
+   "rule": "none",
+   "note": "Passing opener's reply is natural."
+  },
+  {
+   "fields": [
+    "notrump.stayman.garbage"
+   ],
+   "call": "2♥",
+   "when": "playing crawling Stayman (2♥ shows both majors, weak)",
+   "after": "1NT–2♣–2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Crawling variant: weak with both majors. The ACBL alerts it; the EBU and WBF do not mention it, but its extra message is alertable under their general rules."
+  },
+  {
+   "fields": [
+    "major_openings.two_over_one.game_force"
+   ],
+   "call": "2♣/2♦/2♥",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "note": "Natural game-forcing new suit (2♥ only over 1♠). The EBU announces it as \"natural, game-forcing\"; the ACBL and WBF do not alert it."
+  },
+  {
+   "fields": [
+    "major_openings.two_over_one.game_force"
+   ],
+   "call": "2♣ (may be short)",
+   "when": "the 2♣ response may hold fewer than three clubs",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted when the 2♣ response may hold fewer than three clubs, since it is then not natural."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.play"
+   ],
+   "call": "2NT",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial game-forcing raise."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.play"
+   ],
+   "call": "3♣/3♦/3 of other major",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Shows shortness in the suit bid."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.play"
+   ],
+   "call": "3 of the major",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Shows extras without shortness. The ACBL reads it as natural; the EBU and WBF alert it as a coded strength message."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.play"
+   ],
+   "call": "3NT",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "delayed",
+   "note": "Coded hand description, not an offer to play. The ACBL gives a delayed alert because it is at 3NT on opener's rebid."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.play"
+   ],
+   "call": "4♣/4♦",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Shows a good second suit. Natural in the ACBL and above 3NT after the first round in the EBU; the WBF alerts the reply."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.play"
+   ],
+   "call": "4 of the major",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "none",
+   "note": "Minimum sign-off. The WBF does not list it separately; it reads as natural."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.modified"
+   ],
+   "call": "2NT",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial game-forcing raise."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.modified"
+   ],
+   "call": "3♣/3♦/3♥/3♠",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Step replies showing strength or controls."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.modified"
+   ],
+   "call": "3NT",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "delayed",
+   "note": "Step reply at 3NT. The ACBL delays the alert to the end of the auction."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.modified"
+   ],
+   "call": "4-level steps",
+   "after": "1M–2NT",
+   "by": "opener",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Step reply above 3NT. The ACBL gives a delayed alert, the EBU none after the first round; the WBF has no level cut-off."
+  },
+  {
+   "fields": [
+    "major_openings.jacoby_2nt.modified"
+   ],
+   "call": "Relay asks below 3NT",
+   "after": "1M–2NT–3x",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Responder's artificial follow-up asks (ACBL uncertain: depends on the scheme, and those at 3NT or above are delayed)."
+  },
+  {
+   "fields": [
+    "major_openings.bergen_raises.play"
+   ],
+   "call": "3♣/3♦",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial raises showing four-card support."
+  },
+  {
+   "fields": [
+    "major_openings.bergen_raises.play"
+   ],
+   "call": "3♥/3♠",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "wbf": "none",
+   "note": "Preemptive jump raise, alerted in the ACBL and EBU when the next hand passed. The WBF does not list it and reads a jump raise as natural (uncertain)."
+  },
+  {
+   "fields": [
+    "major_openings.bergen_raises.play"
+   ],
+   "call": "3♦/3 of other suit",
+   "after": "1M–3♣",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Artificial re-ask or game try after the artificial raise."
+  },
+  {
+   "fields": [
+    "major_openings.jump_raise.mixed"
+   ],
+   "call": "3♥/3♠",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "wbf": "none",
+   "note": "Jump raise weaker than a limit raise; the ACBL does not alert it after a double. The WBF reads it as a natural raise (uncertain)."
+  },
+  {
+   "fields": [
+    "major_openings.jump_raise.mixed"
+   ],
+   "call": "Artificial mixed raise",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "A mixed raise shown by an artificial bid (such as 3♣). The ACBL does not alert a jump cuebid after an overcall."
+  },
+  {
+   "fields": [
+    "major_openings.splinters.play"
+   ],
+   "call": "3♠/4♣/4♦/4♥",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Double jump showing shortness. Alerted at once even at the four level, as responder's first call."
+  },
+  {
+   "fields": [
+    "major_openings.splinters.play"
+   ],
+   "call": "3-level splinter",
+   "after": "1x–1y",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Opener's jump showing shortness below 3NT."
+  },
+  {
+   "fields": [
+    "major_openings.splinters.play"
+   ],
+   "call": "4-level splinter",
+   "after": "1x–1y",
+   "by": "opener",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Opener's splinter above 3NT. The ACBL delays the alert; the EBU does not alert it after the first round; the WBF alerts it."
+  },
+  {
+   "fields": [
+    "major_openings.drury.play"
+   ],
+   "call": "2♣",
+   "after": "P–1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial raise by a passed hand."
+  },
+  {
+   "fields": [
+    "major_openings.drury.play"
+   ],
+   "call": "2♦",
+   "after": "P–1M–2♣",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Artificial reply about opener's strength."
+  },
+  {
+   "fields": [
+    "major_openings.drury.play"
+   ],
+   "call": "2 of the major",
+   "after": "P–1M–2♣",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Return to the major. Natural in the ACBL and EBU; the WBF alerts opener's replies as artificial (it groups them, so this is our reading)."
+  },
+  {
+   "fields": [
+    "major_openings.drury.reverse"
+   ],
+   "call": "2♣",
+   "after": "P–1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial raise by a passed hand."
+  },
+  {
+   "fields": [
+    "major_openings.drury.reverse"
+   ],
+   "call": "2♦",
+   "after": "P–1M–2♣",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Artificial: a full opening with game interest."
+  },
+  {
+   "fields": [
+    "major_openings.drury.reverse"
+   ],
+   "call": "2 of the major",
+   "after": "P–1M–2♣",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Sign-off showing a light opening. Natural in the ACBL and EBU; the WBF alerts it as a step reply."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.semi_forcing"
+   ],
+   "call": "1NT",
+   "after": "1♥/1♠ (1st/2nd seat)",
+   "by": "responder",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Partner announces \"Semi-forcing\" in the ACBL and the upper limit (\"Up to 12\") in the EBU. The WBF alerts it as a special understanding (uncertain)."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.semi_forcing"
+   ],
+   "call": "1NT",
+   "after": "1♥/1♠ (3rd/4th seat)",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "wbf": "alert",
+   "note": "Not announced in the ACBL after a third- or fourth-seat opening. The EBU has no seat rule, so the announcement still applies; the WBF alerts it (uncertain)."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.semi_forcing"
+   ],
+   "call": "2♣/2♦ (three cards)",
+   "after": "1M–1NT",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Rebid in a three-card minor: natural in the ACBL and EBU. The WBF alerts a rebid that may be that short."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.semi_forcing"
+   ],
+   "call": "2♣/2♦ (may be two)",
+   "when": "opener's minor may be a doubleton",
+   "after": "1M–1NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Rebid in a minor that may be a doubleton is not natural (EBU uncertain)."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.forcing"
+   ],
+   "call": "1NT",
+   "after": "1♥/1♠ (1st/2nd seat)",
+   "by": "responder",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Partner announces \"Forcing\" (ACBL: add \"could have four spades\" if 1♠ may be bypassed). The WBF alerts it as a special understanding (uncertain)."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.forcing"
+   ],
+   "call": "1NT",
+   "after": "1♥/1♠ (3rd/4th seat)",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "wbf": "alert",
+   "note": "Not announced in the ACBL after a third- or fourth-seat opening. The EBU has no seat rule, so it still announces; the WBF alerts it (uncertain)."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.forcing"
+   ],
+   "call": "2♣/2♦ (three cards)",
+   "after": "1M–1NT",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Rebid in a three-card minor: natural in the ACBL and EBU. The WBF alerts a rebid that may be that short."
+  },
+  {
+   "fields": [
+    "major_openings.one_nt_response.forcing"
+   ],
+   "call": "2♣/2♦ (may be two)",
+   "when": "opener's minor may be a doubleton",
+   "after": "1M–1NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Rebid in a minor that may be a doubleton is not natural (EBU uncertain)."
+  },
+  {
+   "fields": [
+    "minor_openings.inverted_minors.play"
+   ],
+   "call": "2♣/2♦",
+   "after": "1♣/1♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Strong, forcing single raise."
+  },
+  {
+   "fields": [
+    "minor_openings.inverted_minors.play"
+   ],
+   "call": "3♣/3♦",
+   "after": "1♣/1♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Weak jump raise, alerted when the next hand passed (WBF uncertain)."
+  },
+  {
+   "fields": [
+    "minor_openings.inverted_minors.play"
+   ],
+   "call": "New suit (stopper)",
+   "after": "1m–2m",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Opener's bid showing a stopper rather than length. Listed by the EBU; the ACBL and WBF alert artificial calls below 3NT."
+  },
+  {
+   "fields": [
+    "minor_openings.walsh.play"
+   ],
+   "call": "1♥/1♠",
+   "after": "1♣",
+   "by": "responder",
+   "rule": "none",
+   "note": "Natural four-card major response."
+  },
+  {
+   "fields": [
+    "minor_openings.walsh.play"
+   ],
+   "call": "1♦",
+   "after": "1♣",
+   "by": "responder",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Natural, but denies a four-card major unless strong. The ACBL and EBU (uncertain) leave the inference to questions; the WBF alerts it as a special understanding (uncertain)."
+  },
+  {
+   "fields": [
+    "minor_openings.walsh.play"
+   ],
+   "call": "1NT",
+   "after": "1♣–1♦",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural rebid that may bypass a major."
+  },
+  {
+   "fields": [
+    "minor_openings.one_club.transfer_resp"
+   ],
+   "call": "1♦/1♥",
+   "after": "1♣",
+   "by": "responder",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Transfer: partner names the suit shown (\"Hearts\", \"Spades\"). The WBF alerts it."
+  },
+  {
+   "fields": [
+    "minor_openings.one_club.transfer_resp"
+   ],
+   "call": "1♠",
+   "after": "1♣",
+   "by": "responder",
+   "rule": "alert",
+   "ebu": "announce",
+   "note": "Denies a four-card major. Alerted in the ACBL and WBF; the EBU announces \"No major\"."
+  },
+  {
+   "fields": [
+    "minor_openings.one_club.transfer_resp"
+   ],
+   "call": "Completion",
+   "after": "1♣–1♦/1♥",
+   "by": "opener",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Accepting the transfer. Natural in the ACBL (uncertain) and EBU unless it promises a holding; the WBF alerts it."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.meaning"
+   ],
+   "call": "2♣",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Artificial strong opening. The ACBL exempts a very strong 2♣ (alert one that may be merely strong); the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.meaning"
+   ],
+   "call": "2♦",
+   "after": "2♣",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Waiting or negative reply. Exempt in the ACBL; alerted in the EBU and WBF."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.meaning"
+   ],
+   "call": "2♥/2♠ (natural)",
+   "after": "2♣",
+   "by": "responder",
+   "rule": "none",
+   "note": "Natural positive reply."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.meaning"
+   ],
+   "call": "2NT",
+   "after": "2♣–2♦",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural balanced rebid."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.meaning"
+   ],
+   "call": "2♦",
+   "after": "opening",
+   "by": "opener",
+   "rule": "none",
+   "ebu": "announce",
+   "note": "Natural weak two. The EBU announces the strength (\"Weak\"); the ACBL and WBF do not alert it."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.meaning"
+   ],
+   "call": "New suit (non-forcing)",
+   "when": "a new-suit response is not forcing",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted when a new-suit response is not forcing. The EBU and WBF do not cover it directly; an unexpected meaning is alertable under both."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.meaning"
+   ],
+   "call": "Raise (invitational or forcing)",
+   "when": "a raise is invitational or forcing, not preemptive",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted in the ACBL when a raise is not preemptive. The EBU and WBF do not cover it; this follows the ACBL."
+  },
+  {
+   "fields": [
+    "two_level.two_hearts.meaning"
+   ],
+   "call": "2♥",
+   "after": "opening",
+   "by": "opener",
+   "rule": "none",
+   "ebu": "announce",
+   "note": "Natural weak two. The EBU announces the strength (\"Weak\"); the ACBL and WBF do not alert it."
+  },
+  {
+   "fields": [
+    "two_level.two_hearts.meaning"
+   ],
+   "call": "New suit (non-forcing)",
+   "when": "a new-suit response is not forcing",
+   "after": "2♥",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted when a new-suit response is not forcing. The EBU and WBF do not cover it directly; an unexpected meaning is alertable under both."
+  },
+  {
+   "fields": [
+    "two_level.two_hearts.meaning"
+   ],
+   "call": "Raise (invitational or forcing)",
+   "when": "a raise is invitational or forcing, not preemptive",
+   "after": "2♥",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted in the ACBL when a raise is not preemptive. The EBU and WBF do not cover it; this follows the ACBL."
+  },
+  {
+   "fields": [
+    "two_level.two_spades.meaning"
+   ],
+   "call": "2♠",
+   "after": "opening",
+   "by": "opener",
+   "rule": "none",
+   "ebu": "announce",
+   "note": "Natural weak two. The EBU announces the strength (\"Weak\"); the ACBL and WBF do not alert it."
+  },
+  {
+   "fields": [
+    "two_level.two_spades.meaning"
+   ],
+   "call": "New suit (non-forcing)",
+   "when": "a new-suit response is not forcing",
+   "after": "2♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted when a new-suit response is not forcing. The EBU and WBF do not cover it directly; an unexpected meaning is alertable under both."
+  },
+  {
+   "fields": [
+    "two_level.two_spades.meaning"
+   ],
+   "call": "Raise (invitational or forcing)",
+   "when": "a raise is invitational or forcing, not preemptive",
+   "after": "2♠",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Alerted in the ACBL when a raise is not preemptive. The EBU and WBF do not cover it; this follows the ACBL."
+  },
+  {
+   "fields": [
+    "two_level.ogust.play"
+   ],
+   "call": "2NT",
+   "after": "2♦/2♥/2♠",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Asking bid. The ACBL exempts any forcing 2NT over a two-level preempt; the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "two_level.ogust.play"
+   ],
+   "call": "3♣/3♦/3♥/3♠",
+   "after": "2x–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Coded replies about strength and suit quality."
+  },
+  {
+   "fields": [
+    "two_level.ogust.play"
+   ],
+   "call": "3NT",
+   "after": "2x–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "delayed",
+   "note": "Coded reply (such as a solid suit). The ACBL delays the alert as a 3NT call on opener's rebid."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.multi"
+   ],
+   "call": "2♦",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Weak two in an unknown major or other options; also pre-alerted in the ACBL."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.multi"
+   ],
+   "call": "2♥/2♠",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Pass-or-correct response (ACBL uncertain)."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.multi"
+   ],
+   "call": "2NT",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Enquiry. The ACBL exempts a forcing 2NT over a two-level preempt (uncertain, as Multi may hold strong hands); the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.multi"
+   ],
+   "call": "3-level replies",
+   "after": "2♦–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Coded replies to the enquiry."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.mini_roman"
+   ],
+   "call": "2♦",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Three-suited opening."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.mini_roman"
+   ],
+   "call": "2NT",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Asks for the short suit; not a preempt, so the ACBL 2NT exemption does not apply."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.mini_roman"
+   ],
+   "call": "3-level replies",
+   "after": "2♦–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Show the short suit."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.mini_roman"
+   ],
+   "call": "2♥/2♠/3♣",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Pass-or-correct response. Listed by the EBU; the ACBL and WBF alert a call that does not promise the suit."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.reverse_flannery"
+   ],
+   "call": "2♦",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Two-suiter in the majors."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.reverse_flannery"
+   ],
+   "call": "2♥/2♠/3♥/3♠",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "none",
+   "note": "Natural choice of major."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.reverse_flannery"
+   ],
+   "call": "2NT",
+   "after": "2♦",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Asking bid; the ACBL 2NT exemption covers only weak preempts."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.kokish"
+   ],
+   "call": "2♥",
+   "after": "2♣–2♦",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Relay: hearts or a big balanced hand."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.kokish"
+   ],
+   "call": "2♠",
+   "after": "2♣–2♦–2♥",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Forced relay."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.kokish"
+   ],
+   "call": "2NT",
+   "after": "2♣–2♦–2♥–2♠",
+   "by": "opener",
+   "rule": "none",
+   "ebu": "alert",
+   "note": "Balanced, stronger than a direct 2NT. The EBU alerts the unexpected strength; the ACBL treats it as natural, and the WBF does not mention it."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.kokish"
+   ],
+   "call": "3♥ (natural)",
+   "after": "2♣–2♦–2♥–2♠",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural heart rebid after the relay (EBU uncertain)."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.parrish_bust"
+   ],
+   "call": "2♥",
+   "after": "2♣",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Very weak reply, says nothing about hearts."
+  },
+  {
+   "fields": [
+    "two_level.mccabe.play"
+   ],
+   "call": "2NT",
+   "after": "2x–(X)",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Relay to 3♣. The ACBL exempts a forcing 2NT after a two-level preempt (uncertain); the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "two_level.mccabe.play"
+   ],
+   "call": "3♣",
+   "after": "2x–(X)–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Forced reply to the relay."
+  },
+  {
+   "fields": [
+    "two_level.mccabe.play"
+   ],
+   "call": "New suit",
+   "after": "2x–(X)",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Lead-directing, with support for partner, not a suit to play."
+  },
+  {
+   "fields": [
+    "slam.blackwood.standard"
+   ],
+   "call": "4NT",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Ace or keycard ask. Exempt in the ACBL and above 3NT in the EBU; the WBF has no level cut-off."
+  },
+  {
+   "fields": [
+    "slam.blackwood.standard"
+   ],
+   "call": "5♣/5♦/5♥/5♠",
+   "after": "4NT",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Replies to the ask. The ACBL gives a delayed alert; the EBU does not alert above 3NT; the WBF alerts them."
+  },
+  {
+   "fields": [
+    "slam.blackwood.standard"
+   ],
+   "call": "5NT and replies",
+   "after": "4NT–5x",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "King ask and its replies. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.blackwood.rkcb_1430"
+   ],
+   "call": "4NT",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Ace or keycard ask. Exempt in the ACBL and above 3NT in the EBU; the WBF has no level cut-off."
+  },
+  {
+   "fields": [
+    "slam.blackwood.rkcb_1430"
+   ],
+   "call": "5♣/5♦/5♥/5♠",
+   "after": "4NT",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Replies to the ask. The ACBL gives a delayed alert; the EBU does not alert above 3NT; the WBF alerts them."
+  },
+  {
+   "fields": [
+    "slam.blackwood.rkcb_1430"
+   ],
+   "call": "5NT and replies",
+   "after": "4NT–5x",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "King ask and its replies. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.blackwood.rkcb_0314"
+   ],
+   "call": "4NT",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Ace or keycard ask. Exempt in the ACBL and above 3NT in the EBU; the WBF has no level cut-off."
+  },
+  {
+   "fields": [
+    "slam.blackwood.rkcb_0314"
+   ],
+   "call": "5♣/5♦/5♥/5♠",
+   "after": "4NT",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Replies to the ask. The ACBL gives a delayed alert; the EBU does not alert above 3NT; the WBF alerts them."
+  },
+  {
+   "fields": [
+    "slam.blackwood.rkcb_0314"
+   ],
+   "call": "5NT and replies",
+   "after": "4NT–5x",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "King ask and its replies. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.blackwood.queen_ask"
+   ],
+   "call": "Next step / 5NT",
+   "after": "4NT–5♣/5♦",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Asks for the trump queen. Delayed in the ACBL, not alerted above 3NT in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.blackwood.queen_ask"
+   ],
+   "call": "Replies",
+   "after": "4NT–5x–ask",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Show or deny the queen (and kings). Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.gerber.play"
+   ],
+   "call": "4♣",
+   "after": "1NT/2NT",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Ace ask directly over notrump. Exempt in the ACBL; the EBU alerts it as an artificial first-round suit bid above 3NT, and the WBF alerts it."
+  },
+  {
+   "fields": [
+    "slam.gerber.play"
+   ],
+   "call": "4♦/4♥/4♠/4NT",
+   "after": "1NT/2NT–4♣",
+   "by": "opener",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Ace replies. Delayed in the ACBL (opener's rebid), not alerted above 3NT in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.gerber.play"
+   ],
+   "call": "5♣ and replies",
+   "after": "1NT–4♣–reply",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "King ask and replies. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.gerber.play"
+   ],
+   "call": "4♣",
+   "after": "later round",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Gerber outside a direct notrump auction. Not exempt in the ACBL, so delayed; not alerted in the EBU; alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.kickback.play"
+   ],
+   "call": "4 of the suit above trumps",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Keycard ask. Delayed in the ACBL; the EBU does not alert it after the first round; the WBF alerts it."
+  },
+  {
+   "fields": [
+    "slam.kickback.play"
+   ],
+   "call": "Replies",
+   "after": "Kickback ask",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Keycard step replies. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.minorwood.play"
+   ],
+   "call": "4♣/4♦",
+   "after": "minor agreed",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Keycard ask in the agreed minor. Delayed in the ACBL, not alerted above 3NT in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.minorwood.play"
+   ],
+   "call": "Replies",
+   "after": "Minorwood ask",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Keycard step replies. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.exclusion_blackwood.play"
+   ],
+   "call": "Jump in a void suit",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Keycard ask excluding the void. Delayed in the ACBL; the EBU alerts it only as a first-round jump; the WBF alerts it."
+  },
+  {
+   "fields": [
+    "slam.exclusion_blackwood.play"
+   ],
+   "call": "Replies",
+   "after": "Exclusion ask",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Keycard replies ignoring that suit. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.pick_a_slam_5nt.play"
+   ],
+   "call": "5NT",
+   "after": "fit or slam drive",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Asks partner to choose a slam, not a notrump offer. Delayed in the ACBL; not alerted in the EBU; alerted in the WBF."
+  },
+  {
+   "fields": [
+    "slam.pick_a_slam_5nt.play"
+   ],
+   "call": "6-level choice",
+   "after": "5NT",
+   "by": "either",
+   "rule": "none",
+   "note": "Natural choice of strain."
+  },
+  {
+   "fields": [
+    "slam.western_cuebid.play"
+   ],
+   "call": "Cuebid of their suit",
+   "after": "competitive auction",
+   "by": "either",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Asks for a stopper for 3NT. The ACBL exempts cuebids after an opening and overcall; the EBU (below 3NT or on the first round) and WBF alert it."
+  },
+  {
+   "fields": [
+    "slam.western_cuebid.play"
+   ],
+   "call": "Own side's suit (stopper ask)",
+   "after": "uncontested",
+   "by": "either",
+   "rule": "alert",
+   "note": "Asks for a stopper in a suit the partnership has bid (ACBL uncertain; delayed at 3NT or above after opener's rebid)."
+  },
+  {
+   "fields": [
+    "slam.spiral_cuebids.play"
+   ],
+   "call": "Control bids below 3NT",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "alert",
+   "acbl": "delayed",
+   "note": "The ACBL always delays control bids, even below 3NT; the EBU and WBF alert them at once."
+  },
+  {
+   "fields": [
+    "slam.spiral_cuebids.play"
+   ],
+   "call": "Spiral asks and replies below 3NT",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "alert",
+   "note": "Trump-quality asks and step replies (ACBL uncertain)."
+  },
+  {
+   "fields": [
+    "slam.spiral_cuebids.play"
+   ],
+   "call": "Asks, replies and control bids above 3NT",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Delayed in the ACBL; the EBU does not alert above 3NT after the first round; the WBF alerts them."
+  },
+  {
+   "fields": [
+    "slam.non_serious_3nt.play"
+   ],
+   "call": "3NT",
+   "after": "game-forcing major fit",
+   "by": "either",
+   "rule": "alert",
+   "acbl": "delayed",
+   "note": "Shows or denies slam interest rather than offering to play. The ACBL delays the alert; the EBU (3NT is not above 3NT) and WBF alert it at once."
+  },
+  {
+   "fields": [
+    "slam.non_serious_3nt.play"
+   ],
+   "call": "Control bids after it",
+   "after": "3NT",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "The ACBL delays all control bids; the EBU does not alert above 3NT; the WBF alerts them."
+  },
+  {
+   "fields": [
+    "doubles.takeout_style"
+   ],
+   "call": "X",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "none",
+   "note": "Takeout double of a natural suit opening. The WBF has no explicit exemption but treats it as generally understood (uncertain)."
+  },
+  {
+   "fields": [
+    "doubles.takeout_style"
+   ],
+   "call": "X (not penalty)",
+   "when": "the double of 1NT is not for penalty",
+   "after": "(1NT)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "Takeout or conventional double of a 1NT opening. Listed by the EBU; the ACBL and WBF alert a double of notrump that is not for penalty or values."
+  },
+  {
+   "fields": [
+    "doubles.negative.play"
+   ],
+   "call": "X",
+   "after": "1♣/1♦–(1♥/1♠)",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "wbf": "alert",
+   "note": "Negative double. Exempt in the ACBL (announce the major if it usually holds five); the EBU announces it when it shows just four of the other major; the WBF alerts it (uncertain)."
+  },
+  {
+   "fields": [
+    "doubles.negative.play"
+   ],
+   "call": "X",
+   "after": "1x–(overcall)",
+   "by": "responder",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Negative double after other one-level openings. The WBF alerts a double that is not for penalty (uncertain)."
+  },
+  {
+   "fields": [
+    "doubles.negative.play"
+   ],
+   "call": "X",
+   "after": "2x or higher–(overcall)",
+   "by": "responder",
+   "rule": "alert",
+   "ebu": "none",
+   "note": "Negative double after a preempt. The ACBL exempts only a penalty double here; the EBU does not alert a takeout-style double; the WBF alerts it."
+  },
+  {
+   "fields": [
+    "doubles.negative.play"
+   ],
+   "call": "X",
+   "after": "1NT/2NT–(overcall)",
+   "by": "responder",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Negative, penalty or card-showing double after a notrump opening. Exempt in the ACBL and not alerted in the EBU; the WBF alerts a non-penalty double."
+  },
+  {
+   "fields": [
+    "doubles.responsive.play"
+   ],
+   "call": "X",
+   "after": "(1x)–X/overcall–(2x)",
+   "by": "advancer",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Takeout double by advancer after they raise. Not alerted in the ACBL or EBU; the WBF alerts it as a special understanding."
+  },
+  {
+   "fields": [
+    "doubles.support.play"
+   ],
+   "call": "X",
+   "after": "1x–1y–(overcall)",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Shows exactly three-card support. The ACBL exempts all doubles from opener's rebid on; the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "doubles.support.play"
+   ],
+   "call": "XX",
+   "after": "1x–1y–(X)",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Support redouble. Exempt in the ACBL; the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "competitive.michaels.play"
+   ],
+   "call": "2♣/2♦",
+   "after": "(1♣/1♦)",
+   "by": "overcaller",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Cuebid showing both majors. Exempt in the ACBL; the EBU (overcalls are never announced) and WBF alert it."
+  },
+  {
+   "fields": [
+    "competitive.michaels.play"
+   ],
+   "call": "2♥/2♠",
+   "after": "(1♥/1♠)",
+   "by": "overcaller",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Cuebid showing the other major and a minor. Exempt in the ACBL; alerted in the EBU and WBF."
+  },
+  {
+   "fields": [
+    "competitive.michaels.play"
+   ],
+   "call": "Cuebid (other suit pair)",
+   "when": "the cuebid shows a pair of suits other than the usual one",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "A cuebid showing a non-standard pair of suits."
+  },
+  {
+   "fields": [
+    "competitive.michaels.play"
+   ],
+   "call": "2NT",
+   "after": "(1M)–2M–(P)",
+   "by": "advancer",
+   "rule": "alert",
+   "note": "Asks for overcaller's minor."
+  },
+  {
+   "fields": [
+    "competitive.unusual_2nt.play"
+   ],
+   "call": "2NT",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Two lowest unbid suits. Exempt in the ACBL; the EBU and WBF alert it as two-suited."
+  },
+  {
+   "fields": [
+    "competitive.unusual_2nt.play"
+   ],
+   "call": "2NT (other suits)",
+   "when": "2NT shows suits other than the two lowest unbid",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "A 2NT overcall showing two suits other than the lowest two."
+  },
+  {
+   "fields": [
+    "competitive.unusual_2nt.play"
+   ],
+   "call": "2NT",
+   "after": "(1x)–P–(1y)",
+   "by": "overcaller",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Two-suited 2NT after an opening and a response; exempt in the ACBL since 2026. The EBU and WBF do not list it; both alert a two-suited 2NT."
+  },
+  {
+   "fields": [
+    "competitive.dont.play"
+   ],
+   "call": "X",
+   "after": "(1NT)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "Shows a one-suiter."
+  },
+  {
+   "fields": [
+    "competitive.dont.play"
+   ],
+   "call": "2♣/2♦/2♥",
+   "after": "(1NT)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "The suit bid plus a higher one."
+  },
+  {
+   "fields": [
+    "competitive.dont.play"
+   ],
+   "call": "2♠",
+   "after": "(1NT)",
+   "by": "overcaller",
+   "rule": "none",
+   "note": "Natural spade one-suiter."
+  },
+  {
+   "fields": [
+    "competitive.dont.play"
+   ],
+   "call": "2♣ relay / next step",
+   "after": "(1NT)–X or 2x",
+   "by": "advancer",
+   "rule": "alert",
+   "note": "Relay or pass-or-correct bid."
+  },
+  {
+   "fields": [
+    "competitive.cue_bid_raise.play"
+   ],
+   "call": "Cuebid",
+   "after": "1x–(overcall)",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Limit raise or better. Exempt in the ACBL after an opening and overcall; the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "competitive.cue_bid_raise.play"
+   ],
+   "call": "Cuebid",
+   "after": "(1x)–overcall–(P)",
+   "by": "advancer",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Raise of the overcall, limit or better. Exempt in the ACBL; alerted in the EBU, and by the WBF's rule for artificial calls."
+  },
+  {
+   "fields": [
+    "competitive.lead_directing_double.play"
+   ],
+   "call": "X (asks for that suit)",
+   "after": "artificial bid",
+   "by": "either",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Double of an artificial bid asking for that suit. Not alerted in the ACBL or EBU; the WBF alerts it."
+  },
+  {
+   "fields": [
+    "competitive.lead_directing_double.play"
+   ],
+   "call": "X (asks for another lead)",
+   "after": "artificial bid",
+   "by": "either",
+   "rule": "alert",
+   "note": "Double of an artificial bid asking for a different lead or against that suit."
+  },
+  {
+   "fields": [
+    "competitive.lead_directing_double.play"
+   ],
+   "call": "X",
+   "after": "3NT or slam",
+   "by": "either",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Lead-directing double such as Lightner. The ACBL does not alert doubles of 3NT or higher; the EBU alerts the lead message even above 3NT, and so does the WBF's special-meaning rule."
+  },
+  {
+   "fields": [
+    "competitive.lebensohl_weak_twos.play"
+   ],
+   "call": "2NT",
+   "after": "(2x)–X–(P)",
+   "by": "advancer",
+   "rule": "alert",
+   "note": "Relay to 3♣ (ACBL uncertain: its forcing-2NT exemption may reach advancer)."
+  },
+  {
+   "fields": [
+    "competitive.lebensohl_weak_twos.play"
+   ],
+   "call": "3♣",
+   "after": "(2x)–X–(P)–2NT",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "Forced completion of the relay."
+  },
+  {
+   "fields": [
+    "competitive.lebensohl_weak_twos.play"
+   ],
+   "call": "Cuebid",
+   "after": "(2x)–X–(P)",
+   "by": "advancer",
+   "rule": "alert",
+   "note": "Artificial cuebid by advancer (ACBL uncertain); not listed by the EBU or WBF, but artificial."
+  },
+  {
+   "fields": [
+    "competitive.sandwich_nt.play"
+   ],
+   "call": "1NT",
+   "after": "(1x)–P–(1y)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "Shows the two unbid suits, not a notrump hand."
+  },
+  {
+   "fields": [
+    "competitive.snapdragon.play"
+   ],
+   "call": "X",
+   "after": "(1x)–1y–(1z)",
+   "by": "advancer",
+   "rule": "alert",
+   "acbl": "announce",
+   "note": "Shows the fourth suit with tolerance for partner. The ACBL announces the suit (uncertain); the EBU (uncertain) and WBF alert it."
+  },
+  {
+   "fields": [
+    "doubles.maximal"
+   ],
+   "call": "X",
+   "after": "1M–(2x)–2M–(3x)",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Game try, not penalty. The ACBL exempts all doubles from opener's rebid on; the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "competitive.unusual_vs_unusual.play"
+   ],
+   "call": "3♣/3♦",
+   "after": "1M–(2NT)",
+   "by": "responder",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Cuebids of the shown suits. Exempt in the ACBL as raises or good hands; the EBU and WBF alert them."
+  },
+  {
+   "fields": [
+    "competitive.unusual_vs_unusual.play"
+   ],
+   "call": "X",
+   "after": "1x–(2NT)",
+   "by": "responder",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "Shows values or penalty interest. Exempt in the ACBL and not listed by the EBU (uncertain); the WBF alerts it."
+  },
+  {
+   "fields": [
+    "competitive.unusual_vs_unusual.play"
+   ],
+   "call": "3 of other major",
+   "after": "1M–(2NT)",
+   "by": "responder",
+   "rule": "alert",
+   "ebu": "announce",
+   "note": "Natural and non-forcing. The ACBL and WBF alert a non-forcing new suit by an unpassed hand; the EBU's \"natural, non-forcing\" announcement fits it."
+  },
+  {
+   "fields": [
+    "competitive.leaping_michaels.play"
+   ],
+   "call": "4♣/4♦",
+   "after": "(2♥/2♠)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "The minor plus the other major; a direct overcall, so not delayed."
+  },
+  {
+   "fields": [
+    "competitive.leaping_michaels.play"
+   ],
+   "call": "4 of their suit",
+   "after": "(2♥/2♠)",
+   "by": "overcaller",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Cuebid of the weak two. Exempt in the ACBL; the EBU (first-round artificial bid) and WBF alert it."
+  },
+  {
+   "fields": [
+    "competitive.leaping_michaels.play"
+   ],
+   "call": "4♥/4♠",
+   "after": "(2♦)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "Two-suited jump over a weak 2♦. The ACBL does not mention it; it alerts natural bids that also show another suit."
+  },
+  {
+   "fields": [
+    "other_conventions.fourth_suit_forcing.one_round"
+   ],
+   "call": "Fourth suit",
+   "after": "1x–1y–1z",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial and forcing (one round); does not promise the suit."
+  },
+  {
+   "fields": [
+    "other_conventions.fourth_suit_forcing.one_round"
+   ],
+   "call": "Opener's rebids",
+   "after": "1x–1y–1z–4th suit",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural rebids: raise, notrump with a stopper, preference."
+  },
+  {
+   "fields": [
+    "other_conventions.fourth_suit_forcing.game_force"
+   ],
+   "call": "Fourth suit",
+   "after": "1x–1y–1z",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial and forcing (game force); does not promise the suit."
+  },
+  {
+   "fields": [
+    "other_conventions.fourth_suit_forcing.game_force"
+   ],
+   "call": "Opener's rebids",
+   "after": "1x–1y–1z–4th suit",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural rebids: raise, notrump with a stopper, preference."
+  },
+  {
+   "fields": [
+    "other_conventions.help_suit_game_tries.play"
+   ],
+   "call": "New suit",
+   "after": "1M–2M",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural try promising three or more cards in the suit (WBF uncertain)."
+  },
+  {
+   "fields": [
+    "other_conventions.help_suit_game_tries.play"
+   ],
+   "call": "New suit (may be short)",
+   "when": "the try may be a doubleton or shorter",
+   "after": "1M–2M",
+   "by": "opener",
+   "rule": "alert",
+   "note": "A try that may be a doubleton or shorter."
+  },
+  {
+   "fields": [
+    "other_conventions.reverse_bids.forcing"
+   ],
+   "call": "Reverse",
+   "after": "1x–1y",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural; the extra strength is standard."
+  },
+  {
+   "fields": [
+    "other_conventions.new_minor_forcing.play"
+   ],
+   "call": "2♣/2♦ (other minor)",
+   "after": "1m–1M–1NT",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial forcing enquiry."
+  },
+  {
+   "fields": [
+    "other_conventions.new_minor_forcing.play"
+   ],
+   "call": "Opener's replies",
+   "after": "1m–1M–1NT–2m",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural replies; an artificial reply is alerted."
+  },
+  {
+   "fields": [
+    "other_conventions.two_way_nmf"
+   ],
+   "call": "2♣",
+   "after": "1x–1y–1NT",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Relay to 2♦."
+  },
+  {
+   "fields": [
+    "other_conventions.two_way_nmf"
+   ],
+   "call": "2♦",
+   "after": "1x–1y–1NT",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial game force."
+  },
+  {
+   "fields": [
+    "other_conventions.two_way_nmf"
+   ],
+   "call": "2♦ (forced)",
+   "after": "1x–1y–1NT–2♣",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Forced completion of the relay."
+  },
+  {
+   "fields": [
+    "other_conventions.xyz"
+   ],
+   "call": "2♣",
+   "after": "1x–1y–1z",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Relay to 2♦ (also after a 1NT rebid)."
+  },
+  {
+   "fields": [
+    "other_conventions.xyz"
+   ],
+   "call": "2♦",
+   "after": "1x–1y–1z",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial game force."
+  },
+  {
+   "fields": [
+    "other_conventions.xyz"
+   ],
+   "call": "2♦ (forced)",
+   "after": "1x–1y–1z–2♣",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Forced completion of the relay."
+  },
+  {
+   "fields": [
+    "other_conventions.sos_redouble.play"
+   ],
+   "call": "XX",
+   "after": "balancing double",
+   "by": "either",
+   "rule": "alert",
+   "acbl": "none",
+   "note": "Asks partner to pick another suit. Exempt in the ACBL in the balancing seat or after a balancing double; the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "other_conventions.sos_redouble.play"
+   ],
+   "call": "XX",
+   "after": "direct penalty double",
+   "by": "either",
+   "rule": "alert",
+   "note": "Asks partner to pick another suit."
+  },
+  {
+   "fields": [
+    "other_conventions.ingberman_2nt.play"
+   ],
+   "call": "2NT",
+   "after": "opener's reverse",
+   "by": "responder",
+   "rule": "alert",
+   "note": "Artificial relay or enquiry, not a natural notrump."
+  },
+  {
+   "fields": [
+    "other_conventions.ingberman_2nt.play"
+   ],
+   "call": "3♣ (forced)",
+   "after": "reverse–2NT",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Forced or coded reply to the relay."
+  },
+  {
+   "fields": [
+    "notrump.one_nt.range_min"
+   ],
+   "call": "1NT",
+   "after": "opening",
+   "by": "opener",
+   "rule": "announce",
+   "wbf": "none",
+   "note": "Partner states the range (\"15 to 17\") in the ACBL and EBU. The WBF does not alert a natural notrump opening of any range."
+  },
+  {
+   "fields": [
+    "notrump.two_nt.range_min"
+   ],
+   "call": "2NT",
+   "after": "opening",
+   "by": "opener",
+   "rule": "none",
+   "note": "Natural; only the 1NT range is announced."
+  },
+  {
+   "fields": [
+    "minor_openings.one_club.min_length"
+   ],
+   "call": "1♣",
+   "after": "opening",
+   "by": "opener",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Partner announces the minimum length (\"Could be two\"). The WBF has no rule for it but alerts a 1♣ that may be short (uncertain)."
+  },
+  {
+   "fields": [
+    "minor_openings.one_diamond.min_length"
+   ],
+   "call": "1♦",
+   "after": "opening",
+   "by": "opener",
+   "rule": "announce",
+   "wbf": "alert",
+   "note": "Partner announces the minimum length. The WBF alerts a 1♦ that can hold fewer than three cards as artificial."
+  },
+  {
+   "fields": [
+    "minor_openings.one_club.art_forcing"
+   ],
+   "call": "1♣",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Strong, forcing, artificial 1♣; the ACBL also wants a pre-alert."
+  },
+  {
+   "fields": [
+    "two_level.two_clubs.meaning"
+   ],
+   "call": "2♣ (natural)",
+   "when": "the 2♣ opening is natural",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "ebu": "announce",
+   "wbf": "none",
+   "note": "When 2♣ is natural. The ACBL alerts any natural 2♣; the EBU announces its strength band; the WBF does not alert a natural opening."
+  },
+  {
+   "fields": [
+    "two_level.two_diamonds.max_hcp",
+    "two_level.two_hearts.max_hcp",
+    "two_level.two_spades.max_hcp"
+   ],
+   "call": "2♦/2♥/2♠",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "ebu": "announce",
+   "wbf": "none",
+   "note": "A natural two-level opening that may hold 12+ HCP (not 4th seat). The ACBL alerts it; the EBU announces the band (\"Intermediate\"); the WBF does not cover it, and natural openings are not alerted."
+  },
+  {
+   "fields": [
+    "notrump.three_nt.one_suit"
+   ],
+   "call": "3NT",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "note": "Based on a long running suit, not a natural notrump. The WBF does not list it; it is not natural, so it is alerted."
+  },
+  {
+   "fields": [
+    "preempts.namyats.play",
+    "preempts.transfer_4_minor"
+   ],
+   "call": "4♣/4♦",
+   "after": "opening",
+   "by": "opener",
+   "rule": "alert",
+   "acbl": "announce",
+   "note": "Transfer to a major. The ACBL announces the suit shown (and wants a pre-alert); the EBU and WBF alert it."
+  },
+  {
+   "fields": [
+    "nt_overcalls.direct.range_min"
+   ],
+   "call": "1NT",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "none",
+   "note": "Natural 1NT overcall in the usual range."
+  },
+  {
+   "fields": [
+    "nt_overcalls.direct.range_min"
+   ],
+   "call": "1NT (may be weak)",
+   "when": "the 1NT overcall may be weak",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "Alerted in the ACBL below 14 HCP and in the EBU when well under 15. The WBF does not cover it; this follows the ACBL."
+  },
+  {
+   "fields": [
+    "overcalls.jump"
+   ],
+   "call": "Jump overcall (weak)",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "none",
+   "note": "A weak jump overcall is natural and expected, treated like a weak two opening: no regulator alerts it."
+  },
+  {
+   "fields": [
+    "overcalls.jump"
+   ],
+   "call": "Jump overcall (intermediate or strong)",
+   "when": "jump overcalls are intermediate or strong, not weak",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "Natural but not weak, so not what opponents expect: the ACBL and the EBU alert it; the WBF does not cover it, so this follows the ACBL."
+  },
+  {
+   "fields": [
+    "direct_cuebids.nat_minors_natural",
+    "direct_cuebids.nat_majors_natural"
+   ],
+   "call": "2 of their suit (natural)",
+   "after": "(1x)",
+   "by": "overcaller",
+   "rule": "alert",
+   "note": "A natural cuebid of a natural one-level opening. The ACBL alerts it; the EBU and WBF do not list it, but a natural cuebid is unexpected."
+  },
+  {
+   "fields": [
+    "major_openings.jump_raise.inv"
+   ],
+   "call": "3♥/3♠",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "none",
+   "note": "Invitational double raise: natural and expected."
+  },
+  {
+   "fields": [
+    "major_openings.jump_raise.weak"
+   ],
+   "call": "3♥/3♠",
+   "after": "1♥/1♠",
+   "by": "responder",
+   "rule": "alert",
+   "wbf": "none",
+   "note": "Preemptive jump raise, alerted in the ACBL and EBU when the next hand passed. The WBF reads a raise as natural (uncertain)."
+  },
+  {
+   "fields": [
+    "general.jump_shifts.weak_2",
+    "general.jump_shifts.weak_3",
+    "other_conventions.weak_jump_shifts_not_in_comp"
+   ],
+   "call": "Jump shift (weak)",
+   "after": "1x",
+   "by": "responder",
+   "rule": "alert",
+   "ebu": "announce",
+   "note": "A weak jump shift by responder with no interference. Strong is the default, so the ACBL and the WBF alert the weak version; the EBU announces it as natural and non-forcing. Not to be read as a preempt like a weak two or a weak jump overcall."
+  },
+  {
+   "fields": [
+    "other_conventions.weak_jump_shifts_in_comp"
+   ],
+   "call": "Jump shift (weak)",
+   "after": "1x–(X or overcall)",
+   "by": "responder",
+   "rule": "none",
+   "wbf": "alert",
+   "note": "After a double or an overcall the weak jump shift is standard: no alert in the ACBL, and none in the EBU (uncertain). The WBF alerts every non-forcing jump shift."
+  },
+  {
+   "fields": [
+    "general.jump_shifts.strong_2",
+    "general.jump_shifts.strong_3"
+   ],
+   "call": "Jump shift (strong)",
+   "after": "1x",
+   "by": "responder",
+   "rule": "none",
+   "ebu": "announce",
+   "note": "Natural and forcing. The EBU announces \"natural, game-forcing\"; the ACBL and WBF do not alert it."
+  },
+  {
+   "fields": [
+    "slam.cue_bids.play"
+   ],
+   "call": "Control bid",
+   "after": "suit agreed",
+   "by": "either",
+   "rule": "delayed",
+   "ebu": "none",
+   "wbf": "alert",
+   "note": "Shows a control in the suit bid. The ACBL always delays it; the EBU does not alert it above 3NT after the first round (it does below); the WBF alerts it."
+  }
+ ]
+}

@@ -204,6 +204,13 @@
         <span class="control-label">SHOW</span>
         <SkillPills v-model="visibleLevelsLocal" />
       </div>
+      <div class="control-divider"></div>
+      <div class="control-group">
+        <label class="control-label" for="cc-regulator">ALERTS</label>
+        <select id="cc-regulator" v-model="regulator" class="regulator-select" title="Whose alerting rules the badges show">
+          <option v-for="(r, id) in REGULATORS" :key="id" :value="id">{{ r.name }}</option>
+        </select>
+      </div>
       <div v-if="overlays" class="control-divider"></div>
       <div v-if="overlays" class="control-group">
         <span class="control-label">OVERLAYS</span>
@@ -257,6 +264,7 @@ import { computed, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importCard } from '../../../js/importCard.js'
 import { checkCard } from '../../../js/checkCard.js'
+import { REGULATORS } from '../../../js/spec.js'
 import SkillPills from './components/SkillPills.vue'
 import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
@@ -287,6 +295,7 @@ const cardLoading = cc.cardLoading
 const cardError = cc.cardError
 const saving = cc.saving
 const saveError = cc.saveError
+const regulator = cc.regulator
 
 // The PDF and .bbsa code is loaded when first used, from files named by the
 // build. A deploy replaces them, so a page opened before a deploy asks for
@@ -772,6 +781,14 @@ watch(() => currentUser.value?.id, async (uid) => {
 .import-notes-close {
   position: absolute; top: 4px; right: 8px;
   border: none; background: none; font-size: 16px; color: inherit; cursor: pointer;
+}
+.regulator-select {
+  font: inherit;
+  font-size: 13px;
+  padding: 3px 6px;
+  border: 1px solid var(--card-border, #d1d5db);
+  border-radius: 6px;
+  background: #fff;
 }
 .card-problems {
   margin: -4px 0 12px;

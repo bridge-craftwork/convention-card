@@ -258,6 +258,30 @@ conventions cover anything a rule author adds
 says whether a card plays a convention, by a fixed field or an
 `other_agreements` entry.
 
+## Alerts
+
+Which calls are alerted or announced is in the spec, **`spec/alerts.toml`**
+(Rick Wilson, 2026-10-03), not in the editor. Alerting belongs to calls, not
+to conventions: Jacoby 2NT's 2NT is alerted, while opener's natural rebids
+are not; Garbage Stayman needs no alert at all, since its 2♣ is Stayman and
+the pass of the reply is natural. So each entry names a call, the auction it
+follows and who makes it, and the card field it belongs to.
+
+- **One rule, and the regulators that differ.** `rule` is what most of the
+  regulators covered do (`alert`, `announce`, `delayed` or `none`); a
+  regulator that does otherwise gets its own key, and only then. The first
+  three are the ACBL, the EBU and the WBF, each cited by its document; more
+  can be added without a format change.
+- **The editor shows it for a chosen regulator,** ACBL by default (the
+  cards it prints are the ACBL's): a row's badge is its strongest rule
+  ("Alert", "Delayed alert", "Announce"), and the tooltip lists each call.
+- **A guide, not a ruling.** The entries are our reading of each
+  regulator's document, in our own words. Where a document leaves a call
+  unclear, the entry says so in its note.
+- **Agreements, not meanings.** An alert entry says what a regulator asks
+  for when a partnership plays a convention; what the call means is still
+  the business of whoever reads the card (CLAUDE.md).
+
 ## Accounts and storage: local first
 
 **The standalone editor needs no account.** Cards live in the browser
