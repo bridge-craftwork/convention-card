@@ -499,6 +499,26 @@ built-in cards are the same kind of thing, shipped with the editor.
   field name cannot read them; that would need text extraction by
   position.
 
+## Two ways to edit: guided and form
+
+*Planned* (Rick Wilson, 2026-10-03). Like a tax program's "walk me
+through it" and "forms" modes, the editor offers two views of the same card:
+
+- **Guided** (what the editor is today): a section at a time, conventions
+  as rows with their level, alerts and notes, filtered by level band. Good
+  for building a card and for newer players; the card wizard (above) is its
+  first-time form.
+- **Form**: the card laid out as the printed card is, ACBL Classic or New
+  (later WBF), and edited where each box sits, for players who know the
+  card and want to see all of it at once. The layout comes from the same
+  template mapping the PDF uses (above), so a box in the form is a field
+  in the card, and anything a template can print, the form can edit;
+  editing on the PDF page itself is the same idea rendered over the
+  template.
+
+Both read and write the same card_data through the same editor state, so
+a person can switch at any time; neither stores anything of its own.
+
 ## Shared cards
 
 On BBO and Bridgodex, partners share one card and either can edit it. Bridge
@@ -608,8 +628,12 @@ one row per agreement that is not the same on every card. It belongs in the
 library (a pure function over cards and the spec), with a view in the editor
 and a printable version.
 
-Bridgodex offers a two-card version ("Compare with another card"), worth
-looking at when this is built. A plain field-by-field comparison is too
+Bridgodex offers a two-card version ("Compare with another card"): the whole
+form of the first card, and under each setting where the second card
+differs, the second card's value on a highlighted row (2026-10-03). It reads
+well for two cards because it is the familiar form; ours should work the
+same way in the form view (two cards: each difference under its box), and
+use the matrix for three or more. A plain field-by-field comparison is too
 noisy to use. Across Rick's five
 partnership cards (2026-09-30), 165 of the 212 fields set on any card differ.
 Most of the noise comes from things the spec can fix:
