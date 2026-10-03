@@ -516,7 +516,7 @@ const FIELD_MAP_CLASSIC = [
   { pdf: '2CD Force New Suit NFRow1', card: 'two_level.two_clubs.continuation_response', kind: 'text' },
 
   // ─── First-discard fixes ───
-  // bridgeodex writes a single first_discard flag (not separated by
+  // Bridgodex writes a single first_discard flag (not separated by
   // SUITS/NT). Mirror the boolean to both ACBL columns so users see
   // both filled when they play Lavinthal or Odd/Even universally.
   // (These OVERRIDE the earlier suits-only mappings.)
@@ -711,7 +711,7 @@ const FIELD_MAP_NEW = [
   { pdf: 'O.c.6', card: 'other_conventions.fourth_suit_forcing.one_round', kind: 'check' },
   { pdf: 'O.c.7', card: 'other_conventions.fourth_suit_forcing.game_force', kind: 'check' },
   // Two catch-all free-text rows at the bottom of the OTHER section.
-  // The bridgeodex importer writes `more1`/`more2` into these.
+  // The Bridgodex importer writes `more1`/`more2` into these.
   { pdf: 'O.t.8', card: 'other_conventions.notes_line_1', kind: 'text' },
   { pdf: 'O.t.9', card: 'other_conventions.notes_line_2', kind: 'text' },
 
@@ -1868,8 +1868,10 @@ function embedCardDataInPdf(pdf, card, pdfFields = null) {
   try {
     const payload = {
       schema: 'bridge-classroom/card_data@v1',
+      id: card.id ?? null,
       name: card.name || null,
       description: card.description || null,
+      updatedAt: card.updated_at || card.updatedAt || null,
       exportedAt: new Date().toISOString(),
       card_data: card.card_data,
       // What the export wrote into each box, so an import can find edits
@@ -1934,7 +1936,7 @@ export function readEmbeddedPayload(pdf) {
 /**
  * An open-ended HCP range ("14+", "22+") carries its `+` in a sibling
  * boolean at `<path>_plus`, because the range itself is stored as a
- * number so the editor can render a numeric input. Bridgeodex sends
+ * number so the editor can render a numeric input. Bridgodex sends
  * "14+" and the importer preserves the qualifier separately; without
  * this the exported card reads a flat "14" and silently changes the
  * partnership's agreement.
@@ -2167,11 +2169,11 @@ function drawLeadCircles(pdf, card) {
   if (populated.length) console.log('  populated in card_data:', populated)
   if (missing.length) console.log('  populated but value out of range:', missing)
 
-  // Also dump the raw bridgeodex leads payload so we can see what keys
+  // Also dump the raw Bridgodex leads payload so we can see what keys
   // the source data actually uses for Hxx-style length leads and honor
   // leads. If they're present in `_bridgeodex_raw` but not making it
   // into our `leads.*.length.lead_choice_*` or `leads.*.honors.lead_choice_*`
-  // paths, the bridgeodex importer needs a fix.
+  // paths, the Bridgodex importer needs a fix.
   const raw = cardData._bridgeodex_raw
   if (raw) {
     const vsSuitsKeys = raw.leads_vs_suits ? Object.entries(raw.leads_vs_suits)
@@ -2180,8 +2182,8 @@ function drawLeadCircles(pdf, card) {
     const vsNtKeys = raw.leads_vs_nt ? Object.entries(raw.leads_vs_nt)
       .filter(([k, v]) => v != null && v !== '' && (k.startsWith('length') || k.startsWith('honor')))
       .map(([k, v]) => `${k}=${JSON.stringify(v)}`) : []
-    console.log('  raw bridgeodex leads_vs_suits:', vsSuitsKeys)
-    console.log('  raw bridgeodex leads_vs_nt:', vsNtKeys)
+    console.log('  raw Bridgodex leads_vs_suits:', vsSuitsKeys)
+    console.log('  raw Bridgodex leads_vs_nt:', vsNtKeys)
   } else {
     console.log('  (no _bridgeodex_raw on this card)')
   }

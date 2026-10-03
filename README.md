@@ -15,7 +15,7 @@ already use.
 | Part | What it is | Used by |
 |---|---|---|
 | **The card spec** (`spec/`) | Data files that define every field a card can hold (its type, label, allowed values, default, and the teaching skill it belongs to), how other formats map onto those fields, and the list of teaching skills. | Everything below |
-| **JavaScript library** (`js/`) | Read and write cards; import and export BBO, bridgeodex and BBA `.bbsa` cards; fill the official ACBL convention card PDFs and read them back. | The editor, Bridge Classroom, the Better BBO Convention Card browser extension |
+| **JavaScript library** (`js/`) | Read and write cards; import and export BBO, Bridgodex and BBA `.bbsa` cards; fill the official ACBL convention card PDFs and read them back. | The editor, Bridge Classroom, the Better BBO Convention Card browser extension |
 | **The editor** (`web/`) | A browser app for building and editing a card, at [bridge-craftwork.com/card](https://bridge-craftwork.com/card/). No account needed. | Anyone; also embedded in Bridge Classroom |
 | **Rust crate** (`crates/bridge-card`) | The same card model for Rust programs: load, check and convert cards. | rusty-bidding-bot |
 

@@ -10,7 +10,7 @@ responsibility lives. Decisions and open questions are tracked in
 The card began as a lobby tab in Bridge Classroom. It has since become a
 general tool, and a cross-repo dependency:
 
-- **The converters are general-purpose.** BBO, bridgeodex, BBA `.bbsa` and the
+- **The converters are general-purpose.** BBO, Bridgodex, BBA `.bbsa` and the
   ACBL PDFs are formats every bridge player meets, whether or not they use Bridge
   Classroom.
 - **The card format already exists twice.** rusty-bidding-bot's `bridge-card`
@@ -33,7 +33,7 @@ One home, one definition, and each consumer depends on it.
 
 | Consumer | What it needs |
 |---|---|
-| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, bridgeodex and PDF; export to the same, plus the ACBL PDFs. |
+| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, Bridgodex and PDF; export to the same, plus the ACBL PDFs. |
 | **Bridge Classroom** | The editor embedded as a lobby tab; saved cards per user; the "My proficiency" overlay; later, "practice our card". |
 | **rusty-bidding-bot** | The Rust card model: read a card, resolve aliases and defaults, and switch rule modules on from its agreements. `.bbsa` import and export. |
 | **lesson-studio** | The skill vocabulary, to validate lesson front matter. |
@@ -54,7 +54,7 @@ Language-neutral files that every other part reads:
   the more rigorous of the two lists, merged with the display text from
   `conventionCatalog.js`.
 - **Format maps**: how each outside format lands on the fields. The first is the
-  bot's `bbsa-map.toml`. BBO, bridgeodex and the ACBL PDF field maps are tables
+  bot's `bbsa-map.toml`. BBO, Bridgodex and the ACBL PDF field maps are tables
   inside JavaScript today and move into data over time, not on day one;
   the ACBL PDF maps move first, for [card templates of your own](#card-templates-of-your-own).
 - **Conventions and skills** (`conventions/`, one file per ID, such as
@@ -155,7 +155,7 @@ ID to pick up the shared summary and links.
 ### 2. The JavaScript library (repo root + `js/`)
 
 Reads and writes cards against the spec, and holds the converters: BBO,
-bridgeodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
+Bridgodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
 the drawn PDF (`acblCardPdf.js`), and PDF re-import (the source card is
 embedded in the PDF's Info dictionary). No framework and no network: it runs
 in a page, a browser extension or Node.
@@ -169,7 +169,7 @@ in a page, a browser extension or Node.
   (a page fetches them from wherever it serves them; Node reads them from
   disk).
 - **One reader for every format** (`importCard`, `js/importCard.js`): the
-  editor's own JSON, BBO, bridgeodex, `.bbsa`, our PDFs and the URL hand-off,
+  editor's own JSON, BBO, Bridgodex, `.bbsa`, our PDFs and the URL hand-off,
   told apart by their content. The editor's Import and the standalone page's
   `window.card` both read through it.
 - **Hand edits in our PDFs** (`js/acblPdfImport.js`): the export records
@@ -230,13 +230,25 @@ the adapters, whose full shape is in `web/src/editor/useCardEditor.js`:
 ```
 
 One editor state is kept per storage adapter, so a host that unmounts and
-remounts the editor (a lobby tab) finds the card it left. The overlay
+remounts the editor (a lobby tab) finds the card it left.
+
+**A home page before the editor** (`CardCatalog.vue`, Rick Wilson
+2026-10-03): what the editor does (the cards it prints, import and export,
+the BBO extension; where cards are kept: in the browser for the standalone
+app, in the player's account, with their name and initials, inside Bridge
+Classroom; and that Bridge Classroom is adding cards shared between
+partners), and a
+table of the person's cards: name, names on the card, system, the card's
+level, how many conventions it plays by band, and up to three settings where
+the cards differ (1NT range, 2/1, signals, keycard). Choosing a card opens
+the editor, with a way back. The host does the routing: the standalone app
+at `#/card/<id>`, Bridge Classroom at `/convention-card?card=<id>`. The overlay
 controls appear only when the host gives overlays.
 
 **The standalone app** keeps cards in the browser's IndexedDB with no
 account (`web/src/browserStorage.js`); the starter card (Bridge Classroom's
 "2/1 Intermediate") is read-only, and Duplicate makes an editable copy. It
-imports BBO, bridgeodex, `.bbsa` and its own PDFs, and exports PDFs, its JSON
+imports BBO, Bridgodex, `.bbsa` and its own PDFs, and exports PDFs, its JSON
 and `.bbsa`. **Save to Bridge Classroom** opens Bridge Classroom with the card
 compressed into the URL's fragment (`js/handoff.js`; DECISIONS, 20), where it
 is saved under Bridge Classroom's own session. The same hand-off works the
@@ -482,14 +494,14 @@ built-in cards are the same kind of thing, shipped with the editor.
     template; a filled-in card's bytes differ, so an import recognises
     the template by its field names and uses the hash only to tell
     apart templates that share them.
-- **What a PDF without a form needs is different.** Most bridgeodex PDFs
+- **What a PDF without a form needs is different.** Most Bridgodex PDFs
   have no form fields (the text is printed into the page), so a mapping by
   field name cannot read them; that would need text extraction by
   position.
 
 ## Shared cards
 
-On BBO and bridgeodex, partners share one card and either can edit it. Bridge
+On BBO and Bridgodex, partners share one card and either can edit it. Bridge
 Classroom's saved cards will work the same way. Storage and membership stay
 in Bridge Classroom (DECISIONS, 7); the API side is
 [Bridge-Classroom #436](https://github.com/bridge-craftwork/Bridge-Classroom/issues/436).
@@ -566,6 +578,28 @@ one, and a partnership to see what it has taken on.
   the difficulty is one more row of it, so partners see whose card asks
   for more.
 
+## Printing, and material beyond the card
+
+*Ideas, not planned in detail* (Rick Wilson, 2026-10-03; several are things
+Bridgodex already offers).
+
+- **Paper sizes and large print.** The PDFs are letter size today. Card
+  size (8" × 8.5"), A4, and a **large-print** version over two pages would
+  help players who find the card's small type hard to read.
+- **Footnotes and supplementary pages.** Advanced cards often run to one or
+  more pages of additional material: relay schemes, defences, sequences the
+  card has no room for. Today a value that doesn't fit is shrunk and
+  wrapped; a value that still doesn't fit should continue in a numbered
+  footnote, and a card should be able to carry **supplementary pages** of
+  its own text (with headings, by section), printed after the card. They
+  belong in the card as data (sections of text the editor edits and the
+  PDF lays out), so they survive import, export and a hand-off like any
+  other agreement. The WBF card's "supplementary sheets" are the same idea.
+- **Other card services.** Bridgodex's "config files" are a minimal JSON
+  form of its card that RSVP Bridge reads and writes too, so our Bridgodex
+  importer may read RSVP Bridge cards as well; to be checked against a
+  real file before saying so.
+
 ## Comparing cards
 
 A player with several partners has different agreements with each, and wants a
@@ -574,7 +608,9 @@ one row per agreement that is not the same on every card. It belongs in the
 library (a pure function over cards and the spec), with a view in the editor
 and a printable version.
 
-A plain field-by-field comparison is too noisy to use. Across Rick's five
+Bridgodex offers a two-card version ("Compare with another card"), worth
+looking at when this is built. A plain field-by-field comparison is too
+noisy to use. Across Rick's five
 partnership cards (2026-09-30), 165 of the 212 fields set on any card differ.
 Most of the noise comes from things the spec can fix:
 

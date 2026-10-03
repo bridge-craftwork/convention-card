@@ -255,7 +255,7 @@
    "aliases": [
     "notrump.stayman.puppet"
    ],
-   "desc": "Bridge Classroom's editor, its PDFs and the BBO and bridgeodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)",
+   "desc": "Bridge Classroom's editor, its PDFs and the BBO and Bridgodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)",
    "skill": "bidding_conventions/puppet_stayman",
    "level": 7
   },
@@ -325,7 +325,7 @@
   "transfers.spades_relay": {
    "kind": "bool",
    "label": "1NT–2♠ transfer",
-   "desc": "The card's 2♠ transfer box, as bridgeodex marks it; what it transfers to is in the card's notes",
+   "desc": "The card's 2♠ transfer box, as Bridgodex marks it; what it transfers to is in the card's notes",
    "skill": "bidding_conventions/minor_suit_transfers",
    "level": 5
   },
@@ -338,7 +338,7 @@
   "transfers.two_nt": {
    "kind": "bool",
    "label": "1NT–2NT transfer",
-   "desc": "The card's 2NT transfer box, as bridgeodex marks it",
+   "desc": "The card's 2NT transfer box, as Bridgodex marks it",
    "skill": "bidding_conventions/minor_suit_transfers",
    "level": 5
   },
@@ -583,7 +583,7 @@
    "kind": "bool",
    "label": "1NT range: minimum has a plus",
    "choice": "notrump.one_nt.range_min_qualifier",
-   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+   "desc": "The card's range written with a plus (\"14+\"), as Bridgodex marks it"
   },
   "one_nt.range_min_minus": {
    "kind": "bool",
@@ -595,7 +595,7 @@
    "kind": "bool",
    "label": "1NT range: maximum has a plus",
    "choice": "notrump.one_nt.range_max_qualifier",
-   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+   "desc": "The card's range written with a plus (\"14+\"), as Bridgodex marks it"
   },
   "one_nt.range_max_minus": {
    "kind": "bool",
@@ -607,7 +607,7 @@
    "kind": "bool",
    "label": "Alternate 1NT range: minimum has a plus",
    "choice": "notrump.one_nt_alt.range_min_qualifier",
-   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+   "desc": "The card's range written with a plus (\"14+\"), as Bridgodex marks it"
   },
   "one_nt_alt.range_min_minus": {
    "kind": "bool",
@@ -619,7 +619,7 @@
    "kind": "bool",
    "label": "Alternate 1NT range: maximum has a plus",
    "choice": "notrump.one_nt_alt.range_max_qualifier",
-   "desc": "The card's range written with a plus (\"14+\"), as bridgeodex marks it"
+   "desc": "The card's range written with a plus (\"14+\"), as Bridgodex marks it"
   },
   "one_nt_alt.range_max_minus": {
    "kind": "bool",
