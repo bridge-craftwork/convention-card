@@ -1,0 +1,26 @@
+{
+ "schema": "levels/v1",
+ "generated_from": "spec/levels.toml (do not edit)",
+ "band": [
+  {
+   "name": "basic",
+   "label": "Basic",
+   "max": 3
+  },
+  {
+   "name": "intermediate",
+   "label": "Intermediate",
+   "max": 6
+  },
+  {
+   "name": "advanced",
+   "label": "Advanced",
+   "max": 8
+  },
+  {
+   "name": "expert",
+   "label": "Expert",
+   "max": 10
+  }
+ ]
+}

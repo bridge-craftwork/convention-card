@@ -1,0 +1,30 @@
+# The named level bands (DECISIONS.md, 11 and 12).
+#
+# Every skill, convention and convention field has a level from 1 to 10
+# (DESIGN.md, "Difficulty levels"). A band is a range of that number, for
+# the editor's level filter and lesson front matter: derived, never stored,
+# so renaming a band or moving a boundary changes no saved data.
+#
+# Bands are in order, each covering the levels up to and including `max`.
+# Bridge Classroom's four names for now; "basic" is not a recognised bridge
+# level, so the names may change (decision 12).
+
+[[band]]
+name = "basic"
+label = "Basic"
+max = 3
+
+[[band]]
+name = "intermediate"
+label = "Intermediate"
+max = 6
+
+[[band]]
+name = "advanced"
+label = "Advanced"
+max = 8
+
+[[band]]
+name = "expert"
+label = "Expert"
+max = 10

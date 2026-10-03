@@ -70,7 +70,8 @@ What's settled, and what's still open. Newest first within each list.
     Advancing in Bridge moved from a compressed 1–6 to 1–10 as its lessons grew;
     four named tiers are too coarse to rate a card.
 12. **Named bands are derived** from the number, for the editor's filter and
-    lesson front matter, and never stored. For now, Bridge Classroom's four
+    lesson front matter, and never stored. They are defined in
+    `spec/levels.toml`, which the editor and the taxonomy build both read. For now, Bridge Classroom's four
     names: basic 1–3, intermediate 4–6, advanced 7–8, expert 9–10. "Basic" is not
     a recognised bridge level, so the names may change; since only the number is
     stored, that changes no data. Under this split DONT, Lebensohl, Drury, Jacoby

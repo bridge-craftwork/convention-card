@@ -17,7 +17,7 @@
  * Puppet Stayman).
  */
 
-import { getLevelForSkill } from './levels.js'
+import { bandOf, levelOfPath } from './levels.js'
 
 /**
  * Top-level sections in display order. `icon` is a key into ICON_SVG
@@ -91,12 +91,14 @@ export const STRUCTURED_FIELDS = {
       from: 'notrump.one_nt.range_min', to: 'notrump.one_nt.range_max' },
     { label: '1NT seat / vul', cardPath: 'notrump.one_nt.seat_vul', kind: 'seat_vul',
       placeholder: 'e.g. all seats, vul, 1st/2nd seat' },
-    { label: '1NT range (alternate)', kind: 'range', level: 'advanced',
+    // filterByLevel: hidden below their level's band, as conventions are
+    // (their level is in the spec). Other structured fields always show.
+    { label: '1NT range (alternate)', kind: 'range', filterByLevel: true,
       from: 'notrump.one_nt_alt.range_min', to: 'notrump.one_nt_alt.range_max' },
     { label: 'Alternate seat / vul', cardPath: 'notrump.one_nt_alt.seat_vul', kind: 'seat_vul',
-      level: 'advanced', placeholder: 'e.g. not vul, 3rd seat' },
+      filterByLevel: true, placeholder: 'e.g. not vul, 3rd seat' },
     { label: 'Alternate uses same responses', cardPath: 'notrump.one_nt_alt.same_responses',
-      kind: 'boolean', level: 'advanced' },
+      kind: 'boolean', filterByLevel: true },
     { label: 'May contain 5-card major', cardPath: 'notrump.one_nt.five_card_major',
       kind: 'select', options: ['never', 'sometimes', 'always'] },
     { label: 'Systems on vs', cardPath: 'notrump.one_nt.sys_on_vs',
@@ -394,7 +396,8 @@ export const STRUCTURED_FIELDS = {
  *                whether this row is checked
  *   - skillPath: Underlying skill in BAKER_BRIDGE_TAXONOMY (or null if
  *                this convention has no corresponding lesson yet)
- *   - level:     Optional override; defaults to getLevelForSkill(skillPath)
+ *   - (level)    Not set here: a row's level is its cardPath's level in the
+ *                spec (fields.toml), else its convention's (levels.js).
  *   - form:      ACBL alert procedure: 'alert' (red — non-standard, must
  *                be alerted at the table) or 'announce' (blue — bids
  *                that opener announces, like NT range or transfers).
@@ -419,32 +422,27 @@ export const CONVENTION_CATALOG = [
   {
     id: 'texas_transfers', section: 'notrump', name: 'Texas transfers',
     desc: '4♦/4♥ at game level',
-    cardPath: 'notrump.transfers.texas', skillPath: 'bidding_conventions/jacoby_transfers',
-    level: 'intermediate', form: 'announce'
+    cardPath: 'notrump.transfers.texas', skillPath: 'bidding_conventions/jacoby_transfers', form: 'announce'
   },
   {
     id: 'smolen', section: 'notrump', name: 'Smolen',
     desc: 'Show 5-4 majors after Stayman',
-    cardPath: 'notrump.smolen.play', skillPath: 'bidding_conventions/stayman',
-    level: 'intermediate', form: 'alert'
+    cardPath: 'notrump.smolen.play', skillPath: 'bidding_conventions/stayman', form: 'alert'
   },
   {
     id: 'puppet_stayman', section: 'notrump', name: 'Puppet Stayman',
     desc: 'Over 2NT, asks for 5-card major',
-    cardPath: 'notrump.stayman.puppet', skillPath: 'bidding_conventions/stayman',
-    level: 'advanced', form: 'alert'
+    cardPath: 'notrump.stayman.puppet', skillPath: 'bidding_conventions/stayman', form: 'alert'
   },
   {
     id: 'lebensohl_interference', section: 'notrump', name: 'Lebensohl (over interference)',
     desc: '2NT relay after interference to 1NT',
-    cardPath: 'notrump.lebensohl.over_interference', skillPath: 'competitive_bidding/lebensohl',
-    level: 'advanced', form: 'alert'
+    cardPath: 'notrump.lebensohl.over_interference', skillPath: 'competitive_bidding/lebensohl', form: 'alert'
   },
   {
     id: 'garbage_stayman', section: 'notrump', name: 'Garbage Stayman',
     desc: 'Weak hand with both majors',
-    cardPath: 'notrump.stayman.garbage', skillPath: 'bidding_conventions/stayman',
-    level: 'intermediate', form: 'alert'
+    cardPath: 'notrump.stayman.garbage', skillPath: 'bidding_conventions/stayman', form: 'alert'
   },
 
   // ─── Major openings ───
@@ -462,20 +460,17 @@ export const CONVENTION_CATALOG = [
   {
     id: 'modified_jacoby_2nt', section: 'major_openings', name: 'Modified Jacoby 2NT',
     desc: 'Variant response structure (showing controls/HCP first)',
-    cardPath: 'major_openings.jacoby_2nt.modified', skillPath: 'bidding_conventions/jacoby_2nt_splinters',
-    level: 'advanced', form: 'alert'
+    cardPath: 'major_openings.jacoby_2nt.modified', skillPath: 'bidding_conventions/jacoby_2nt_splinters', form: 'alert'
   },
   {
     id: 'bergen_raises', section: 'major_openings', name: 'Bergen raises',
     desc: '3♣ = 7-9 pts, 3♦ = 10-12 pts (or similar)',
-    cardPath: 'major_openings.bergen_raises.play', skillPath: null,
-    level: 'intermediate', form: 'alert'
+    cardPath: 'major_openings.bergen_raises.play', skillPath: null, form: 'alert'
   },
   {
     id: 'mixed_jump_raise', section: 'major_openings', name: 'Mixed jump raise',
     desc: 'Jump raise = 4-card support, ~6-9 pts',
-    cardPath: 'major_openings.jump_raise.mixed', skillPath: null,
-    level: 'intermediate', form: 'alert'
+    cardPath: 'major_openings.jump_raise.mixed', skillPath: null, form: 'alert'
   },
   {
     id: 'splinters', section: 'major_openings', name: 'Splinters',
@@ -492,40 +487,35 @@ export const CONVENTION_CATALOG = [
   {
     id: 'reverse_drury', section: 'major_openings', name: 'Reverse Drury',
     desc: '3-step responses with reverse strength',
-    cardPath: 'major_openings.drury.reverse', skillPath: 'bidding_conventions/reverse_drury',
-    level: 'advanced', form: 'alert'
+    cardPath: 'major_openings.drury.reverse', skillPath: 'bidding_conventions/reverse_drury', form: 'alert'
   },
   {
     id: 'semi_forcing_1nt', section: 'major_openings', name: 'Semi-forcing 1NT',
     desc: 'Opener may pass with balanced minimum',
-    cardPath: 'major_openings.one_nt_response.semi_forcing', skillPath: null,
-    level: 'intermediate', form: 'announce'
+    cardPath: 'major_openings.one_nt_response.semi_forcing', skillPath: null, form: 'announce'
   },
   {
     id: 'forcing_1nt', section: 'major_openings', name: 'Forcing 1NT',
     desc: 'Opener must bid again',
-    cardPath: 'major_openings.one_nt_response.forcing', skillPath: null,
-    level: 'intermediate', form: 'announce'
+    cardPath: 'major_openings.one_nt_response.forcing', skillPath: null, form: 'announce'
   },
 
   // ─── Minor openings ───
   {
     id: 'inverted_minors', section: 'minor_openings', name: 'Inverted minors',
     desc: 'Single raise = strong, jump = weak',
-    cardPath: 'minor_openings.inverted_minors.play', skillPath: null, level: 'intermediate',
+    cardPath: 'minor_openings.inverted_minors.play', skillPath: null,
     form: 'alert'
   },
   {
     id: 'walsh', section: 'minor_openings', name: 'Walsh responses',
     desc: 'After 1♣, bypass 4-card ♦ to show 4-card major',
-    cardPath: 'minor_openings.walsh.play', skillPath: null,
-    level: 'intermediate', form: 'alert'
+    cardPath: 'minor_openings.walsh.play', skillPath: null, form: 'alert'
   },
   {
     id: 'transfer_responses_1c', section: 'minor_openings', name: 'Transfer responses to 1♣',
     desc: '1♦ → ♥, 1♥ → ♠ (or similar)',
-    cardPath: 'minor_openings.one_club.transfer_resp', skillPath: null,
-    level: 'expert', form: 'alert'
+    cardPath: 'minor_openings.one_club.transfer_resp', skillPath: null, form: 'alert'
   },
 
   // ─── Two-level openings ───
@@ -539,7 +529,7 @@ export const CONVENTION_CATALOG = [
     id: 'weak_2d', section: 'two_level', name: 'Weak 2♦',
     desc: '2♦ = 5-10 HCP, 6-card suit',
     cardPath: 'two_level.two_diamonds.meaning', skillPath: 'bidding_conventions/weak_2s',
-    truthy: 'weak', level: 'basic'
+    truthy: 'weak'
   },
   {
     id: 'weak_2h', section: 'two_level', name: 'Weak 2♥',
@@ -562,38 +552,32 @@ export const CONVENTION_CATALOG = [
   {
     id: 'multi_2d', section: 'two_level', name: 'Multi 2♦',
     desc: 'Weak 2 in a major (or strong variants)',
-    cardPath: 'two_level.two_diamonds.multi', skillPath: null,
-    level: 'expert', form: 'alert'
+    cardPath: 'two_level.two_diamonds.multi', skillPath: null, form: 'alert'
   },
   {
     id: 'mini_roman_2d', section: 'two_level', name: 'Mini-Roman 2♦',
     desc: '3-suited hand, short in a specified suit',
-    cardPath: 'two_level.two_diamonds.mini_roman', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'two_level.two_diamonds.mini_roman', skillPath: null, form: 'alert'
   },
   {
     id: 'reverse_flannery_2d', section: 'two_level', name: 'Reverse Flannery 2♦',
     desc: '5+ ♥ and 4+ ♠, 11-15 HCP',
-    cardPath: 'two_level.two_diamonds.reverse_flannery', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'two_level.two_diamonds.reverse_flannery', skillPath: null, form: 'alert'
   },
   {
     id: 'kokish', section: 'two_level', name: 'Kokish relay',
     desc: 'After 2♣–2♦, 2♥ asks; rebid shows hearts',
-    cardPath: 'two_level.two_clubs.kokish', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'two_level.two_clubs.kokish', skillPath: null, form: 'alert'
   },
   {
     id: 'parrish_2h_bust', section: 'two_level', name: 'Parrish 2♥ bust',
     desc: 'After 2♣, 2♥ shows a flat 0-3 HCP',
-    cardPath: 'two_level.two_clubs.parrish_bust', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'two_level.two_clubs.parrish_bust', skillPath: null, form: 'alert'
   },
   {
     id: 'mccabe', section: 'two_level', name: 'McCabe adjunct',
     desc: 'After weak two doubled: 2NT = lead-directing raise',
-    cardPath: 'two_level.mccabe.play', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'two_level.mccabe.play', skillPath: null, form: 'alert'
   },
 
   // ─── Slam bidding ───
@@ -609,20 +593,17 @@ export const CONVENTION_CATALOG = [
   {
     id: 'rkcb_1430', section: 'slam', name: 'RKCB 1430',
     desc: 'Roman Keycard Blackwood — 1-or-4 then 3-or-0',
-    cardPath: 'other_conventions.blackwood.rkcb_1430', skillPath: 'bidding_conventions/roman_keycard',
-    level: 'intermediate', form: 'alert'
+    cardPath: 'other_conventions.blackwood.rkcb_1430', skillPath: 'bidding_conventions/roman_keycard', form: 'alert'
   },
   {
     id: 'rkcb_0314', section: 'slam', name: 'RKCB 0314',
     desc: 'Roman Keycard Blackwood — 0-or-3 then 1-or-4',
-    cardPath: 'other_conventions.blackwood.rkcb_0314', skillPath: 'bidding_conventions/roman_keycard',
-    level: 'intermediate', form: 'alert'
+    cardPath: 'other_conventions.blackwood.rkcb_0314', skillPath: 'bidding_conventions/roman_keycard', form: 'alert'
   },
   {
     id: 'queen_ask', section: 'slam', name: 'Queen ask',
     desc: '5NT (or next step) asks for trump queen',
-    cardPath: 'other_conventions.blackwood.queen_ask', skillPath: 'bidding_conventions/roman_keycard',
-    level: 'advanced', form: 'alert'
+    cardPath: 'other_conventions.blackwood.queen_ask', skillPath: 'bidding_conventions/roman_keycard', form: 'alert'
   },
   {
     id: 'gerber', section: 'slam', name: 'Gerber',
@@ -632,44 +613,37 @@ export const CONVENTION_CATALOG = [
   {
     id: 'kickback', section: 'slam', name: 'Kickback',
     desc: 'Suit-above-trump = keycard ask',
-    cardPath: 'other_conventions.kickback.play', skillPath: 'bidding_conventions/roman_keycard',
-    level: 'expert', form: 'alert'
+    cardPath: 'other_conventions.kickback.play', skillPath: 'bidding_conventions/roman_keycard', form: 'alert'
   },
   {
     id: 'minorwood', section: 'slam', name: 'Minorwood',
     desc: '4 of the agreed minor = RKCB',
-    cardPath: 'slam.minorwood.play', skillPath: 'bidding_conventions/roman_keycard',
-    level: 'advanced', form: 'alert'
+    cardPath: 'slam.minorwood.play', skillPath: 'bidding_conventions/roman_keycard', form: 'alert'
   },
   {
     id: 'exclusion_blackwood', section: 'slam', name: 'Exclusion Blackwood',
     desc: 'Jump in a void suit asks for keycards excluding that suit',
-    cardPath: 'slam.exclusion_blackwood.play', skillPath: 'bidding_conventions/roman_keycard',
-    level: 'advanced', form: 'alert'
+    cardPath: 'slam.exclusion_blackwood.play', skillPath: 'bidding_conventions/roman_keycard', form: 'alert'
   },
   {
     id: 'pick_a_slam_5nt', section: 'slam', name: 'Pick-a-slam 5NT',
     desc: '5NT after a fit suggests slam, lets partner pick the strain',
-    cardPath: 'slam.pick_a_slam_5nt.play', skillPath: null,
-    level: 'advanced'
+    cardPath: 'slam.pick_a_slam_5nt.play', skillPath: null
   },
   {
     id: 'western_cuebid', section: 'slam', name: 'Western cuebid',
     desc: '4 of an opponent\'s suit asks for a stopper for 3NT',
-    cardPath: 'slam.western_cuebid.play', skillPath: null,
-    level: 'intermediate'
+    cardPath: 'slam.western_cuebid.play', skillPath: null
   },
   {
     id: 'spiral_cuebids', section: 'slam', name: 'Spiral cuebids',
     desc: 'Step-wise control showing (1st-round controls in order)',
-    cardPath: 'slam.spiral_cuebids.play', skillPath: null,
-    level: 'expert', form: 'alert'
+    cardPath: 'slam.spiral_cuebids.play', skillPath: null, form: 'alert'
   },
   {
     id: 'non_serious_3nt', section: 'slam', name: 'Non-serious 3NT',
     desc: 'In a 2/1 auction, 3NT denies slam interest',
-    cardPath: 'slam.non_serious_3nt.play', skillPath: null,
-    level: 'expert', form: 'alert'
+    cardPath: 'slam.non_serious_3nt.play', skillPath: null, form: 'alert'
   },
 
   // ─── Competitive ───
@@ -687,14 +661,12 @@ export const CONVENTION_CATALOG = [
   {
     id: 'responsive_doubles', section: 'doubles', name: 'Responsive doubles',
     desc: 'Double after partner double + opp raise = takeout',
-    cardPath: 'doubles.responsive.play', skillPath: null,
-    level: 'intermediate'
+    cardPath: 'doubles.responsive.play', skillPath: null
   },
   {
     id: 'support_doubles', section: 'doubles', name: 'Support doubles',
     desc: 'Double after interference = exactly 3-card support',
-    cardPath: 'doubles.support.play', skillPath: 'competitive_bidding/support_cuebids',
-    level: 'advanced'
+    cardPath: 'doubles.support.play', skillPath: 'competitive_bidding/support_cuebids'
   },
   {
     id: 'michaels', section: 'competitive', name: 'Michaels cue bid',
@@ -710,56 +682,47 @@ export const CONVENTION_CATALOG = [
   {
     id: 'dont', section: 'competitive', name: 'DONT',
     desc: 'Disturbing Opponents NT — double = single-suited',
-    cardPath: 'competitive.dont.play', skillPath: 'competitive_bidding/dont',
-    level: 'advanced', form: 'alert'
+    cardPath: 'competitive.dont.play', skillPath: 'competitive_bidding/dont', form: 'alert'
   },
   {
     id: 'cue_bid_raise', section: 'competitive', name: 'Cue-bid raise',
     desc: 'Cue of opp\'s suit = 3+ card limit raise',
-    cardPath: 'competitive.cue_bid_raise.play', skillPath: 'competitive_bidding/support_cuebids',
-    level: 'intermediate'
+    cardPath: 'competitive.cue_bid_raise.play', skillPath: 'competitive_bidding/support_cuebids'
   },
   {
     id: 'lead_directing_double', section: 'competitive', name: 'Lead-directing doubles',
     desc: 'Double of artificial bid suggests opening lead',
-    cardPath: 'competitive.lead_directing_double.play', skillPath: null,
-    level: 'intermediate'
+    cardPath: 'competitive.lead_directing_double.play', skillPath: null
   },
   {
     id: 'lebensohl_weak_twos', section: 'competitive', name: 'Lebensohl (over weak twos)',
     desc: '2NT relay after partner doubles a weak two',
-    cardPath: 'competitive.lebensohl_weak_twos.play', skillPath: 'competitive_bidding/lebensohl',
-    level: 'advanced', form: 'alert'
+    cardPath: 'competitive.lebensohl_weak_twos.play', skillPath: 'competitive_bidding/lebensohl', form: 'alert'
   },
   {
     id: 'sandwich_nt', section: 'competitive', name: 'Sandwich NT',
     desc: '1NT in 4th seat after two suits bid = unusual NT',
-    cardPath: 'competitive.sandwich_nt.play', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'competitive.sandwich_nt.play', skillPath: null, form: 'alert'
   },
   {
     id: 'snapdragon', section: 'competitive', name: 'Snapdragon doubles',
     desc: 'After 3 suits bid, double = 4+ in 4th suit + tolerance for partner',
-    cardPath: 'competitive.snapdragon.play', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'competitive.snapdragon.play', skillPath: null, form: 'alert'
   },
   {
     id: 'maximal_doubles', section: 'doubles', name: 'Maximal doubles',
     desc: 'Game-try double when no suit available for help-suit try',
-    cardPath: 'doubles.maximal', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'doubles.maximal', skillPath: null, form: 'alert'
   },
   {
     id: 'unusual_vs_unusual', section: 'competitive', name: 'Unusual vs Unusual',
     desc: 'Defenses to opponents\' Unusual 2NT',
-    cardPath: 'competitive.unusual_vs_unusual.play', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'competitive.unusual_vs_unusual.play', skillPath: null, form: 'alert'
   },
   {
     id: 'leaping_michaels', section: 'competitive', name: 'Leaping Michaels',
     desc: '4♣/4♦ over weak two = good 5+ in that minor + 5+ major',
-    cardPath: 'competitive.leaping_michaels.play', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'competitive.leaping_michaels.play', skillPath: null, form: 'alert'
   },
 
   // ─── Other conventions ───
@@ -798,26 +761,22 @@ export const CONVENTION_CATALOG = [
   {
     id: 'two_way_nmf', section: 'other_conventions', name: '2-Way new minor forcing',
     desc: 'After 1m-1M-1NT: 2♣ = invite-only, 2♦ = game-forcing',
-    cardPath: 'other_conventions.two_way_nmf', skillPath: 'bidding_conventions/new_minor_forcing',
-    level: 'intermediate', form: 'alert'
+    cardPath: 'other_conventions.two_way_nmf', skillPath: 'bidding_conventions/new_minor_forcing', form: 'alert'
   },
   {
     id: 'xyz', section: 'other_conventions', name: 'XYZ',
     desc: 'After 1x-1y-1z: 2♣ = relay, 2♦ = game force',
-    cardPath: 'other_conventions.xyz', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'other_conventions.xyz', skillPath: null, form: 'alert'
   },
   {
     id: 'sos_redouble', section: 'other_conventions', name: 'SOS redouble',
     desc: 'Redouble asking partner to pick another suit',
-    cardPath: 'other_conventions.sos_redouble.play', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'other_conventions.sos_redouble.play', skillPath: null, form: 'alert'
   },
   {
     id: 'ingberman_2nt', section: 'other_conventions', name: 'Ingberman 2NT',
     desc: 'After 1♣-1♥-1♠, 2NT = forcing minor-suit inquiry',
-    cardPath: 'other_conventions.ingberman_2nt.play', skillPath: null,
-    level: 'advanced', form: 'alert'
+    cardPath: 'other_conventions.ingberman_2nt.play', skillPath: null, form: 'alert'
   }
 ]
 
@@ -832,10 +791,25 @@ export function getCatalogEntry(id) {
 }
 
 /** Resolve the effective level for a catalog row. */
+/** A catalog row's 1–10 level, from the spec: its card field's, else its convention's. */
+export function getLevelNumberForEntry(entry) {
+  return levelOfPath(entry.cardPath)
+}
+
+/** A catalog row's band name ("intermediate"), derived from its level. */
 export function getLevelForEntry(entry) {
-  if (entry.level) return entry.level
-  if (entry.skillPath) return getLevelForSkill(entry.skillPath)
-  return 'basic'
+  return bandOf(getLevelNumberForEntry(entry))
+}
+
+/** A structured field's path for its level: the field, or a range's lower end. */
+const structuredPath = f => f.cardPath || f.from || f.paths?.[0]?.cardPath
+
+/**
+ * The band of a structured field the filter hides (`filterByLevel`), from
+ * its path's level in the spec; null for a field that is always shown.
+ */
+export function getLevelForStructuredField(f) {
+  return f.filterByLevel ? bandOf(levelOfPath(structuredPath(f))) : null
 }
 
 /**

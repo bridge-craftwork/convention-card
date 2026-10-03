@@ -195,21 +195,25 @@
    "kind": "int",
    "label": "Alternate 1NT range: minimum",
    "min": 8,
-   "max": 25
+   "max": 25,
+   "level": 7
   },
   "one_nt_alt.range_max": {
    "kind": "int",
    "label": "Alternate 1NT range: maximum",
    "min": 8,
-   "max": 25
+   "max": 25,
+   "level": 7
   },
   "one_nt_alt.seat_vul": {
    "kind": "text",
-   "label": "Alternate 1NT seat / vulnerability"
+   "label": "Alternate 1NT seat / vulnerability",
+   "level": 7
   },
   "one_nt_alt.same_responses": {
    "kind": "bool",
-   "label": "Alternate 1NT uses same responses"
+   "label": "Alternate 1NT uses same responses",
+   "level": 7
   },
   "dbl.negative": {
    "kind": "bool",
