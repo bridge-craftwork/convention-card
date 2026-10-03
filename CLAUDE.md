@@ -12,10 +12,10 @@ maps, the skill vocabulary), a **JavaScript library** (converters, PDF), the
 the ADRs in [docs/adr/](docs/adr/). ADR-0001 (standard vs namespaced convention
 IDs) shapes every tool that names a convention.
 [docs/MIGRATION.md](docs/MIGRATION.md) tracks the move from Bridge-Classroom and
-rusty-bidding-bot. **As of 2026-10-02**, Phases 0–2 are done, Phase 3 (the editor) is merged
-and awaits a signed-in test in Bridge Classroom, and Phase 4 is live at
-`bridge-craftwork.com/card/`. rusty-bidding-bot depends on `v0.1.0` and
-Bridge Classroom on `v0.3.1` (`v0.4.1` in its #439). A change here reaches a
+rusty-bidding-bot. **As of 2026-10-02**, Phases 0–4 are done: the editor is live at
+`bridge-craftwork.com/card/` and embedded in Bridge Classroom.
+rusty-bidding-bot depends on `v0.1.0` and Bridge Classroom on `v0.5.0`. Next
+is the editor's level filter (decision 12), then Phase 5. A change here reaches a
 consumer by a new tag here and a pin bump there.
 
 ## Ground rules
