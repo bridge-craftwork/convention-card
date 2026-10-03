@@ -6,49 +6,61 @@
 
     <section class="intro">
       <h1 v-if="!embedded">Convention card</h1>
-      <p class="lede">
-        Build and edit your partnerships' convention cards, print the ACBL card, and move cards
-        between BBO, bridgeodex, BBA and Bridge Classroom. No account needed.
-      </p>
-
-      <div class="facts">
-        <div class="fact">
-          <h2>Cards it prints</h2>
-          <p>
-            The <strong>ACBL Classic</strong> card most clubs use and the <strong>ACBL New</strong> card,
-            as fillable PDFs. Each PDF carries the card inside it, so you can import it again, even after
-            changing a box by hand.
-          </p>
+      <details class="about" :open="aboutOpen" @toggle="onToggle">
+        <summary>
+          <span class="about-title">About this editor</span>
+          <span class="about-hint">card layouts, import and export{{ showStorage ? ', where your cards are kept' : '' }}, BBO</span>
+        </summary>
+        <p class="lede">
+          Build and edit your partnerships' convention cards, print them, and move them between BBO,
+          bridgeodex, BBA and Bridge Classroom.
+        </p>
+        <div class="facts">
+          <div class="fact">
+            <h2>Card layouts</h2>
+            <p>ACBL Classic and ACBL New, as fillable PDFs. Each PDF carries the card inside it, so it
+              comes back complete, even after a box was changed by hand.</p>
+            <p class="flag">WBF: planned.</p>
+          </div>
+          <div class="fact">
+            <h2>Import and export</h2>
+            <table class="formats">
+              <thead><tr><th></th><th>Import</th><th>Export</th></tr></thead>
+              <tbody>
+                <tr><td>Filled-in ACBL PDFs</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+                <tr><td>BBO</td><td class="yes">✓</td><td class="no">not yet</td></tr>
+                <tr><td>bridgeodex</td><td class="yes">✓</td><td class="no">not yet</td></tr>
+                <tr><td>BBA (<code>.bbsa</code>)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              </tbody>
+            </table>
+            <p class="flag">A PDF read in is a fillable ACBL Classic or New card; a printed one (as most
+              bridgeodex PDFs are) has no boxes to read. BBO and bridgeodex can't be written to yet.</p>
+          </div>
+          <div v-if="showStorage" class="fact">
+            <h2>Where your cards are kept</h2>
+            <ol class="places">
+              <li><strong>Bridge Classroom</strong>, if you have an account: <em>Save to Bridge
+                Classroom</em> keeps a card there, on any device.</li>
+              <li><strong>A file on your drive</strong>: <em>Export Content</em> or <em>Export PDF</em>;
+                <em>Import</em> brings it back.</li>
+              <li><strong>This browser</strong>, with no account. Clearing the browser's data deletes
+                these cards.<template v-if="isSafari"> <strong>In Safari this is short-term</strong>:
+                Safari may delete a site's stored data after a week or so without a visit, so keep a
+                copy one of the other ways.</template></li>
+            </ol>
+          </div>
+          <div class="fact">
+            <h2>On BBO</h2>
+            <p>The <a href="https://github.com/bridge-craftwork/Better-BBO-Convention-Card" target="_blank" rel="noopener">Better BBO Convention Card</a>
+              browser extension improves BBO's convention card pages.</p>
+            <p class="flag">A button to open a BBO card here: on its way.</p>
+          </div>
         </div>
-        <div class="fact">
-          <h2>Import and export</h2>
-          <p>
-            <strong>Import</strong> reads this editor's own file, BBO's and bridgeodex's card exports, a
-            BBA <code>.bbsa</code> file, and filled-in ACBL PDFs. <strong>Export Content</strong> writes this
-            editor's file or a <code>.bbsa</code>.
-          </p>
-        </div>
-        <div v-if="showStorage" class="fact">
-          <h2>Where your cards are kept</h2>
-          <p>
-            <strong>In this browser</strong>, on this computer: clearing the browser's data deletes them.
-            <strong>Export Content</strong> saves a copy you keep yourself, and
-            <strong>Save to Bridge Classroom</strong> keeps a card in your account there.
-          </p>
-        </div>
-        <div class="fact">
-          <h2>On BBO</h2>
-          <p>
-            The <a href="https://github.com/bridge-craftwork/Better-BBO-Convention-Card" target="_blank" rel="noopener">Better BBO Convention Card</a>
-            browser extension improves BBO's convention card pages; a button to open a BBO card here is on
-            its way.
-          </p>
-        </div>
-      </div>
-      <p class="more">
-        More in the <a href="https://bridge-craftwork.com/docs/card/" target="_blank" rel="noopener">guide</a>; for programs, the
-        <a href="https://bridge-craftwork.com/card/reference.txt" target="_blank" rel="noopener">card reference</a>.
-      </p>
+        <p class="more">
+          More in the <a href="https://bridge-craftwork.com/docs/card/" target="_blank" rel="noopener">guide</a>; for programs, the
+          <a href="https://bridge-craftwork.com/card/reference.txt" target="_blank" rel="noopener">card reference</a>.
+        </p>
+      </details>
     </section>
 
     <section class="cards">
@@ -97,17 +109,14 @@
               <span v-else class="muted">—</span>
             </td>
             <td>
-              <div v-if="row.levels.total" class="levels">
+              <div v-if="row.levels.total" class="levels" :title="`${row.levels.total} conventions; the highest is level ${row.levels.highest}`">
                 <span class="total">{{ row.levels.total }}</span>
-                <span class="bands">
-                  <span v-for="b in BANDS" v-show="row.levels.bands[b.name]" :key="b.name"
-                        :class="'lvl lvl-' + b.name" :title="b.label">{{ row.levels.bands[b.name] }} {{ b.label.toLowerCase() }}</span>
-                </span>
-                <span class="highest" title="The highest level among its conventions, of 10">highest {{ row.levels.highest }}</span>
+                <span v-for="b in BANDS" v-show="row.levels.bands[b.name]" :key="b.name"
+                      :class="'lvl lvl-' + b.name" :title="`${row.levels.bands[b.name]} ${b.label.toLowerCase()}`">{{ row.levels.bands[b.name] }}</span>
               </div>
               <span v-else class="muted">none ticked</span>
             </td>
-            <td v-for="d in columns" :key="d.key">{{ d.value(row.data) || '—' }}</td>
+            <td v-for="d in columns" :key="d.key" class="nowrap">{{ d.value(row.data) || '—' }}</td>
           </tr>
         </tbody>
       </table>
@@ -123,7 +132,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { summarize, distinguishing } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { useCardEditor } from './useCardEditor.js'
@@ -159,6 +168,25 @@ const error = ref('')
 const notice = reactive({ message: '', error: false })
 const fileInput = ref(null)
 const canCreate = computed(() => !!props.storage.user?.value)
+
+// "About this editor": open for someone with no cards of their own yet;
+// after that, as they last left it (a per-browser convenience).
+const ABOUT_KEY = 'convention-card.about-open'
+function savedAbout() {
+  try { const v = localStorage.getItem(ABOUT_KEY); return v == null ? null : v === '1' } catch { return null }
+}
+const aboutOpen = ref(savedAbout() ?? true)
+function onToggle(event) {
+  aboutOpen.value = event.target.open
+  try { localStorage.setItem(ABOUT_KEY, aboutOpen.value ? '1' : '0') } catch { /* private mode */ }
+}
+const hasOwnCards = computed(() => cards.value.some(c => !c.readOnly))
+watch(hasOwnCards, own => { if (savedAbout() == null) aboutOpen.value = !own })
+
+// Safari deletes a site's script-written storage after about a week without
+// a visit, so its users get a warning about keeping cards in the browser.
+const isSafari = typeof navigator !== 'undefined'
+  && /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(navigator.userAgent)
 
 async function load() {
   loading.value = true
@@ -227,6 +255,21 @@ h2 { font-family: var(--font-heading); font-size: 18px; margin: 0 0 6px; }
 .fact { background: #fff; border: 1px solid var(--card-border); border-radius: var(--radius-card); padding: 14px 16px; }
 .fact p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--text-primary); }
 .more { font-size: 14px; color: var(--text-secondary); margin: 10px 0 0; }
+.about { background: transparent; }
+.about summary { cursor: pointer; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; padding: 4px 0 10px; list-style: none; }
+.about summary::-webkit-details-marker { display: none; }
+.about summary::before { content: '▸'; color: var(--green-dark); width: 10px; }
+.about[open] summary::before { content: '▾'; }
+.about-title { font-family: var(--font-heading); font-weight: 600; font-size: 17px; color: var(--green-dark); }
+.about-hint { font-size: 13px; color: var(--text-secondary); }
+.flag { font-size: 13px; color: #8a4b00; margin-top: 6px !important; }
+.formats { border-collapse: collapse; font-size: 13px; width: 100%; }
+.formats th { text-align: left; font-weight: 600; color: var(--text-secondary); padding: 2px 6px; }
+.formats td { padding: 3px 6px; border-top: 1px solid #efede8; }
+.formats .yes { color: var(--green-dark); font-weight: 600; }
+.formats .no { color: #8a4b00; font-size: 12px; }
+.places { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.5; }
+.places li { margin-bottom: 4px; }
 a { color: var(--green-dark); }
 code { font-size: 13px; }
 
@@ -244,7 +287,8 @@ code { font-size: 13px; }
 .name a { font-weight: 600; text-decoration: none; }
 .tag { margin-left: 6px; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--green-pale); color: var(--green-dark); }
 .muted-tag { background: #eee; color: var(--text-secondary); }
-.levels { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+.levels { display: flex; flex-wrap: nowrap; gap: 4px; align-items: baseline; }
+.levels .lvl { min-width: 14px; text-align: center; }
 .total { font-weight: 600; }
 .bands { display: inline-flex; gap: 4px; flex-wrap: wrap; }
 .lvl { font-size: 12px; padding: 0 6px; border-radius: 999px; background: #f1f1ef; white-space: nowrap; }
@@ -252,6 +296,7 @@ code { font-size: 13px; }
 .lvl-basic { background: #e8f5e9; } .lvl-intermediate { background: #e3f2fd; }
 .lvl-advanced { background: #fff3e0; } .lvl-expert { background: #fce4ec; }
 .highest { font-size: 12px; color: var(--text-secondary); }
+.nowrap { white-space: nowrap; }
 .muted { color: var(--text-secondary); font-size: 14px; }
 .error { color: #b91c1c; }
 .notice { margin: 0; padding: 8px 14px; border-radius: var(--radius-card); background: #fff; border: 1px solid var(--card-border); font-size: 14px; }

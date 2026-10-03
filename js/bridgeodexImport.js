@@ -81,6 +81,11 @@ function deriveName(settings) {
   return 'Imported bridgeodex card'
 }
 
+/** Whether a system's description names 2/1 ("2/1", "2 over 1", "two over one"). */
+export function namesTwoOverOne(text) {
+  return /(^|[^\d])2\s*\/\s*1(?!\d)|\b2\s*over\s*1\b|\btwo[\s-]*over[\s-]*one\b/i.test(String(text || ''))
+}
+
 /**
  * Main converter. Returns `{ name, description, card_data }` ready to
  * pass to the convention-card create endpoint.
@@ -123,6 +128,10 @@ export function importBridgeodexJson(input) {
   // ─── Overview ─────────────────────────────────────────────────
   const ov = s.overview || {}
   if (ov.general_approach) card_data.general.system = suits(ov.general_approach)
+  // bridgeodex has no 2/1 box of its own: its general approach names the
+  // system in words. "2/1" there is the ACBL card's Two Over One Game
+  // Forcing box (and the BBO export's 2over1GF).
+  if (namesTwoOverOne(ov.general_approach)) card_data.major_openings.two_over_one.game_force = true
   card_data.general.min_hcp_open = num(ov.min_exp_hcp_bal_opening)
   card_data.general.min_hcp_respond = num(ov.min_exp_hcp_bal_responding)
   if (on(ov.forcing_1c)) card_data.general.forcing_opening_1c = true

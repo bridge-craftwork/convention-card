@@ -95,3 +95,15 @@ describe('importBridgeodexJson — key-name regression guards', () => {
     expect(card_data.notrump.one_nt.range_min_plus).toBe(true)
   })
 })
+
+describe('2/1 from the general approach', async () => {
+  const { namesTwoOverOne } = await import('../bridgeodexImport.js')
+  it('reads 2/1 written in words', () => {
+    for (const t of ['2/1', '2/1 GF', '2 over 1', 'Two over one', 'two-over-one game forcing']) expect([t, namesTwoOverOne(t)]).toEqual([t, true])
+    for (const t of ['SAYC', 'Precision', '12/14 NT', '21 points', '']) expect([t, namesTwoOverOne(t)]).toEqual([t, false])
+  })
+  it('sets the 2/1 game-force field', () => {
+    const { card_data } = importBridgeodexJson(bdex({ overview: { general_approach: '2/1' } }))
+    expect(card_data.major_openings.two_over_one.game_force).toBe(true)
+  })
+})

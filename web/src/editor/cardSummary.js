@@ -7,6 +7,7 @@ import { CONVENTION_CATALOG, isEntryChecked, getLevelNumberForEntry } from './co
 import { SKILL_LEVELS, bandOf } from './levels.js'
 import { readPath } from '../../../js/paths.js'
 import { field } from '../../../js/spec.js'
+import { namesTwoOverOne } from '../../../js/bridgeodexImport.js'
 
 const SYSTEM_NAMES = {
   two_over_one: '2/1',
@@ -94,7 +95,9 @@ export const DISTINGUISHING = [
   {
     key: 'two_over_one',
     label: '2/1',
-    value: data => (on(data, 'major_openings.two_over_one.game_force') ? 'GF' : ''),
+    // The field, or, for a card imported from bridgeodex before its
+    // importer read it, the system's own words.
+    value: data => (on(data, 'major_openings.two_over_one.game_force') || namesTwoOverOne(readPath(data, 'general.system')) ? 'GF' : ''),
   },
   {
     key: 'attitude',
