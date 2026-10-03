@@ -8,7 +8,8 @@
     <!-- Title row + actions -->
     <div class="card-header">
       <div class="card-title">
-        <div class="title-main">Convention card</div>
+        <!-- The page heading says it already; embedded (no heading), this is the title. -->
+        <div v-if="embedded" class="title-main">Convention card</div>
         <div class="title-sub">
           <template v-if="cardLoading">Loading…</template>
           <template v-else-if="cardError">{{ cardError }}</template>
