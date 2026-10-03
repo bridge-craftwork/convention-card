@@ -23,20 +23,6 @@
             <p class="flag">WBF: planned.</p>
           </div>
           <div class="fact">
-            <h2>Import and export</h2>
-            <table class="formats">
-              <thead><tr><th></th><th>Import</th><th>Export</th></tr></thead>
-              <tbody>
-                <tr><td>Filled-in ACBL PDFs</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-                <tr><td>BBO</td><td class="yes">✓</td><td class="no">not yet</td></tr>
-                <tr><td>bridgeodex</td><td class="yes">✓</td><td class="no">not yet</td></tr>
-                <tr><td>BBA (<code>.bbsa</code>)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-              </tbody>
-            </table>
-            <p class="flag">A PDF read in is a fillable ACBL Classic or New card; a printed one (as most
-              bridgeodex PDFs are) has no boxes to read. BBO and bridgeodex can't be written to yet.</p>
-          </div>
-          <div class="fact">
             <h2>Where your cards are kept</h2>
             <template v-if="storagePlace === 'account'">
               <p class="account">
@@ -59,6 +45,20 @@
             </template>
             <p class="flag">Coming to Bridge Classroom: cards shared between partners, which either of
               you can edit.</p>
+          </div>
+          <div class="fact">
+            <h2>Import and export</h2>
+            <table class="formats">
+              <thead><tr><th></th><th>Import</th><th>Export</th></tr></thead>
+              <tbody>
+                <tr><td>Filled-in ACBL PDFs</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+                <tr><td><a href="https://www.bridgebase.com/" target="_blank" rel="noopener">BBO</a></td><td class="yes">✓</td><td class="no">not yet</td></tr>
+                <tr><td>bridgeodex</td><td class="yes">✓</td><td class="no">not yet</td></tr>
+                <tr><td><a href="https://sites.google.com/view/bbaenglish" target="_blank" rel="noopener">BBA</a> (<code>.bbsa</code>)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              </tbody>
+            </table>
+            <p class="flag">A PDF read in is a fillable ACBL Classic or New card; a printed one (as most
+              bridgeodex PDFs are) has no boxes to read. BBO and bridgeodex can't be written to yet.</p>
           </div>
           <div class="fact">
             <h2>On BBO</h2>
@@ -101,6 +101,7 @@
             <th>Level</th>
             <th>Conventions</th>
             <th v-for="d in columns" :key="d.key">{{ d.label }}</th>
+            <th class="pdf-col"><span class="sr-only">PDF</span></th>
           </tr>
         </thead>
         <tbody>
@@ -109,6 +110,8 @@
             <td class="name">
               <a :href="cardLink ? cardLink(row.id) : undefined" @click.prevent="$emit('open', row.id)">{{ row.name }}</a>
               <span v-if="row.primary" class="tag" title="Opens first">primary</span>
+              <span v-if="row.sharing?.write" class="tag share-tag" title="Shared with a partner, who can edit it">shared · edit</span>
+              <span v-else-if="row.sharing?.read" class="tag share-tag" title="Shared with a partner, who can read it">shared · read</span>
               <span v-if="row.readOnly" class="tag muted-tag" title="Duplicate it to make your own copy">sample</span>
             </td>
             <td>{{ row.names || '—' }}</td>
@@ -128,6 +131,16 @@
               <span v-else class="muted">none ticked</span>
             </td>
             <td v-for="d in columns" :key="d.key" class="nowrap">{{ d.value(row.data) || '—' }}</td>
+            <td class="pdf-col" @click.stop>
+              <button class="pdf-btn" :title="`Export ${row.name} as a PDF`" :aria-label="`Export ${row.name} as a PDF`"
+                      :disabled="exporting === row.id" @click="pdfMenu = pdfMenu === row.id ? null : row.id">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+                <span>PDF</span>
+              </button>
+              <div v-if="pdfMenu === row.id" class="pdf-menu" role="menu">
+                <button v-for="t in PDF_LAYOUTS" :key="t.id" role="menuitem" @click="exportPdf(row.id, t.id)">{{ t.name }}</button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -143,7 +156,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { summarize, distinguishing } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { useCardEditor } from './useCardEditor.js'
@@ -216,7 +229,7 @@ async function load() {
   error.value = ''
   try {
     const links = canCreate.value ? await props.storage.listLinks() : []
-    const own = await Promise.all(links.map(async l => ({ ...(await props.storage.load(l.card_id)), primary: !!l.is_primary })))
+    const own = await Promise.all(links.map(async l => ({ ...(await props.storage.load(l.card_id)), primary: !!l.is_primary, sharing: l.sharing || null })))
     own.sort((a, b) => (b.primary - a.primary) || String(a.name).localeCompare(String(b.name)))
     const sample = props.sampleId ? [{ ...(await props.storage.load(props.sampleId)), readOnly: true }] : []
     cards.value = [...own, ...sample]
@@ -227,7 +240,34 @@ async function load() {
   }
 }
 
-const rows = computed(() => cards.value.map(c => ({ ...summarize(c), primary: !!c.primary, readOnly: !!c.readOnly, data: c.card_data || {} })))
+const rows = computed(() => cards.value.map(c => ({ ...summarize(c), primary: !!c.primary, sharing: c.sharing, readOnly: !!c.readOnly, data: c.card_data || {} })))
+
+// PDF export from the table: the card layouts the library fills. Needs the
+// host to have told the library where its templates are (setAssetLoader).
+const PDF_LAYOUTS = [
+  { id: 'classic', name: 'ACBL Classic' },
+  { id: 'new', name: 'ACBL New' },
+]
+const pdfMenu = ref(null)
+const exporting = ref(null)
+async function exportPdf(id, layout) {
+  pdfMenu.value = null
+  const card = cards.value.find(c => c.id === id)
+  if (!card) return
+  exporting.value = id
+  try {
+    const { downloadAcblPdf } = await import('../../../js/acblClassicFillPdf.js')
+    await downloadAcblPdf({ name: card.name, description: card.description || null, card_data: card.card_data || {} }, layout)
+  } catch (err) {
+    const stale = /dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(err?.message || '')
+    Object.assign(notice, {
+      message: stale ? 'This page is older than the site: reload it and try again.' : `Could not export ${card.name}: ${err.message}`,
+      error: true,
+    })
+  } finally {
+    exporting.value = null
+  }
+}
 const columns = computed(() => distinguishing(cards.value))
 
 async function create(record) {
@@ -265,7 +305,15 @@ async function onFile(event) {
   }
 }
 
-onMounted(load)
+// A click anywhere outside a row's PDF button closes its menu.
+function closeMenu(event) {
+  if (pdfMenu.value && !event.target.closest?.('.pdf-col')) pdfMenu.value = null
+}
+onMounted(() => {
+  load()
+  document.addEventListener('click', closeMenu)
+})
+onBeforeUnmount(() => document.removeEventListener('click', closeMenu))
 defineExpose({ reload: load })
 </script>
 
@@ -323,6 +371,14 @@ code { font-size: 13px; }
 .lvl-advanced { background: #fff3e0; } .lvl-expert { background: #fce4ec; }
 .highest { font-size: 12px; color: var(--text-secondary); }
 .nowrap { white-space: nowrap; }
+.share-tag { background: #ede7f6; color: #4527a0; }
+.pdf-col { position: relative; width: 1%; white-space: nowrap; text-align: right; }
+.pdf-btn { font: inherit; font-size: 12px; display: inline-flex; gap: 4px; align-items: center; padding: 4px 8px; border: 1px solid var(--card-border); border-radius: var(--radius-button); background: #fff; color: var(--text-secondary); cursor: pointer; }
+.pdf-btn:hover { color: var(--green-dark); border-color: var(--green-mid); }
+.pdf-menu { position: absolute; right: 8px; top: calc(100% - 6px); z-index: 5; background: #fff; border: 1px solid var(--card-border); border-radius: var(--radius-button); box-shadow: 0 4px 14px rgba(0,0,0,.12); display: flex; flex-direction: column; min-width: 130px; }
+.pdf-menu button { font: inherit; font-size: 13px; text-align: left; padding: 8px 12px; border: none; background: none; cursor: pointer; }
+.pdf-menu button:hover { background: #f6faf7; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .muted { color: var(--text-secondary); font-size: 14px; }
 .error { color: #b91c1c; }
 .notice { margin: 0; padding: 8px 14px; border-radius: var(--radius-card); background: #fff; border: 1px solid var(--card-border); font-size: 14px; }
