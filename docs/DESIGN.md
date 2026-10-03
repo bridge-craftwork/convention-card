@@ -230,7 +230,16 @@ the adapters, whose full shape is in `web/src/editor/useCardEditor.js`:
 ```
 
 One editor state is kept per storage adapter, so a host that unmounts and
-remounts the editor (a lobby tab) finds the card it left. The overlay
+remounts the editor (a lobby tab) finds the card it left.
+
+**A home page before the editor** (`CardCatalog.vue`, Rick Wilson
+2026-10-03): what the editor does (the cards it prints, import and export,
+the BBO extension; where cards are kept, in the standalone app only), and a
+table of the person's cards: name, names on the card, system, the card's
+level, how many conventions it plays by band, and up to three settings where
+the cards differ (1NT range, 2/1, signals, keycard). Choosing a card opens
+the editor, with a way back. The host does the routing: the standalone app
+at `#/card/<id>`, Bridge Classroom at `/convention-card?card=<id>`. The overlay
 controls appear only when the host gives overlays.
 
 **The standalone app** keeps cards in the browser's IndexedDB with no

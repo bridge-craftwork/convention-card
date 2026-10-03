@@ -24,6 +24,12 @@
               </option>
             </select>
             <span v-else>{{ subtitle }}</span>
+            <span
+              v-if="cardLevelNow"
+              class="card-level-pill"
+              :class="'lvl-' + cardLevelNow.band"
+              :title="cardLevelNow.why"
+            >{{ bandLabel(cardLevelNow.band) }} · {{ cardLevelNow.level }}</span>
             <span v-if="!canEdit" class="read-only-pill">read-only</span>
             <span v-else-if="viewMode" class="view-pill">view</span>
             <span v-if="isDirty" class="dirty-pill">unsaved</span>
@@ -265,6 +271,8 @@ import { useCardEditor } from './useCardEditor.js'
 import { importCard } from '../../../js/importCard.js'
 import { checkCard } from '../../../js/checkCard.js'
 import { REGULATORS } from '../../../js/spec.js'
+import { cardLevel } from './cardSummary.js'
+import { bandLabel } from './levels.js'
 import SkillPills from './components/SkillPills.vue'
 import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
@@ -311,6 +319,9 @@ function explain(err, fallback) {
 }
 function reloadPage() { window.location.reload() }
 
+// The card's level (cardSummary.js), unsaved edits included.
+const cardLevelNow = computed(() => (cc.editedCardData.value ? cardLevel(cc.editedCardData.value) : null))
+
 // The open card's problems, unsaved edits included, as checkCard reports them.
 const cardProblems = computed(() => {
   const data = cc.editedCardData.value
@@ -338,7 +349,10 @@ const editorCard = computed(() => {
 })
 
 const isSystemCard = computed(() => currentCard.value && currentCard.value.owner_id == null)
-const hasMultipleCards = computed(() => userCardLinks.value.length > 1)
+// The picker lists the person's own cards; a card that isn't one of them (a
+// sample or system card) shows its name instead of a blank picker.
+const hasMultipleCards = computed(() =>
+  userCardLinks.value.length > 1 && userCardLinks.value.some(l => l.card_id === currentCard.value?.id))
 
 const saveTitle = computed(() => {
   if (!canEdit.value) return 'You can only edit private cards you own (admins can edit any)'
@@ -626,7 +640,9 @@ function relativeTime(iso) {
 }
 
 onMounted(async () => {
-  if (!currentCard.value) {
+  // The host may already be opening a card (from its table of cards): then
+  // don't load the default over it.
+  if (!currentCard.value && !cc.cardLoading.value) {
     await cc.loadCardForCurrentUser()
   }
   if (isAuthed.value && Object.keys(cc.lessonMasteryMap.value).length === 0) {
@@ -782,6 +798,19 @@ watch(() => currentUser.value?.id, async (uid) => {
   position: absolute; top: 4px; right: 8px;
   border: none; background: none; font-size: 16px; color: inherit; cursor: pointer;
 }
+.card-level-pill {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #f1f1ef;
+  vertical-align: middle;
+}
+.card-level-pill.lvl-basic { background: #e8f5e9; color: #1b5e20; }
+.card-level-pill.lvl-intermediate { background: #e3f2fd; color: #0d47a1; }
+.card-level-pill.lvl-advanced { background: #fff3e0; color: #8a4b00; }
+.card-level-pill.lvl-expert { background: #fce4ec; color: #880e4f; }
 .regulator-select {
   font: inherit;
   font-size: 13px;

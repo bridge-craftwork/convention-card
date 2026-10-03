@@ -153,5 +153,9 @@ is a level and a load (DESIGN.md, "A card's difficulty"). The level could be
 the highest level of any agreement on the card, which is simple to explain
 but lets one exotic convention decide it; or the highest level that several
 agreements reach (say three), which describes the card as a whole. Try both
-on Rick's partnership cards and the PBS test cards before choosing.
+on Rick's partnership cards and the PBS test cards before choosing. **On trial
+(2026-10-03):** the second, with three: the editor's table and card header
+show the highest level at least three of a card's conventions reach, and its
+band (`cardLevel`, `web/src/editor/cardSummary.js`), with the conventions
+behind it in the tooltip.
 
