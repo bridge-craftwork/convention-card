@@ -1,5 +1,6 @@
 <template>
   <div class="catalog">
+    <ChoiceDialog ref="dialog" />
     <p v-if="notice.message" class="notice" :class="{ error: notice.error }" role="status">
       {{ notice.message }}
     </p>
@@ -178,6 +179,8 @@ import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportAll } from '../../../js/cardBundle.js'
 import { mergeImported } from './importMerge.js'
+import { askInDialog, tellMatched } from './importDialogs.js'
+import ChoiceDialog from './ChoiceDialog.vue'
 import { LEVEL_BANDS } from '../../../js/spec.js'
 
 // The editor's home page: what it does, and a table of the person's cards.
@@ -209,6 +212,7 @@ const busy = ref(false)
 const error = ref('')
 const notice = reactive({ message: '', error: false })
 const fileInput = ref(null)
+const dialog = ref(null)
 const canCreate = computed(() => !!props.storage.user?.value)
 
 // "About this editor": open for someone with no cards of their own yet;
@@ -325,13 +329,13 @@ async function onFile(event) {
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
     const input = isPdf ? await file.arrayBuffer() : await file.text()
     const records = await importCards(input, { name: file.name.replace(/\.[^.]*$/, '') })
-    const merged = await mergeImported(records, props.storage)
+    const merged = await mergeImported(records, props.storage, askInDialog(dialog.value))
     await cc.loadUserCardLinks()
     // One card: open it, as before. Several: stay on the table and say what happened.
     // A pop-up only when imported cards met ones already here without
     // asking (replaced by a newer copy, or the same): new cards, and ones
     // the person was asked about, need no message.
-    if (merged.matched) window.alert(merged.matched)
+    await tellMatched(dialog.value, merged)
     if (records.length === 1 && merged.lastId) {
       emit('open', merged.lastId)
       return

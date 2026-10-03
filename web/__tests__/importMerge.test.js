@@ -32,7 +32,7 @@ describe('mergeImported', () => {
       { id: 'x', name: 'New partner', card_data: { v: 9 } },
       { id: 'a', name: 'With Pat', updatedAt: '2026-09-01T00:00:00Z', card_data: { v: 0 } },
     ]
-    const out = await mergeImported(records, storage, text => { asked.push(text); return true })
+    const out = await mergeImported(records, storage, info => { asked.push(info.name); return true })
     expect(out.added).toHaveLength(1)
     expect(out.keptOurs).toEqual(['a'])
     expect(asked[0]).toMatch(/With Pat/)
