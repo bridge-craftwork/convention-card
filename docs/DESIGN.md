@@ -234,7 +234,10 @@ remounts the editor (a lobby tab) finds the card it left.
 
 **A home page before the editor** (`CardCatalog.vue`, Rick Wilson
 2026-10-03): what the editor does (the cards it prints, import and export,
-the BBO extension; where cards are kept, in the standalone app only), and a
+the BBO extension; where cards are kept: in the browser for the standalone
+app, in the player's account, with their name and initials, inside Bridge
+Classroom; and that Bridge Classroom is adding cards shared between
+partners), and a
 table of the person's cards: name, names on the card, system, the card's
 level, how many conventions it plays by band, and up to three settings where
 the cards differ (1NT range, 2/1, signals, keycard). Choosing a card opens

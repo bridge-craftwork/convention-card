@@ -9,7 +9,7 @@
       <details class="about" :open="aboutOpen" @toggle="onToggle">
         <summary>
           <span class="about-title">About this editor</span>
-          <span class="about-hint">card layouts, import and export{{ showStorage ? ', where your cards are kept' : '' }}, BBO</span>
+          <span class="about-hint">card layouts, import and export, where your cards are kept, BBO</span>
         </summary>
         <p class="lede">
           Build and edit your partnerships' convention cards, print them, and move them between BBO,
@@ -36,18 +36,29 @@
             <p class="flag">A PDF read in is a fillable ACBL Classic or New card; a printed one (as most
               bridgeodex PDFs are) has no boxes to read. BBO and bridgeodex can't be written to yet.</p>
           </div>
-          <div v-if="showStorage" class="fact">
+          <div class="fact">
             <h2>Where your cards are kept</h2>
-            <ol class="places">
-              <li><strong>Bridge Classroom</strong>, if you have an account: <em>Save to Bridge
-                Classroom</em> keeps a card there, on any device.</li>
-              <li><strong>A file on your drive</strong>: <em>Export Content</em> or <em>Export PDF</em>;
-                <em>Import</em> brings it back.</li>
-              <li><strong>This browser</strong>, with no account. Clearing the browser's data deletes
-                these cards.<template v-if="isSafari"> <strong>In Safari this is short-term</strong>:
-                Safari may delete a site's stored data after a week or so without a visit, so keep a
-                copy one of the other ways.</template></li>
-            </ol>
+            <template v-if="storagePlace === 'account'">
+              <p class="account">
+                <span class="avatar" :title="userName">{{ userInitials }}</span>
+                <span>Saved in <strong>{{ userName || 'your' }}</strong>'s Bridge Classroom account.</span>
+              </p>
+              <p>You can also keep a copy on your drive: <em>Export Content</em> or <em>Export PDF</em>,
+                and <em>Import</em> brings it back.</p>
+            </template>
+            <template v-else>
+              <p><strong>In this browser</strong>, with no account. Clearing the browser's data deletes
+                them.<template v-if="isSafari"> <strong>In Safari this is short-term</strong>: Safari may
+                delete a site's stored data after a week or so without a visit.</template></p>
+              <p>To keep a card safe:</p>
+              <ol class="places">
+                <li><em>Save to Bridge Classroom</em>, if you have an account there: on any device.</li>
+                <li><em>Export Content</em> or <em>Export PDF</em> to a file on your drive;
+                  <em>Import</em> brings it back.</li>
+              </ol>
+            </template>
+            <p class="flag">Coming to Bridge Classroom: cards shared between partners, which either of
+              you can edit.</p>
           </div>
           <div class="fact">
             <h2>On BBO</h2>
@@ -151,9 +162,10 @@ const props = defineProps({
   sampleId: { type: String, default: null },
   // Inside a host's own page: no page title.
   embedded: { type: Boolean, default: false },
-  // Explain where cards are kept (the standalone app keeps them in the
-  // browser; a host with accounts needs no such note).
-  showStorage: { type: Boolean, default: true },
+  // Where the host keeps cards: 'browser' (the standalone app's IndexedDB)
+  // or 'account' (a host with accounts, such as Bridge Classroom, whose
+  // storage.user names the player).
+  storagePlace: { type: String, default: 'browser' },
   // The address of a card, for its link (so it can open in a new tab).
   cardLink: { type: Function, default: null },
 })
@@ -180,6 +192,17 @@ function onToggle(event) {
   aboutOpen.value = event.target.open
   try { localStorage.setItem(ABOUT_KEY, aboutOpen.value ? '1' : '0') } catch { /* private mode */ }
 }
+// The signed-in player, for an account host: a circle with their initials,
+// as Bridge Classroom shows its players.
+const userName = computed(() => {
+  const u = props.storage.user?.value
+  return u ? `${u.firstName || ''} ${u.lastName || ''}`.trim() : ''
+})
+const userInitials = computed(() => {
+  const u = props.storage.user?.value
+  return `${(u?.firstName || '').charAt(0)}${(u?.lastName || '').charAt(0)}`.toUpperCase() || '?'
+})
+
 const hasOwnCards = computed(() => cards.value.some(c => !c.readOnly))
 watch(hasOwnCards, own => { if (savedAbout() == null) aboutOpen.value = !own })
 
@@ -268,7 +291,10 @@ h2 { font-family: var(--font-heading); font-size: 18px; margin: 0 0 6px; }
 .formats td { padding: 3px 6px; border-top: 1px solid #efede8; }
 .formats .yes { color: var(--green-dark); font-weight: 600; }
 .formats .no { color: #8a4b00; font-size: 12px; }
-.places { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.5; }
+.places { margin: 0 0 6px; padding-left: 18px; font-size: 14px; line-height: 1.5; }
+.fact p + p { margin-top: 6px; }
+.account { display: flex; gap: 8px; align-items: center; }
+.avatar { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--green-dark); color: #fff; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; }
 .places li { margin-bottom: 4px; }
 a { color: var(--green-dark); }
 code { font-size: 13px; }
