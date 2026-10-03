@@ -46,4 +46,4 @@ jobs:
         with:
           python-version: '3.12'
       - name: Every convention file parses and its id matches its path
-        run: python3 scripts/build_spec.py >/dev/null && git checkout -- spec/conventions.json spec/taxonomy.json spec/fields.json spec/levels.json spec/formats/bbsa-map.json
+        run: python3 scripts/build_spec.py >/dev/null && git checkout -- spec/conventions.json spec/taxonomy.json spec/fields.json spec/levels.json spec/alerts.json spec/formats/bbsa-map.json

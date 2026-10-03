@@ -1,4 +1,5 @@
 import { ref, computed, watch } from 'vue'
+import { alertSummary, alertsFor } from '../../../js/spec.js'
 import {
   CONVENTION_CATALOG,
   SECTION_META,
@@ -68,6 +69,9 @@ function createState(storage, overlays) {
 
   const activeSection = ref('notrump')
   const visibleLevels = ref(new Set(['basic']))
+  // Whose alerting rules the badges show (spec/alerts.toml): ACBL by
+  // default, since the cards the editor prints are the ACBL's.
+  const regulator = ref('acbl')
   const showCoverage = ref(false)
   const showProf = ref(false)
 
@@ -182,6 +186,8 @@ function createState(storage, overlays) {
         profStatus: tierToProf(tier),
         checked: cardData ? isEntryChecked(entry, cardData) : false,
         level: getLevelForEntry(entry),
+        alert: alertSummary(entry.cardPath, regulator.value),
+        alertCalls: alertsFor(entry.cardPath, regulator.value),
         levelNumber: getLevelNumberForEntry(entry) ?? null
       })
     }
@@ -395,6 +401,7 @@ function createState(storage, overlays) {
     lessonMasteryMap,
     activeSection,
     visibleLevels,
+    regulator,
     showCoverage,
     showProf,
     // derived

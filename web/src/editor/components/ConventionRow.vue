@@ -14,9 +14,18 @@
           <span v-if="showCoverage && status.covered" class="bar bar-coverage" title="Covered in solo practice"></span>
           <span v-if="showProf" class="bar" :class="profClass" :title="profLabel"></span>
         </span>
-        <span v-if="entry.form" class="form-badge" :class="'form-' + entry.form">
-          {{ entry.form === 'alert' ? 'Alert' : 'Announce' }}
-        </span>
+        <span
+          v-if="status.alert && status.alert.main !== 'none'"
+          class="form-badge"
+          :class="'form-' + status.alert.main"
+          :title="alertTitle"
+        >{{ ALERT_LABEL[status.alert.main] }}</span>
+        <span
+          v-if="status.alert?.more"
+          class="form-badge form-more"
+          :class="'form-' + status.alert.more"
+          :title="alertTitle"
+        >+ {{ ALERT_LABEL[status.alert.more] }}</span>
         <span
           class="level-badge"
           :class="'lvl-' + status.level"
@@ -52,11 +61,22 @@ const profLabel = computed(() => {
   }
 })
 
+// Alerting comes from the spec (spec/alerts.toml), for the regulator the
+// editor is set to: the row's strongest rule, and each call in the tooltip.
+const ALERT_LABEL = { alert: 'Alert', delayed: 'Delayed alert', announce: 'Announce', none: '' }
+
+// The name is coloured by the convention's own call, as the ACBL card prints
+// alertable conventions in red and announced ones in blue.
 const formClass = computed(() => {
-  if (props.entry.form === 'alert') return 'form-name-alert'
-  if (props.entry.form === 'announce') return 'form-name-announce'
+  const main = props.status.alert?.main
+  if (main === 'alert' || main === 'delayed') return 'form-name-alert'
+  if (main === 'announce') return 'form-name-announce'
   return ''
 })
+
+const alertTitle = computed(() => (props.status.alertCalls || [])
+  .map(c => `${c.after ? `${c.after}: ` : ''}${c.call} (${ALERT_LABEL[c.rule] || 'no alert'}${c.when ? `, if ${c.when}` : ''})${c.note ? ` — ${c.note}` : ''}`)
+  .join('\n'))
 </script>
 
 <style scoped>
@@ -117,6 +137,16 @@ const formClass = computed(() => {
 .form-badge.form-alert {
   background: #fdecea;
   color: #c62828;
+}
+
+.form-badge.form-delayed {
+  background: #fff3e0;
+  color: #b45309;
+}
+
+.form-badge.form-more {
+  background: transparent;
+  border: 1px solid currentColor;
 }
 
 .form-badge.form-announce {
