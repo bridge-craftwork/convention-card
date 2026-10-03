@@ -29,7 +29,7 @@
           >Save to Bridge Classroom</button>
         </div>
       </div>
-      <ConventionCardEditor :storage="browserStorage" />
+      <ConventionCardEditor :storage="browserStorage" @deleted="goHome" />
     </template>
   </div>
 </template>

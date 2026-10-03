@@ -11,8 +11,9 @@ const when = t => (t ? new Date(t).toLocaleString(undefined, { dateStyle: 'mediu
 /**
  * Merge `records` (from importCards) into `storage`'s cards. `ask(text)`
  * returns true to keep the kept card (defaults to window.confirm).
- * Returns `{ added, replaced, same, keptOurs, lastId }` (card ids) and a
- * one-line `summary`.
+ * Returns `{ added, replaced, same, keptOurs, lastId }` (card ids), a
+ * one-line `summary`, and `matched`: what to tell the person about cards
+ * that met ones already kept, or null when there is nothing to tell.
  */
 export async function mergeImported(records, storage, ask = text => window.confirm(text)) {
   const links = storage.user?.value ? await storage.listLinks() : []
@@ -52,6 +53,15 @@ export async function mergeImported(records, storage, ask = text => window.confi
     out.replaced.push(target.id)
     out.lastId = target.id
   }
+
+  // What the person should hear about: cards that met one already kept
+  // without being asked (a newer copy replaced it, or it was the same).
+  // New cards and cards they were asked about need no message.
+  const nameOf = id => kept.find(k => k.id === id)?.name || records.find(r => r.id === id)?.name || 'a card'
+  const lines = []
+  if (out.replaced.length) lines.push(`Replaced with the newer imported copy: ${out.replaced.map(nameOf).join(', ')}.`)
+  if (out.same.length) lines.push(`Already up to date: ${out.same.map(nameOf).join(', ')}.`)
+  out.matched = lines.join('\n') || null
 
   const parts = []
   if (out.added.length) parts.push(`${out.added.length} added`)

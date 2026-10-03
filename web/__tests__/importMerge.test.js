@@ -52,3 +52,18 @@ describe('mergeImported', () => {
     expect(out.replaced).toEqual(['a'])
   })
 })
+
+describe('what the person is told', () => {
+  it('nothing for new cards or ones they were asked about', async () => {
+    const out = await mergeImported([{ id: 'n', name: 'Brand new', card_data: {} }, { name: 'With Pat', updatedAt: '2026-01-01T00:00:00Z', card_data: { v: 5 } }], memoryStorage(kept), () => true)
+    expect(out.matched).toBe(null)
+  })
+  it('names the cards replaced and the ones already up to date', async () => {
+    const storage = memoryStorage([...kept, { id: 'b', name: 'With Lee', updated_at: '2026-10-01T00:00:00Z', card_data: { w: 1 } }])
+    const out = await mergeImported([
+      { id: 'a', name: 'With Pat', updatedAt: '2026-10-05T00:00:00Z', card_data: { v: 2 } },
+      { id: 'b', name: 'With Lee', card_data: { w: 1 } },
+    ], storage)
+    expect(out.matched).toBe('Replaced with the newer imported copy: With Pat.\nAlready up to date: With Lee.')
+  })
+})
