@@ -20,10 +20,13 @@ import {
 //   user          a ref: the signed-in user ({ id, role, firstName }) or null
 //   loadDefault() the card to open first (the user's primary, else a system card)
 //   load(id)      one card: { id, name, description, owner_id, visibility, card_data, updated_at }
-//   listLinks()   the user's cards: [{ card_id, card_name, is_primary, label, sharing? }]
-//                 sharing (optional): { read, write } when the card is shared
-//                 with a partner (Bridge Classroom's shared cards, #436); the
-//                 table of cards flags it
+//   listLinks()   the user's cards: [{ card_id, card_name, is_primary, label,
+//                 role?, owner_name?, shared? }]. For shared cards (Bridge
+//                 Classroom #436): role is 'owner', 'editor' or 'viewer';
+//                 owner_name names the owner of a card shared with you; shared
+//                 says an owned card is shared. The table of cards shows them
+//                 as Bridgodex does ("Editor · by …", "Read only · by …",
+//                 "Shared")
 //   save(card, cardData)                       write a card's card_data
 //   overwrite(id, { name, description, cardData })   (also how a card is renamed)
 //   create({ name, description, cardData, visibility, primary }) → the new card's id

@@ -578,6 +578,28 @@ one, and a partnership to see what it has taken on.
   the difficulty is one more row of it, so partners see whose card asks
   for more.
 
+## Printing, and material beyond the card
+
+*Ideas, not planned in detail* (Rick Wilson, 2026-10-03; several are things
+Bridgodex already offers).
+
+- **Paper sizes and large print.** The PDFs are letter size today. Card
+  size (8" × 8.5"), A4, and a **large-print** version over two pages would
+  help players who find the card's small type hard to read.
+- **Footnotes and supplementary pages.** Advanced cards often run to one or
+  more pages of additional material: relay schemes, defences, sequences the
+  card has no room for. Today a value that doesn't fit is shrunk and
+  wrapped; a value that still doesn't fit should continue in a numbered
+  footnote, and a card should be able to carry **supplementary pages** of
+  its own text (with headings, by section), printed after the card. They
+  belong in the card as data (sections of text the editor edits and the
+  PDF lays out), so they survive import, export and a hand-off like any
+  other agreement. The WBF card's "supplementary sheets" are the same idea.
+- **Other card services.** Bridgodex's "config files" are a minimal JSON
+  form of its card that RSVP Bridge reads and writes too, so our Bridgodex
+  importer may read RSVP Bridge cards as well; to be checked against a
+  real file before saying so.
+
 ## Comparing cards
 
 A player with several partners has different agreements with each, and wants a
@@ -586,7 +608,9 @@ one row per agreement that is not the same on every card. It belongs in the
 library (a pure function over cards and the spec), with a view in the editor
 and a printable version.
 
-A plain field-by-field comparison is too noisy to use. Across Rick's five
+Bridgodex offers a two-card version ("Compare with another card"), worth
+looking at when this is built. A plain field-by-field comparison is too
+noisy to use. Across Rick's five
 partnership cards (2026-09-30), 165 of the 212 fields set on any card differ.
 Most of the noise comes from things the spec can fix:
 

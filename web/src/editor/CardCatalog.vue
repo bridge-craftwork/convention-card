@@ -111,8 +111,9 @@
             <td class="name">
               <a :href="cardLink ? cardLink(row.id) : undefined" @click.prevent="$emit('open', row.id)">{{ row.name }}</a>
               <span v-if="row.primary" class="tag" title="Opens first">primary</span>
-              <span v-if="row.sharing?.write" class="tag share-tag" title="Shared with a partner, who can edit it">shared · edit</span>
-              <span v-else-if="row.sharing?.read" class="tag share-tag" title="Shared with a partner, who can read it">shared · read</span>
+              <span v-if="row.role === 'editor'" class="tag share-tag" title="Shared with you; you can edit it">Editor<template v-if="row.ownerName"> · by {{ row.ownerName }}</template></span>
+              <span v-else-if="row.role === 'viewer'" class="tag share-tag" title="Shared with you to read; duplicate it to make your own copy">Read only<template v-if="row.ownerName"> · by {{ row.ownerName }}</template></span>
+              <span v-else-if="row.shared" class="tag share-tag" title="You share this card with a partner">Shared</span>
               <span v-if="row.readOnly" class="tag muted-tag" title="Duplicate it to make your own copy">sample</span>
             </td>
             <td>{{ row.names || '—' }}</td>
@@ -232,7 +233,13 @@ async function load() {
   error.value = ''
   try {
     const links = canCreate.value ? await props.storage.listLinks() : []
-    const own = await Promise.all(links.map(async l => ({ ...(await props.storage.load(l.card_id)), primary: !!l.is_primary, sharing: l.sharing || null })))
+    const own = await Promise.all(links.map(async l => ({
+      ...(await props.storage.load(l.card_id)),
+      primary: !!l.is_primary,
+      role: l.role || null,
+      ownerName: l.owner_name || null,
+      shared: !!l.shared,
+    })))
     own.sort((a, b) => (b.primary - a.primary) || String(a.name).localeCompare(String(b.name)))
     const sample = props.sampleId ? [{ ...(await props.storage.load(props.sampleId)), readOnly: true }] : []
     cards.value = [...own, ...sample]
@@ -243,7 +250,15 @@ async function load() {
   }
 }
 
-const rows = computed(() => cards.value.map(c => ({ ...summarize(c), primary: !!c.primary, sharing: c.sharing, readOnly: !!c.readOnly, data: c.card_data || {} })))
+const rows = computed(() => cards.value.map(c => ({
+  ...summarize(c),
+  primary: !!c.primary,
+  role: c.role,
+  ownerName: c.ownerName,
+  shared: c.shared,
+  readOnly: !!c.readOnly,
+  data: c.card_data || {},
+})))
 
 // PDF export from the table: the card layouts the library fills. Needs the
 // host to have told the library where its templates are (setAssetLoader).
