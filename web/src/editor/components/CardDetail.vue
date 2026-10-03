@@ -213,7 +213,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { SECTION_META, STRUCTURED_FIELDS, getCatalogEntries } from '../conventionCatalog.js'
+import { SECTION_META, STRUCTURED_FIELDS, getCatalogEntries, getLevelForStructuredField } from '../conventionCatalog.js'
 import { colorizeSuits } from '../suits.js'
 import { field as specField } from '../../../../js/spec.js'
 import ConventionRow from './ConventionRow.vue'
@@ -310,8 +310,9 @@ const structuredFields = computed(() => STRUCTURED_FIELDS[props.sectionId] || []
 // Fields without a `level` property are always visible.
 const visibleStructuredFields = computed(() => {
   return structuredFields.value.filter(f => {
-    if (!f.level) return true
-    if (props.visibleLevels.has(f.level)) return true
+    const band = getLevelForStructuredField(f)
+    if (!band) return true
+    if (props.visibleLevels.has(band)) return true
     return fieldHasValue(f)
   })
 })

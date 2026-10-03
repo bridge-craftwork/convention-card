@@ -5,6 +5,7 @@ import {
   getCatalogEntries,
   isEntryChecked,
   getLevelForEntry,
+  getLevelNumberForEntry,
   setEntryChecked,
   writePath
 } from './conventionCatalog.js'
@@ -180,7 +181,8 @@ function createState(storage, overlays) {
         tier: tier || null,
         profStatus: tierToProf(tier),
         checked: cardData ? isEntryChecked(entry, cardData) : false,
-        level: getLevelForEntry(entry)
+        level: getLevelForEntry(entry),
+        levelNumber: getLevelNumberForEntry(entry) ?? null
       })
     }
     return map

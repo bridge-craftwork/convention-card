@@ -5,6 +5,7 @@
 import FIELDS_DOC from '../spec/fields.json' with { type: 'json' }
 import BBSA_MAP_DOC from '../spec/formats/bbsa-map.json' with { type: 'json' }
 import CONVENTIONS_DOC from '../spec/conventions.json' with { type: 'json' }
+import LEVELS_DOC from '../spec/levels.json' with { type: 'json' }
 
 const { schema: _fs, generated_from: _ff, ...SECTIONS } = FIELDS_DOC
 const { schema: _bs, generated_from: _bf, layout: BBSA_LAYOUT, ...BBSA_MAP } = BBSA_MAP_DOC
@@ -42,3 +43,27 @@ export { BBSA_LAYOUT }
 
 /** Every standard convention and skill, by ID (spec/conventions/). */
 export const CONVENTIONS = CONVENTIONS_DOC.conventions
+
+/**
+ * The named level bands, in order: `{ name, label, max }`, each covering the
+ * levels up to and including `max` (spec/levels.toml; DECISIONS.md, 12).
+ */
+export const LEVEL_BANDS = LEVELS_DOC.band
+
+/** The band (`{ name, label, max }`) a 1–10 level falls in, or undefined. */
+export function levelBand(level) {
+  if (!Number.isFinite(level)) return undefined
+  return LEVEL_BANDS.find(b => level <= b.max)
+}
+
+/**
+ * The level of the field at `path` (or an alias): its own, else that of the
+ * convention it names (its first `skill`), else undefined.
+ */
+export function fieldLevel(path) {
+  const f = field(path)
+  if (!f) return undefined
+  if (f.level != null) return f.level
+  const skill = [f.skill || []].flat()[0]
+  return skill ? CONVENTIONS[skill]?.level : undefined
+}

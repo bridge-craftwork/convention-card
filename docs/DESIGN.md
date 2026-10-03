@@ -302,7 +302,9 @@ card → the fields it switches on → their skills → each collection's manife
 One scale, **1 to 10**, for everything: skills and conventions, bidding and
 cardplay. A level says how hard a thing is to learn, which is the same as when
 a partnership might put it on its card. Named bands (for the editor's filter,
-lesson front matter) are ranges of the number, derived, never stored.
+lesson front matter) are ranges of the number, derived, never stored. The bands
+are `spec/levels.toml`; the editor's filter takes each row's level from its
+field in `fields.toml`, or else from its convention.
 
 **A convention's level is the lowest level at which it is taught.** Its
 extensions are taught later, and they carry their own, higher levels while

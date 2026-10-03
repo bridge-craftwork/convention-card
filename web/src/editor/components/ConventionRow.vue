@@ -17,7 +17,11 @@
         <span v-if="entry.form" class="form-badge" :class="'form-' + entry.form">
           {{ entry.form === 'alert' ? 'Alert' : 'Announce' }}
         </span>
-        <span class="level-badge" :class="'lvl-' + status.level">{{ status.level }}</span>
+        <span
+          class="level-badge"
+          :class="'lvl-' + status.level"
+          :title="status.levelNumber ? `Level ${status.levelNumber} of 10` : ''"
+        >{{ status.level }}<template v-if="status.levelNumber"> · {{ status.levelNumber }}</template></span>
       </div>
       <div class="row-desc" v-html="colorizeSuits(entry.desc)"></div>
     </div>

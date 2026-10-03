@@ -2,7 +2,7 @@ name: Build the spec's generated JSON
 
 # The spec's TOML is the source. scripts/build_spec.py writes its JSON:
 # conventions.json (every spec/conventions/ file in one), taxonomy.json
-# (lesson-studio's Contract 4), and fields.json and formats/bbsa-map.json, for
+# (lesson-studio's Contract 4), and fields.json, levels.json and formats/bbsa-map.json, for
 # readers with no TOML parser (the JS library). Regenerates whenever a source
 # changes, as Practice-Bidding-Scenarios does for its manifest.
 
@@ -12,6 +12,7 @@ on:
     paths:
       - 'spec/conventions/**'
       - 'spec/fields.toml'
+      - 'spec/levels.toml'
       - 'spec/formats/bbsa-map.toml'
       - 'spec/formats/bbsa-layout.txt'
       - 'scripts/build_spec.py'
@@ -43,7 +44,7 @@ jobs:
 
       - name: Commit the generated files if changed
         run: |
-          GENERATED="spec/conventions.json spec/taxonomy.json spec/fields.json spec/formats/bbsa-map.json"
+          GENERATED="spec/conventions.json spec/taxonomy.json spec/fields.json spec/levels.json spec/formats/bbsa-map.json"
           if [ -z "$(git status --porcelain $GENERATED)" ]; then
             echo "Generated files unchanged — nothing to commit."
             exit 0

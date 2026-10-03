@@ -17,7 +17,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { SKILL_LEVELS } from '../levels.js'
+import { SKILL_LEVELS, bandLabel } from '../levels.js'
 
 const props = defineProps({
   // Set of all levels at-or-below the threshold (kept as a Set so
@@ -38,9 +38,7 @@ const thresholdLevel = computed(() => {
   return highestIdx >= 0 ? SKILL_LEVELS[highestIdx] : SKILL_LEVELS[0]
 })
 
-function label(lvl) {
-  return lvl.charAt(0).toUpperCase() + lvl.slice(1)
-}
+const label = bandLabel
 
 function isAtOrBelow(lvl) {
   return SKILL_LEVELS.indexOf(lvl) <= SKILL_LEVELS.indexOf(thresholdLevel.value)

@@ -3,7 +3,7 @@
 // PDFs and read them back. No framework and no network access; see
 // docs/DESIGN.md, "The JavaScript library".
 
-export { FIELDS, field, BBSA_MAP, BBSA_LAYOUT, CONVENTIONS } from './spec.js'
+export { FIELDS, field, BBSA_MAP, BBSA_LAYOUT, CONVENTIONS, LEVEL_BANDS, levelBand, fieldLevel } from './spec.js'
 export { readPath, writePath } from './paths.js'
 export { normalizeSuitShorthand } from './suits.js'
 export { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from './assets.js'
