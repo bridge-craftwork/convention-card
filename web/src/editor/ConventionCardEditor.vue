@@ -31,16 +31,19 @@
               :title="cardLevelNow.why"
             >{{ bandLabel(cardLevelNow.band) }} · {{ cardLevelNow.level }}</span>
             <span v-if="!canEdit" class="read-only-pill">read-only</span>
-            <span v-else-if="viewMode" class="view-pill">view</span>
+            <span v-else-if="viewMode" class="view-pill">Viewing</span>
+            <span v-else class="editing-pill">Editing</span>
             <span v-if="isDirty" class="dirty-pill">unsaved</span>
           </template>
         </div>
       </div>
       <div class="card-actions">
         <!-- View-mode actions -->
+        <!-- Outlined with a glow, not filled: a filled Edit read as "already
+             editing" (Rick, 2026-10-03). Save is the filled button. -->
         <button
           v-if="canEdit && viewMode"
-          class="btn btn-primary"
+          class="btn btn-edit"
           @click="cc.enterEditMode"
           :disabled="saving"
           title="Switch to edit mode"
@@ -290,6 +293,7 @@ const props = defineProps({
   overlays: { type: Object, default: null }
 })
 
+const emit = defineEmits(['deleted'])
 const cc = useCardEditor(props.storage, props.overlays || undefined)
 const currentUser = computed(() => props.storage.user?.value || null)
 
@@ -536,7 +540,8 @@ async function onImportFile(event) {
     const merged = await mergeImported(records, props.storage)
     await cc.loadUserCardLinks()
     if (merged.lastId) await cc.switchCard(merged.lastId)
-    importNotes.value = [{ severity: 'info', message: merged.summary }, ...pdfNotes]
+    importNotes.value = pdfNotes
+    if (merged.matched) window.alert(merged.matched)
   } catch (err) {
     console.error('Import failed:', err)
     saveError.value = explain(err, 'Import failed')
@@ -588,9 +593,13 @@ async function onRename() {
 }
 
 async function onDelete() {
-  const name = currentCard.value?.name || 'this card'
+  const card = currentCard.value
+  const name = card?.name || 'this card'
   if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
   await cc.deleteCurrentCard()
+  // A host with a table of cards goes back to it (rather than showing
+  // whichever card the editor opens next).
+  emit('deleted', card?.id)
 }
 
 // Local ref bridging the composable's Set with v-model on SkillPills
@@ -708,6 +717,16 @@ watch(() => currentUser.value?.id, async (uid) => {
   opacity: 0.6;
 }
 
+.btn-edit {
+  background: #fff;
+  color: var(--green-dark, #2d6a4f);
+  border-color: var(--green-mid, #40916c);
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.22), 0 0 10px rgba(64, 145, 108, 0.35);
+}
+.btn-edit:hover:not(:disabled) {
+  background: var(--green-pale, #d8f3dc);
+}
 .btn-primary {
   background: var(--green-mid, #40916c);
   color: white;
@@ -740,11 +759,12 @@ watch(() => currentUser.value?.id, async (uid) => {
 
 .read-only-pill,
 .view-pill,
+.editing-pill,
 .dirty-pill {
   display: inline-block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 1px 8px;
+  padding: 2px 10px;
   border-radius: 999px;
   margin-left: 6px;
   text-transform: uppercase;
@@ -759,6 +779,11 @@ watch(() => currentUser.value?.id, async (uid) => {
 .view-pill {
   background: #e0f2fe;
   color: #075985;
+}
+
+.editing-pill {
+  background: var(--green-pale, #d8f3dc);
+  color: var(--green-dark, #2d6a4f);
 }
 
 .dirty-pill {

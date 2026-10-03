@@ -72,6 +72,16 @@
           <a href="https://bridge-craftwork.com/card/reference.txt" target="_blank" rel="noopener">card reference</a>.
         </p>
       </details>
+      <!-- Where the cards are, even with "About" closed. -->
+      <p v-if="!aboutOpen" class="where-line">
+        <template v-if="storagePlace === 'account'">
+          <span class="avatar small" :title="userName">{{ userInitials }}</span>
+          Saved in <strong>{{ userName || 'your' }}</strong>'s Bridge Classroom account.
+        </template>
+        <template v-else>
+          Your cards are stored <strong>in this browser</strong>: use <em>Export all</em> to keep a copy.
+        </template>
+      </p>
     </section>
 
     <section class="cards">
@@ -136,8 +146,11 @@
             <td class="pdf-col" @click.stop>
               <button class="pdf-btn" :title="`Export ${row.name} as a PDF`" :aria-label="`Export ${row.name} as a PDF`"
                       :disabled="exporting === row.id" @click="pdfMenu = pdfMenu === row.id ? null : row.id">
+                <span v-if="exporting === row.id">Preparing…</span>
+                <template v-else>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
                 <span>PDF</span>
+                </template>
               </button>
               <div v-if="pdfMenu === row.id" class="pdf-menu" role="menu">
                 <button v-for="t in PDF_LAYOUTS" :key="t.id" role="menuitem" @click="exportPdf(row.id, t.id)">{{ t.name }}</button>
@@ -315,11 +328,14 @@ async function onFile(event) {
     const merged = await mergeImported(records, props.storage)
     await cc.loadUserCardLinks()
     // One card: open it, as before. Several: stay on the table and say what happened.
+    // A pop-up only when imported cards met ones already here without
+    // asking (replaced by a newer copy, or the same): new cards, and ones
+    // the person was asked about, need no message.
+    if (merged.matched) window.alert(merged.matched)
     if (records.length === 1 && merged.lastId) {
       emit('open', merged.lastId)
       return
     }
-    Object.assign(notice, { message: merged.summary, error: false })
     await load()
   } catch (err) {
     Object.assign(notice, { message: `Could not import ${file.name}: ${err.message}`, error: true })
@@ -379,6 +395,8 @@ h2 { font-family: var(--font-heading); font-size: 18px; margin: 0 0 6px; }
 .places { margin: 0 0 6px; padding-left: 18px; font-size: 14px; line-height: 1.5; }
 .fact p + p { margin-top: 6px; }
 .account { display: flex; gap: 8px; align-items: center; }
+.where-line { margin: -4px 0 0; font-size: 14px; color: var(--text-secondary); line-height: 24px; }
+.avatar.small { width: 24px; height: 24px; font-size: 10px; vertical-align: middle; margin-right: 6px; }
 .avatar { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--green-dark); color: #fff; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; }
 .places li { margin-bottom: 4px; }
 a { color: var(--green-dark); }
