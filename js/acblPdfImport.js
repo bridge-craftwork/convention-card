@@ -143,6 +143,8 @@ export async function readCardFromPdf(bytes) {
   const template = payload?.pdf_fields?.template || detectTemplate(boxes)
 
   const record = {
+    ...(payload?.id != null && { id: payload.id }),
+    ...(payload?.updatedAt && { updatedAt: payload.updatedAt }),
     name: payload?.name || null,
     description: payload?.description || null,
     card_data: JSON.parse(JSON.stringify(embedded || { schema_version: '1.0', format: 'bridge_classroom', metadata: {} })),

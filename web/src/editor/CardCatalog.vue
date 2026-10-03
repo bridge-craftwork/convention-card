@@ -79,7 +79,8 @@
         <h2>Your cards</h2>
         <div class="cards-actions">
           <button v-if="canCreate" class="btn btn-primary" :disabled="busy" @click="onNew">New card</button>
-          <button v-if="canCreate" class="btn" :disabled="busy" @click="fileInput?.click()">Import a card</button>
+          <button v-if="canCreate" class="btn" :disabled="busy" @click="fileInput?.click()" title="One card, or an Export all file">Import</button>
+          <button v-if="canCreate" class="btn" :disabled="busy || !ownCards.length" @click="onExportAll" title="Every card in one file, which Import reads back">Export all</button>
           <input
             ref="fileInput"
             type="file"
@@ -145,7 +146,7 @@
         </tbody>
       </table>
       <p v-if="!loading && !rows.length" class="muted">
-        No cards yet: start a <strong>New card</strong> or <strong>Import a card</strong>.
+        No cards yet: start a <strong>New card</strong> or <strong>Import</strong> one.
       </p>
       <p v-if="!loading && rows.length === 1 && rows[0].readOnly" class="muted">
         Only the sample so far: open it and use <strong>Duplicate</strong> to make it yours, or start a
@@ -160,7 +161,9 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { summarize, distinguishing } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { useCardEditor } from './useCardEditor.js'
-import { importCard } from '../../../js/importCard.js'
+import { importCards } from '../../../js/importCard.js'
+import { exportAll } from '../../../js/cardBundle.js'
+import { mergeImported } from './importMerge.js'
 import { LEVEL_BANDS } from '../../../js/spec.js'
 
 // The editor's home page: what it does, and a table of the person's cards.
@@ -257,7 +260,7 @@ async function exportPdf(id, layout) {
   exporting.value = id
   try {
     const { downloadAcblPdf } = await import('../../../js/acblClassicFillPdf.js')
-    await downloadAcblPdf({ name: card.name, description: card.description || null, card_data: card.card_data || {} }, layout)
+    await downloadAcblPdf({ id: card.id, name: card.name, description: card.description || null, updated_at: card.updated_at || null, card_data: card.card_data || {} }, layout)
   } catch (err) {
     const stale = /dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(err?.message || '')
     Object.assign(notice, {
@@ -269,11 +272,6 @@ async function exportPdf(id, layout) {
   }
 }
 const columns = computed(() => distinguishing(cards.value))
-
-async function create(record) {
-  const name = record.name || 'Imported convention card'
-  return cc.createCard({ name, description: record.description || null, cardData: record.card_data })
-}
 
 async function onNew() {
   busy.value = true
@@ -288,6 +286,8 @@ async function onNew() {
   }
 }
 
+const ownCards = computed(() => cards.value.filter(c => !c.readOnly))
+
 async function onFile(event) {
   const file = event.target.files?.[0]
   event.target.value = ''
@@ -296,13 +296,35 @@ async function onFile(event) {
   try {
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
     const input = isPdf ? await file.arrayBuffer() : await file.text()
-    const read = await importCard(input, { name: file.name.replace(/\.[^.]*$/, '') })
-    emit('open', await create(read))
+    const records = await importCards(input, { name: file.name.replace(/\.[^.]*$/, '') })
+    const merged = await mergeImported(records, props.storage)
+    await cc.loadUserCardLinks()
+    // One card: open it, as before. Several: stay on the table and say what happened.
+    if (records.length === 1 && merged.lastId) {
+      emit('open', merged.lastId)
+      return
+    }
+    Object.assign(notice, { message: merged.summary, error: false })
+    await load()
   } catch (err) {
     Object.assign(notice, { message: `Could not import ${file.name}: ${err.message}`, error: true })
   } finally {
     busy.value = false
   }
+}
+
+// "Export all": the person's own cards (not the sample) in one file.
+function onExportAll() {
+  const bundle = exportAll(ownCards.value)
+  const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `convention-cards-${new Date().toISOString().slice(0, 10)}.json`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
 }
 
 // A click anywhere outside a row's PDF button closes its menu.

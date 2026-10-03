@@ -1868,8 +1868,10 @@ function embedCardDataInPdf(pdf, card, pdfFields = null) {
   try {
     const payload = {
       schema: 'bridge-classroom/card_data@v1',
+      id: card.id ?? null,
       name: card.name || null,
       description: card.description || null,
+      updatedAt: card.updated_at || card.updatedAt || null,
       exportedAt: new Date().toISOString(),
       card_data: card.card_data,
       // What the export wrote into each box, so an import can find edits

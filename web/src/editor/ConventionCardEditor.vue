@@ -268,7 +268,9 @@
 <script setup>
 import { computed, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
-import { importCard } from '../../../js/importCard.js'
+import { importCards } from '../../../js/importCard.js'
+import { exportRecord } from '../../../js/cardBundle.js'
+import { mergeImported } from './importMerge.js'
 import { checkCard } from '../../../js/checkCard.js'
 import { REGULATORS } from '../../../js/spec.js'
 import { cardLevel } from './cardSummary.js'
@@ -482,13 +484,7 @@ async function doContentExport(formatId) {
   try {
     let payload
     if (formatId === 'bridge-classroom') {
-      payload = JSON.stringify({
-        schema: 'bridge-classroom/card_data@v1',
-        name: card.name || null,
-        description: card.description || null,
-        exportedAt: new Date().toISOString(),
-        card_data: card.card_data || {}
-      }, null, 2)
+      payload = JSON.stringify(exportRecord(card), null, 2)
     } else if (formatId === 'bbsa') {
       const { exportBbsa } = await loadBbsa()
       payload = exportBbsa(card.card_data || {}).text
@@ -526,33 +522,21 @@ async function onImportFile(event) {
   event.target.value = ''  // allow re-importing the same filename later
   if (!file) return
   try {
-    // importCard tells the formats apart by their content: the editor's
-    // own JSON, BBO's, Bridgodex's, .bbsa and our PDFs.
+    // importCards tells the formats apart by their content: the editor's
+    // own JSON (one card, or an "Export all" file), BBO's, Bridgodex's,
+    // .bbsa and our PDFs. The cards are merged with those kept
+    // (importMerge.js): added, skipped, replaced by a newer copy, or, for an
+    // older one, the person chooses.
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
     const bytes = isPdf ? await file.arrayBuffer() : await file.text()
-    const { name, description, card_data, format, report } = await importCard(bytes, { name: file.name.replace(/\.[^.]*$/, '') })
-    importNotes.value = format === 'pdf'
-      ? (await import('../../../js/acblPdfImport.js')).pdfReportDiagnostics(report)
+    const records = await importCards(bytes, { name: file.name.replace(/\.[^.]*$/, '') })
+    const pdfNotes = records[0]?.format === 'pdf'
+      ? (await import('../../../js/acblPdfImport.js')).pdfReportDiagnostics(records[0].report)
       : []
-
-    // Duplicate-name check: a user often re-imports the same partnership
-    // card after updating it on Bridgodex. Offer to overwrite the
-    // existing card rather than piling up "My Card", "My Card (2)" etc.
-    const existing = userCardLinks.value.find(link => link.card_name === name)
-    if (existing) {
-      const overwrite = window.confirm(
-        `You already have a card named "${name}".\n\nClick OK to overwrite the existing card with the imported data.\nClick Cancel to import as a new card with a date suffix.`
-      )
-      if (overwrite) {
-        await cc.overwriteCard(existing.card_id, { name, description, cardData: card_data })
-        return
-      }
-      const stamp = new Date().toISOString().slice(0, 10)
-      await cc.createCard({ name: `${name} (imported ${stamp})`, description, cardData: card_data })
-      return
-    }
-
-    await cc.createCard({ name, description, cardData: card_data })
+    const merged = await mergeImported(records, props.storage)
+    await cc.loadUserCardLinks()
+    if (merged.lastId) await cc.switchCard(merged.lastId)
+    importNotes.value = [{ severity: 'info', message: merged.summary }, ...pdfNotes]
   } catch (err) {
     console.error('Import failed:', err)
     saveError.value = explain(err, 'Import failed')

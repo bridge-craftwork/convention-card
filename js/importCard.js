@@ -10,6 +10,7 @@
 import { isBboCard, importBboJson } from './bboImport.js'
 import { importBridgeodexJson } from './bridgeodexImport.js'
 import { decodeCardFromUrl } from './handoff.js'
+import { isBundle } from './cardBundle.js'
 
 /** What `importCard` reads, by the name its `from` option takes. */
 export const IMPORT_FORMATS = {
@@ -61,6 +62,7 @@ export function detectFormat(input) {
   }
   if (!input || typeof input !== 'object' || Array.isArray(input)) return null
   if (input.card_data && typeof input.card_data === 'object') return 'card'
+  if (isBundle(input)) return 'card'
   if (isBboCard(input)) return 'bbo'
   if (input.settings && typeof input.settings === 'object') return 'bridgeodex'
   if (looksLikeCardData(input)) return 'card'
@@ -92,12 +94,17 @@ export async function importCard(input, { from = null, name = null } = {}) {
     name: record.name || name || null,
     description: record.description || null,
     card_data: record.card_data,
+    // The editor's own exports carry the card's id and last change, for
+    // merging (cardBundle.js); other formats have neither.
+    ...(record.id != null && { id: record.id }),
+    ...(record.updatedAt && { updatedAt: record.updatedAt }),
     ...extra,
   })
 
   switch (format) {
     case 'card': {
       const obj = json()
+      if (isBundle(obj)) throw new Error('This is an "Export all" file of several cards: read it with importCards')
       if (obj.card_data && typeof obj.card_data === 'object') return card(obj)
       return card({ name: obj.metadata?.name, description: obj.metadata?.description, card_data: obj })
     }
@@ -125,4 +132,20 @@ export async function importCard(input, { from = null, name = null } = {}) {
       return card(await decodeCardFromUrl(match[1]))
     }
   }
+}
+
+/**
+ * Read one card or many: an "Export all" file (cardBundle.js) gives every
+ * card in it, anything importCard reads gives one. Returns an array of
+ * what importCard returns.
+ */
+export async function importCards(input, options = {}) {
+  let obj = null
+  if (typeof input === 'string' && input.trim().startsWith('{')) {
+    try { obj = JSON.parse(input) } catch { /* not JSON: importCard says what it is */ }
+  } else if (input && typeof input === 'object' && !isBytes(input)) {
+    obj = input
+  }
+  if (isBundle(obj)) return Promise.all(obj.cards.map(c => importCard(c, { from: 'card' })))
+  return [await importCard(input, options)]
 }
