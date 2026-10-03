@@ -141,14 +141,19 @@ passes, and the JS `.bbsa` converter matches the crate's golden files.
 
 ### Phase 3: the editor
 
-**Under way.** Done here: the view, components, editing state and catalog
-moved with history (`web/src/editor/`), split from Bridge Classroom's API and
-user store into storage and overlay adapters; the standalone app (`web/`)
-with IndexedDB storage, `.bbsa` import and export, and the hand-off to Bridge
-Classroom (decision 20); checked in a browser (duplicate, edit, save, reload,
-export a PDF and read it back, import and re-export a `.bbsa` byte for byte).
-Still to do: tag, and switch Bridge Classroom to embed the editor (with its
-adapters and the hand-off's receiving end).
+**Done 2026-10-02** (tags `v0.3.0`–`v0.5.0`; Bridge-Classroom #437, #438,
+#439, #440, #441). The view, components, editing state and catalog moved with
+history (`web/src/editor/`), split from Bridge Classroom's API and user store
+into storage and overlay adapters; the standalone app (`web/`) with IndexedDB
+storage, `.bbsa` import and export, and the hand-off to Bridge Classroom
+(decision 20). Bridge Classroom embeds the editor from the tag (v0.5.0).
+Rick's signed-in test of its Convention Card tab passed: save, New,
+Duplicate, Delete, My proficiency, PDF export and re-import, Export Content
+and Import, `.bbsa` import, and Save to Bridge Classroom from the standalone
+editor. Fixed along the way: Import reading the editor's own JSON (#26),
+"14+"/"17-" ranges, Rename, names on the card, Make primary, a stale page's
+module error (#39, #40), and the hand-off going to Bridge Classroom's landing
+page instead of its app.
 
 - Move the view and components here; split `useConventionCard.js` into editor
   state (moves) and Bridge Classroom's storage and overlay adapters (stay).
@@ -161,14 +166,13 @@ proficiency overlay; and the standalone build runs locally with no account.
 
 ### Phase 4: publish at `bridge-craftwork.com/card/`
 
-**Live 2026-10-02** (tags `v0.4.0`, `v0.4.1`; bridge-craftwork-site #6). The
+**Done 2026-10-02** (tags `v0.4.0`–`v0.5.0`; bridge-craftwork-site #6). The
 Pages project `convention-card`, deployed by `pages.yml`; `reference.txt` and
 `llms.txt` from the spec; `window.card`; real 404s; the site's `/card` route,
 tile, `/docs/card/` and apex `/llms.txt`. Exercised on the live
 `bridge-craftwork.com/card/`: duplicate, edit, save, export the Classic PDF,
-import it back to the same card, and the Save to Bridge Classroom link
-carries the card. Still to do: see the hand-off saved inside Bridge
-Classroom, which needs a signed-in account (Rick's Phase 3 test).
+import it back to the same card, and a card handed to Bridge Classroom and
+saved there under Rick's account.
 
 - A Cloudflare Pages project `convention-card`, deployed by CI (copy
   `pbn-to-pdf`'s `pages.yml`).
