@@ -23,7 +23,7 @@ What's settled, and what's still open. Newest first within each list.
 
 **2026-09-30: shared cards** (Rick Wilson)
 
-18. **Partners share a saved card, as on BBO and bridgeodex.** Members have a
+18. **Partners share a saved card, as on BBO and Bridgodex.** Members have a
     role (owner, editor, viewer) and join by an invitation link that expires
     after 30 days. Bridge Classroom holds the members and the API; the merge
     of two partners' edits is a library function here. See DESIGN.md,
@@ -120,7 +120,7 @@ What's settled, and what's still open. Newest first within each list.
 
 **2. Reconciling the field lists.** Done for paths (PRs #5, #7–#13, 2026-09-30):
 every path Bridge Classroom's editor catalog uses (180) and every literal path
-its bridgeodex and BBO importers write resolves in `spec/fields.toml`, directly
+its Bridgodex and BBO importers write resolves in `spec/fields.toml`, directly
 or through an alias, and all 11 saved cards load with no unknown path and no
 invalid value. Every convention field has a level and names its convention.
 Choice groups done too (the `choice` attribute, 23 groups): no saved card sets

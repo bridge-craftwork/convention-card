@@ -74,7 +74,7 @@
           class="btn"
           @click="onImportClick"
           :disabled="saving"
-          title="Import a card: this editor's JSON, BBO or bridgeodex JSON, a BBA .bbsa file, or a PDF exported from this editor"
+          title="Import a card: this editor's JSON, BBO or Bridgodex JSON, a BBA .bbsa file, or a PDF exported from this editor"
         >Import</button>
         <input
           ref="importInput"
@@ -426,8 +426,8 @@ const CONTENT_FORMATS = [
   },
   {
     id: 'bridgeodex',
-    name: 'Bridgeodex JSON',
-    desc: 'Compatible with bridgeodex.com. Useful for sharing with partners who use that site.',
+    name: 'Bridgodex JSON',
+    desc: 'Compatible with Bridgodex.com. Useful for sharing with partners who use that site.',
     ready: false,
     ext: 'json',
     mime: 'application/json'
@@ -527,7 +527,7 @@ async function onImportFile(event) {
   if (!file) return
   try {
     // importCard tells the formats apart by their content: the editor's
-    // own JSON, BBO's, bridgeodex's, .bbsa and our PDFs.
+    // own JSON, BBO's, Bridgodex's, .bbsa and our PDFs.
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
     const bytes = isPdf ? await file.arrayBuffer() : await file.text()
     const { name, description, card_data, format, report } = await importCard(bytes, { name: file.name.replace(/\.[^.]*$/, '') })
@@ -536,7 +536,7 @@ async function onImportFile(event) {
       : []
 
     // Duplicate-name check: a user often re-imports the same partnership
-    // card after updating it on bridgeodex. Offer to overwrite the
+    // card after updating it on Bridgodex. Offer to overwrite the
     // existing card rather than piling up "My Card", "My Card (2)" etc.
     const existing = userCardLinks.value.find(link => link.card_name === name)
     if (existing) {

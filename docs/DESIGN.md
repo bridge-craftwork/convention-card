@@ -10,7 +10,7 @@ responsibility lives. Decisions and open questions are tracked in
 The card began as a lobby tab in Bridge Classroom. It has since become a
 general tool, and a cross-repo dependency:
 
-- **The converters are general-purpose.** BBO, bridgeodex, BBA `.bbsa` and the
+- **The converters are general-purpose.** BBO, Bridgodex, BBA `.bbsa` and the
   ACBL PDFs are formats every bridge player meets, whether or not they use Bridge
   Classroom.
 - **The card format already exists twice.** rusty-bidding-bot's `bridge-card`
@@ -33,7 +33,7 @@ One home, one definition, and each consumer depends on it.
 
 | Consumer | What it needs |
 |---|---|
-| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, bridgeodex and PDF; export to the same, plus the ACBL PDFs. |
+| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, Bridgodex and PDF; export to the same, plus the ACBL PDFs. |
 | **Bridge Classroom** | The editor embedded as a lobby tab; saved cards per user; the "My proficiency" overlay; later, "practice our card". |
 | **rusty-bidding-bot** | The Rust card model: read a card, resolve aliases and defaults, and switch rule modules on from its agreements. `.bbsa` import and export. |
 | **lesson-studio** | The skill vocabulary, to validate lesson front matter. |
@@ -54,7 +54,7 @@ Language-neutral files that every other part reads:
   the more rigorous of the two lists, merged with the display text from
   `conventionCatalog.js`.
 - **Format maps**: how each outside format lands on the fields. The first is the
-  bot's `bbsa-map.toml`. BBO, bridgeodex and the ACBL PDF field maps are tables
+  bot's `bbsa-map.toml`. BBO, Bridgodex and the ACBL PDF field maps are tables
   inside JavaScript today and move into data over time, not on day one;
   the ACBL PDF maps move first, for [card templates of your own](#card-templates-of-your-own).
 - **Conventions and skills** (`conventions/`, one file per ID, such as
@@ -155,7 +155,7 @@ ID to pick up the shared summary and links.
 ### 2. The JavaScript library (repo root + `js/`)
 
 Reads and writes cards against the spec, and holds the converters: BBO,
-bridgeodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
+Bridgodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
 the drawn PDF (`acblCardPdf.js`), and PDF re-import (the source card is
 embedded in the PDF's Info dictionary). No framework and no network: it runs
 in a page, a browser extension or Node.
@@ -169,7 +169,7 @@ in a page, a browser extension or Node.
   (a page fetches them from wherever it serves them; Node reads them from
   disk).
 - **One reader for every format** (`importCard`, `js/importCard.js`): the
-  editor's own JSON, BBO, bridgeodex, `.bbsa`, our PDFs and the URL hand-off,
+  editor's own JSON, BBO, Bridgodex, `.bbsa`, our PDFs and the URL hand-off,
   told apart by their content. The editor's Import and the standalone page's
   `window.card` both read through it.
 - **Hand edits in our PDFs** (`js/acblPdfImport.js`): the export records
@@ -248,7 +248,7 @@ controls appear only when the host gives overlays.
 **The standalone app** keeps cards in the browser's IndexedDB with no
 account (`web/src/browserStorage.js`); the starter card (Bridge Classroom's
 "2/1 Intermediate") is read-only, and Duplicate makes an editable copy. It
-imports BBO, bridgeodex, `.bbsa` and its own PDFs, and exports PDFs, its JSON
+imports BBO, Bridgodex, `.bbsa` and its own PDFs, and exports PDFs, its JSON
 and `.bbsa`. **Save to Bridge Classroom** opens Bridge Classroom with the card
 compressed into the URL's fragment (`js/handoff.js`; DECISIONS, 20), where it
 is saved under Bridge Classroom's own session. The same hand-off works the
@@ -494,14 +494,14 @@ built-in cards are the same kind of thing, shipped with the editor.
     template; a filled-in card's bytes differ, so an import recognises
     the template by its field names and uses the hash only to tell
     apart templates that share them.
-- **What a PDF without a form needs is different.** Most bridgeodex PDFs
+- **What a PDF without a form needs is different.** Most Bridgodex PDFs
   have no form fields (the text is printed into the page), so a mapping by
   field name cannot read them; that would need text extraction by
   position.
 
 ## Shared cards
 
-On BBO and bridgeodex, partners share one card and either can edit it. Bridge
+On BBO and Bridgodex, partners share one card and either can edit it. Bridge
 Classroom's saved cards will work the same way. Storage and membership stay
 in Bridge Classroom (DECISIONS, 7); the API side is
 [Bridge-Classroom #436](https://github.com/bridge-craftwork/Bridge-Classroom/issues/436).

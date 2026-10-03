@@ -1,7 +1,7 @@
 /**
  * BBO (Bridge Base Online) ACBL-style convention-card JSON import.
  *
- * BBO's exporter produces a very different shape from bridgeodex:
+ * BBO's exporter produces a very different shape from Bridgodex:
  *
  *   {
  *     "schema_version": "1.1",
@@ -42,7 +42,7 @@ function rangeNum(value) {
 
 function on(v) { return v === 'y' || v === true || v === 'on' || v === 1 }
 
-/** Detect a BBO export (vs a bridgeodex one). */
+/** Detect a BBO export (vs a Bridgodex one). */
 export function isBboCard(input) {
   if (!input || typeof input !== 'object') return false
   const src = String(input.source || '').toLowerCase()

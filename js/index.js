@@ -1,5 +1,5 @@
 // @bridge-craftwork/convention-card: read and write convention cards
-// against the spec, convert BBO, bridgeodex and .bbsa cards, fill the ACBL
+// against the spec, convert BBO, Bridgodex and .bbsa cards, fill the ACBL
 // PDFs and read them back. No framework and no network access; see
 // docs/DESIGN.md, "The JavaScript library".
 

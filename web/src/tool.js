@@ -19,7 +19,7 @@ export const HOME = 'https://bridge-craftwork.com/card/'
 
 /** What `input` may be. */
 export const INPUT = [
-  { form: 'object', about: `A card as JSON: the editor's export ({ schema: "${EXPORT_SCHEMA}", name, description, card_data }), a record { name, description, card_data }, bare card_data, BBO's export or bridgeodex's.` },
+  { form: 'object', about: `A card as JSON: the editor's export ({ schema: "${EXPORT_SCHEMA}", name, description, card_data }), a record { name, description, card_data }, bare card_data, BBO's export or Bridgodex's.` },
   { form: 'string', about: 'The same JSON as text, a .bbsa file\'s text, or a hand-off (v1.<data>, or a URL ending #import=v1.<data>).' },
   { form: 'ArrayBuffer | Uint8Array', about: 'A file\'s bytes: a PDF this editor exported (the card travels inside it), or any of the text forms.' },
   { form: 'null or omitted', about: 'run, validate: the card open in the editor, unsaved edits included.' },

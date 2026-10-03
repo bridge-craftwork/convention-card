@@ -192,7 +192,7 @@ export function renderLlmsText(version, referenceBytes) {
   return `# Convention card
 
 > Build and edit a bridge convention card in the browser, with no account.
-> Import BBO, bridgeodex and BBA (.bbsa) cards; export the ACBL cards as PDF,
+> Import BBO, Bridgodex and BBA (.bbsa) cards; export the ACBL cards as PDF,
 > .bbsa and JSON. Cards stay in the browser.
 
 **If you are reading or writing a card, read the plain-text reference first.**

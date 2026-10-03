@@ -72,7 +72,7 @@ Don't move code that's mid-change.
      headings "DEFENSE VS NOTRUMP", "NOTRUMP OPENING BIDS" and
      "RESPONSES/REBIDS". Growth checks for room only against other form
      fields, not against the page's printed text.
-- Land the bridgeodex `14+` fix with it. Only the new PDF code reads the
+- Land the Bridgodex `14+` fix with it. Only the new PDF code reads the
   `<path>_plus` fields it writes.
 
 **Done when:** a sample export of a full card is legible with no clipped
@@ -129,8 +129,8 @@ to the same card.
   golden files the crate writes (card JSON and `.bbsa` for each test card)
   that the JS tests must match; "Import .bbsa" and "Export .bbsa" in the
   editor in Phase 3.
-- ~~Fix the bridgeodex importer's Puppet Stayman path.~~ Done, in the spec
-  rather than the importer: the editor, both PDFs and the BBO and bridgeodex
+- ~~Fix the Bridgodex importer's Puppet Stayman path.~~ Done, in the spec
+  rather than the importer: the editor, both PDFs and the BBO and Bridgodex
   importers all mean **1NT** Puppet by `notrump.stayman.puppet`, so that path
   is now an alias of `notrump.stayman.puppet_1nt`, not of 2NT Puppet. No saved
   card used it.

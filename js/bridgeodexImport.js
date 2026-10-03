@@ -1,13 +1,13 @@
 /**
- * Bridgeodex JSON import
+ * Bridgodex JSON import
  *
- * Converts a card exported from bridgeodex.com into our card_data
- * shape. Lossy where the bridgeodex schema has fields we haven't
+ * Converts a card exported from Bridgodex.com into our card_data
+ * shape. Lossy where the Bridgodex schema has fields we haven't
  * catalogued yet — we keep the original blob under
  * `card_data._bridgeodex_raw` so nothing's discarded, and the editor
  * can surface those fields once we catalogue them.
  *
- * Bridgeodex quirks we handle here:
+ * Bridgodex quirks we handle here:
  *   - Boolean fields appear as the string "on" when checked; missing
  *     when unchecked.
  *   - Numeric range fields are strings like "14+", "17 Vul", "11+".
@@ -25,7 +25,7 @@ function on(v) { return v === 'on' || v === true }
 
 /**
  * Convert every suit-shorthand variant the user might have typed into
- * a real ♠♥♦♣ character. Handles both bridgeodex's "!C/!H/..." style
+ * a real ♠♥♦♣ character. Handles both Bridgodex's "!C/!H/..." style
  * and bare "2C" / "1C" / "S" / "H" patterns. Idempotent.
  */
 function suits(text) {
@@ -34,7 +34,7 @@ function suits(text) {
 }
 
 /**
- * Split a bridgeodex range string into a leading integer, an
+ * Split a Bridgodex range string into a leading integer, an
  * open-ended marker, and an optional trailing qualifier.
  * "14+" → {n: 14, plus: true}, "17 Vul" → {n: 17, suffix: "Vul"}.
  *
@@ -73,12 +73,12 @@ function num(value) {
 }
 
 /**
- * Pick a human-readable card name from the bridgeodex payload.
+ * Pick a human-readable card name from the Bridgodex payload.
  */
 function deriveName(settings) {
   const namesText = settings?.names?.names?.trim()
   if (namesText) return namesText
-  return 'Imported bridgeodex card'
+  return 'Imported Bridgodex card'
 }
 
 /** Whether a system's description names 2/1 ("2/1", "2 over 1", "two over one"). */
@@ -92,11 +92,11 @@ export function namesTwoOverOne(text) {
  */
 export function importBridgeodexJson(input) {
   if (!input || typeof input !== 'object') {
-    throw new Error('Bridgeodex file is empty or not JSON')
+    throw new Error('Bridgodex file is empty or not JSON')
   }
   const s = input.settings || input
   if (!s || typeof s !== 'object') {
-    throw new Error('Bridgeodex file is missing the settings block')
+    throw new Error('Bridgodex file is missing the settings block')
   }
 
   const card_data = {
@@ -128,7 +128,7 @@ export function importBridgeodexJson(input) {
   // ─── Overview ─────────────────────────────────────────────────
   const ov = s.overview || {}
   if (ov.general_approach) card_data.general.system = suits(ov.general_approach)
-  // bridgeodex has no 2/1 box of its own: its general approach names the
+  // Bridgodex has no 2/1 box of its own: its general approach names the
   // system in words. "2/1" there is the ACBL card's Two Over One Game
   // Forcing box (and the BBO export's 2over1GF).
   if (namesTwoOverOne(ov.general_approach)) card_data.major_openings.two_over_one.game_force = true
@@ -137,7 +137,7 @@ export function importBridgeodexJson(input) {
   if (on(ov.forcing_1c)) card_data.general.forcing_opening_1c = true
   if (on(ov.forcing_2c)) card_data.general.forcing_opening_2c = true
   if (ov.forcing_other)  card_data.general.forcing_opening_other = suits(ov.forcing_other)
-  // Bridgeodex spells these `1nt_open_strong` / `1nt_open_weak`; accept the
+  // Bridgodex spells these `1nt_open_strong` / `1nt_open_weak`; accept the
   // abbreviated forms too in case other exports differ.
   if (on(ov['1nt_open_strong']) || on(ov['1nt_open_str'])) card_data.general.nt_open_style = 'strong'
   if (on(ov['1nt_open_weak'])   || on(ov['1nt_open_wk']))  card_data.general.nt_open_style = 'weak'
@@ -176,7 +176,7 @@ export function importBridgeodexJson(input) {
   if (on(nt['2s_tfr']))             card_data.notrump.transfers.spades_relay = true
   if (on(nt['2nt_tfr']))            card_data.notrump.transfers.two_nt = true
   if (on(nt['2nt_nat']))            card_data.notrump.two_nt_natural = true
-  // Texas transfers — bridgeodex has per-suit flags. We mirror them
+  // Texas transfers — Bridgodex has per-suit flags. We mirror them
   // 1:1 (so the per-suit checkboxes light up in the editor) and also
   // keep an umbrella `texas` boolean so the "Texas transfers" catalog
   // row stays checked from a single source of truth.
@@ -242,9 +242,9 @@ export function importBridgeodexJson(input) {
   if (on(mj.art_raises_3nt))      card_data.major_openings.three_nt_raise.play = true
   if (on(mj.art_raises_splinter)) card_data.major_openings.splinters.play = true
   if (mj.art_raises_other)        card_data.major_openings.art_raises_other = suits(mj.art_raises_other)
-  // Bridgeodex only has a single Drury checkbox. Almost everyone who
+  // Bridgodex only has a single Drury checkbox. Almost everyone who
   // plays Drury today plays Reverse Drury (low responses = strong,
-  // 2♣ = limit raise). When the bridgeodex flag is on we mark both:
+  // 2♣ = limit raise). When the Bridgodex flag is on we mark both:
   //   - `drury.play=true` — the structured "Drury bid: 2♣" checkbox
   //     on the ACBL-style card lights up
   //   - `drury.reverse=true` — the Reverse Drury catalog row lights up
@@ -292,7 +292,7 @@ export function importBridgeodexJson(input) {
   if (on(mn['1c_jump_raise_overcall_weak']))  card_data.minor_openings.one_club.jump_raise_after_overcall.weak = true
   if (on(mn['1c_jump_raise_overcall_mixed'])) card_data.minor_openings.one_club.jump_raise_after_overcall.mixed = true
   if (on(mn['1c_jump_raise_overcall_inv']))   card_data.minor_openings.one_club.jump_raise_after_overcall.inv = true
-  // Bridgeodex puts the minor-opening free-text under `1c_more`; older
+  // Bridgodex puts the minor-opening free-text under `1c_more`; older
   // exports used `1c_1d`. Accept either.
   const minorMore = mn['1c_more'] || mn['1c_1d']
   if (minorMore) card_data.minor_openings.notes = suits(minorMore)
@@ -340,7 +340,7 @@ export function importBridgeodexJson(input) {
   if (on(sl.gerber_over_nt_seq))      card_data.other_conventions.gerber.over_nt_seq = true
   if (on(sl.gerber_non_nt_seq))       card_data.other_conventions.gerber.non_nt_seq = true
   // Umbrella `gerber.play` lights up the catalog row whenever any
-  // variant is on — bridgeodex itself doesn't have a top-level "Gerber"
+  // variant is on — Bridgodex itself doesn't have a top-level "Gerber"
   // flag, just the three variant checkboxes.
   if (on(sl.gerber_directly_over_nt) || on(sl.gerber_over_nt_seq) || on(sl.gerber_non_nt_seq)) {
     card_data.other_conventions.gerber.play = true
@@ -349,7 +349,7 @@ export function importBridgeodexJson(input) {
   if (on(sl['4nt_rkc_0314']))  card_data.other_conventions.blackwood.rkcb_0314 = true
   if (on(sl['4nt_rkc_1430']))  card_data.other_conventions.blackwood.rkcb_1430 = true
   if (sl['4nt_more'])    card_data.other_conventions.blackwood.notes = suits(sl['4nt_more'])
-  // DOPI / DEPO / ROPI — bridgeodex doesn't surface these as named
+  // DOPI / DEPO / ROPI — Bridgodex doesn't surface these as named
   // flags; they typically live in the slam notes blob. BBO does have
   // them as `C_dopi`/`C_depo`/`C_ropi` and the future BBO importer
   // will write here.
@@ -438,7 +438,7 @@ export function importBridgeodexJson(input) {
   if (on(vd.redouble_conv))      card_data.vs_to_double.redouble.conv = true
   if (on(vd.redouble_denies_fit)) card_data.vs_to_double.redouble.denies_fit = true
   if (vd.redouble_conv_desc)     card_data.vs_to_double.redouble.conv_desc = suits(vd.redouble_conv_desc)
-  // Bridgeodex marks 2NT-over-their-double as either a raise (`_raise`)
+  // Bridgodex marks 2NT-over-their-double as either a raise (`_raise`)
   // or natural showing the two suits (`_nat`); either way the card's
   // "2NT Over" box is in use, so light up the play flag.
   if (on(vd['2nt_over_minors_raise']) || on(vd['2nt_over_minors_nat'])) card_data.vs_to_double.two_nt_raise_minors.play = true
@@ -512,7 +512,7 @@ export function importBridgeodexJson(input) {
   if (on(ot.fsf_1_rnd))   card_data.other_conventions.fourth_suit_forcing.one_round = true
   if (ot.jump_shift_resp) card_data.other_conventions.jump_shift_response = suits(ot.jump_shift_resp)
   if (ot.vs_str_open)     card_data.other_conventions.vs_strong_open = suits(ot.vs_str_open)
-  // Bridgeodex's "Other" section has two free-text rows. We preserve
+  // Bridgodex's "Other" section has two free-text rows. We preserve
   // them as separate fields (notes_line_1 / notes_line_2) so PDF
   // exporters can fill the two corresponding text fields on the ACBL
   // New card, and also keep a joined `notes` field for the editor's
@@ -525,7 +525,7 @@ export function importBridgeodexJson(input) {
   // ─── Top-level notes ─────────────────────────────────────────
   if (s.names?.names) card_data.metadata.partner_names = String(s.names.names)
 
-  // Flatten all the free-text fields from the bridgeodex source into
+  // Flatten all the free-text fields from the Bridgodex source into
   // per-section notes that the editor actually displays. Without this
   // pass, descriptions like "Range ask: 2NT rebid shows min, 3♣ shows
   // max" — important agreements — would be invisible in the editor
@@ -537,13 +537,13 @@ export function importBridgeodexJson(input) {
 
   return {
     name: deriveName(s),
-    description: 'Imported from bridgeodex.com',
+    description: 'Imported from Bridgodex.com',
     card_data
   }
 }
 
 /**
- * Walk the bridgeodex source and gather every free-text / descriptive
+ * Walk the Bridgodex source and gather every free-text / descriptive
  * field into per-section notes. We use the same notes keys the editor
  * already exposes (see SECTION_META.notes in conventionCatalog.js), so
  * imported descriptions show up in the editor's Notes block.
@@ -695,7 +695,7 @@ function importLeadsBlock(src, target) {
   if (on(src.length_attitude)) target.length.attitude = true
   if (on(src.length_2nd_from_xxxx_plus)) target.length.second_from_4plus = true
   if (on(src.small_from_xx)) target.length.small_from_xx = true
-  // Numeric "circle which card to lead" indicators. Bridgeodex uses
+  // Numeric "circle which card to lead" indicators. Bridgodex uses
   // capitalized pattern names with one of three prefixes:
   //   length_leads_<Pat>      → length.lead_choice_<pat>
   //   honor_leads_<Pat>       → honors.lead_choice_<pat>

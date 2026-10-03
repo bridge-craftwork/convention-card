@@ -86,7 +86,7 @@
 "stayman.play"             = { kind = "bool", label = "Stayman", skill = "bidding_conventions/stayman", level = 3 }
 "stayman.forcing"          = { kind = "bool", label = "Stayman is forcing", skill = "bidding_conventions/stayman", level = 3 }
 "stayman.garbage"          = { kind = "bool", label = "Garbage Stayman", skill = "bidding_conventions/stayman", level = 3 }
-"stayman.puppet_1nt"       = { kind = "bool", label = "Puppet Stayman over 1NT (3♣)", aliases = ["notrump.stayman.puppet"], desc = "Bridge Classroom's editor, its PDFs and the BBO and bridgeodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)", skill = "bidding_conventions/puppet_stayman", level = 7 }
+"stayman.puppet_1nt"       = { kind = "bool", label = "Puppet Stayman over 1NT (3♣)", aliases = ["notrump.stayman.puppet"], desc = "Bridge Classroom's editor, its PDFs and the BBO and Bridgodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)", skill = "bidding_conventions/puppet_stayman", level = 7 }
 "smolen.play"              = { kind = "bool", label = "Smolen", skill = "bidding_conventions/smolen", level = 4 }
 "minor_suit_stayman.play"  = { kind = "bool", label = "Minor Suit Stayman (1NT–2♠)", level = 6, skill = "bidding_conventions/minor_suit_stayman" }
 "transfers.jacoby"         = { kind = "bool", label = "Jacoby transfers", skill = "bidding_conventions/jacoby_transfers", level = 3 }
@@ -96,9 +96,9 @@
 "transfers.texas_4h"       = { kind = "bool", label = "Texas 4♥", level = 4, skill = "bidding_conventions/jacoby_transfers" }
 "transfers.texas_4s"       = { kind = "bool", label = "Texas 4♠", level = 4, skill = "bidding_conventions/jacoby_transfers" }
 "minor_transfers"          = { kind = "enum", label = "Minor-suit responses to 1NT", options = ["relay", "four_way", "four_way_reversed", "bba", "none"], default = "relay", desc = "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). none: not played", skill = "bidding_conventions/minor_suit_transfers", level = 5 }
-"transfers.spades_relay"   = { kind = "bool", label = "1NT–2♠ transfer", desc = "The card's 2♠ transfer box, as bridgeodex marks it; what it transfers to is in the card's notes", skill = "bidding_conventions/minor_suit_transfers", level = 5 }
+"transfers.spades_relay"   = { kind = "bool", label = "1NT–2♠ transfer", desc = "The card's 2♠ transfer box, as Bridgodex marks it; what it transfers to is in the card's notes", skill = "bidding_conventions/minor_suit_transfers", level = 5 }
 "transfers.two_s_clubs"    = { kind = "bool", label = "1NT–2♠ transfer to clubs", level = 5, skill = "bidding_conventions/minor_suit_transfers" }
-"transfers.two_nt"         = { kind = "bool", label = "1NT–2NT transfer", desc = "The card's 2NT transfer box, as bridgeodex marks it", skill = "bidding_conventions/minor_suit_transfers", level = 5 }
+"transfers.two_nt"         = { kind = "bool", label = "1NT–2NT transfer", desc = "The card's 2NT transfer box, as Bridgodex marks it", skill = "bidding_conventions/minor_suit_transfers", level = 5 }
 "two_nt_natural"           = { kind = "bool", label = "1NT–2NT natural (invitational)" }
 "transfers.two_nt_clubs"   = { kind = "bool", label = "1NT–2NT transfer to clubs", level = 5, skill = "bidding_conventions/minor_suit_transfers" }
 "transfers.two_nt_diamonds" = { kind = "bool", label = "1NT–2NT transfer to diamonds", level = 5, skill = "bidding_conventions/minor_suit_transfers" }
@@ -140,13 +140,13 @@
 "responses.3h"             = { kind = "text", label = "3♥ response" }
 "responses.3s"             = { kind = "text", label = "3♠ response" }
 "notes"                    = { kind = "text", label = "Notrump notes", note = true }
-"one_nt.range_min_plus"    = { kind = "bool", label = "1NT range: minimum has a plus", choice = "notrump.one_nt.range_min_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt.range_min_plus"    = { kind = "bool", label = "1NT range: minimum has a plus", choice = "notrump.one_nt.range_min_qualifier", desc = "The card's range written with a plus (\"14+\"), as Bridgodex marks it" }
 "one_nt.range_min_minus"   = { kind = "bool", label = "1NT range: minimum has a minus", choice = "notrump.one_nt.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
-"one_nt.range_max_plus"    = { kind = "bool", label = "1NT range: maximum has a plus", choice = "notrump.one_nt.range_max_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt.range_max_plus"    = { kind = "bool", label = "1NT range: maximum has a plus", choice = "notrump.one_nt.range_max_qualifier", desc = "The card's range written with a plus (\"14+\"), as Bridgodex marks it" }
 "one_nt.range_max_minus"   = { kind = "bool", label = "1NT range: maximum has a minus", choice = "notrump.one_nt.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
-"one_nt_alt.range_min_plus" = { kind = "bool", label = "Alternate 1NT range: minimum has a plus", choice = "notrump.one_nt_alt.range_min_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_min_plus" = { kind = "bool", label = "Alternate 1NT range: minimum has a plus", choice = "notrump.one_nt_alt.range_min_qualifier", desc = "The card's range written with a plus (\"14+\"), as Bridgodex marks it" }
 "one_nt_alt.range_min_minus" = { kind = "bool", label = "Alternate 1NT range: minimum has a minus", choice = "notrump.one_nt_alt.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
-"one_nt_alt.range_max_plus" = { kind = "bool", label = "Alternate 1NT range: maximum has a plus", choice = "notrump.one_nt_alt.range_max_qualifier", desc = "The card's range written with a plus (\"14+\"), as bridgeodex marks it" }
+"one_nt_alt.range_max_plus" = { kind = "bool", label = "Alternate 1NT range: maximum has a plus", choice = "notrump.one_nt_alt.range_max_qualifier", desc = "The card's range written with a plus (\"14+\"), as Bridgodex marks it" }
 "one_nt_alt.range_max_minus" = { kind = "bool", label = "Alternate 1NT range: maximum has a minus", choice = "notrump.one_nt_alt.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt.range_min_plus"    = { kind = "bool", label = "2NT range: minimum has a plus", choice = "notrump.two_nt.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
 "two_nt.range_min_minus"   = { kind = "bool", label = "2NT range: minimum has a minus", choice = "notrump.two_nt.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }

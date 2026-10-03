@@ -13,7 +13,7 @@
         </summary>
         <p class="lede">
           Build and edit your partnerships' convention cards, print them, and move them between BBO,
-          bridgeodex, BBA and Bridge Classroom.
+          Bridgodex, BBA and Bridge Classroom.
         </p>
         <div class="facts">
           <div class="fact">
@@ -53,12 +53,12 @@
               <tbody>
                 <tr><td>Filled-in ACBL PDFs</td><td class="yes">✓</td><td class="yes">✓</td></tr>
                 <tr><td><a href="https://www.bridgebase.com/" target="_blank" rel="noopener">BBO</a></td><td class="yes">✓</td><td class="no">not yet</td></tr>
-                <tr><td>bridgeodex</td><td class="yes">✓</td><td class="no">not yet</td></tr>
+                <tr><td><a href="https://bridgodex.com/" target="_blank" rel="noopener">Bridgodex</a></td><td class="yes">✓</td><td class="no">not yet</td></tr>
                 <tr><td><a href="https://sites.google.com/view/bbaenglish" target="_blank" rel="noopener">BBA</a> (<code>.bbsa</code>)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
               </tbody>
             </table>
             <p class="flag">A PDF read in is a fillable ACBL Classic or New card; a printed one (as most
-              bridgeodex PDFs are) has no boxes to read. BBO and bridgeodex can't be written to yet.</p>
+              Bridgodex PDFs are) has no boxes to read. BBO and Bridgodex can't be written to yet.</p>
           </div>
           <div class="fact">
             <h2>On BBO</h2>

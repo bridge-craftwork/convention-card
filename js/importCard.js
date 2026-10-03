@@ -1,6 +1,6 @@
 // Read a card from any format the library knows, telling them apart by
 // their content: the editor's own JSON (its export, or bare card_data),
-// BBO's and bridgeodex's JSON, BBA's .bbsa text, a PDF this library wrote,
+// BBO's and Bridgodex's JSON, BBA's .bbsa text, a PDF this library wrote,
 // and the URL hand-off (js/handoff.js). The editor's Import button and the
 // standalone page's window.card both read through here, so they agree.
 //
@@ -15,13 +15,13 @@ import { decodeCardFromUrl } from './handoff.js'
 export const IMPORT_FORMATS = {
   card: "the editor's own JSON: its export ({ schema, name, description, card_data }) or bare card_data",
   bbo: "BBO's ACBL card export (JSON)",
-  bridgeodex: "bridgeodex's card export (JSON, with a settings block)",
+  bridgeodex: "Bridgodex's card export (JSON, with a settings block)",
   bbsa: "BBA's .bbsa convention file (Key = value lines)",
   pdf: 'an ACBL PDF: one this editor exported (the card travels inside it, and boxes changed since are read too), or any filled-in ACBL Classic or New card',
   handoff: 'a hand-off string, v1.<data>, or a URL ending #import=v1.<data>',
 }
 
-// Top-level keys only card_data has. Bridgeodex's settings share several
+// Top-level keys only card_data has. Bridgodex's settings share several
 // section names with card_data (carding, doubles, two_level, …), so
 // those prove nothing.
 const CARD_DATA_ONLY = ['format', 'schema_version', 'metadata', 'notrump', 'major_openings', 'minor_openings', 'slam', 'other_conventions', 'other_agreements', 'leads']
@@ -76,7 +76,9 @@ export function detectFormat(input) {
  * is not a card.
  */
 export async function importCard(input, { from = null, name = null } = {}) {
-  const format = from || detectFormat(input)
+  // 'bridgodex' is the site's own spelling; 'bridgeodex' is the format's
+  // name here, kept for saved cards and callers.
+  const format = (from === 'bridgodex' ? 'bridgeodex' : from) || detectFormat(input)
   if (!format) {
     throw new Error(`Not a card this editor reads. It reads ${Object.values(IMPORT_FORMATS).join('; ')}.`)
   }

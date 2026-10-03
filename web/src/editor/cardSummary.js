@@ -95,7 +95,7 @@ export const DISTINGUISHING = [
   {
     key: 'two_over_one',
     label: '2/1',
-    // The field, or, for a card imported from bridgeodex before its
+    // The field, or, for a card imported from Bridgodex before its
     // importer read it, the system's own words.
     value: data => (on(data, 'major_openings.two_over_one.game_force') || namesTwoOverOne(readPath(data, 'general.system')) ? 'GF' : ''),
   },
