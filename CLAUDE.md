@@ -70,7 +70,7 @@ alongside it.
 
 ## Sibling checkouts
 
-`/Users/rick/Development/GitHub/`:
+`/Volumes/Express2T/Development/GitHub/`:
 - `Bridge-Classroom` — the code's current home; keeps saved cards and the API.
 - `rusty-bidding-bot` — the Rust crate's current home; a consumer.
 - `lesson-studio` — validates against the taxonomy (its Contract 4).
