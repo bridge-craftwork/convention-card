@@ -7,7 +7,7 @@
 // The .bbsa and PDF code is loaded only when a file needs it, so a page that
 // imports this module does not pull in pdf-lib.
 
-import { isBboCard, importBboJson } from './bboImport.js'
+import { isBboCard, importBboJson } from './bbo.js'
 import { importBridgeodexJson } from './bridgeodexImport.js'
 import { decodeCardFromUrl } from './handoff.js'
 import { isBundle } from './cardBundle.js'

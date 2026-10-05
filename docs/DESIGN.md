@@ -53,10 +53,12 @@ Language-neutral files that every other part reads:
   is taught under. This starts from the bot's `fields.toml`, which is already
   the more rigorous of the two lists, merged with the display text from
   `conventionCatalog.js`.
-- **Format maps**: how each outside format lands on the fields. The first is the
-  bot's `bbsa-map.toml`. BBO, Bridgodex and the ACBL PDF field maps are tables
-  inside JavaScript today and move into data over time, not on day one;
-  the ACBL PDF maps move first, for [card templates of your own](#card-templates-of-your-own).
+- **Format maps**: how each outside format lands on the fields, read both
+  ways (import and export). The first was the bot's `bbsa-map.toml`; BBO's
+  ACBL card followed (`bbo-map.toml`, 2026-10-05). Bridgodex and the ACBL PDF
+  field maps are tables inside JavaScript today and move into data over time;
+  Bridgodex next, for its export, and the ACBL PDF maps for
+  [card templates of your own](#card-templates-of-your-own).
 - **Conventions and skills** (`conventions/`, one file per ID, such as
   `conventions/bidding_conventions/stayman.toml`): name, level, the names people
   write it as, a summary and sources. See
@@ -154,8 +156,8 @@ ID to pick up the shared summary and links.
 
 ### 2. The JavaScript library (repo root + `js/`)
 
-Reads and writes cards against the spec, and holds the converters: BBO,
-Bridgodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
+Reads and writes cards against the spec, and holds the converters: BBO
+(both ways, `js/bbo.js`), Bridgodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
 the drawn PDF (`acblCardPdf.js`), and PDF re-import (the source card is
 embedded in the PDF's Info dictionary). No framework and no network: it runs
 in a page, a browser extension or Node.

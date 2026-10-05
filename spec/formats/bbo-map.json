@@ -1,0 +1,425 @@
+{
+ "schema": "bbo-map/v1",
+ "generated_from": "spec/formats/bbo-map.toml (do not edit)",
+ "conventions": {
+  "1430": "other_conventions.blackwood.rkcb_1430",
+  "rkc": "other_conventions.blackwood.rkcb_0314",
+  "blackwood": "other_conventions.blackwood.standard",
+  "gerber": "other_conventions.gerber.play",
+  "dopi": "slam.dopi",
+  "depo": "slam.depo",
+  "ropi": "slam.ropi",
+  "2over1GF": "major_openings.two_over_one.game_force",
+  "F1C": "general.forcing_opening_1c",
+  "F2C": "general.forcing_opening_2c",
+  "major12-4": {
+   "set": {
+    "major_openings.min_length_1st_2nd": 4
+   }
+  },
+  "major12-5": {
+   "set": {
+    "major_openings.min_length_1st_2nd": 5
+   }
+  },
+  "major34-4": {
+   "set": {
+    "major_openings.min_length_3rd_4th": 4
+   }
+  },
+  "major34-5": {
+   "set": {
+    "major_openings.min_length_3rd_4th": 5
+   }
+  },
+  "major2RaiseW": "major_openings.jump_raise.weak",
+  "major2RaiseI": "major_openings.jump_raise.inv",
+  "majorO2RaiseW": "major_openings.jump_raise_after_overcall.weak",
+  "majorO2RaiseI": "major_openings.jump_raise_after_overcall.inv",
+  "major2NTRaise": "major_openings.jacoby_2nt.play",
+  "major3NTRaise": "major_openings.three_nt_raise.play",
+  "majorSplinter": "major_openings.splinters.play",
+  "major1NTF": "major_openings.one_nt_response.forcing",
+  "major1NTSF": "major_openings.one_nt_response.semi_forcing",
+  "drury": "major_openings.drury.play",
+  "druryRev": {
+   "set": {
+    "major_openings.drury.play": true,
+    "major_openings.drury.reverse": true
+   }
+  },
+  "drury2W": {
+   "set": {
+    "major_openings.drury.play": true,
+    "major_openings.drury.two_way": true
+   }
+  },
+  "minorC3": {
+   "set": {
+    "minor_openings.one_club.min_length": 3
+   }
+  },
+  "minorC4": {
+   "set": {
+    "minor_openings.one_club.min_length": 4
+   }
+  },
+  "minorC5": {
+   "set": {
+    "minor_openings.one_club.min_length": 5
+   }
+  },
+  "minorD3": {
+   "set": {
+    "minor_openings.one_diamond.min_length": 3
+   }
+  },
+  "minorD4": {
+   "set": {
+    "minor_openings.one_diamond.min_length": 4
+   }
+  },
+  "minorD5": {
+   "set": {
+    "minor_openings.one_diamond.min_length": 5
+   }
+  },
+  "minor2RaiseW": "minor_openings.one_club.jump_raise.weak",
+  "minor2RaiseI": "minor_openings.one_club.jump_raise.inv",
+  "minorO2RaiseW": "minor_openings.one_club.jump_raise_after_overcall.weak",
+  "minorO2RaiseI": "minor_openings.one_club.jump_raise_after_overcall.inv",
+  "minorSingleRaise": "minor_openings.one_club.single_raise.nf",
+  "minorInvForcing": "minor_openings.inverted_minors.play",
+  "bypassDs": "minor_openings.bypass_5_plus",
+  "2CStrong": {
+   "set": {
+    "two_level.two_clubs.meaning": "strong"
+   }
+  },
+  "2CVeryStrong": {
+   "set": {
+    "two_level.two_clubs.meaning": "very_strong"
+   }
+  },
+  "2DWaiting": {
+   "set": {
+    "two_level.two_clubs.2d_response": "waiting"
+   }
+  },
+  "2DNeg": {
+   "set": {
+    "two_level.two_clubs.2d_response": "negative"
+   }
+  },
+  "2DWeak": {
+   "set": {
+    "two_level.two_diamonds.meaning": "weak"
+   }
+  },
+  "2HWeak": {
+   "set": {
+    "two_level.two_hearts.meaning": "weak"
+   }
+  },
+  "2SWeak": {
+   "set": {
+    "two_level.two_spades.meaning": "weak"
+   }
+  },
+  "2D2NT": "two_level.two_diamonds.two_nt_force",
+  "2H2NT": "two_level.two_hearts.two_nt_force",
+  "2S2NT": "two_level.two_spades.two_nt_force",
+  "2DNew": "two_level.two_diamonds.new_suit_nf",
+  "2HNew": "two_level.two_hearts.new_suit_nf",
+  "2SNew": "two_level.two_spades.new_suit_nf",
+  "WJS": "other_conventions.weak_jump_shifts_not_in_comp",
+  "WJSComp": "other_conventions.weak_jump_shifts_in_comp",
+  "FSF1": "other_conventions.fourth_suit_forcing.one_round",
+  "FSFG": "other_conventions.fourth_suit_forcing.game_force",
+  "NMF": "other_conventions.new_minor_forcing.play",
+  "NMF2": "other_conventions.two_way_nmf",
+  "1N5M": {
+   "set": {
+    "notrump.one_nt.five_card_major": "sometimes"
+   }
+  },
+  "1NStayman": "notrump.stayman.forcing",
+  "1NPuppet": "notrump.stayman.puppet",
+  "1N2DTrans": "notrump.transfers.jacoby",
+  "1N2HTrans": "notrump.transfers.jacoby",
+  "1NTexas": "notrump.transfers.texas",
+  "1NSmolen": "notrump.smolen.play",
+  "1NLeb": "notrump.lebensohl.over_interference",
+  "1NNeg": "notrump.dbl.negative",
+  "2NPuppet": "notrump.two_nt.puppet",
+  "2NJacoby": "notrump.two_nt.transfers_3level",
+  "2NTexas": "notrump.two_nt.transfers_4level",
+  "dblNegative": "doubles.negative.play",
+  "dblResponsive": "doubles.responsive.play",
+  "dblMaximal": "doubles.maximal",
+  "dblSupport": "doubles.support.play",
+  "rdblSupport": "doubles.support.rdbl",
+  "ocallNSF": {
+   "set": {
+    "overcalls.responses.new_suit": "forcing"
+   }
+  },
+  "ocallNSC": {
+   "set": {
+    "overcalls.responses.new_suit": "nf_constructive"
+   }
+  },
+  "ocallJRW": {
+   "set": {
+    "overcalls.responses.jump_raise": "weak"
+   }
+  },
+  "jOcallW": {
+   "set": {
+    "overcalls.jump": "weak"
+   }
+  },
+  "jOcallI": {
+   "set": {
+    "overcalls.jump": "intermediate"
+   }
+  },
+  "jOcallS": {
+   "set": {
+    "overcalls.jump": "strong"
+   }
+  },
+  "preS": {
+   "set": {
+    "preempts.three_level_style": "sound"
+   }
+  },
+  "preL": {
+   "set": {
+    "preempts.three_level_style": "light"
+   }
+  },
+  "preVL": {
+   "set": {
+    "preempts.three_level_style": "very_light"
+   }
+  },
+  "cueMinorM": "direct_cuebids.nat_minors_michaels",
+  "cueMajorM": "direct_cuebids.nat_majors_michaels",
+  "systemOn": "nt_overcalls.direct.systems_on",
+  "systemOnB": "nt_overcalls.balance.systems_on",
+  "2NTOcallLowest": "nt_overcalls.jump_2nt_lowest_unbid",
+  "vsTONSF1": "vs_to_double.new_suit_forcing_1lvl",
+  "vsTONSF2": "vs_to_double.new_suit_forcing_2lvl",
+  "vsTORdbl": "vs_to_double.redouble.ten_plus",
+  "vsTOMajorsLP": "vs_to_double.two_nt_raise_majors.limit_plus",
+  "vsTOMinorsLP": "vs_to_double.two_nt_raise_minors.limit_plus",
+  "vsPreTO": "vs_preempts.takeout_double",
+  "vsPreLeb": "vs_preempts.lebensohl_response",
+  "4thSuits": "leads.vs_suits.length.fourth_best",
+  "4thNT": "leads.vs_nt.length.fourth_best",
+  "primaryA": "carding.partner_lead.attitude",
+  "primaryC": "carding.partner_lead.count",
+  "primarySP": "carding.partner_lead.suit_preference",
+  "UDCSuits": "carding.suits.upside_down_count",
+  "UDCNT": "carding.nt.upside_down_count",
+  "UDASuits": "carding.suits.upside_down_attitude",
+  "UDANT": "carding.nt.upside_down_attitude",
+  "smithSuits": "carding.smith_echo_suits",
+  "smithNT": "carding.smith_echo_nt",
+  "trumpSP": {
+   "set": {
+    "carding.trump_signals": "Suit Preference"
+   }
+  }
+ },
+ "fields": {
+  "approach": "general.system",
+  "1NTMin1": {
+   "range": "notrump.one_nt.range_min"
+  },
+  "1NTMax1": {
+   "range": "notrump.one_nt.range_max"
+  },
+  "1NTMin2": {
+   "range": "notrump.one_nt_alt.range_min"
+  },
+  "1NTMax2": {
+   "range": "notrump.one_nt_alt.range_max"
+  },
+  "1NSysOn": "notrump.one_nt.sys_on_vs",
+  "1N2S": "notrump.responses.2s_other",
+  "1N2N": "notrump.responses.2nt_other",
+  "1N3C": "notrump.responses.3c",
+  "1N3D": "notrump.responses.3d",
+  "1N3H": "notrump.responses.3h",
+  "1N3S": "notrump.responses.3s",
+  "1NLebDenies": "notrump.lebensohl.description",
+  "1NNegOther": "notrump.dbl.negative_desc",
+  "2NTMin": {
+   "range": "notrump.two_nt.range_min"
+  },
+  "2NTMax": {
+   "range": "notrump.two_nt.range_max"
+  },
+  "2N3S": "notrump.two_nt.three_s_desc",
+  "3NOther": {
+   "text": "three_nt.one_suit_desc",
+   "also": {
+    "three_nt.one_suit": true
+   }
+  },
+  "major3NTMin": {
+   "range": "major_openings.three_nt_raise.range_min"
+  },
+  "major3NTMax": {
+   "range": "major_openings.three_nt_raise.range_max"
+  },
+  "minor1NTMin": {
+   "range": "minor_openings.one_club.one_nt_range_min"
+  },
+  "minor1NTMax": {
+   "range": "minor_openings.one_club.one_nt_range_max"
+  },
+  "minor2NTMin": {
+   "range": "minor_openings.one_club.two_nt_range_min"
+  },
+  "minor2NTMax": {
+   "range": "minor_openings.one_club.two_nt_range_max"
+  },
+  "minor3NTMin": {
+   "range": "minor_openings.one_club.three_nt_range_min"
+  },
+  "minor3NTMax": {
+   "range": "minor_openings.one_club.three_nt_range_max"
+  },
+  "2CMin": {
+   "plain": "two_level.two_clubs.min_hcp_str"
+  },
+  "2CMax": {
+   "plain": "two_level.two_clubs.max_hcp"
+  },
+  "2DMin": {
+   "range": "two_level.two_diamonds.min_hcp"
+  },
+  "2DMax": {
+   "range": "two_level.two_diamonds.max_hcp"
+  },
+  "2DOther1": "two_level.two_diamonds.description",
+  "2DOther2": "two_level.two_diamonds.notes",
+  "2HMin": {
+   "range": "two_level.two_hearts.min_hcp"
+  },
+  "2HMax": {
+   "range": "two_level.two_hearts.max_hcp"
+  },
+  "2HOther1": "two_level.two_hearts.description",
+  "2HOther2": "two_level.two_hearts.notes",
+  "2SMin": {
+   "range": "two_level.two_spades.min_hcp"
+  },
+  "2SMax": {
+   "range": "two_level.two_spades.max_hcp"
+  },
+  "2SOther1": "two_level.two_spades.description",
+  "2SOther2": "two_level.two_spades.notes",
+  "ocallMin": {
+   "range": "overcalls.one_level_min"
+  },
+  "ocallMax": {
+   "range": "overcalls.one_level_max"
+  },
+  "ocallOther": "overcalls.notes",
+  "1NOcallDMin": {
+   "range": "nt_overcalls.direct.range_min"
+  },
+  "1NOcallDMax": {
+   "range": "nt_overcalls.direct.range_max"
+  },
+  "1NOcallBMin": {
+   "range": "nt_overcalls.balance.range_min"
+  },
+  "1NOcallBMax": {
+   "range": "nt_overcalls.balance.range_max"
+  },
+  "1NOcallOther1": "nt_overcalls.direct.conv_text",
+  "1NOcallOther2": "nt_overcalls.balance.conv_text",
+  "vs1NTHead1": "competitive.vs_1nt_strong.system",
+  "vs1NT2C1": "competitive.vs_1nt_strong.2c",
+  "vs1NT2D1": "competitive.vs_1nt_strong.2d",
+  "vs1NT2H1": "competitive.vs_1nt_strong.2h",
+  "vs1NT2S1": "competitive.vs_1nt_strong.2s",
+  "vs1NT2N1": "competitive.vs_1nt_strong.2nt",
+  "vs1NTDbl1": "competitive.vs_1nt_strong.dbl",
+  "vs1NTHead2": "competitive.vs_1nt_weak.system",
+  "vs1NT2C2": "competitive.vs_1nt_weak.2c",
+  "vs1NT2D2": "competitive.vs_1nt_weak.2d",
+  "vs1NT2H2": "competitive.vs_1nt_weak.2h",
+  "vs1NT2S2": "competitive.vs_1nt_weak.2s",
+  "vs1NT2N2": "competitive.vs_1nt_weak.2nt",
+  "vs1NTDbl2": "competitive.vs_1nt_weak.dbl",
+  "dblOther2": "doubles.negative.through",
+  "dblOther3": "doubles.responsive.through",
+  "dblOther4": "doubles.support.through",
+  "vsPreTOThru": "vs_preempts.takeout_double_thru",
+  "slamLevel": "slam.trump_level",
+  "slamOther1": "slam.control_bids",
+  "slamOther2": "slam.vs_interference",
+  "cueOther": "direct_cuebids.description",
+  "vsTOOther": "vs_to_double.notes",
+  "discardOther": "carding.notes",
+  "other1": "other_conventions.nmf_notes",
+  "other2": "other_conventions.weak_jump_shifts_notes",
+  "other3": "other_conventions.fourth_suit_forcing.notes",
+  "other4": "other_conventions.notes_line_1",
+  "other5": "other_conventions.notes_line_2"
+ },
+ "joined": [
+  {
+   "path": "notes.notrump_notes",
+   "keys": [
+    "1NOther1",
+    "1NOther2",
+    "1NOther3",
+    "2NOther",
+    "CNTOther1"
+   ]
+  },
+  {
+   "path": "notes.major_notes",
+   "keys": [
+    "majorOther1",
+    "majorOther2"
+   ]
+  },
+  {
+   "path": "notes.minor_notes",
+   "keys": [
+    "minorOther1",
+    "minorOther2"
+   ]
+  },
+  {
+   "path": "competitive.notes",
+   "keys": [
+    "vs1NTOther1",
+    "vs1NTOther2"
+   ]
+  },
+  {
+   "path": "doubles.notes",
+   "keys": [
+    "dblOther5",
+    "dblOther6"
+   ]
+  },
+  {
+   "path": "nt_overcalls.notes",
+   "keys": [
+    "1NOcallOther1",
+    "1NOcallOther2"
+   ],
+   "export": false
+  }
+ ]
+}
