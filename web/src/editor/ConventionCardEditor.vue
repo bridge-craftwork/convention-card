@@ -109,7 +109,16 @@
           title="Give this card a new name"
         >Rename</button>
         <button
-          v-if="canEdit && !isSystemCard"
+          v-if="canRemoveFromList"
+          class="btn"
+          @click="onRemoveFromList"
+          :disabled="saving"
+          title="Take this card off your list; it isn't deleted"
+        >Remove from my list</button>
+        <!-- A built-in or public card shows Delete only to an admin (canEdit),
+             behind a stronger warning (onDelete). -->
+        <button
+          v-if="canEdit"
           class="btn btn-danger"
           @click="onDelete"
           :disabled="saving"
@@ -297,6 +306,7 @@ const props = defineProps({
   overlays: { type: Object, default: null }
 })
 
+// 'deleted' also when the card is only taken off the person's list.
 const emit = defineEmits(['deleted'])
 const cc = useCardEditor(props.storage, props.overlays || undefined)
 const currentUser = computed(() => props.storage.user?.value || null)
@@ -359,6 +369,9 @@ const editorCard = computed(() => {
 })
 
 const isSystemCard = computed(() => currentCard.value && currentCard.value.owner_id == null)
+// A card everyone can use (built-in or public), rather than a player's own.
+const isSharedResource = computed(() => !!currentCard.value &&
+  (isSystemCard.value || currentCard.value.visibility === 'public'))
 // The picker lists the person's own cards; a card that isn't one of them (a
 // sample or system card) shows its name instead of a blank picker.
 const hasMultipleCards = computed(() =>
@@ -575,6 +588,14 @@ const canMakePrimary = computed(() => {
   return !!link && !link.is_primary
 })
 
+// A card on the person's list that isn't theirs (built-in, public, or shared
+// with them), when the host can take it off the list.
+const canRemoveFromList = computed(() => {
+  const card = currentCard.value
+  if (!cc.canUnlink || !card || !currentUser.value) return false
+  return card.owner_id !== currentUser.value.id && userCardLinks.value.some(l => l.card_id === card.id)
+})
+
 async function onMakePrimary() {
   saveError.value = null
   try {
@@ -600,11 +621,33 @@ async function onRename() {
 async function onDelete() {
   const card = currentCard.value
   const name = card?.name || 'this card'
-  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
+  if (isSharedResource.value) {
+    // Easy to mistake for one's own card in the table (Rick, 2026-10-05), so
+    // the name has to be typed.
+    const typed = window.prompt(
+      `"${name}" is a ${isSystemCard.value ? 'built-in' : 'public'} card that every player can use, ` +
+      `not one of yours. Deleting it removes it for everyone, from every player's list, ` +
+      `and cannot be undone.` +
+      (cc.canUnlink ? `\n\nTo take it off your own list only, cancel and use "Remove from my list".` : '') +
+      `\n\nType the card's name to delete it for everyone:`)
+    if (typed == null) return
+    if (typed.trim() !== String(card?.name || '').trim()) {
+      saveError.value = 'Not deleted: the name typed did not match'
+      return
+    }
+  } else if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
   await cc.deleteCurrentCard()
   // A host with a table of cards goes back to it (rather than showing
   // whichever card the editor opens next).
   emit('deleted', card?.id)
+}
+
+async function onRemoveFromList() {
+  const card = currentCard.value
+  if (!card) return
+  if (!confirm(`Take "${card.name}" off your list? The card itself is not deleted.`)) return
+  if (!(await cc.unlinkCurrentCard())) return
+  emit('deleted', card.id)
 }
 
 // Local ref bridging the composable's Set with v-model on SkillPills

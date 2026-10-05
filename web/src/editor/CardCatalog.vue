@@ -126,6 +126,8 @@
               <span v-else-if="row.role === 'viewer'" class="tag share-tag" title="Shared with you to read; duplicate it to make your own copy">Read only<template v-if="row.ownerName"> · by {{ row.ownerName }}</template></span>
               <span v-else-if="row.shared" class="tag share-tag" title="You share this card with a partner">Shared</span>
               <span v-if="row.readOnly" class="tag muted-tag" title="Duplicate it to make your own copy">sample</span>
+              <span v-else-if="row.common" class="tag muted-tag"
+                    title="Every player can use it; it isn't yours. Open it to take it off your list, or Duplicate it to make your own copy">{{ row.common }}</span>
             </td>
             <td>{{ row.names || '—' }}</td>
             <td>{{ row.system || '—' }}</td>
@@ -257,7 +259,10 @@ async function load() {
       ownerName: l.owner_name || null,
       shared: !!l.shared,
     })))
-    own.sort((a, b) => (b.primary - a.primary) || String(a.name).localeCompare(String(b.name)))
+    // The person's own cards first, then cards shared with them, then
+    // built-in and public cards on their list.
+    own.sort((a, b) => (b.primary - a.primary) || (group(a) - group(b))
+      || String(a.name).localeCompare(String(b.name)))
     const sample = props.sampleId ? [{ ...(await props.storage.load(props.sampleId)), readOnly: true }] : []
     cards.value = [...own, ...sample]
   } catch (err) {
@@ -267,6 +272,11 @@ async function load() {
   }
 }
 
+// A card every player can use rather than one of the person's: 'built-in'
+// (no owner) or 'public'.
+const commonKind = c => (c.owner_id == null ? 'built-in' : c.visibility === 'public' ? 'public' : null)
+const group = c => (commonKind(c) && c.role !== 'owner' ? 2 : c.role === 'editor' || c.role === 'viewer' ? 1 : 0)
+
 const rows = computed(() => cards.value.map(c => ({
   ...summarize(c),
   primary: !!c.primary,
@@ -274,6 +284,7 @@ const rows = computed(() => cards.value.map(c => ({
   ownerName: c.ownerName,
   shared: c.shared,
   readOnly: !!c.readOnly,
+  common: commonKind(c),
   data: c.card_data || {},
 })))
 
