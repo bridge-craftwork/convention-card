@@ -33,12 +33,12 @@ One home, one definition, and each consumer depends on it.
 
 | Consumer | What it needs |
 |---|---|
-| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, Bridgodex and PDF; export to the same, plus the ACBL PDFs. |
+| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, Bridgodex, `.bbsa` and PDF; export to Bridgodex and `.bbsa`, plus the ACBL PDFs. BBO has no card files, so moving a card to and from BBO is the extension's job. |
 | **Bridge Classroom** | The editor embedded as a lobby tab; saved cards per user; the "My proficiency" overlay; later, "practice our card". |
 | **rusty-bidding-bot** | The Rust card model: read a card, resolve aliases and defaults, and switch rule modules on from its agreements. `.bbsa` import and export. |
 | **lesson-studio** | The skill vocabulary, to validate lesson front matter. |
 | **Lesson collections** (Baker-Bridge, Practice-Bidding-Scenarios, …) | The skill vocabulary, to tag boards with skills in their manifests. |
-| **Better BBO Convention Card** (browser extension) | BBO import/export and the PDF renderer. |
+| **Better BBO Convention Card** (browser extension) | A card to and from BBO's XML (`importBboJson`, `exportBboCard`) and the PDF renderer. Its own files are this library's card JSON: BBO has no card files of its own (Rick Wilson, 2026-10-05). |
 
 ## The four parts
 
@@ -157,7 +157,7 @@ ID to pick up the shared summary and links.
 ### 2. The JavaScript library (repo root + `js/`)
 
 Reads and writes cards against the spec, and holds the converters: BBO
-(both ways, `js/bbo.js`), Bridgodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
+(both ways, `js/bbo.js`, for the Better BBO extension), Bridgodex, `.bbsa`, the ACBL fillable-PDF export (`acblClassicFillPdf.js`),
 the drawn PDF (`acblCardPdf.js`), and PDF re-import (the source card is
 embedded in the PDF's Info dictionary). No framework and no network: it runs
 in a page, a browser extension or Node.

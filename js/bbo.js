@@ -1,12 +1,17 @@
-// Import and export of BBO's ACBL convention card, as the JSON the Better BBO
-// Convention Card extension reads and writes (`source: "bbo-acbl"`; its
+// BBO's ACBL convention card to and from card_data, for the Better BBO
+// Convention Card extension. BBO has no card files: its cards live on BBO,
+// as XML, and the extension reads and writes them there, keeping its own
+// files in this library's card JSON (Rick Wilson, 2026-10-05). So the BBO side
+// here is one card as the extension reads it out of BBO's XML (its
 // docs/architecture.md):
 //
-//   { schema_version: "1.1", exported_at, source: "bbo-acbl",
-//     cards: [ { cc_key, title, partner, owner, stock, default, style,
-//                fields:      { "1NTMin1": "15", "majorOther1": "…", … },
-//                conventions: { "1NStayman": "y", … },
-//                leads:       { "ls-akx-a": "y", … } } ] }
+//   { cc_key, title, partner, owner, stock, default, style,
+//     fields:      { "1NTMin1": "15", "majorOther1": "…", … },   (E_ elements)
+//     conventions: { "1NStayman": "y", … },                       (C_)
+//     leads:       { "ls-akx-a": "y", … } }                       (L_)
+//
+// The import also reads the extension's earlier file of such cards
+// (`{ source: "bbo-acbl", cards: [ … ] }`), taking the first.
 //
 // Both directions read one map, spec/formats/bbo-map.toml, which says what
 // each entry does. The import keeps the BBO card in `card_data._bbo_raw`, and
@@ -17,9 +22,6 @@
 import { field, BBO_MAP } from './spec.js'
 import { readPath, writePath } from './paths.js'
 import { normalizeSuitShorthand } from './suits.js'
-
-const SCHEMA_VERSION = '1.1'
-const SOURCE = 'bbo-acbl'
 
 const known = path => {
   if (!field(path)) throw new Error(`BBO map: unknown field ${path}`)
@@ -223,7 +225,7 @@ export function isBboCard(input) {
   return src.includes('bbo') || Array.isArray(input.cards)
 }
 
-/** Convert a BBO ACBL card export into `{ name, description, card_data }`. */
+/** Convert one BBO card (or the extension's earlier file of them) into `{ name, description, card_data }`. */
 export function importBboJson(input) {
   if (!input || typeof input !== 'object') {
     throw new Error('BBO file is empty or not JSON')
@@ -276,11 +278,11 @@ function settings(cardData) {
 }
 
 /**
- * Convert card_data to BBO's ACBL card JSON, one card in the extension's
- * envelope. `name` is the card's title on BBO (default: the imported title,
- * else the card's own name).
+ * Convert card_data to one BBO card, `{ …, title, style, fields,
+ * conventions, leads }`, for the extension to write to BBO. `name` is the
+ * card's title on BBO (default: the imported title, else the card's name).
  */
-export function exportBboJson(cardData, { name, exportedAt } = {}) {
+export function exportBboCard(cardData, { name } = {}) {
   const raw = cardData?._bbo_raw || {}
   const before = raw.fields || raw.conventions || raw.leads ? importBboJson({ cards: [raw] }).card_data : {}
   const get = settings(cardData)
@@ -325,14 +327,9 @@ export function exportBboJson(cardData, { name, exportedAt } = {}) {
 
   const { fields, conventions, leads, ...meta } = raw
   return {
-    schema_version: SCHEMA_VERSION,
-    exported_at: exportedAt ?? new Date().toISOString(),
-    source: SOURCE,
-    cards: [{
-      ...meta,
-      title: name ?? raw.title ?? cardData?.metadata?.name ?? 'Convention card',
-      style: meta.style || 'ACBL',
-      ...out,
-    }],
+    ...meta,
+    title: name ?? raw.title ?? cardData?.metadata?.name ?? 'Convention card',
+    style: meta.style || 'ACBL',
+    ...out,
   }
 }

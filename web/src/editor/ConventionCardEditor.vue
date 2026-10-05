@@ -315,7 +315,6 @@ const currentUser = computed(() => props.storage.user?.value || null)
 const loadAcblPdf = () => import('../../../js/acblClassicFillPdf.js')
 /** The .bbsa converter, loaded only when it is needed (it brings the spec's JSON). */
 const loadBbsa = () => import('../../../js/bbsa.js')
-const loadBbo = () => import('../../../js/bbo.js')
 
 const currentCard = cc.currentCard
 const editedCardData = cc.editedCardData
@@ -449,14 +448,6 @@ const CONTENT_FORMATS = [
     mime: 'text/plain'
   },
   {
-    id: 'bbo',
-    name: 'BBO JSON',
-    desc: 'BBO’s ACBL card, in the JSON the Better BBO Convention Card extension reads and writes. Slots and boxes the card has no field for are kept from an imported BBO card.',
-    ready: true,
-    ext: 'bbo.json',
-    mime: 'application/json'
-  },
-  {
     id: 'bridgeodex',
     name: 'Bridgodex JSON',
     desc: 'Compatible with Bridgodex.com. Useful for sharing with partners who use that site.',
@@ -471,14 +462,6 @@ const CONTENT_FORMATS = [
     ready: false,
     ext: 'swn',
     mime: 'text/plain'
-  },
-  {
-    id: 'bbo-xml',
-    name: 'BBO XML',
-    desc: 'BBO’s convention-card XML, importable into Bridge Base Online.',
-    ready: false,
-    ext: 'xml',
-    mime: 'application/xml'
   }
 ]
 
@@ -518,9 +501,6 @@ async function doContentExport(formatId) {
     } else if (formatId === 'bbsa') {
       const { exportBbsa } = await loadBbsa()
       payload = exportBbsa(card.card_data || {}).text
-    } else if (formatId === 'bbo') {
-      const { exportBboJson } = await loadBbo()
-      payload = JSON.stringify(exportBboJson(card.card_data || {}, { name: card.name }), null, 2)
     } else {
       throw new Error(`No exporter wired up for "${fmt.name}" yet`)
     }

@@ -30,7 +30,6 @@ export const OUTPUTS = {
   card: `The editor's export, as an object: { schema: "${EXPORT_SCHEMA}", name, description, exportedAt, card_data }. What Export Content saves, and what Import reads back.`,
   card_data: 'card_data alone, the nested settings object.',
   bbsa: "BBA's .bbsa convention file, as text.",
-  bbo: "BBO's ACBL card as JSON, as the Better BBO Convention Card extension reads it (source \"bbo-acbl\"), as an object.",
   'pdf-classic': 'The ACBL Classic card, filled in, as PDF bytes (Uint8Array). The card travels inside it, so Import reads it back.',
   'pdf-new': 'The ACBL New card, filled in, as PDF bytes (Uint8Array). The card travels inside it too.',
   'pdf-drawn': 'A card drawn from scratch in the ACBL layout, as PDF bytes (Uint8Array).',
@@ -86,10 +85,6 @@ async function produce(record, to) {
     case 'bbsa': {
       const { exportBbsa } = await import('../../js/bbsa.js')
       return exportBbsa(record.card_data).text
-    }
-    case 'bbo': {
-      const { exportBboJson } = await import('../../js/bbo.js')
-      return exportBboJson(record.card_data, { name: record.name })
     }
     case 'pdf-classic':
     case 'pdf-new':

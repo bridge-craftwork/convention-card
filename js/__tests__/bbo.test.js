@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
-import { isBboCard, importBboJson, exportBboJson } from '../bbo.js'
+import { isBboCard, importBboJson, exportBboCard } from '../bbo.js'
 import { field } from '../spec.js'
 
 // A compact fixture modelled on a real BBO ACBL export
@@ -278,13 +278,16 @@ function bmw() {
 
 const dense = () => JSON.parse(fs.readFileSync(new URL('./fixtures/dense-convention-card.json', import.meta.url))).card_data
 
-describe('exportBboJson', () => {
-  it('gives back an imported card as it came', () => {
+describe('exportBboCard', () => {
+  it('reads one card as the extension takes it out of BBO, and gives it back as it came', () => {
+    const one = bmw().cards[0]
+    expect(exportBboCard(importBboJson(one).card_data)).toEqual(one)
+  })
+
+  it('gives back a card from the extension\'s earlier file as it came', () => {
     const input = bmw()
     const { card_data } = importBboJson(input)
-    const out = exportBboJson(card_data, { exportedAt: 'now' })
-    expect(out).toMatchObject({ schema_version: '1.1', source: 'bbo-acbl', exported_at: 'now' })
-    expect(out.cards).toEqual(input.cards)
+    expect(exportBboCard(card_data)).toEqual(input.cards[0])
   })
 
   it('writes the slots, boxes and circles whose fields changed', () => {
@@ -295,7 +298,7 @@ describe('exportBboJson', () => {
     c.notrump.smolen = { play: true }
     c.general.system = '2/1, 1♥-1NT forcing'
     c.leads.vs_suits.length.lead_choice_xx = 2
-    const card = exportBboJson(c).cards[0]
+    const card = exportBboCard(c)
     expect(card.fields).toMatchObject({ '1NTMin1': '14+', '1NTMax1': '17', approach: '2/1, 1!H-1NT forcing', vsPreTOThru: 'thru 4!H' })
     expect(card.conventions['1NStayman']).toBeUndefined()
     expect(card.conventions).toMatchObject({ '1NSmolen': 'y', someNewBox: 'y', '2CStrong': 'y' })
@@ -305,17 +308,17 @@ describe('exportBboJson', () => {
   it('names the card on BBO by the title given, and writes changed partner names', () => {
     const { card_data: c } = importBboJson(bmw())
     c.metadata.partner_names = 'Rick and Dan'
-    const card = exportBboJson(c, { name: 'BMW 2' }).cards[0]
+    const card = exportBboCard(c, { name: 'BMW 2' })
     expect(card).toMatchObject({ title: 'BMW 2', cc_key: 'ACBL/N/kemistry/1399129902_4125_aam135/1399129902' })
     expect(card.fields.names).toBe('Rick and Dan')
   })
 
   it('ticks every BBO box a card field stands for', () => {
-    const card = exportBboJson({
+    const card = exportBboCard({
       major_openings: { min_length_1st_2nd: 5, drury: { play: true, reverse: true } },
       notrump: { transfers: { jacoby: true } },
       two_level: { two_clubs: { meaning: 'strong' } },
-    }).cards[0]
+    })
     expect(card.conventions).toEqual({
       'major12-5': 'y', drury: 'y', druryRev: 'y', '1N2DTrans': 'y', '1N2HTrans': 'y', '2CStrong': 'y',
     })
@@ -325,13 +328,13 @@ describe('exportBboJson', () => {
   it('spreads the 2♣ lines back over the DESCRIBE and RESPONSES slots', () => {
     const { card_data: c } = importBboJson(bboFixture({ '2COther1': 'a', '2COther2': 'b', '2COther3': 'c', '2COther4': 'd', '2COther5': 'e' }))
     c.two_level.two_clubs.notes = 'D'
-    const fields = exportBboJson(c).cards[0].fields
+    const fields = exportBboCard(c).fields
     expect(fields).toMatchObject({ '2COther1': 'a', '2COther2': 'b', '2COther3': 'c', '2COther4': 'D', '2COther5': 'e' })
   })
 
   it('exports a card made elsewhere, which reads back the same where BBO has room', () => {
     const card = dense()
-    const back = importBboJson(exportBboJson(card, { name: 'Dense' })).card_data
+    const back = importBboJson(exportBboCard(card, { name: 'Dense' })).card_data
     const flat = (o, p = '', out = {}) => {
       for (const [k, v] of Object.entries(o || {})) {
         if (k.startsWith('_') || k === 'metadata') continue

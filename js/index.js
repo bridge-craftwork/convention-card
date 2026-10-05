@@ -12,7 +12,7 @@ export { checkCard, checkValue, EXPORT_SCHEMA } from './checkCard.js'
 export { importCard, importCards, detectFormat, IMPORT_FORMATS } from './importCard.js'
 export { exportRecord, exportAll, isBundle, planImport, BUNDLE_SCHEMA } from './cardBundle.js'
 
-export { isBboCard, importBboJson, exportBboJson } from './bbo.js'
+export { isBboCard, importBboJson, exportBboCard } from './bbo.js'
 export { importBridgeodexJson } from './bridgeodexImport.js'
 export { importBbsa, exportBbsa, parseBbsa } from './bbsa.js'
 export { NT_DEFENSE_BIDS, KNOWN_NT_DEFENSES, findKnownDefense } from './ntDefenses.js'
