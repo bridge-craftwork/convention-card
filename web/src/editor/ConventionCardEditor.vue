@@ -447,6 +447,17 @@ const CONTENT_FORMATS = [
     ext: 'bbsa',
     mime: 'text/plain'
   },
+  // BBO has no card files: the Better BBO Convention Card extension reads
+  // this editor's own JSON and writes the card into BBO. Listed by name so
+  // that person need not know it is the same file (Rick Wilson, 2026-10-05).
+  {
+    id: 'bbo',
+    name: 'BBO',
+    desc: 'For Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO. The same file as Bridge Classroom JSON.',
+    ready: true,
+    ext: 'json',
+    mime: 'application/json'
+  },
   {
     id: 'bridgeodex',
     name: 'Bridgodex JSON',
@@ -496,7 +507,7 @@ async function doContentExport(formatId) {
   if (!card) return
   try {
     let payload
-    if (formatId === 'bridge-classroom') {
+    if (formatId === 'bridge-classroom' || formatId === 'bbo') {
       payload = JSON.stringify(exportRecord(card), null, 2)
     } else if (formatId === 'bbsa') {
       const { exportBbsa } = await loadBbsa()
