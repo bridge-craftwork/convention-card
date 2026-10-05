@@ -33,7 +33,7 @@ One home, one definition, and each consumer depends on it.
 
 | Consumer | What it needs |
 |---|---|
-| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, Bridgodex, `.bbsa` and PDF; export to Bridgodex and `.bbsa`, plus the ACBL PDFs. BBO has no card files, so moving a card to and from BBO is the extension's job; Export Content still lists BBO, saving the card JSON the extension reads. |
+| **People** | The editor at `bridge-craftwork.com/card/`, with no account needed; import from BBO, Bridgodex, `.bbsa` and PDF; export to Bridgodex and `.bbsa`, plus the ACBL PDFs. BBO has no card files, so moving a card to and from BBO is the extension's job; an **Export for BBO** button (and Export Content's BBO entry) saves the card JSON the extension reads, as `<name>.BBO.json`. |
 | **Bridge Classroom** | The editor embedded as a lobby tab; saved cards per user; the "My proficiency" overlay; later, "practice our card". |
 | **rusty-bidding-bot** | The Rust card model: read a card, resolve aliases and defaults, and switch rule modules on from its agreements. `.bbsa` import and export. |
 | **lesson-studio** | The skill vocabulary, to validate lesson front matter. |

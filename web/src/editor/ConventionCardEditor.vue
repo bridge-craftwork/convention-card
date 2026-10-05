@@ -135,6 +135,12 @@
           title="Export the card's data: this editor's JSON or a BBA .bbsa file"
           @click="onExportContent"
         >Export Content</button>
+        <button
+          class="btn"
+          :disabled="!currentCard || cardLoading"
+          title="Save the card for Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO"
+          @click="doContentExport('bbo')"
+        >Export for BBO</button>
       </div>
     </div>
     <div v-if="saveError" class="save-error">
@@ -448,14 +454,15 @@ const CONTENT_FORMATS = [
     mime: 'text/plain'
   },
   // BBO has no card files: the Better BBO Convention Card extension reads
-  // this editor's own JSON and writes the card into BBO. Listed by name so
-  // that person need not know it is the same file (Rick Wilson, 2026-10-05).
+  // this editor's own JSON and writes the card into BBO. It has its own
+  // button and entry, and BBO in the file's name, so a person finds it by
+  // name (Rick Wilson, 2026-10-05).
   {
     id: 'bbo',
     name: 'BBO',
-    desc: 'For Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO. The same file as Bridge Classroom JSON.',
+    desc: 'For Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO. The same JSON as Bridge Classroom JSON, named with BBO.',
     ready: true,
-    ext: 'json',
+    ext: 'BBO.json',
     mime: 'application/json'
   },
   {
