@@ -223,7 +223,8 @@ the adapters, whose full shape is in `web/src/editor/useCardEditor.js`:
 ```js
 // storage: where cards live, and who may edit them
 { user /* ref */, loadDefault(), load(id), listLinks(), save(card, cardData),
-  overwrite(id, …), create(…), remove(id), canEdit(card, user) }
+  overwrite(id, …), create(…), remove(id), canEdit(card, user),
+  setPrimary(id) /* optional */, unlink(id) /* optional */ }
 
 // overlays (optional): extra information beside each convention
 { covered(skillPath), mastery(user) }   // e.g. Bridge Classroom's practice deals and lesson mastery

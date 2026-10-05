@@ -27,6 +27,22 @@ function memoryStorage({ signedIn = true } = {}) {
 }
 
 describe('the editor state, against a storage adapter', () => {
+  it('takes a built-in card off the list without deleting it, when the adapter can', async () => {
+    const storage = memoryStorage()
+    const linked = new Set(['system'])
+    storage.listLinks = async () => [...linked].map(id => ({ card_id: id, card_name: id, is_primary: true }))
+    storage.loadDefault = async () => storage.load([...linked][0] || 'system')
+    expect(useCardEditor(memoryStorage()).canUnlink).toBe(false)
+    storage.unlink = async id => { linked.delete(id) }
+    const ed = useCardEditor(storage)
+    expect(ed.canUnlink).toBe(true)
+    await ed.loadCardForCurrentUser()
+    expect(ed.userCardLinks.value.map(l => l.card_id)).toEqual(['system'])
+    expect(await ed.unlinkCurrentCard()).toBe(true)
+    expect(ed.userCardLinks.value).toEqual([])
+    expect(await storage.load('system')).toMatchObject({ id: 'system' })
+  })
+
   it('opens the default card read-only and lets nothing change it', async () => {
     const storage = memoryStorage()
     const ed = useCardEditor(storage)

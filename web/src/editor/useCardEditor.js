@@ -34,6 +34,9 @@ import {
 //   setPrimary(id)  optional: make a card the one that opens first (the
 //                   editor offers "Make primary" only when this is given)
 //   remove(id)
+//   unlink(id)      optional: take a card off the user's list without deleting
+//                   it (a built-in or public card, or one shared with them);
+//                   the editor offers "Remove from my list" only when given
 //   canEdit(card, user) → boolean
 //
 // overlays (optional) — extra information beside each convention:
@@ -358,6 +361,22 @@ function createState(storage, overlays) {
     await loadUserCardLinks()
   }
 
+  const canUnlink = typeof storage.unlink === 'function'
+
+  /** Take the open card off the user's list; the card itself stays. */
+  async function unlinkCurrentCard() {
+    const card = currentCard.value
+    if (!card || !user() || !canUnlink) return false
+    try {
+      await storage.unlink(card.id)
+    } catch (err) {
+      saveError.value = err.message || 'Remove failed'
+      return false
+    }
+    await loadCardForCurrentUser()
+    return true
+  }
+
   async function duplicateCurrentCard() {
     const card = currentCard.value
     if (!card) return null
@@ -438,6 +457,8 @@ function createState(storage, overlays) {
     createCard,
     duplicateCurrentCard,
     deleteCurrentCard,
+    canUnlink,
+    unlinkCurrentCard,
     // helpers re-exported for convenience
     tierToProf
   }
