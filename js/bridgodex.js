@@ -44,16 +44,15 @@ function num(value) {
 }
 
 /**
- * A range end: "14+" → { n: 14, plus }, "17 Vul" → { n: 17, suffix: "Vul" }.
- * The + or - must end the number ("17-ish" stays words).
+ * A range end: "14+" → { n: 14, plus }, "17 Vul" → { n: 17, words: "Vul" }.
+ * The + or - must end the number ("17-ish" is words).
  */
 function parseRange(value) {
-  if (value == null || value === '') return { n: null, suffix: null }
+  if (value == null || value === '') return { n: null }
   const s = String(value).trim()
   const m = s.match(/^([+\-]?\d+)([+-]?)(?=\s|$)\s*(.*)$/)
-  if (!m) return { n: null, suffix: s }
-  const n = parseInt(m[1], 10)
-  return { n: Number.isFinite(n) ? n : null, plus: m[2] === '+', minus: m[2] === '-', suffix: m[3].trim() || null }
+  if (!m) return { n: null, words: s }
+  return { n: parseInt(m[1], 10), plus: m[2] === '+', minus: m[2] === '-', words: m[3].trim() || null }
 }
 
 /** Whether a system's description names 2/1 ("2/1", "2 over 1", "two over one"). */
@@ -113,22 +112,22 @@ function entry(block, key, spec) {
   if (spec.range) {
     const path = known(spec.range)
     const signs = ['plus', 'minus'].filter(s => field(`${path}_${s}`)).map(s => [s, `${path}_${s}`])
-    const suffix = spec.suffix && known(spec.suffix)
+    const words = spec.words && known(spec.words)
+    const wordsBack = words && spec.words_export
     return {
-      ...base, paths: [path, ...signs.map(([, p]) => p), ...(suffix ? [suffix] : [])], suffix,
+      ...base, paths: [path, ...signs.map(([, p]) => p), ...(wordsBack ? [words] : [])],
       read: (b, card) => {
         const r = parseRange(b[key])
         if (r.n != null) card.set(path, r.n)
         for (const [s, p] of signs) if (r[s]) card.set(p, true)
-        if (suffix && r.suffix) card.set(suffix, [card.get(suffix), r.suffix].filter(Boolean).join(' '))
+        if (words && r.words) card.set(words, [card.get(words), r.words].filter(Boolean).join(' '))
       },
-      // The words go after the last end that carries them (the max).
-      write: (get, { lastOfSuffix } = {}) => {
+      write: get => {
         const n = get(path)
         const sign = signs.find(([, p]) => get(p) === true)?.[0]
-        const words = suffix && lastOfSuffix && !blank(get(suffix)) ? ` ${get(suffix)}` : ''
-        if (n == null) return { [key]: words ? words.trim() : undefined }
-        return { [key]: `${n}${sign === 'plus' ? '+' : sign === 'minus' ? '-' : ''}${words}` }
+        const after = wordsBack && !blank(get(words)) ? String(get(words)) : ''
+        const text = [n == null ? '' : `${n}${sign === 'plus' ? '+' : sign === 'minus' ? '-' : ''}`, after].filter(Boolean).join(' ')
+        return { [key]: text || undefined }
       },
     }
   }
@@ -137,11 +136,6 @@ function entry(block, key, spec) {
 
 const ENTRIES = Object.entries(BLOCKS).flatMap(([block, keys]) =>
   Object.entries(keys).map(([key, spec]) => entry(block, key, spec)))
-
-// A range end whose words (`suffix`) are written on it: the last entry
-// naming that suffix field.
-const LAST_OF_SUFFIX = new Set(
-  [...new Map(ENTRIES.filter(e => e.suffix).map(e => [e.suffix, e])).values()])
 
 const split = dotted => {
   const i = dotted.indexOf('.')
@@ -176,7 +170,8 @@ const LEAD_PREFIXES = [
   { prefix: 'honor_leads_', group: 'honors' },
   { prefix: 'honor_interior_seq_', group: 'honors' },
 ]
-// Holdings Bridgodex lists as interior sequences.
+// Holdings Bridgodex lists as interior sequences (KJTx, KT9x and QT9x vs
+// suits; AQJx, AJTx, KT9x and QT9x vs NT).
 const INTERIOR = new Set(['kjtx', 'kt9x', 'qt9x', 'aqjx', 'ajtx'])
 
 function leadPath(side, key) {
@@ -292,7 +287,7 @@ export function exportBridgodexJson(cardData) {
 
   for (const e of ENTRIES) {
     if (e.importOnly || unchanged(e.paths)) continue
-    put(e.block, e.write(get, { lastOfSuffix: LAST_OF_SUFFIX.has(e) }))
+    put(e.block, e.write(get))
   }
 
   // Lead circles: a choice as imported keeps its key and value; a changed

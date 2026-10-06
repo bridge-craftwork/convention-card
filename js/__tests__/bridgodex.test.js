@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import { importBridgeodexJson, exportBridgodexJson } from '../bridgodex.js'
+import { BRIDGODEX_MAP } from '../spec.js'
 
 // Minimal bridgeodex shape: a `settings` object with per-section blocks.
 function bdex(settings = {}) {
@@ -10,11 +11,6 @@ function bdex(settings = {}) {
 describe('importBridgeodexJson — key-name regression guards', () => {
   it('reads the strong-NT flag under the real key (1nt_open_strong)', () => {
     const { card_data } = importBridgeodexJson(bdex({ overview: { '1nt_open_strong': 'on' } }))
-    expect(card_data.general.nt_open_style).toBe('strong')
-  })
-
-  it('still accepts the abbreviated 1nt_open_str alias', () => {
-    const { card_data } = importBridgeodexJson(bdex({ overview: { '1nt_open_str': 'on' } }))
     expect(card_data.general.nt_open_style).toBe('strong')
   })
 
@@ -163,5 +159,33 @@ describe('exportBridgodexJson', () => {
       notes: { notrump_notes: 'Lebensohl: fast denies' },
     })
     expect(out.settings['1_no_trump']).toEqual({ lebensohl_desc: 'fast denies' })
+  })
+})
+
+describe('the Bridgodex map', () => {
+  // Bridgodex's own list of boxes (fixtures/bridgodex-keys.json): a key the
+  // map invents is one Bridgodex never writes or reads.
+  const { about, ...KEYS } = JSON.parse(fs.readFileSync(new URL('./fixtures/bridgodex-keys.json', import.meta.url)))
+  const has = dotted => { const i = dotted.indexOf('.'); return (KEYS[dotted.slice(0, i)] || []).includes(dotted.slice(i + 1)) }
+
+  it('names only boxes Bridgodex has', () => {
+    const { any, notes, ...blocks } = BRIDGODEX_MAP
+    const named = [
+      ...Object.entries(blocks).flatMap(([b, keys]) => Object.keys(keys).map(k => `${b}.${k}`)),
+      ...any.flatMap(a => [...a.keys, ...(a.export || [])]),
+      ...notes.flatMap(n => [...n.lines.flatMap(l => [l.key].flat()), n.export_to].filter(Boolean)),
+    ]
+    expect(named.length).toBeGreaterThan(300)
+    expect(named.filter(k => !has(k))).toEqual([])
+  })
+
+  it('writes lead keys as Bridgodex spells them', () => {
+    const out = exportBridgodexJson({ leads: {
+      vs_suits: { honors: { lead_choice_akx: 1, lead_choice_kjtx: 2 }, length: { lead_choice_hxx: 3 } },
+      vs_nt: { honors: { lead_choice_kqt9: 1, lead_choice_aqjx: 2 }, length: { lead_choice_xxxxx: 4 } },
+    } })
+    const keys = Object.entries(out.settings).flatMap(([b, v]) => Object.keys(v).map(k => `${b}.${k}`))
+    expect(keys).toHaveLength(6)
+    expect(keys.filter(k => !has(k))).toEqual([])
   })
 })
