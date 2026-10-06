@@ -4,12 +4,14 @@
 
 import FIELDS_DOC from '../spec/fields.json' with { type: 'json' }
 import BBSA_MAP_DOC from '../spec/formats/bbsa-map.json' with { type: 'json' }
+import BBO_MAP_DOC from '../spec/formats/bbo-map.json' with { type: 'json' }
 import CONVENTIONS_DOC from '../spec/conventions.json' with { type: 'json' }
 import LEVELS_DOC from '../spec/levels.json' with { type: 'json' }
 import ALERTS_DOC from '../spec/alerts.json' with { type: 'json' }
 
 const { schema: _fs, generated_from: _ff, ...SECTIONS } = FIELDS_DOC
 const { schema: _bs, generated_from: _bf, layout: BBSA_LAYOUT, ...BBSA_MAP } = BBSA_MAP_DOC
+const { schema: _bos, generated_from: _bof, ...BBO_MAP } = BBO_MAP_DOC
 
 /**
  * Every card field, by canonical path (`notrump.stayman.play`): its kind,
@@ -38,6 +40,9 @@ export function field(path) {
 
 /** The `.bbsa` map (spec/formats/bbsa-map.toml): key → mapping, plus `implied` and `derived`. */
 export { BBSA_MAP }
+
+/** BBO's ACBL card map (spec/formats/bbo-map.toml): `conventions`, `fields` and `joined`. */
+export { BBO_MAP }
 
 /** BBA's `.bbsa` file layout (spec/formats/bbsa-layout.txt): every key, in the order an export writes them. */
 export { BBSA_LAYOUT }

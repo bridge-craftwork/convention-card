@@ -192,10 +192,13 @@ actually exercised, not just loaded.
 - lesson-studio validates against the taxonomy here (its Contract 4).
 - Baker-Bridge carries its skill-to-lesson data in its manifest; Bridge
   Classroom's `bakerBridgeTaxonomy.js` reduces to reading it.
-- Better BBO Convention Card uses the library for BBO import/export and PDF,
-  and gets an **Open in the convention card editor** button on BBO's card
-  pages: it converts the card with the library's BBO importer (its JSON
-  export, `source: "bbo-acbl"`, is the format that importer reads) and opens
+- Better BBO Convention Card uses the library for BBO and PDF. It reads a
+  card out of BBO's XML into `{ fields, conventions, leads }` and converts it
+  with `importBboJson`; `exportBboCard` goes the other way. Its Export and
+  Import files are this library's card JSON, not a BBO format of its own
+  (Rick Wilson, 2026-10-05): BBO has no card files, and a card from BBO keeps
+  the BBO card inside it (`_bbo_raw`), so nothing is lost. It gets an **Open
+  in the convention card editor** button on BBO's card pages, which opens
   `bridge-craftwork.com/card/#import=v1.…` (decision 20), where the
   standalone editor adds it to the browser's cards. Writing a card back to
   BBO waits on BBO's save endpoint, still unknown (the extension's
