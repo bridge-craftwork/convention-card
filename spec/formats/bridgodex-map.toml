@@ -410,8 +410,10 @@
 [[any]]
 path = "notrump.transfers.texas"
 keys = ["1_no_trump.tfr_4c", "1_no_trump.tfr_4d", "1_no_trump.tfr_4h", "1_no_trump.tfr_4s"]
-# Texas on its own is the majors' (the spec's level-4 pair).
-export = ["1_no_trump.tfr_4h", "1_no_trump.tfr_4s"]
+# Bridgodex's Texas boxes are the bids (4♣, 4♦, 4♥; its card has no 4♠).
+# Texas on its own is 4♦ and 4♥, the transfers to the majors (seen on
+# Bridgodex's own card, 2026-10-06).
+export = ["1_no_trump.tfr_4d", "1_no_trump.tfr_4h"]
 
 [[any]]
 path = "other_conventions.gerber.play"

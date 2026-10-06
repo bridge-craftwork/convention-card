@@ -145,7 +145,7 @@ describe('exportBridgodexJson', () => {
       metadata: { partner_names: 'Pat and Sam' },
     }
     const out = exportBridgodexJson(card)
-    expect(out.settings['1_no_trump']).toMatchObject({ a_range_min: '15', a_range_max: '17', '2c_stayman': 'on', '2d_tfr': 'on', '2h_tfr': 'on', tfr_4h: 'on', tfr_4s: 'on' })
+    expect(out.settings['1_no_trump']).toMatchObject({ a_range_min: '15', a_range_max: '17', '2c_stayman': 'on', '2d_tfr': 'on', '2h_tfr': 'on', tfr_4d: 'on', tfr_4h: 'on' })
     expect(out.settings.majors.drury_2c).toBe('on')
     expect(out.settings.leads_vs_nt).toEqual({ honor_interior_seq_KT9x: 2, length_leads_Hxx: 3 })
     expect(out.settings.slams.other).toBe('Exclusion Blackwood')
