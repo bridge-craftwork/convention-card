@@ -285,26 +285,30 @@
   },
   "transfers.texas_4c": {
    "kind": "bool",
-   "label": "Texas 4♣",
+   "label": "4♣ is a transfer",
+   "desc": "The bid: 4♣ over 1NT transfers (South African Texas: to ♥, with 4♦ to ♠)",
    "level": 6,
    "skill": "bidding_conventions/jacoby_transfers"
   },
   "transfers.texas_4d": {
    "kind": "bool",
-   "label": "Texas 4♦",
-   "level": 6,
+   "label": "4♦ is a transfer",
+   "desc": "The bid: 4♦ over 1NT transfers (Texas: to ♥)",
+   "level": 4,
    "skill": "bidding_conventions/jacoby_transfers"
   },
   "transfers.texas_4h": {
    "kind": "bool",
-   "label": "Texas 4♥",
+   "label": "4♥ is a transfer",
+   "desc": "The bid: 4♥ over 1NT transfers (Texas: to ♠)",
    "level": 4,
    "skill": "bidding_conventions/jacoby_transfers"
   },
   "transfers.texas_4s": {
    "kind": "bool",
-   "label": "Texas 4♠",
-   "level": 4,
+   "label": "4♠ is a transfer",
+   "desc": "The bid: 4♠ over 1NT transfers (to a minor); no printed card has a box for it",
+   "level": 6,
    "skill": "bidding_conventions/jacoby_transfers"
   },
   "minor_transfers": {

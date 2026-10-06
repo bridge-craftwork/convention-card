@@ -91,10 +91,13 @@
 "minor_suit_stayman.play"  = { kind = "bool", label = "Minor Suit Stayman (1NT–2♠)", level = 6, skill = "bidding_conventions/minor_suit_stayman" }
 "transfers.jacoby"         = { kind = "bool", label = "Jacoby transfers", skill = "bidding_conventions/jacoby_transfers", level = 3 }
 "transfers.texas"          = { kind = "bool", label = "Texas transfers", skill = "bidding_conventions/jacoby_transfers", level = 4 }
-"transfers.texas_4c"       = { kind = "bool", label = "Texas 4♣", level = 6, skill = "bidding_conventions/jacoby_transfers" }
-"transfers.texas_4d"       = { kind = "bool", label = "Texas 4♦", level = 6, skill = "bidding_conventions/jacoby_transfers" }
-"transfers.texas_4h"       = { kind = "bool", label = "Texas 4♥", level = 4, skill = "bidding_conventions/jacoby_transfers" }
-"transfers.texas_4s"       = { kind = "bool", label = "Texas 4♠", level = 4, skill = "bidding_conventions/jacoby_transfers" }
+# The four-level transfer boxes name the bid, as the ACBL New card ("Transfers:
+# 4♣ 4♦ 4♥"), Bridgodex and the editor do: Texas transfers are 4♦ (to ♥) and 4♥ (to ♠); 4♣ is South African
+# Texas's (with 4♦). Their levels said the reverse until 2026-10-06.
+"transfers.texas_4c"       = { kind = "bool", label = "4♣ is a transfer", desc = "The bid: 4♣ over 1NT transfers (South African Texas: to ♥, with 4♦ to ♠)", level = 6, skill = "bidding_conventions/jacoby_transfers" }
+"transfers.texas_4d"       = { kind = "bool", label = "4♦ is a transfer", desc = "The bid: 4♦ over 1NT transfers (Texas: to ♥)", level = 4, skill = "bidding_conventions/jacoby_transfers" }
+"transfers.texas_4h"       = { kind = "bool", label = "4♥ is a transfer", desc = "The bid: 4♥ over 1NT transfers (Texas: to ♠)", level = 4, skill = "bidding_conventions/jacoby_transfers" }
+"transfers.texas_4s"       = { kind = "bool", label = "4♠ is a transfer", desc = "The bid: 4♠ over 1NT transfers (to a minor); no printed card has a box for it", level = 6, skill = "bidding_conventions/jacoby_transfers" }
 "minor_transfers"          = { kind = "enum", label = "Minor-suit responses to 1NT", options = ["relay", "four_way", "four_way_reversed", "bba", "none"], default = "relay", desc = "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). none: not played", skill = "bidding_conventions/minor_suit_transfers", level = 5 }
 "transfers.spades_relay"   = { kind = "bool", label = "1NT–2♠ transfer", desc = "The card's 2♠ transfer box, as Bridgodex marks it; what it transfers to is in the card's notes", skill = "bidding_conventions/minor_suit_transfers", level = 5 }
 "transfers.two_s_clubs"    = { kind = "bool", label = "1NT–2♠ transfer to clubs", level = 5, skill = "bidding_conventions/minor_suit_transfers" }
