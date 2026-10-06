@@ -7,7 +7,7 @@ import { CONVENTION_CATALOG, isEntryChecked, getLevelNumberForEntry } from './co
 import { SKILL_LEVELS, bandOf } from './levels.js'
 import { readPath } from '../../../js/paths.js'
 import { field } from '../../../js/spec.js'
-import { namesTwoOverOne } from '../../../js/bridgeodexImport.js'
+import { namesTwoOverOne } from '../../../js/bridgodex.js'
 
 const SYSTEM_NAMES = {
   two_over_one: '2/1',

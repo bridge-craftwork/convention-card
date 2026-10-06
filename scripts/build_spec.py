@@ -5,9 +5,9 @@
   (one file per convention) in one file.
 - spec/taxonomy.json: lesson-studio's Contract 4 (taxonomy/v1), the skill
   vocabulary with a four-band level.
-- spec/fields.json, spec/levels.json, spec/alerts.json,
-  spec/formats/bbsa-map.json and spec/formats/bbo-map.json: fields.toml,
-  levels.toml, alerts.toml, bbsa-map.toml and bbo-map.toml as JSON, for readers with no TOML parser (the JS library).
+- spec/fields.json, spec/levels.json, spec/alerts.json and
+  spec/formats/{bbsa,bbo,bridgodex}-map.json: fields.toml, levels.toml,
+  alerts.toml and the three format maps as JSON, for readers with no TOML parser (the JS library).
   alerts.toml is checked first: every field it names exists, and every rule
   is one the format allows.
   bbsa-map.json also carries BBA's file layout (bbsa-layout.txt) as
@@ -41,6 +41,8 @@ BBSA_JSON = ROOT / "spec" / "formats" / "bbsa-map.json"
 BBSA_LAYOUT = ROOT / "spec" / "formats" / "bbsa-layout.txt"
 BBO_TOML = ROOT / "spec" / "formats" / "bbo-map.toml"
 BBO_JSON = ROOT / "spec" / "formats" / "bbo-map.json"
+BRIDGODEX_TOML = ROOT / "spec" / "formats" / "bridgodex-map.toml"
+BRIDGODEX_JSON = ROOT / "spec" / "formats" / "bridgodex-map.json"
 CATEGORIES = SOURCE / "categories.toml"
 LEVELS_TOML = ROOT / "spec" / "levels.toml"
 LEVELS_JSON = ROOT / "spec" / "levels.json"
@@ -167,6 +169,7 @@ def main() -> None:
         BBSA_JSON: as_json(BBSA_TOML, "bbsa-map/v1",
                            {"layout": BBSA_LAYOUT.read_text(encoding="utf-8").splitlines()}),
         BBO_JSON: as_json(BBO_TOML, "bbo-map/v1"),
+        BRIDGODEX_JSON: as_json(BRIDGODEX_TOML, "bridgodex-map/v1"),
     }
     if "--check" in sys.argv[1:]:
         stale = [p.name for p, text in outputs.items()

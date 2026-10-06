@@ -1,0 +1,1107 @@
+{
+ "schema": "bridgodex-map/v1",
+ "generated_from": "spec/formats/bridgodex-map.toml (do not edit)",
+ "overview": {
+  "general_approach": {
+   "text": "general.system"
+  },
+  "min_exp_hcp_bal_opening": {
+   "number": "general.min_hcp_open"
+  },
+  "min_exp_hcp_bal_responding": {
+   "number": "general.min_hcp_respond"
+  },
+  "forcing_1c": "general.forcing_opening_1c",
+  "forcing_2c": "general.forcing_opening_2c",
+  "forcing_other": {
+   "text": "general.forcing_opening_other"
+  },
+  "1nt_open_str": {
+   "set": {
+    "general.nt_open_style": "strong"
+   },
+   "export": false
+  },
+  "1nt_open_strong": {
+   "set": {
+    "general.nt_open_style": "strong"
+   }
+  },
+  "1nt_open_wk": {
+   "set": {
+    "general.nt_open_style": "weak"
+   },
+   "export": false
+  },
+  "1nt_open_weak": {
+   "set": {
+    "general.nt_open_style": "weak"
+   }
+  },
+  "1nt_open_variable": {
+   "set": {
+    "general.nt_open_style": "variable"
+   }
+  },
+  "bids_prep": {
+   "text": "general.bids_requiring_prep"
+  }
+ },
+ "1_no_trump": {
+  "a_range_min": {
+   "range": "notrump.one_nt.range_min",
+   "suffix": "notrump.one_nt.seat_vul"
+  },
+  "a_range_max": {
+   "range": "notrump.one_nt.range_max",
+   "suffix": "notrump.one_nt.seat_vul"
+  },
+  "b_range_min": {
+   "range": "notrump.one_nt_alt.range_min",
+   "suffix": "notrump.one_nt_alt.seat_vul"
+  },
+  "b_range_max": {
+   "range": "notrump.one_nt_alt.range_max",
+   "suffix": "notrump.one_nt_alt.seat_vul"
+  },
+  "b_range_same_resp": "notrump.one_nt_alt.same_responses",
+  "5_card_major": {
+   "set": {
+    "notrump.one_nt.five_card_major": "sometimes"
+   }
+  },
+  "sys_on_vs": {
+   "text": "notrump.one_nt.sys_on_vs"
+  },
+  "2c_stayman": "notrump.stayman.forcing",
+  "2c_puppet": "notrump.stayman.puppet",
+  "2d_tfr": "notrump.transfers.jacoby",
+  "2h_tfr": "notrump.transfers.jacoby",
+  "2s_tfr": "notrump.transfers.spades_relay",
+  "2nt_tfr": "notrump.transfers.two_nt",
+  "2nt_nat": "notrump.two_nt_natural",
+  "tfr_4c": "notrump.transfers.texas_4c",
+  "tfr_4d": "notrump.transfers.texas_4d",
+  "tfr_4h": "notrump.transfers.texas_4h",
+  "tfr_4s": "notrump.transfers.texas_4s",
+  "smolen": "notrump.smolen.play",
+  "lebensohl": "notrump.lebensohl.over_interference",
+  "lebensohl_desc": {
+   "text": "notrump.lebensohl.description"
+  },
+  "dbl_neg": "notrump.dbl.negative",
+  "dbl_pen": "notrump.dbl.penalty",
+  "dbl_neg_desc": {
+   "text": "notrump.dbl.negative_desc"
+  },
+  "dbl_other": {
+   "text": "notrump.dbl.other"
+  },
+  "3c": {
+   "text": "notrump.responses.3c"
+  },
+  "3d": {
+   "text": "notrump.responses.3d"
+  },
+  "3h": {
+   "text": "notrump.responses.3h"
+  },
+  "3s": {
+   "text": "notrump.responses.3s"
+  },
+  "2d_other": {
+   "text": "notrump.responses.2d_other"
+  },
+  "2h_other": {
+   "text": "notrump.responses.2h_other"
+  },
+  "2s_other": {
+   "text": "notrump.responses.2s_other"
+  },
+  "2nt_other": {
+   "text": "notrump.responses.2nt_other"
+  },
+  "more": {
+   "text": "notrump.notes"
+  }
+ },
+ "2_no_trump": {
+  "range_min": {
+   "number": "notrump.two_nt.range_min"
+  },
+  "range_max": {
+   "number": "notrump.two_nt.range_max"
+  },
+  "puppet": "notrump.two_nt.puppet",
+  "3s": "notrump.two_nt.three_s",
+  "3s_desc": {
+   "text": "notrump.two_nt.three_s_desc"
+  },
+  "tfr_3lvl": "notrump.two_nt.transfers_3level",
+  "tfr_4lvl": "notrump.two_nt.transfers_4level",
+  "neg_dbl": "notrump.two_nt.neg_dbl",
+  "other": {
+   "text": "notrump.two_nt.notes"
+  }
+ },
+ "3_no_trump": {
+  "range_min": {
+   "number": "three_nt.range_min"
+  },
+  "range_max": {
+   "number": "three_nt.range_max"
+  },
+  "one_suit": "three_nt.one_suit",
+  "one_suit_desc": {
+   "text": "three_nt.one_suit_desc"
+  }
+ },
+ "majors": {
+  "min_len_1st_2nd_4": {
+   "set": {
+    "major_openings.min_length_1st_2nd": 4
+   }
+  },
+  "min_len_1st_2nd_5": {
+   "set": {
+    "major_openings.min_length_1st_2nd": 5
+   }
+  },
+  "min_len_3rd_4th_4": {
+   "set": {
+    "major_openings.min_length_3rd_4th": 4
+   }
+  },
+  "min_len_3rd_4th_5": {
+   "set": {
+    "major_openings.min_length_3rd_4th": 5
+   }
+  },
+  "1nt_forcing": "major_openings.one_nt_response.forcing",
+  "1nt_semi_forcing": "major_openings.one_nt_response.semi_forcing",
+  "bypass_1s": "major_openings.one_nt_response.bypass_1s",
+  "jump_raise_weak": "major_openings.jump_raise.weak",
+  "jump_raise_mixed": "major_openings.jump_raise.mixed",
+  "jump_raise_inv": "major_openings.jump_raise.inv",
+  "jump_raise_overcall_weak": "major_openings.jump_raise_after_overcall.weak",
+  "jump_raise_overcall_mixed": "major_openings.jump_raise_after_overcall.mixed",
+  "jump_raise_overcall_inv": "major_openings.jump_raise_after_overcall.inv",
+  "art_raises_2nt": "major_openings.jacoby_2nt.play",
+  "art_raises_3nt": "major_openings.three_nt_raise.play",
+  "art_raises_splinter": "major_openings.splinters.play",
+  "art_raises_other": {
+   "text": "major_openings.art_raises_other"
+  },
+  "drury_2c": {
+   "set": {
+    "major_openings.drury.play": true,
+    "major_openings.drury.reverse": true
+   },
+   "when_any": {
+    "major_openings.drury.play": true,
+    "major_openings.drury.reverse": true
+   }
+  },
+  "drury_2d": "major_openings.drury.two_d",
+  "drury_in_comp": "major_openings.drury.in_comp",
+  "more": {
+   "text": "major_openings.notes"
+  },
+  "other": {
+   "text": "major_openings.bergen_raises_notes",
+   "unless_same_as": "more"
+  }
+ },
+ "minors": {
+  "1c_min_len_3": {
+   "set": {
+    "minor_openings.one_club.min_length": 3
+   }
+  },
+  "1c_min_len_4": {
+   "set": {
+    "minor_openings.one_club.min_length": 4
+   }
+  },
+  "1c_min_len_5": {
+   "set": {
+    "minor_openings.one_club.min_length": 5
+   }
+  },
+  "1c_unbal": "minor_openings.one_club.unbalanced",
+  "1c_nf2": "minor_openings.one_club.nf2",
+  "1c_nf1": "minor_openings.one_club.nf1",
+  "1c_nf0": "minor_openings.one_club.nf0",
+  "1c_art_f": "minor_openings.one_club.art_forcing",
+  "1d_min_len_3": {
+   "set": {
+    "minor_openings.one_diamond.min_length": 3
+   }
+  },
+  "1d_min_len_4": {
+   "set": {
+    "minor_openings.one_diamond.min_length": 4
+   }
+  },
+  "1d_min_len_5": {
+   "set": {
+    "minor_openings.one_diamond.min_length": 5
+   }
+  },
+  "1d_4432_only": "minor_openings.one_diamond.nf2_4432_only",
+  "1d_same_as_1c": "minor_openings.one_diamond.same_as_1c",
+  "1c_1d_bypass_5": "minor_openings.bypass_5_plus",
+  "1c_transfer_resp": "minor_openings.one_club.transfer_resp",
+  "1c_1nt_min": {
+   "number": "minor_openings.one_club.one_nt_range_min"
+  },
+  "1c_1nt_max": {
+   "number": "minor_openings.one_club.one_nt_range_max"
+  },
+  "1c_2nt_min": {
+   "number": "minor_openings.one_club.two_nt_range_min"
+  },
+  "1c_2nt_max": {
+   "number": "minor_openings.one_club.two_nt_range_max"
+  },
+  "1c_single_raise_nf": "minor_openings.one_club.single_raise.nf",
+  "1c_single_raise_inv": "minor_openings.one_club.single_raise.inv",
+  "1c_single_raise_gf": "minor_openings.one_club.single_raise.gf",
+  "1c_jump_raise_weak": "minor_openings.one_club.jump_raise.weak",
+  "1c_jump_raise_mixed": "minor_openings.one_club.jump_raise.mixed",
+  "1c_jump_raise_inv": "minor_openings.one_club.jump_raise.inv",
+  "1c_jump_raise_overcall_weak": "minor_openings.one_club.jump_raise_after_overcall.weak",
+  "1c_jump_raise_overcall_mixed": "minor_openings.one_club.jump_raise_after_overcall.mixed",
+  "1c_jump_raise_overcall_inv": "minor_openings.one_club.jump_raise_after_overcall.inv",
+  "1c_1d": {
+   "text": "minor_openings.notes",
+   "export": false
+  },
+  "1c_more": {
+   "text": "minor_openings.notes"
+  }
+ },
+ "two_level": {
+  "2c_min": {
+   "plain": "two_level.two_clubs.min_hcp_str"
+  },
+  "2c_max": {
+   "plain": "two_level.two_clubs.max_hcp"
+  },
+  "2c_str": {
+   "set": {
+    "two_level.two_clubs.meaning": "strong"
+   }
+  },
+  "2c_nat": {
+   "set": {
+    "two_level.two_clubs.meaning": "natural"
+   }
+  },
+  "2c_conv": {
+   "set": {
+    "two_level.two_clubs.meaning": "conventional"
+   }
+  },
+  "2c_very_str": {
+   "set": {
+    "two_level.two_clubs.meaning": "very_strong"
+   }
+  },
+  "2c_2d_neg": {
+   "set": {
+    "two_level.two_clubs.2d_response": "negative"
+   }
+  },
+  "2c_2d_waiting": {
+   "set": {
+    "two_level.two_clubs.2d_response": "waiting"
+   }
+  },
+  "2c_2d_steps": {
+   "set": {
+    "two_level.two_clubs.2d_response": "steps"
+   }
+  },
+  "2c_2h_neg": {
+   "set": {
+    "two_level.two_clubs.2h_response": "negative"
+   }
+  },
+  "2c_2h_steps": {
+   "set": {
+    "two_level.two_clubs.2h_response": "steps"
+   }
+  },
+  "2c_other": {
+   "text": "two_level.two_clubs.notes"
+  },
+  "2d_min": {
+   "number": "two_level.two_diamonds.min_hcp"
+  },
+  "2d_max": {
+   "number": "two_level.two_diamonds.max_hcp"
+  },
+  "2d_weak": {
+   "set": {
+    "two_level.two_diamonds.meaning": "weak"
+   }
+  },
+  "2d_int": {
+   "set": {
+    "two_level.two_diamonds.meaning": "intermediate"
+   }
+  },
+  "2d_str": {
+   "set": {
+    "two_level.two_diamonds.meaning": "strong"
+   }
+  },
+  "2d_conv": {
+   "set": {
+    "two_level.two_diamonds.meaning": "conventional"
+   }
+  },
+  "2d_2suits": "two_level.two_diamonds.two_suited",
+  "2d_nsnf": "two_level.two_diamonds.new_suit_nf",
+  "2d_rebids_2nt": {
+   "text": "two_level.two_diamonds.rebids_2nt"
+  },
+  "2d_desc": {
+   "text": "two_level.two_diamonds.description"
+  },
+  "2d_other": {
+   "text": "two_level.two_diamonds.notes"
+  },
+  "2h_min": {
+   "number": "two_level.two_hearts.min_hcp"
+  },
+  "2h_max": {
+   "number": "two_level.two_hearts.max_hcp"
+  },
+  "2h_weak": {
+   "set": {
+    "two_level.two_hearts.meaning": "weak"
+   }
+  },
+  "2h_int": {
+   "set": {
+    "two_level.two_hearts.meaning": "intermediate"
+   }
+  },
+  "2h_str": {
+   "set": {
+    "two_level.two_hearts.meaning": "strong"
+   }
+  },
+  "2h_conv": {
+   "set": {
+    "two_level.two_hearts.meaning": "conventional"
+   }
+  },
+  "2h_2suits": "two_level.two_hearts.two_suited",
+  "2h_nsnf": "two_level.two_hearts.new_suit_nf",
+  "2h_rebids_2nt": {
+   "text": "two_level.two_hearts.rebids_2nt"
+  },
+  "2h_desc": {
+   "text": "two_level.two_hearts.description"
+  },
+  "2h_other": {
+   "text": "two_level.two_hearts.notes"
+  },
+  "2s_min": {
+   "number": "two_level.two_spades.min_hcp"
+  },
+  "2s_max": {
+   "number": "two_level.two_spades.max_hcp"
+  },
+  "2s_weak": {
+   "set": {
+    "two_level.two_spades.meaning": "weak"
+   }
+  },
+  "2s_int": {
+   "set": {
+    "two_level.two_spades.meaning": "intermediate"
+   }
+  },
+  "2s_str": {
+   "set": {
+    "two_level.two_spades.meaning": "strong"
+   }
+  },
+  "2s_conv": {
+   "set": {
+    "two_level.two_spades.meaning": "conventional"
+   }
+  },
+  "2s_2suits": "two_level.two_spades.two_suited",
+  "2s_nsnf": "two_level.two_spades.new_suit_nf",
+  "2s_rebids_2nt": {
+   "text": "two_level.two_spades.rebids_2nt"
+  },
+  "2s_desc": {
+   "text": "two_level.two_spades.description"
+  },
+  "2s_other": {
+   "text": "two_level.two_spades.notes"
+  },
+  "ogust": "two_level.ogust.play"
+ },
+ "slams": {
+  "gerber_directly_over_nt": "other_conventions.gerber.directly_over_nt",
+  "gerber_over_nt_seq": "other_conventions.gerber.over_nt_seq",
+  "gerber_non_nt_seq": "other_conventions.gerber.non_nt_seq",
+  "4nt_blackwood": "other_conventions.blackwood.standard",
+  "4nt_rkc_0314": "other_conventions.blackwood.rkcb_0314",
+  "4nt_rkc_1430": "other_conventions.blackwood.rkcb_1430",
+  "4nt_more": {
+   "text": "other_conventions.blackwood.notes"
+  },
+  "dopi": "slam.dopi",
+  "depo": "slam.depo",
+  "ropi": "slam.ropi",
+  "control_bids": {
+   "text": "slam.control_bids"
+  },
+  "vs_interference": {
+   "text": "slam.vs_interference"
+  },
+  "trump_level": {
+   "text": "slam.trump_level"
+  },
+  "other": {
+   "text": "slam.notes"
+  }
+ },
+ "vs_1nt_opening": {
+  "vs_a": {
+   "text": "competitive.vs_1nt_strong.system"
+  },
+  "vs_b": {
+   "text": "competitive.vs_1nt_weak.system"
+  },
+  "vs_a_dbl": {
+   "text": "competitive.vs_1nt_strong.dbl"
+  },
+  "vs_b_dbl": {
+   "text": "competitive.vs_1nt_weak.dbl"
+  },
+  "vs_a_2c": {
+   "text": "competitive.vs_1nt_strong.2c"
+  },
+  "vs_b_2c": {
+   "text": "competitive.vs_1nt_weak.2c"
+  },
+  "vs_a_2d": {
+   "text": "competitive.vs_1nt_strong.2d"
+  },
+  "vs_b_2d": {
+   "text": "competitive.vs_1nt_weak.2d"
+  },
+  "vs_a_2h": {
+   "text": "competitive.vs_1nt_strong.2h"
+  },
+  "vs_b_2h": {
+   "text": "competitive.vs_1nt_weak.2h"
+  },
+  "vs_a_2s": {
+   "text": "competitive.vs_1nt_strong.2s"
+  },
+  "vs_b_2s": {
+   "text": "competitive.vs_1nt_weak.2s"
+  },
+  "vs_a_2nt": {
+   "text": "competitive.vs_1nt_strong.2nt"
+  },
+  "vs_b_2nt": {
+   "text": "competitive.vs_1nt_weak.2nt"
+  }
+ },
+ "overcalls": {
+  "1_lvl_min": {
+   "number": "overcalls.one_level_min"
+  },
+  "1_lvl_max": {
+   "number": "overcalls.one_level_max"
+  },
+  "2_lvl_min": {
+   "number": "overcalls.two_level_min"
+  },
+  "2_lvl_max": {
+   "number": "overcalls.two_level_max"
+  },
+  "often_4_cards": "overcalls.often_4_cards",
+  "jump_weak": {
+   "set": {
+    "overcalls.jump": "weak"
+   }
+  },
+  "jump_int": {
+   "set": {
+    "overcalls.jump": "intermediate"
+   }
+  },
+  "jump_str": {
+   "set": {
+    "overcalls.jump": "strong"
+   }
+  },
+  "conv": {
+   "text": "overcalls.conv_text"
+  },
+  "new_suit_f": {
+   "set": {
+    "overcalls.responses.new_suit": "forcing"
+   }
+  },
+  "new_suit_nf_const": {
+   "set": {
+    "overcalls.responses.new_suit": "nf_constructive"
+   }
+  },
+  "new_suit_nf": {
+   "set": {
+    "overcalls.responses.new_suit": "nf"
+   }
+  },
+  "new_suit_tfr": {
+   "set": {
+    "overcalls.responses.new_suit": "transfer"
+   }
+  },
+  "jump_raise_wk": {
+   "set": {
+    "overcalls.responses.jump_raise": "weak"
+   }
+  },
+  "jump_raise_mixed": {
+   "set": {
+    "overcalls.responses.jump_raise": "mixed"
+   }
+  },
+  "jump_raise_inv": {
+   "set": {
+    "overcalls.responses.jump_raise": "invitational"
+   }
+  },
+  "cuebids": {
+   "text": "overcalls.responses.cuebids_text"
+  },
+  "cue_support": "overcalls.responses.support_cuebid",
+  "other": {
+   "text": "overcalls.notes"
+  }
+ },
+ "doubles": {
+  "negative": "doubles.negative.play",
+  "negative_thru": {
+   "text": "doubles.negative.through"
+  },
+  "responsive": "doubles.responsive.play",
+  "responsive_thru": {
+   "text": "doubles.responsive.through"
+  },
+  "maximal": "doubles.maximal",
+  "support": "doubles.support.play",
+  "support_thru": {
+   "text": "doubles.support.through"
+  },
+  "support_rdbl": "doubles.support.rdbl",
+  "to_style": {
+   "text": "doubles.takeout_style"
+  },
+  "other": {
+   "text": "doubles.notes"
+  }
+ },
+ "preempts": {
+  "3_lvl_style": {
+   "text": "preempts.three_level_style"
+  },
+  "4_lvl_style": {
+   "text": "preempts.four_level_style"
+  },
+  "3_lvl_response": {
+   "text": "preempts.three_level_response"
+  },
+  "4_lvl_response": {
+   "text": "preempts.four_level_response"
+  },
+  "transfer_4c4d": "preempts.transfer_4_minor",
+  "other": {
+   "text": "preempts.notes"
+  }
+ },
+ "nt_overcalls": {
+  "direct_1nt_min": {
+   "range": "nt_overcalls.direct.range_min"
+  },
+  "direct_1nt_max": {
+   "range": "nt_overcalls.direct.range_max"
+  },
+  "balance_1nt_min": {
+   "range": "nt_overcalls.balance.range_min"
+  },
+  "balance_1nt_max": {
+   "range": "nt_overcalls.balance.range_max"
+  },
+  "direct_systems_on": "nt_overcalls.direct.systems_on",
+  "balance_systems_on": "nt_overcalls.balance.systems_on",
+  "jump_2nt_2_lowest_unbid": "nt_overcalls.jump_2nt_lowest_unbid",
+  "conv": {
+   "text": "nt_overcalls.conv_text"
+  },
+  "other": {
+   "text": "nt_overcalls.notes"
+  }
+ },
+ "vs_to_double": {
+  "new_suit_forcing_2_level": {
+   "set": {
+    "vs_to_double.new_suit_forcing_2lvl": true
+   },
+   "export": false
+  },
+  "new_suit_forcing_2_lvl": "vs_to_double.new_suit_forcing_2lvl",
+  "new_suit_forcing_trf": "vs_to_double.new_suit_forcing_tfr",
+  "jump_shift_weak": {
+   "set": {
+    "vs_to_double.jump_shift": "weak"
+   }
+  },
+  "jump_shift_inv": {
+   "set": {
+    "vs_to_double.jump_shift": "inv"
+   }
+  },
+  "jump_shift_f": {
+   "set": {
+    "vs_to_double.jump_shift": "forcing"
+   }
+  },
+  "jump_shift_fit": {
+   "set": {
+    "vs_to_double.jump_shift": "fit"
+   }
+  },
+  "redouble_10_plus": "vs_to_double.redouble.ten_plus",
+  "redouble_conv": "vs_to_double.redouble.conv",
+  "redouble_denies_fit": "vs_to_double.redouble.denies_fit",
+  "redouble_conv_desc": {
+   "text": "vs_to_double.redouble.conv_desc"
+  },
+  "2nt_over_minors_raise": "vs_to_double.two_nt_raise_minors.play",
+  "2nt_over_minors_nat": {
+   "set": {
+    "vs_to_double.two_nt_raise_minors.play": true
+   },
+   "export": false
+  },
+  "2nt_over_majors_raise": "vs_to_double.two_nt_raise_majors.play",
+  "2nt_over_majors_nat": {
+   "set": {
+    "vs_to_double.two_nt_raise_majors.play": true
+   },
+   "export": false
+  },
+  "2nt_over_minors_min": {
+   "range": "vs_to_double.two_nt_raise_minors.range_min"
+  },
+  "2nt_over_minors_max": {
+   "range": "vs_to_double.two_nt_raise_minors.range_max"
+  },
+  "2nt_over_majors_min": {
+   "range": "vs_to_double.two_nt_raise_majors.range_min"
+  },
+  "2nt_over_majors_max": {
+   "range": "vs_to_double.two_nt_raise_majors.range_max"
+  },
+  "other": {
+   "text": "vs_to_double.notes"
+  }
+ },
+ "vs_preempts": {
+  "2nt_overcall": {
+   "text": "vs_preempts.two_nt_overcall"
+  },
+  "to_dbl_thru": {
+   "text": "vs_preempts.takeout_double_thru"
+  },
+  "to_dbl_penalty": "vs_preempts.takeout_double_penalty",
+  "2nt_lebensohl_resp": "vs_preempts.lebensohl_response",
+  "cuebid": {
+   "text": "vs_preempts.cuebid"
+  },
+  "jump_overcalls": {
+   "text": "vs_preempts.jump_overcalls"
+  },
+  "other": {
+   "text": "vs_preempts.notes"
+  }
+ },
+ "direct_cuebids": {
+  "art_michaels": "direct_cuebids.art_michaels",
+  "art_natural": "direct_cuebids.art_natural",
+  "art_other": "direct_cuebids.art_other",
+  "quasi_michaels": "direct_cuebids.quasi_michaels",
+  "quasi_natural": "direct_cuebids.quasi_natural",
+  "quasi_other": "direct_cuebids.quasi_other",
+  "nat_minors_michaels": "direct_cuebids.nat_minors_michaels",
+  "nat_minors_natural": "direct_cuebids.nat_minors_natural",
+  "nat_minors_other": "direct_cuebids.nat_minors_other",
+  "nat_majors_michaels": "direct_cuebids.nat_majors_michaels",
+  "nat_majors_natural": "direct_cuebids.nat_majors_natural",
+  "nat_majors_other": "direct_cuebids.nat_majors_other",
+  "describe": {
+   "text": "direct_cuebids.description"
+  }
+ },
+ "carding": {
+  "suits_ud_att": "carding.suits.upside_down_attitude",
+  "suits_ud_count": "carding.suits.upside_down_count",
+  "suits_std_att": "carding.suits.standard_attitude",
+  "suits_std_count": "carding.suits.standard_count",
+  "nt_ud_att": "carding.nt.upside_down_attitude",
+  "nt_ud_count": "carding.nt.upside_down_count",
+  "nt_std_att": "carding.nt.standard_attitude",
+  "nt_std_count": "carding.nt.standard_count",
+  "smith_echo_suits": "carding.smith_echo_suits",
+  "smith_echo_nt": "carding.smith_echo_nt",
+  "smith_echo_reverse": "carding.smith_echo_reverse",
+  "trump_signals": {
+   "text": "carding.trump_signals"
+  },
+  "exceptions": {
+   "text": "carding.exceptions"
+  },
+  "other": {
+   "text": "carding.notes"
+  }
+ },
+ "signals": {
+  "declarer_lead_att": "carding.declarer_lead.attitude",
+  "declarer_lead_count": "carding.declarer_lead.count",
+  "declarer_lead_sp": "carding.declarer_lead.suit_preference",
+  "partner_lead_att": "carding.partner_lead.attitude",
+  "partner_lead_count": "carding.partner_lead.count",
+  "partner_lead_sp": "carding.partner_lead.suit_preference",
+  "first_discard_std": "carding.first_discard.standard",
+  "first_discard_ud": "carding.first_discard.upside_down",
+  "first_discard_lavinthal": "carding.first_discard.lavinthal",
+  "first_discard_odd_even": "carding.first_discard.odd_even"
+ },
+ "leads_vs_suits": {
+  "length_4th": "leads.vs_suits.length.fourth_best",
+  "length_3_5": "leads.vs_suits.length.third_fifth",
+  "length_3_low": "leads.vs_suits.length.third_low",
+  "length_attitude": "leads.vs_suits.length.attitude",
+  "small_from_xx": "leads.vs_suits.length.small_from_xx",
+  "after_first_trick": {
+   "text": "leads.vs_suits.after_first_trick"
+  },
+  "exceptions": {
+   "text": "leads.vs_suits.exceptions"
+  }
+ },
+ "leads_vs_nt": {
+  "length_4th": "leads.vs_nt.length.fourth_best",
+  "length_3_5": "leads.vs_nt.length.third_fifth",
+  "length_3_low": "leads.vs_nt.length.third_low",
+  "length_attitude": "leads.vs_nt.length.attitude",
+  "length_2nd_from_xxxx_plus": "leads.vs_nt.length.second_from_4plus",
+  "after_first_trick": {
+   "text": "leads.vs_nt.after_first_trick"
+  },
+  "exceptions": {
+   "text": "leads.vs_nt.exceptions"
+  }
+ },
+ "other": {
+  "nmf": "other_conventions.new_minor_forcing.play",
+  "2_way_nmf": "other_conventions.two_way_nmf",
+  "xyz": "other_conventions.xyz",
+  "fsf_gf": "other_conventions.fourth_suit_forcing.game_force",
+  "fsf_1_rnd": "other_conventions.fourth_suit_forcing.one_round",
+  "jump_shift_resp": {
+   "text": "other_conventions.jump_shift_response"
+  },
+  "vs_str_open": {
+   "text": "other_conventions.vs_strong_open"
+  },
+  "more1": {
+   "text": "other_conventions.notes_line_1"
+  },
+  "more2": {
+   "text": "other_conventions.notes_line_2"
+  }
+ },
+ "any": [
+  {
+   "path": "notrump.transfers.texas",
+   "keys": [
+    "1_no_trump.tfr_4c",
+    "1_no_trump.tfr_4d",
+    "1_no_trump.tfr_4h",
+    "1_no_trump.tfr_4s"
+   ],
+   "export": [
+    "1_no_trump.tfr_4h",
+    "1_no_trump.tfr_4s"
+   ]
+  },
+  {
+   "path": "other_conventions.gerber.play",
+   "keys": [
+    "slams.gerber_directly_over_nt",
+    "slams.gerber_over_nt_seq",
+    "slams.gerber_non_nt_seq"
+   ],
+   "export": [
+    "slams.gerber_directly_over_nt"
+   ]
+  }
+ ],
+ "notes": [
+  {
+   "path": "other_conventions.notes",
+   "export_to": "other.more2",
+   "lines": [
+    {
+     "key": "other.more1"
+    },
+    {
+     "key": "other.more2"
+    }
+   ]
+  },
+  {
+   "path": "notes.notrump_notes",
+   "export_to": "1_no_trump.more",
+   "lines": [
+    {
+     "key": "1_no_trump.more"
+    },
+    {
+     "key": "2_no_trump.other",
+     "label": "2NT: "
+    }
+   ]
+  },
+  {
+   "path": "notes.major_notes",
+   "export_to": "majors.more",
+   "lines": [
+    {
+     "key": "majors.art_raises_other",
+     "label": "Artificial raises: "
+    },
+    {
+     "key": "majors.drury_other",
+     "label": "Drury: "
+    },
+    {
+     "key": "majors.more",
+     "unless_same_as": "majors.other"
+    },
+    {
+     "key": "majors.other"
+    }
+   ]
+  },
+  {
+   "path": "notes.minor_notes",
+   "export_to": "minors.1c_more",
+   "lines": [
+    {
+     "key": [
+      "minors.1c_more",
+      "minors.1c_1d"
+     ],
+     "label": "1♣ responses: "
+    },
+    {
+     "key": "minors.1c",
+     "label": "1♣: "
+    },
+    {
+     "key": "minors.1d",
+     "label": "1♦: "
+    }
+   ]
+  },
+  {
+   "path": "notes.two_level_notes",
+   "export_to": "other.more2",
+   "lines": [
+    {
+     "key": "two_level.2c_other",
+     "label": "2♣: "
+    },
+    {
+     "key": "two_level.2d_desc",
+     "label": "2♦ description: "
+    },
+    {
+     "key": "two_level.2d_other",
+     "label": "2♦: "
+    },
+    {
+     "key": "two_level.2d_rebids_2nt",
+     "label": "2♦ rebid 2NT: "
+    },
+    {
+     "key": "two_level.2h_other",
+     "label": "2♥: "
+    },
+    {
+     "key": "two_level.2h_rebids_2nt",
+     "label": "2♥ rebid 2NT: "
+    },
+    {
+     "key": "two_level.2s_other",
+     "label": "2♠: "
+    },
+    {
+     "key": "two_level.2s_rebids_2nt",
+     "label": "2♠ rebid 2NT: "
+    }
+   ]
+  },
+  {
+   "path": "notes.slam_notes",
+   "export_to": "slams.other",
+   "lines": [
+    {
+     "key": "slams.other"
+    }
+   ]
+  },
+  {
+   "path": "notes.competitive_notes",
+   "export_to": "other.more2",
+   "lines": [
+    {
+     "key": "vs_to_double.redouble_conv_desc",
+     "label": "Redouble: "
+    },
+    {
+     "key": "vs_to_double.other",
+     "label": "Vs takeout double: "
+    },
+    {
+     "key": "vs_preempts.2nt_overcall",
+     "label": "Vs preempts — 2NT overcall: "
+    },
+    {
+     "key": "vs_preempts.cuebid",
+     "label": "Vs preempts — cuebid: "
+    },
+    {
+     "key": "vs_preempts.jump_overcalls",
+     "label": "Vs preempts — jump overcalls: "
+    },
+    {
+     "key": "vs_preempts.other",
+     "label": "Vs preempts: "
+    },
+    {
+     "key": "direct_cuebids.describe",
+     "label": "Direct cuebids: "
+    }
+   ]
+  },
+  {
+   "path": "notes.doubles_notes",
+   "export_to": "doubles.other",
+   "lines": [
+    {
+     "key": "doubles.other"
+    }
+   ]
+  },
+  {
+   "path": "notes.overcalls_notes",
+   "export_to": "overcalls.other",
+   "lines": [
+    {
+     "key": "overcalls.conv",
+     "label": "Convention: "
+    },
+    {
+     "key": "overcalls.cuebids",
+     "label": "Cuebid responses: "
+    },
+    {
+     "key": "overcalls.other"
+    }
+   ]
+  },
+  {
+   "path": "notes.nt_overcalls_notes",
+   "export_to": "nt_overcalls.other",
+   "lines": [
+    {
+     "key": "nt_overcalls.conv",
+     "label": "Convention: "
+    },
+    {
+     "key": "nt_overcalls.other"
+    }
+   ]
+  },
+  {
+   "path": "notes.preempts_notes",
+   "export_to": "preempts.other",
+   "lines": [
+    {
+     "key": "preempts.other"
+    }
+   ]
+  },
+  {
+   "path": "notes.carding_notes",
+   "export_to": "carding.other",
+   "lines": [
+    {
+     "key": "carding.other"
+    }
+   ]
+  },
+  {
+   "path": "notes.leads_notes",
+   "export_to": "other.more2",
+   "lines": [
+    {
+     "key": "leads_vs_suits.other",
+     "label": "vs suits: "
+    },
+    {
+     "key": "leads_vs_nt.other",
+     "label": "vs NT: "
+    }
+   ]
+  },
+  {
+   "path": "notes.other_notes",
+   "export_to": "other.more2",
+   "lines": [
+    {
+     "key": "other.jump_shift_resp",
+     "label": "Jump-shift response: "
+    },
+    {
+     "key": "other.vs_str_open",
+     "label": "Vs (very) strong open: "
+    },
+    {
+     "key": "other.more1"
+    },
+    {
+     "key": "other.more2"
+    }
+   ]
+  }
+ ]
+}
