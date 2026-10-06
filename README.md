@@ -39,7 +39,7 @@ bridge-card = { git = "https://github.com/bridge-craftwork/convention-card", tag
 ```
 
 ```js
-import { importBbsa, exportBbsa, importBboJson, renderAcblPdfBytes, setAssetLoader }
+import { importBbsa, exportBbsa, importBboJson, exportBridgodexJson, renderAcblPdfBytes, setAssetLoader }
   from '@bridge-craftwork/convention-card'
 
 // The PDF export's template and font: the library never fetches them itself.
