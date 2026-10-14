@@ -679,10 +679,12 @@ records it and another doesn't) or *same*. Rows follow the spec's order, and:
   against a card silent on the defence to 1NT);
 - text is compared ignoring case and spacing, enums after the spec's
   normalisation, and `other_agreements` by ID, else by text;
-- with three or more cards, the odd ones out are marked: the cells that
-  differ from the value more cards share than any other ("Yes, Yes, Yes, –"
-  marks the "–"; a tie marks nothing). Not recorded counts as a value of
-  its own (Rick Wilson, 2026-10-14).
+- with three or more cards, each value apart from the most common gets its
+  own colour, so cells that agree share one and subtle differences
+  ("14+–17" against "14–17") stand out: "Yes, Yes, Yes, –" shades the "–";
+  on a tie the first card's value stays plain ("Yes, –, Yes, –" shades the
+  dashes); when every card differs, all are shaded. Not recorded counts as
+  a value of its own (Rick Wilson, 2026-10-14).
 
 The editor's `CardCompare.vue` shows it: a "Card level" row first, then the
 rows by section, filtered to differences or everything, with a printable

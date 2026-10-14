@@ -149,19 +149,26 @@ const ROWS = []
   }
 }
 
-// The odd ones out: with three or more cards, the cells that differ from
-// the value most of them share, when one value is held more often than any
-// other (Yes, Yes, Yes, – marks the –; Yes, Yes, –, – marks nothing).
-function oddOnesOut(readings) {
-  const n = readings.length
-  if (n < 3) return readings.map(() => false)
+// Shades, with three or more cards: one per value, so cells that say the
+// same thing share a colour. The value most cards hold is left plain (on a
+// tie, the one the first card holds: Yes, Yes, –, – shades the dashes);
+// when every card says something different, all are shaded. Values are
+// numbered by how many cards hold them, then by column. Not recorded is a
+// value of its own. `null` for a plain cell.
+function shades(readings) {
+  if (readings.length < 3) return readings.map(() => null)
   const keyOf = r => (r.recorded ? `v:${r.key}` : 'blank')
-  const counts = new Map()
-  for (const r of readings) counts.set(keyOf(r), (counts.get(keyOf(r)) || 0) + 1)
-  const sorted = [...counts.values()].sort((a, b) => b - a)
-  if (sorted.length < 2 || sorted[0] === sorted[1]) return readings.map(() => false)
-  const common = [...counts].find(([, c]) => c === sorted[0])[0]
-  return readings.map(r => keyOf(r) !== common)
+  const groups = new Map()
+  readings.forEach((r, i) => {
+    const k = keyOf(r)
+    if (!groups.has(k)) groups.set(k, { first: i, count: 0 })
+    groups.get(k).count++
+  })
+  if (groups.size < 2) return readings.map(() => null)
+  const order = [...groups].sort(([, a], [, b]) => b.count - a.count || a.first - b.first).map(([k]) => k)
+  const offset = groups.get(order[0]).count > 1 ? 0 : 1
+  const shade = new Map(order.map((k, i) => [k, i + offset || null]))
+  return readings.map(r => shade.get(keyOf(r)))
 }
 
 // other_agreements entries (ADR-0001 D5): by convention ID, else by their text.
@@ -192,10 +199,12 @@ function unwrap(card, i) {
  * cells, blanks }`: `status` is 'differs' (two cards record different
  * values, or one records it and another doesn't) or 'same'; `blanks` is
  * how many cards don't record it; `cells`, one per card, are `{ recorded,
- * text, odd }`, with `text` null for a box that is off or a choice with
- * none chosen, and `odd` true for an odd one out: with three or more
- * cards, a cell that differs from the value more cards share than any
- * other. Rows no card sets at all are left out.
+ * text, odd, shade }`, with `text` null for a box that is off or a choice
+ * with none chosen. With three or more cards, `shade` (1, 2, …) numbers
+ * the values a cell can be told apart by, so cells with the same value
+ * share one, and is null on the value most cards hold (on a tie, the
+ * first card's); `odd` is whether a cell is shaded. Rows no card sets at
+ * all are left out.
  */
 export function compareCards(cards) {
   const columns = (cards || []).map(unwrap)
@@ -209,7 +218,7 @@ export function compareCards(cards) {
     if (!setSomewhere || !recorded.some(r => r.text != null)) return
     const blanks = readings.length - recorded.length
     const status = blanks || new Set(recorded.map(r => r.key)).size > 1 ? 'differs' : 'same'
-    const odd = oddOnesOut(readings)
+    const shade = shades(readings)
     rows.push({
       key: row.key,
       section: row.section,
@@ -217,7 +226,7 @@ export function compareCards(cards) {
       paths: row.paths,
       status,
       blanks,
-      cells: readings.map((r, i) => ({ recorded: r.recorded, text: r.text, odd: odd[i] })),
+      cells: readings.map((r, i) => ({ recorded: r.recorded, text: r.text, odd: shade[i] != null, shade: shade[i] })),
     })
   }
 

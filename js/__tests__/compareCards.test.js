@@ -68,9 +68,9 @@ describe('compareCards', () => {
     const r = compareCards([card({ 'notrump.stayman.play': true }), card({}), card({ 'notrump.stayman.play': false })])
     const stayman = row(r, 'notrump.stayman.play')
     expect(stayman.cells).toEqual([
-      { recorded: true, text: 'Yes', odd: true },
-      { recorded: true, text: null, odd: false },
-      { recorded: true, text: null, odd: false },
+      { recorded: true, text: 'Yes', odd: true, shade: 1 },
+      { recorded: true, text: null, odd: false, shade: null },
+      { recorded: true, text: null, odd: false, shade: null },
     ])
     expect(stayman.status).toBe('differs')
   })
@@ -119,19 +119,26 @@ describe('compareCards', () => {
     expect(found.status).toBe('same')
   })
 
-  it('marks the odd ones out among three or more cards', () => {
+  it('shades each value apart from the one most cards hold', () => {
     const on = { 'notrump.stayman.play': true }
-    const odd = r => row(r, 'notrump.stayman.play').cells.map(c => c.odd)
-    expect(odd(compareCards([card(on), card(on), card(on), card({})]))).toEqual([false, false, false, true])
-    // A tie marks nothing; so do two cards.
-    expect(odd(compareCards([card(on), card(on), card({}), card({})]))).toEqual([false, false, false, false])
-    expect(odd(compareCards([card(on), card({})]))).toEqual([false, false])
-    // Not recorded is a value of its own.
+    const shade = (r, key = 'notrump.stayman.play') => row(r, key).cells.map(c => c.shade)
+    expect(shade(compareCards([card(on), card(on), card(on), card({})]))).toEqual([null, null, null, 1])
+    // A tie leaves the first card's value plain; two cards are never shaded.
+    expect(shade(compareCards([card(on), card({}), card(on), card({})]))).toEqual([null, 1, null, 1])
+    expect(shade(compareCards([card(on), card({})]))).toEqual([null, null])
+    // Two odd values, two shades.
+    const nt = (lo, plus) => card({ 'notrump.one_nt.range_min': lo, 'notrump.one_nt.range_min_plus': plus, 'notrump.one_nt.range_max': 17 })
+    const ranges = compareCards([nt(15, false), nt(14, true), nt(15, false), nt(14, false)])
+    expect(shade(ranges, 'notrump.one_nt.range')).toEqual([null, 1, null, 2])
+    // Every card different: all shaded, each its own.
+    const sys = compareCards(['2/1', 'SAYC', 'Precision'].map(s => card({ 'general.system': s })))
+    expect(shade(sys, 'general.system')).toEqual([1, 2, 3])
+    expect(row(sys, 'general.system').cells.every(c => c.odd)).toBe(true)
+    // Not recorded is a value of its own; text compares ignoring case and spacing.
     const hcp = compareCards([card({ 'general.min_hcp_open': 12 }), card({ 'general.min_hcp_open': 12 }), card({})])
-    expect(row(hcp, 'general.min_hcp_open').cells.map(c => c.odd)).toEqual([false, false, true])
-    // Text compares as the grid does: ignoring case and spacing.
-    const sys = compareCards(['2/1', '2/1 ', 'SAYC'].map(s => card({ 'general.system': s })))
-    expect(row(sys, 'general.system').cells.map(c => c.odd)).toEqual([false, false, true])
+    expect(shade(hcp, 'general.min_hcp_open')).toEqual([null, null, 1])
+    const same = compareCards(['2/1', '2/1 ', 'SAYC'].map(s => card({ 'general.system': s })))
+    expect(shade(same, 'general.system')).toEqual([null, null, 1])
   })
 
   it('leaves out rows no card sets', () => {
