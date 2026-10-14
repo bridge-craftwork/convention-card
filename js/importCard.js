@@ -1,7 +1,7 @@
 // Read a card from any format the library knows, telling them apart by
 // their content: the editor's own JSON (its export, or bare card_data),
-// BBO's and Bridgodex's JSON, BBA's .bbsa text, a PDF this library wrote,
-// and the URL hand-off (js/handoff.js). The editor's Import button and the
+// BBO's and Bridgodex's JSON, BBA's .bbsa text, a PDF this library wrote
+// or Bridgodex made, and the URL hand-off (js/handoff.js). The editor's Import button and the
 // standalone page's window.card both read through here, so they agree.
 //
 // The .bbsa and PDF code is loaded only when a file needs it, so a page that
@@ -18,7 +18,7 @@ export const IMPORT_FORMATS = {
   bbo: "BBO's ACBL card export (JSON)",
   bridgeodex: "Bridgodex's card export (JSON, with a settings block)",
   bbsa: "BBA's .bbsa convention file (Key = value lines)",
-  pdf: 'an ACBL PDF: one this editor exported (the card travels inside it, and boxes changed since are read too), or any filled-in ACBL Classic or New card',
+  pdf: 'an ACBL PDF: one this editor exported (the card travels inside it, and boxes changed since are read too), or any filled-in ACBL Classic or New card; or a card PDF Bridgodex made',
   handoff: 'a hand-off string, v1.<data>, or a URL ending #import=v1.<data>',
 }
 
@@ -119,10 +119,16 @@ export async function importCard(input, { from = null, name = null } = {}) {
     }
     case 'pdf': {
       if (!isBytes(input)) throw new Error('A PDF is read from its bytes (an ArrayBuffer or Uint8Array)')
+      const { readBridgodexPdf } = await import('./bridgodexPdf.js')
+      const bridgodex = await readBridgodexPdf(bytesOf(input))
+      if (bridgodex) {
+        const read = importBridgeodexJson(bridgodex)
+        return card({ ...read, description: 'Imported from a Bridgodex PDF' })
+      }
       const { readCardFromPdf } = await import('./acblPdfImport.js')
       const read = await readCardFromPdf(bytesOf(input))
       if (!read) {
-        throw new Error('This PDF has no card inside it, and it is not a filled-in ACBL card.')
+        throw new Error('This PDF has no card inside it, and it is not a filled-in ACBL card or a Bridgodex card.')
       }
       return card(read, { report: read.report })
     }
