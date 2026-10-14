@@ -319,10 +319,11 @@
     "four_way",
     "four_way_reversed",
     "bba",
+    "two_nt_three_c",
     "none"
    ],
    "default": "relay",
-   "desc": "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). none: not played",
+   "desc": "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). two_nt_three_c: 2NT clubs, 3♣ diamonds, leaving 2♠ free (for minor-suit Stayman); BBA's 21GF-MSTandMSS. none: not played",
    "skill": "bidding_conventions/minor_suit_transfers",
    "level": 5
   },
@@ -1334,11 +1335,37 @@
    "skill": "bidding_conventions/multi_2d",
    "level": 8
   },
+  "two_diamonds.multi_strong": {
+   "kind": "enum",
+   "label": "Multi 2♦: strong option",
+   "options": [
+    "none",
+    "balanced_20_21",
+    "balanced_22_23",
+    "three_suiter",
+    "strong_minor",
+    "other"
+   ],
+   "default": "none",
+   "desc": "The strong hand the Multi 2♦ may hold besides a weak two in either major. none: weak twos only. balanced_20_21: 20-21 balanced (Lars Multi). balanced_22_23: 22-23 balanced. three_suiter: a strong 4-4-4-1. strong_minor: a strong (Acol) two in a minor. other: written in the card's notes",
+   "skill": [
+    "bidding_conventions/multi_2d",
+    "bidding_conventions/lars_multi"
+   ],
+   "level": 9
+  },
   "two_diamonds.mini_roman": {
    "kind": "bool",
    "label": "Mini-Roman 2♦",
    "skill": "bidding_conventions/mini_roman_2d",
    "level": 7
+  },
+  "two_diamonds.mini_roman_maxi": {
+   "kind": "bool",
+   "label": "Mini-Maxi Roman 2♦: also 19+",
+   "desc": "The Mini-Roman 2♦ is either the three-suiter of opening strength (Mini) or a 19+ three-suiter (Maxi), which bids again after responder's sign-off. Off: Mini only",
+   "skill": "bidding_conventions/mini_roman_2d",
+   "level": 8
   },
   "two_diamonds.reverse_flannery": {
    "kind": "bool",
@@ -2133,6 +2160,18 @@
    ],
    "default": "wide_range",
    "desc": "wide_range: any strength from about 7 HCP with five-five (BBA: 8+ total points, 12+ vulnerable). weak_or_strong (mini-maxi): weak, or 16+ and bids again; an intermediate hand overcalls instead. Bridge-Classroom's seed card writes weak_or_strong"
+  },
+  "michaels.minor_advance": {
+   "kind": "enum",
+   "label": "Advancing Michaels over a major: which minor",
+   "options": [
+    "ask_2nt",
+    "pass_or_correct"
+   ],
+   "default": "ask_2nt",
+   "desc": "After a Michaels cue bid of a major (the other major and a minor). ask_2nt: advancer bids 2NT to ask for the minor, at any strength; 3♣ and 3♦ are natural, a long suit of advancer's own (Bridge Bum). pass_or_correct: 3♣ is pass or correct to partner's minor, and 2NT a stronger ask (Larry Cohen)",
+   "skill": "competitive_bidding/michaels_unusual",
+   "level": 5
   },
   "leaping_michaels.play": {
    "kind": "bool",

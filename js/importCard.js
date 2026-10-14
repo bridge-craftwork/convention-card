@@ -8,7 +8,7 @@
 // imports this module does not pull in pdf-lib.
 
 import { isBboCard, importBboJson } from './bbo.js'
-import { importBridgeodexJson } from './bridgeodexImport.js'
+import { importBridgeodexJson } from './bridgodex.js'
 import { decodeCardFromUrl } from './handoff.js'
 import { isBundle } from './cardBundle.js'
 
