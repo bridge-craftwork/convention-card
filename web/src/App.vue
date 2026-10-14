@@ -12,8 +12,23 @@
       :storage="browserStorage"
       sample-id="starter"
       :card-link="id => `#/card/${encodeURIComponent(id)}`"
+      compare
       @open="openCard"
+      @compare="openCompare"
     />
+
+    <!-- Cards side by side. -->
+    <template v-else-if="route.view === 'compare'">
+      <div class="card-bar">
+        <a class="back" href="#/" @click.prevent="goHome">← All cards</a>
+      </div>
+      <CardCompare
+        :storage="browserStorage"
+        :ids="route.ids"
+        :card-link="id => `#/card/${encodeURIComponent(id)}`"
+        @open="openCard"
+      />
+    </template>
 
     <!-- One card, in the editor. -->
     <template v-else>
@@ -38,6 +53,7 @@
 import { computed, onMounted, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import ConventionCardEditor from './editor/ConventionCardEditor.vue'
 import CardCatalog from './editor/CardCatalog.vue'
+import CardCompare from './editor/CardCompare.vue'
 import { useCardEditor } from './editor/useCardEditor.js'
 import { browserStorage } from './browserStorage.js'
 import { bridgeClassroomUrl } from './handoffToBridgeClassroom.js'
@@ -57,16 +73,19 @@ async function onSaveToBridgeClassroom() {
   window.open(await bridgeClassroomUrl(currentCard.value), '_blank', 'noopener')
 }
 
-// ─── Two views, by the URL's fragment ──────────────────────────
-//   #/ (or nothing)    home: the table of cards
-//   #/card/<id>        that card in the editor
-//   #import=v1.<data>  a card handed over (below), then opened
-const route = reactive({ view: 'home', id: null })
+// ─── The views, by the URL's fragment ──────────────────────────
+//   #/ (or nothing)          home: the table of cards
+//   #/card/<id>              that card in the editor
+//   #/compare/<id>,<id>…     those cards side by side
+//   #import=v1.<data>        a card handed over (below), then opened
+const route = reactive({ view: 'home', id: null, ids: [] })
 
 function readRoute() {
   const m = /^#\/card\/(.+)$/.exec(window.location.hash)
-  if (m) Object.assign(route, { view: 'card', id: decodeURIComponent(m[1]) })
-  else if (!/^#import=/.test(window.location.hash)) Object.assign(route, { view: 'home', id: null })
+  const c = /^#\/compare\/(.+)$/.exec(window.location.hash)
+  if (m) Object.assign(route, { view: 'card', id: decodeURIComponent(m[1]), ids: [] })
+  else if (c) Object.assign(route, { view: 'compare', id: null, ids: c[1].split(',').map(decodeURIComponent) })
+  else if (!/^#import=/.test(window.location.hash)) Object.assign(route, { view: 'home', id: null, ids: [] })
 }
 
 function editorIdle() {
@@ -94,6 +113,10 @@ async function showRouteCard() {
 
 function openCard(id) {
   window.location.hash = `#/card/${encodeURIComponent(id)}`
+}
+
+function openCompare(ids) {
+  window.location.hash = `#/compare/${ids.map(encodeURIComponent).join(',')}`
 }
 
 function goHome() {
@@ -217,4 +240,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', onHashChange))
   cursor: pointer;
 }
 .handoff:disabled { opacity: 0.5; cursor: default; }
+@media print {
+  .card-bar, .arrival { display: none; }
+}
 </style>

@@ -221,6 +221,10 @@ template can print, and a table of a person's cards with their difficulty,
 from which several open the comparison matrix. See DESIGN.md, "A card's
 difficulty, and your cards side by side".
 
+*Started 2026-10-14:* the comparison grid (`compareCards`, `CardCompare.vue`)
+and the table's Compare button; see DESIGN.md, "Comparing cards". Bridge
+Classroom shows it once it passes `compare` and routes the event.
+
 ### Later: a card wizard for newer players
 
 A short question list (`spec/wizard.toml`) and a wizard in the editor that
