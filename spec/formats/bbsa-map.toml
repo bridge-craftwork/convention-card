@@ -217,10 +217,17 @@
 
 # Minor-suit responses to 1NT. BBA's switches stay as they are (they
 # round-trip); the treatment our rules read is derived from them. Only the
-# combination the corpus confirms is mapped; the others are not modelled.
+# combinations BBA's stock cards play are mapped (21GF-DEFAULT and
+# 21GF-MSTandMSS); the others are not modelled.
 [[derived]]
 when = { "notrump.transfers.two_s_clubs" = true, "notrump.transfers.three_c_diamonds" = true, "notrump.minor_suit_stayman.play" = false, "notrump.transfers.two_nt_clubs" = false, "notrump.transfers.two_nt_diamonds" = false }
 set  = { "notrump.minor_transfers" = "bba" }
+
+# 2NT clubs, 3C diamonds (21GF-MSTandMSS): 2S stays free, for minor-suit
+# Stayman when that is on.
+[[derived]]
+when = { "notrump.transfers.two_nt_clubs" = true, "notrump.transfers.three_c_diamonds" = true, "notrump.transfers.two_s_clubs" = false, "notrump.transfers.two_nt_diamonds" = false }
+set  = { "notrump.minor_transfers" = "two_nt_three_c" }
 
 [[derived]]
 set  = { "notrump.minor_transfers" = "none" }

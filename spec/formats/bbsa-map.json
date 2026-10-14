@@ -554,6 +554,17 @@
    }
   },
   {
+   "when": {
+    "notrump.transfers.two_nt_clubs": true,
+    "notrump.transfers.three_c_diamonds": true,
+    "notrump.transfers.two_s_clubs": false,
+    "notrump.transfers.two_nt_diamonds": false
+   },
+   "set": {
+    "notrump.minor_transfers": "two_nt_three_c"
+   }
+  },
+  {
    "set": {
     "notrump.minor_transfers": "none"
    }
