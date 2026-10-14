@@ -678,7 +678,11 @@ records it and another doesn't) or *same*. Rows follow the spec's order, and:
   something else" (Rick Wilson, 2026-10-14: hiding them hid "Suction"
   against a card silent on the defence to 1NT);
 - text is compared ignoring case and spacing, enums after the spec's
-  normalisation, and `other_agreements` by ID, else by text.
+  normalisation, and `other_agreements` by ID, else by text;
+- with three or more cards, the odd ones out are marked: the cells that
+  differ from the value more cards share than any other ("Yes, Yes, Yes, –"
+  marks the "–"; a tie marks nothing). Not recorded counts as a value of
+  its own (Rick Wilson, 2026-10-14).
 
 The editor's `CardCompare.vue` shows it: a "Card level" row first, then the
 rows by section, filtered to differences or everything, with a printable
