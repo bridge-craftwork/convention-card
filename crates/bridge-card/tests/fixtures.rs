@@ -186,6 +186,11 @@ fn minor_transfer_treatment_is_derived_from_bba_switches() {
     };
     // 2S clubs and 3C diamonds: BBA's own treatment.
     assert_eq!(style("21GF-DEFAULT"), Some(Value::Text("bba".into())));
+    // 2NT clubs and 3C diamonds, 2S Minor Suit Stayman.
+    assert_eq!(
+        style("21GF-MSTandMSS"),
+        Some(Value::Text("two_nt_three_c".into()))
+    );
     // Minor Suit Stayman over 1NT, or 3C Puppet Stayman: not modelled.
     assert_eq!(style("21GF-MSS"), Some(Value::Text("none".into())));
     assert_eq!(style("21GF-Puppet"), Some(Value::Text("none".into())));
