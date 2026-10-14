@@ -155,7 +155,7 @@
     "minor_suit_stayman": {
       "play": true
     },
-    "minor_transfers": "none",
+    "minor_transfers": "two_nt_three_c",
     "one_nt": {
       "allow_4441": false,
       "allow_5422": true,
