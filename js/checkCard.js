@@ -112,29 +112,7 @@ export function checkCard(input) {
   name ??= card_data.metadata?.name ?? null
   description ??= card_data.metadata?.description ?? null
 
-  const found = []
-  for (const [key, value] of Object.entries(card_data)) {
-    if (key.startsWith('_')) report.ignored.push(key)
-    else if (key === 'other_agreements') checkOtherAgreements(value, report)
-    else if (!NOT_SETTINGS.has(key)) leaves(key, value, found, report.ignored)
-  }
-
-  const values = new Map()
-  for (const [path, value] of found) {
-    if (value == null || EDITOR_LEAVES.has(path.slice(path.lastIndexOf('.') + 1))) continue
-    const f = field(path)
-    if (!f) {
-      report.unknown.push(path)
-      continue
-    }
-    const checked = checkValue(f, value)
-    if (checked.problem) {
-      report.invalid.push([path, checked.problem])
-      continue
-    }
-    if (f.path !== path) report.aliased.push([path, f.path])
-    values.set(f.path, checked.value)
-  }
+  const values = readValues(card_data, report)
 
   const isOn = path => (values.has(path) ? values.get(path) : FIELDS[path].default) === true
   for (const [group, members] of CHOICES) {
@@ -164,6 +142,46 @@ export function checkCard(input) {
     diagnostics.push({ severity: 'info', message: `${from}: an older name for ${to}`, path: from })
   }
   return result({ name, description, card_data })
+}
+
+// The card's settings by canonical path, normalised; what is not a setting
+// goes into `report`.
+function readValues(card_data, report) {
+  const found = []
+  for (const [key, value] of Object.entries(card_data)) {
+    if (key.startsWith('_')) report.ignored.push(key)
+    else if (key === 'other_agreements') checkOtherAgreements(value, report)
+    else if (!NOT_SETTINGS.has(key)) leaves(key, value, found, report.ignored)
+  }
+
+  const values = new Map()
+  for (const [path, value] of found) {
+    if (value == null || EDITOR_LEAVES.has(path.slice(path.lastIndexOf('.') + 1))) continue
+    const f = field(path)
+    if (!f) {
+      report.unknown.push(path)
+      continue
+    }
+    const checked = checkValue(f, value)
+    if (checked.problem) {
+      report.invalid.push([path, checked.problem])
+      continue
+    }
+    if (f.path !== path) report.aliased.push([path, f.path])
+    values.set(f.path, checked.value)
+  }
+  return values
+}
+
+/**
+ * A card's settings as the spec reads them: canonical path → value, with
+ * aliases followed and enum spellings normalised. Unknown and invalid
+ * values are left out (checkCard reports them); unset fields are absent,
+ * not filled with their defaults.
+ */
+export function cardValues(card_data) {
+  const report = { aliased: [], unknown: [], invalid: [], ignored: [], conflicts: [], wrapper: null }
+  return card_data && typeof card_data === 'object' ? readValues(card_data, report) : new Map()
 }
 
 // ADR-0001 D5: `[{ id?, section?, text }]`, extra keys kept.

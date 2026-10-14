@@ -92,6 +92,9 @@
           <button v-if="canCreate" class="btn btn-primary" :disabled="busy" @click="onNew">New card</button>
           <button v-if="canCreate" class="btn" :disabled="busy" @click="fileInput?.click()" title="One card, or an Export all file">Import</button>
           <button v-if="canCreate" class="btn" :disabled="busy || !ownCards.length" @click="onExportAll" title="Every card in one file, which Import reads back">Export all</button>
+          <button v-if="compare" class="btn" :disabled="selected.length < 2"
+                  :title="selected.length < 2 ? 'Tick two or more cards to compare them' : 'See where the ticked cards differ'"
+                  @click="$emit('compare', selected)">Compare<template v-if="selected.length"> ({{ selected.length }})</template></button>
           <input
             ref="fileInput"
             type="file"
@@ -104,9 +107,10 @@
       <p v-if="error" class="error">{{ error }}</p>
       <p v-if="loading" class="muted">Loading your cards…</p>
 
-      <table v-else class="card-table">
+      <table v-else class="card-table" :class="{ picking: compare }">
         <thead>
           <tr>
+            <th v-if="compare" class="pick-col"><span class="sr-only">Compare</span></th>
             <th>Card</th>
             <th>Names on the card</th>
             <th>System</th>
@@ -119,6 +123,10 @@
         <tbody>
           <tr v-for="row in rows" :key="row.id" class="card-row" tabindex="0"
               @click="$emit('open', row.id)" @keydown.enter="$emit('open', row.id)">
+            <td v-if="compare" class="pick-col" @click.stop>
+              <input type="checkbox" :checked="selected.includes(row.id)" :aria-label="`Compare ${row.name}`"
+                     @change="togglePick(row.id)" />
+            </td>
             <td class="name">
               <a :href="cardLink ? cardLink(row.id) : undefined" @click.prevent="$emit('open', row.id)">{{ row.name }}</a>
               <span v-if="row.primary" class="tag" title="Opens first">primary</span>
@@ -203,8 +211,11 @@ const props = defineProps({
   storagePlace: { type: String, default: 'browser' },
   // The address of a card, for its link (so it can open in a new tab).
   cardLink: { type: Function, default: null },
+  // Tick cards and compare them: the host routes `compare` (the ids, in
+  // the table's order) to its CardCompare.
+  compare: { type: Boolean, default: false },
 })
-const emit = defineEmits(['open'])
+const emit = defineEmits(['open', 'compare'])
 
 const cc = useCardEditor(props.storage, props.overlays || undefined)
 const BANDS = LEVEL_BANDS
@@ -315,6 +326,16 @@ async function exportPdf(id, layout) {
   }
 }
 const columns = computed(() => distinguishing(cards.value))
+
+// Cards ticked for Compare, kept in the table's order.
+const picked = ref(new Set())
+const selected = computed(() => rows.value.map(r => r.id).filter(id => picked.value.has(id)))
+function togglePick(id) {
+  const next = new Set(picked.value)
+  if (next.has(id)) next.delete(id)
+  else next.add(id)
+  picked.value = next
+}
 
 async function onNew() {
   busy.value = true
@@ -442,6 +463,8 @@ code { font-size: 13px; }
 .highest { font-size: 12px; color: var(--text-secondary); }
 .nowrap { white-space: nowrap; }
 .share-tag { background: #ede7f6; color: #4527a0; }
+.pick-col { width: 1%; padding-right: 0; }
+.pick-col input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--green-dark); }
 .pdf-col { position: relative; width: 1%; white-space: nowrap; text-align: right; }
 .pdf-btn { font: inherit; font-size: 12px; display: inline-flex; gap: 4px; align-items: center; padding: 4px 8px; border: 1px solid var(--card-border); border-radius: var(--radius-button); background: #fff; color: var(--text-secondary); cursor: pointer; }
 .pdf-btn:hover { color: var(--green-dark); border-color: var(--green-mid); }
@@ -456,5 +479,6 @@ code { font-size: 13px; }
 
 @media (max-width: 720px) {
   .card-table th:nth-child(n+4), .card-table td:nth-child(n+4) { display: none; }
+  .card-table.picking th:nth-child(4), .card-table.picking td:nth-child(4) { display: table-cell; }
 }
 </style>
