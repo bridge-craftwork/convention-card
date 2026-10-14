@@ -664,9 +664,8 @@ card's load is counted in agreements, not checkboxes.
 
 **Built: the grid** (Rick Wilson, 2026-10-14). `compareCards(cards)` in the
 library (`js/compareCards.js`) returns the columns and one row per agreement,
-each with a status: *differs* (two cards record different values),
-*unrecorded* (the cards that record it agree, others leave it blank) or
-*same*. Rows follow the spec's order, and:
+each with a status: *differs* (two cards record different values, or one
+records it and another doesn't) or *same*. Rows follow the spec's order, and:
 
 - a choice group is one row, its label the words its members' labels share
   ("Count vs suits": "Standard" | "Upside-down");
@@ -674,17 +673,19 @@ each with a status: *differs* (two cards record different values),
 - an unset yes/no field is off, or its default where it has one (five-card
   majors): an unticked box is left out by some formats and written as false
   by others, and that is no difference;
-- any other unset field is "not recorded", never a different value;
+- any other unset field is "not recorded": a difference from a card that
+  records it, shown in grey so "says nothing" reads apart from "says
+  something else" (Rick Wilson, 2026-10-14: hiding them hid "Suction"
+  against a card silent on the defence to 1NT);
 - text is compared ignoring case and spacing, enums after the spec's
   normalisation, and `other_agreements` by ID, else by text.
 
 The editor's `CardCompare.vue` shows it: a "Card level" row first, then the
-rows by section, filtered to differences, differences and not recorded, or
-everything, with a printable layout. The table of cards gets tick boxes and
-a **Compare** button when the host passes `compare` and routes the
+rows by section, filtered to differences or everything, with a printable
+layout. The table of cards gets tick boxes and a **Compare** button when the host passes `compare` and routes the
 `compare` event (the standalone app: `#/compare/<id>,<id>…`). Across four of
-Rick's Bridgodex cards, 57 of 210 agreements differ and 16 are recorded on
-some cards only. Not yet: the two-card form view, the difficulty load row,
+Rick's Bridgodex cards, 73 of 209 agreements differ, 16 of them because some
+cards don't record them. Not yet: the two-card form view, the difficulty load row,
 and "Same" in the weak notrump defence read as the strong one's.
 
 ## Deployment

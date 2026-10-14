@@ -81,7 +81,7 @@ describe('compareCards', () => {
     expect(row(r, 'major_openings.five_card_majors').status).toBe('same')
   })
 
-  it('tells a value one card does not record from a disagreement', () => {
+  it('counts a value one card does not record as a difference, and says so', () => {
     const r = compareCards([
       card({ 'general.min_hcp_open': 11 }),
       card({}),
@@ -89,7 +89,8 @@ describe('compareCards', () => {
     ])
     const hcp = row(r, 'general.min_hcp_open')
     expect(texts(hcp)).toEqual(['11', '∅', '11'])
-    expect(hcp.status).toBe('unrecorded')
+    expect(hcp.status).toBe('differs')
+    expect(hcp.blanks).toBe(1)
   })
 
   it('compares text ignoring case and spacing, and shows each as written', () => {
