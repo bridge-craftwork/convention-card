@@ -11,8 +11,9 @@
 //   - A yes/no field that is unset is off (or its default, where the spec
 //     gives one): formats that leave unticked boxes out don't differ from
 //     ones that write them as false.
-//   - Any other field that is unset is "not recorded", which is not the same
-//     as a different value. Text is compared ignoring case and spacing.
+//   - Any other field that is unset is "not recorded": a difference from a
+//     card that records it ("Suction" against nothing written), shown apart
+//     from a different value. Text is compared ignoring case and spacing.
 
 import { FIELDS, CONVENTIONS } from './spec.js'
 import { cardValues } from './checkCard.js'
@@ -173,11 +174,11 @@ function unwrap(card, i) {
  *
  * Returns `{ cards, rows }`. `cards` are the columns, in the order given:
  * `{ id, name, names }`. Each row is `{ key, section, label, paths, status,
- * cells }`: `status` is 'differs' (two cards record different values),
- * 'unrecorded' (the cards that record it agree, but some don't record it)
- * or 'same'; `cells`, one per card, are `{ recorded, text }`, with `text`
- * null for a box that is off or a choice with none chosen. Rows no card
- * sets at all are left out.
+ * cells, blanks }`: `status` is 'differs' (two cards record different
+ * values, or one records it and another doesn't) or 'same'; `blanks` is
+ * how many cards don't record it; `cells`, one per card, are `{ recorded,
+ * text }`, with `text` null for a box that is off or a choice with none
+ * chosen. Rows no card sets at all are left out.
  */
 export function compareCards(cards) {
   const columns = (cards || []).map(unwrap)
@@ -189,14 +190,15 @@ export function compareCards(cards) {
   const add = (row, readings, setSomewhere = true) => {
     const recorded = readings.filter(r => r.recorded)
     if (!setSomewhere || !recorded.some(r => r.text != null)) return
-    const keys = new Set(recorded.map(r => r.key))
-    const status = keys.size > 1 ? 'differs' : recorded.length < readings.length ? 'unrecorded' : 'same'
+    const blanks = readings.length - recorded.length
+    const status = blanks || new Set(recorded.map(r => r.key)).size > 1 ? 'differs' : 'same'
     rows.push({
       key: row.key,
       section: row.section,
       label: row.label,
       paths: row.paths,
       status,
+      blanks,
       cells: readings.map(r => ({ recorded: r.recorded, text: r.text })),
     })
   }

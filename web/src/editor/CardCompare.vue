@@ -18,7 +18,7 @@
     <template v-else>
       <p class="summary muted">
         {{ summaryText }}
-        <span class="key"><span class="unrec">not recorded</span> means the card says nothing, which is not a different agreement.</span>
+        <span class="key"><span class="unrec">not recorded</span>: the card says nothing about it.</span>
       </p>
 
       <div class="scroll">
@@ -85,8 +85,7 @@ const props = defineProps({
 defineEmits(['open'])
 
 const SHOW = [
-  { id: 'differs', label: 'Differences', title: 'Agreements two cards record differently' },
-  { id: 'unrecorded', label: 'And not recorded', title: 'Also agreements some cards record and others leave blank' },
+  { id: 'differs', label: 'Differences', title: 'Agreements the cards record differently, or some record and others leave blank' },
   { id: 'all', label: 'Everything', title: 'Every agreement any of the cards sets' },
 ]
 const SHOW_KEY = 'convention-card.compare-show'
@@ -120,14 +119,14 @@ const counts = computed(() => {
   const rows = result.value?.rows || []
   return {
     differs: rows.filter(r => r.status === 'differs').length,
-    unrecorded: rows.filter(r => r.status === 'unrecorded').length,
+    blank: rows.filter(r => r.status === 'differs' && r.blanks).length,
   }
 })
 
 const summaryText = computed(() => {
-  const { differs, unrecorded } = counts.value
+  const { differs, blank } = counts.value
   let text = `${differs} ${differs === 1 ? 'agreement differs' : 'agreements differ'}`
-  if (unrecorded) text += `, and ${unrecorded} ${unrecorded === 1 ? 'is' : 'are'} on some cards but not recorded on others`
+  if (blank) text += `; on ${blank} of them, some cards record nothing`
   return `${text}.`
 })
 
@@ -136,7 +135,7 @@ const sectionLabel = id => SECTION_LABELS[id] || (id.charAt(0).toUpperCase() + i
 
 const sections = computed(() => {
   const visible = (result.value?.rows || []).filter(r =>
-    show.value === 'all' || r.status === 'differs' || (show.value === 'unrecorded' && r.status === 'unrecorded'))
+    show.value === 'all' || r.status === 'differs')
   const out = []
   for (const row of visible) {
     let section = out[out.length - 1]
@@ -176,7 +175,7 @@ const print = () => window.print()
 .label-col { position: sticky; left: 0; z-index: 1; background: #fff; font-weight: 500; min-width: 200px; max-width: 280px; }
 thead .label-col { z-index: 2; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
 .section-row th { background: var(--bg-warm); font-family: var(--font-heading); font-size: 15px; font-weight: 600; padding-top: 12px; }
-.status-unrecorded .label-col, .status-same .label-col { color: var(--text-secondary); }
+.status-same .label-col { color: var(--text-secondary); }
 td.long { font-size: 13px; }
 .unrec { color: var(--text-muted); font-style: italic; font-size: 13px; }
 .off { color: var(--text-muted); }
