@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import path from 'path'
-import { FIELDS, field, CONVENTIONS, BBSA_MAP, BBO_MAP } from '../spec.js'
+import { FIELDS, field, CONVENTIONS, BBSA_MAP, BBO_MAP, BRIDGODEX_MAP } from '../spec.js'
 
 const JS = path.resolve(__dirname, '..')
 
@@ -51,7 +51,19 @@ describe('the spec as the library reads it', () => {
     expect(paths.filter(p => !resolves(p))).toEqual([])
   })
 
-  for (const file of ['bridgeodexImport.js', 'acblClassicFillPdf.js', 'acblCardPdf.js']) {
+  it('every card path the Bridgodex map names is in the spec', () => {
+    const { any, notes, ...blocks } = BRIDGODEX_MAP
+    const paths = [
+      ...Object.values(blocks).flatMap(keys => Object.values(keys)).flatMap(s => (typeof s === 'string' ? [s]
+        : [s.text, s.plain, s.number, s.range, s.suffix, ...Object.keys(s.set || {}), ...Object.keys(s.when || {})].filter(Boolean))),
+      ...any.map(a => a.path),
+      ...notes.map(n => n.path),
+    ]
+    expect(paths.length).toBeGreaterThan(250)
+    expect(paths.filter(p => !resolves(p))).toEqual([])
+  })
+
+  for (const file of ['acblClassicFillPdf.js', 'acblCardPdf.js']) {
     it(`every card path ${file} names is in the spec`, () => {
       const paths = literalPaths(file)
       expect(paths.length).toBeGreaterThan(10)

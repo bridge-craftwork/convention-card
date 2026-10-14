@@ -17,6 +17,7 @@ on:
       - 'spec/formats/bbsa-map.toml'
       - 'spec/formats/bbsa-layout.txt'
       - 'spec/formats/bbo-map.toml'
+      - 'spec/formats/bridgodex-map.toml'
       - 'scripts/build_spec.py'
       - 'Cargo.toml'
       - '.github/workflows/build-spec.yml'
@@ -46,7 +47,7 @@ jobs:
 
       - name: Commit the generated files if changed
         run: |
-          GENERATED="spec/conventions.json spec/taxonomy.json spec/fields.json spec/levels.json spec/alerts.json spec/formats/bbsa-map.json spec/formats/bbo-map.json"
+          GENERATED="spec/conventions.json spec/taxonomy.json spec/fields.json spec/levels.json spec/alerts.json spec/formats/bbsa-map.json spec/formats/bbo-map.json spec/formats/bridgodex-map.json"
           if [ -z "$(git status --porcelain $GENERATED)" ]; then
             echo "Generated files unchanged — nothing to commit."
             exit 0

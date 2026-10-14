@@ -321,6 +321,7 @@ const currentUser = computed(() => props.storage.user?.value || null)
 const loadAcblPdf = () => import('../../../js/acblClassicFillPdf.js')
 /** The .bbsa converter, loaded only when it is needed (it brings the spec's JSON). */
 const loadBbsa = () => import('../../../js/bbsa.js')
+const loadBridgodex = () => import('../../../js/bridgodex.js')
 
 const currentCard = cc.currentCard
 const editedCardData = cc.editedCardData
@@ -468,9 +469,9 @@ const CONTENT_FORMATS = [
   {
     id: 'bridgeodex',
     name: 'Bridgodex JSON',
-    desc: 'Compatible with Bridgodex.com. Useful for sharing with partners who use that site.',
-    ready: false,
-    ext: 'json',
+    desc: 'For Bridgodex.com: its import reads this file. A card imported from Bridgodex goes back with every box it came with.',
+    ready: true,
+    ext: 'bridgodex.json',
     mime: 'application/json'
   },
   {
@@ -519,6 +520,9 @@ async function doContentExport(formatId) {
     } else if (formatId === 'bbsa') {
       const { exportBbsa } = await loadBbsa()
       payload = exportBbsa(card.card_data || {}).text
+    } else if (formatId === 'bridgeodex') {
+      const { exportBridgodexJson } = await loadBridgodex()
+      payload = JSON.stringify(exportBridgodexJson(card.card_data || {}), null, 2)
     } else {
       throw new Error(`No exporter wired up for "${fmt.name}" yet`)
     }
