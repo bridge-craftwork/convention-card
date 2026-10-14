@@ -68,9 +68,9 @@ describe('compareCards', () => {
     const r = compareCards([card({ 'notrump.stayman.play': true }), card({}), card({ 'notrump.stayman.play': false })])
     const stayman = row(r, 'notrump.stayman.play')
     expect(stayman.cells).toEqual([
-      { recorded: true, text: 'Yes' },
-      { recorded: true, text: null },
-      { recorded: true, text: null },
+      { recorded: true, text: 'Yes', odd: true },
+      { recorded: true, text: null, odd: false },
+      { recorded: true, text: null, odd: false },
     ])
     expect(stayman.status).toBe('differs')
   })
@@ -117,6 +117,21 @@ describe('compareCards', () => {
     const r = compareCards([card({ [canonical]: true }), card({ [def.aliases[0]]: true })])
     const found = r.rows.find(x => x.paths.includes(canonical))
     expect(found.status).toBe('same')
+  })
+
+  it('marks the odd ones out among three or more cards', () => {
+    const on = { 'notrump.stayman.play': true }
+    const odd = r => row(r, 'notrump.stayman.play').cells.map(c => c.odd)
+    expect(odd(compareCards([card(on), card(on), card(on), card({})]))).toEqual([false, false, false, true])
+    // A tie marks nothing; so do two cards.
+    expect(odd(compareCards([card(on), card(on), card({}), card({})]))).toEqual([false, false, false, false])
+    expect(odd(compareCards([card(on), card({})]))).toEqual([false, false])
+    // Not recorded is a value of its own.
+    const hcp = compareCards([card({ 'general.min_hcp_open': 12 }), card({ 'general.min_hcp_open': 12 }), card({})])
+    expect(row(hcp, 'general.min_hcp_open').cells.map(c => c.odd)).toEqual([false, false, true])
+    // Text compares as the grid does: ignoring case and spacing.
+    const sys = compareCards(['2/1', '2/1 ', 'SAYC'].map(s => card({ 'general.system': s })))
+    expect(row(sys, 'general.system').cells.map(c => c.odd)).toEqual([false, false, true])
   })
 
   it('leaves out rows no card sets', () => {

@@ -149,6 +149,21 @@ const ROWS = []
   }
 }
 
+// The odd ones out: with three or more cards, the cells that differ from
+// the value most of them share, when one value is held more often than any
+// other (Yes, Yes, Yes, – marks the –; Yes, Yes, –, – marks nothing).
+function oddOnesOut(readings) {
+  const n = readings.length
+  if (n < 3) return readings.map(() => false)
+  const keyOf = r => (r.recorded ? `v:${r.key}` : 'blank')
+  const counts = new Map()
+  for (const r of readings) counts.set(keyOf(r), (counts.get(keyOf(r)) || 0) + 1)
+  const sorted = [...counts.values()].sort((a, b) => b - a)
+  if (sorted.length < 2 || sorted[0] === sorted[1]) return readings.map(() => false)
+  const common = [...counts].find(([, c]) => c === sorted[0])[0]
+  return readings.map(r => keyOf(r) !== common)
+}
+
 // other_agreements entries (ADR-0001 D5): by convention ID, else by their text.
 function agreementsOf(card_data) {
   const list = Array.isArray(card_data?.other_agreements) ? card_data.other_agreements : []
@@ -177,8 +192,10 @@ function unwrap(card, i) {
  * cells, blanks }`: `status` is 'differs' (two cards record different
  * values, or one records it and another doesn't) or 'same'; `blanks` is
  * how many cards don't record it; `cells`, one per card, are `{ recorded,
- * text }`, with `text` null for a box that is off or a choice with none
- * chosen. Rows no card sets at all are left out.
+ * text, odd }`, with `text` null for a box that is off or a choice with
+ * none chosen, and `odd` true for an odd one out: with three or more
+ * cards, a cell that differs from the value more cards share than any
+ * other. Rows no card sets at all are left out.
  */
 export function compareCards(cards) {
   const columns = (cards || []).map(unwrap)
@@ -192,6 +209,7 @@ export function compareCards(cards) {
     if (!setSomewhere || !recorded.some(r => r.text != null)) return
     const blanks = readings.length - recorded.length
     const status = blanks || new Set(recorded.map(r => r.key)).size > 1 ? 'differs' : 'same'
+    const odd = oddOnesOut(readings)
     rows.push({
       key: row.key,
       section: row.section,
@@ -199,7 +217,7 @@ export function compareCards(cards) {
       paths: row.paths,
       status,
       blanks,
-      cells: readings.map(r => ({ recorded: r.recorded, text: r.text })),
+      cells: readings.map((r, i) => ({ recorded: r.recorded, text: r.text, odd: odd[i] })),
     })
   }
 
