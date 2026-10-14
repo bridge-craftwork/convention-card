@@ -19,7 +19,8 @@
       <p class="summary muted">
         {{ summaryText }}
         <span class="key"><span class="unrec">not recorded</span>: the card says nothing about it.
-          <template v-if="result.cards.length >= 3"><span class="odd-key">Highlighted</span>: the card that differs from most of the others.</template></span>
+          <template v-if="result.cards.length >= 3"><span class="shade-key shade-1">Colours</span><span class="shade-key shade-2">mark</span>
+            values that differ from the most common one; cells with the same colour agree.</template></span>
       </p>
 
       <div class="scroll">
@@ -47,8 +48,9 @@
               </tr>
               <tr v-for="row in section.rows" :key="row.key" :class="'status-' + row.status">
                 <th class="label-col" scope="row" :title="row.paths.join(', ')">{{ row.label }}</th>
-                <td v-for="(cell, i) in row.cells" :key="i" :class="{ long: (cell.text || '').length > 60, odd: cell.odd }"
-                    :title="cell.odd ? 'Differs from most of the cards' : undefined">
+                <td v-for="(cell, i) in row.cells" :key="i"
+                    :class="[{ long: (cell.text || '').length > 60 }, cell.shade && 'shade-' + ((cell.shade - 1) % SHADES + 1)]"
+                    :title="cell.shade ? 'Differs from the most common value; cells with the same colour agree' : undefined">
                   <span v-if="!cell.recorded" class="unrec" title="Not recorded on this card">not recorded</span>
                   <span v-else-if="cell.text == null" class="off" aria-label="No">–</span>
                   <template v-else>{{ cell.text }}</template>
@@ -85,6 +87,9 @@ const props = defineProps({
   cardLink: { type: Function, default: null },
 })
 defineEmits(['open'])
+
+// How many shade colours the stylesheet has; more values reuse them.
+const SHADES = 4
 
 const SHOW = [
   { id: 'differs', label: 'Differences', title: 'Agreements the cards record differently, or some record and others leave blank' },
@@ -179,8 +184,11 @@ thead .label-col { z-index: 2; color: var(--text-secondary); font-size: 12px; te
 .section-row th { background: var(--bg-warm); font-family: var(--font-heading); font-size: 15px; font-weight: 600; padding-top: 12px; }
 .status-same .label-col { color: var(--text-secondary); }
 td.long { font-size: 13px; }
-td.odd { background: #fff1d6; box-shadow: inset 3px 0 0 #e8a33d; }
-.odd-key { padding: 0 5px; border-radius: 3px; background: #fff1d6; box-shadow: inset 3px 0 0 #e8a33d; }
+.shade-1 { background: #fff1d6; box-shadow: inset 3px 0 0 #e8a33d; }
+.shade-2 { background: #e2efff; box-shadow: inset 3px 0 0 #4a86d8; }
+.shade-3 { background: #f1e6fb; box-shadow: inset 3px 0 0 #9b6bd1; }
+.shade-4 { background: #dff5ee; box-shadow: inset 3px 0 0 #3aa37f; }
+.shade-key { padding: 0 5px; border-radius: 3px; margin-right: 3px; }
 .unrec { color: var(--text-muted); font-style: italic; font-size: 13px; }
 .off { color: var(--text-muted); }
 .lvl { font-size: 12px; padding: 0 6px; border-radius: 999px; background: #f1f1ef; white-space: nowrap; font-weight: 600; }
@@ -200,6 +208,6 @@ td.odd { background: #fff1d6; box-shadow: inset 3px 0 0 #e8a33d; }
   .grid { font-size: 11px; }
   .grid thead th, .label-col { position: static; }
   .grid tr { break-inside: avoid; }
-  td.odd { font-weight: 700; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  td[class*="shade-"] { font-weight: 700; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 </style>
