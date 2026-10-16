@@ -29,7 +29,9 @@ describe('the level filter', () => {
   it('filters only the structured fields marked for it, by their spec level', () => {
     const marked = Object.values(STRUCTURED_FIELDS).flat().filter(f => f.filterByLevel)
     expect(marked.length).toBeGreaterThan(0)
-    for (const f of marked) expect([f.label, getLevelForStructuredField(f)]).toEqual([f.label, 'advanced'])
+    // The alternate 1NT is advanced; the 2/1 rebid style (level 5) intermediate.
+    const expected = label => (label === '2/1 rebid style' ? 'intermediate' : 'advanced')
+    for (const f of marked) expect([f.label, getLevelForStructuredField(f)]).toEqual([f.label, expected(f.label)])
     const unmarked = Object.values(STRUCTURED_FIELDS).flat().filter(f => !f.filterByLevel)
     for (const f of unmarked) expect(getLevelForStructuredField(f)).toBe(null)
   })
