@@ -166,6 +166,14 @@ export const STRUCTURED_FIELDS = {
     { label: '1NT response is forcing',   cardPath: 'major_openings.one_nt_response.forcing',  kind: 'boolean' },
     { label: '1NT response is semi-forcing', cardPath: 'major_openings.one_nt_response.semi_forcing', kind: 'boolean' },
     { label: 'Bypass 1♠ over 1♥',         cardPath: 'major_openings.one_nt_response.bypass_1s', kind: 'boolean' },
+    // Unset reads as the spec's default (bergen).
+    { label: '2/1 rebid style', cardPath: 'major_openings.two_over_one.rebid_style', kind: 'radio_inline',
+      filterByLevel: true,
+      options: [
+        { value: 'bergen',   label: 'Bergen' },
+        { value: 'lawrence', label: 'Lawrence' },
+        { value: 'schuler',  label: 'Schuler Shift' }
+      ] },
     { label: 'Artificial raises: 3NT (4333)', cardPath: 'major_openings.three_nt_raise.play',   kind: 'boolean' },
     { label: 'Artificial raises: other',  cardPath: 'major_openings.art_raises_other',
       kind: 'text', placeholder: 'e.g. Modified Jacoby 2NT' },
