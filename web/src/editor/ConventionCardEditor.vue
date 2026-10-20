@@ -169,6 +169,9 @@
       </ul>
     </details>
 
+    <!-- Conventions the notes name that the boxes don't (recogniseConventions.js). -->
+    <NoteSuggestions :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
+
     <!-- Export PDF format picker -->
     <div v-if="exportDialogOpen" class="modal-overlay" @click.self="exportDialogOpen = false">
       <div class="modal-content export-dialog">
@@ -301,6 +304,7 @@ import SkillPills from './components/SkillPills.vue'
 import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
 import CardDetail from './components/CardDetail.vue'
+import NoteSuggestions from './components/NoteSuggestions.vue'
 
 // The convention card editor. Where cards live, and who may edit them, is
 // the host's: `storage` and `overlays` are the adapters useCardEditor.js
@@ -357,6 +361,15 @@ const cardProblems = computed(() => {
 })
 const canEdit = cc.canEdit
 const isEditable = cc.isEditable
+
+// A change made outside the card's own boxes (a suggestion accepted or
+// turned down): into edit mode if need be, then applied as an edit.
+function changeCard(apply) {
+  if (!isEditable.value) cc.enterEditMode()
+  if (!isEditable.value || !cc.editedCardData.value) return
+  apply(cc.editedCardData.value)
+  cc.editedCardData.value = { ...cc.editedCardData.value }
+}
 const isDirty = cc.isDirty
 const viewMode = cc.viewMode
 const activeSection = cc.activeSection
