@@ -742,6 +742,19 @@
    "skill": "bidding_conventions/two_over_one",
    "level": 4
   },
+  "two_over_one.rebid_style": {
+   "kind": "enum",
+   "label": "2/1 opener's rebid style",
+   "options": [
+    "bergen",
+    "lawrence",
+    "schuler"
+   ],
+   "default": "bergen",
+   "desc": "Opener's rebid after a 2/1 game force (1♥–2♦). bergen (Bergen style): 2NT is the default bid and says nothing; rebidding the major shows six; a new suit (2♠, 3♣) shows no extras. lawrence (Lawrence style): rebidding the major is the default, 5+; a new suit shows extras; 2NT shows stoppers. schuler (Schuler Shift): rebidding the major is the default, exactly five; a new suit shows extras; 2NT shows six or more in the major (Vic Quiros, ACBL Bridge Bulletin, September 2026)",
+   "skill": "bidding_conventions/two_over_one",
+   "level": 5
+  },
   "three_nt_raise.play": {
    "kind": "bool",
    "label": "3NT artificial raise (4-3-3-3)",
