@@ -1,0 +1,10 @@
+id = "competitive_bidding/mixed_raise"
+name = "Mixed raise"
+source = "proposed"
+level = 6
+names = ["Mixed raise", "Mixed raises", "Mixed-raise"]
+summary = """
+After partner's overcall, advancer's jump cuebid of the opponents' suit
+shows a mixed raise: four-card support with values between a preemptive jump
+raise and a limit raise. The plain cuebid is then a limit raise or better.
+"""

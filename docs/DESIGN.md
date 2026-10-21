@@ -121,9 +121,12 @@ the vocabulary grows, and an answer can deserve a second look (Rick
 Wilson, 2026-10-20). On four of Rick's Bridgodex cards it suggests 18–20
 conventions each; the wrong guesses come from generic names ("balancing
 position", "Direct cuebids", "weak 2"), which is why a person confirms.
-Not yet: importers applying matches with a report, the crate's side, and
-the vocabulary's to-do list (UvsU, Leap Mich, Schuler Shift, Mixed raises,
-Baze, Miller super-accepts and more in those cards' notes).
+From those notes the vocabulary gained "UvsU" (Unusual vs Unusual),
+"Leap Mich" (Leaping Michaels) and the mixed raise (advancer's jump cuebid,
+`overcalls.responses.jump_cuebid_mixed`). Not yet: importers applying
+matches with a report; the crate's side; suggesting an enum value, not only
+a yes/no box ("Schuler Shift" is a value of the 2/1 rebid style in PR #60);
+and Miller super-accepts and Baze, which need specifying first.
 
 The same names resolve enum values that importers write as prose ("Strong -
 Suction" for the defence to 1NT).

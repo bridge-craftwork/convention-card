@@ -1,7 +1,7 @@
 {
  "schema": "taxonomy/v1",
  "version": "0.1.0",
- "generated": "2026-09-30",
+ "generated": "2026-10-20",
  "categories": [
   {
    "id": "basic_bidding",
@@ -704,6 +704,12 @@
    "name": "Mitchell Stayman",
    "category": "competitive_bidding",
    "level": "advanced"
+  },
+  {
+   "path": "competitive_bidding/mixed_raise",
+   "name": "Mixed raise",
+   "category": "competitive_bidding",
+   "level": "intermediate"
   },
   {
    "path": "competitive_bidding/modified_cappelletti",

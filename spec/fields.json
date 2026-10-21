@@ -1937,6 +1937,13 @@
    "skill": "competitive_bidding/support_cuebids",
    "level": 4
   },
+  "responses.jump_cuebid_mixed": {
+   "kind": "bool",
+   "label": "Jump cuebid: mixed raise",
+   "desc": "Advancer's jump cuebid of their suit shows a mixed raise of partner's overcall: four-card support, between a preemptive jump raise and a limit raise",
+   "skill": "competitive_bidding/mixed_raise",
+   "level": 6
+  },
   "responses.natural_in_responders_suit": {
    "kind": "bool",
    "label": "Advancer's bid of responder's suit is natural",

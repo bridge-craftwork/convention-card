@@ -374,6 +374,7 @@
 "responses.jump_raise"     = { kind = "enum", label = "Jump-raise response", options = ["weak", "mixed", "invitational"] }
 "responses.cuebids_text"   = { kind = "text", label = "Cuebid response" }
 "responses.support_cuebid" = { kind = "bool", label = "Support cuebid", skill = "competitive_bidding/support_cuebids", level = 4 }
+"responses.jump_cuebid_mixed" = { kind = "bool", label = "Jump cuebid: mixed raise", desc = "Advancer's jump cuebid of their suit shows a mixed raise of partner's overcall: four-card support, between a preemptive jump raise and a limit raise", skill = "competitive_bidding/mixed_raise", level = 6 }
 "responses.natural_in_responders_suit" = { kind = "bool", label = "Advancer's bid of responder's suit is natural", desc = "(1♣) 1♦ (1♥) 2♥ is natural: RHO's 1♥ promises only 4, so advancer shows 5+. 2♣ would be the cue-bid raise", level = 6 }
 "very_light"               = { kind = "bool", label = "Very light overcalls" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
