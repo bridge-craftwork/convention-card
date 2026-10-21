@@ -105,6 +105,26 @@ spec treats them as agreements, named by their convention IDs
 4. **Text that matches nothing is the vocabulary's to-do list.** Unmatched
    phrases from real cards and imports show which conventions to add next.
 
+*Built: steps 1–3 in the library and the editor* (Rick Wilson, 2026-10-20).
+`findConventions(text)` (`js/recogniseConventions.js`) finds the spec's
+names, longest first and as whole words; `suggestConventions(card_data)`
+lists, once per convention, those the card's text fields name but the card
+doesn't play (as `Card::names_convention` reads it, or a choice field
+holding it, as Suction does the defence to 1NT), each with where it was
+found and what adding it sets: its base yes/no field, else an
+`other_agreements` entry (`{ id, text, section, from }`). The editor shows
+them in a collapsed panel above the card ("Your notes name 20 conventions
+the card doesn't play yet"), with Add, Not this, and Add all. **A "Not
+this" is remembered on the card** (`metadata.dismissed_conventions`, the
+IDs) and not offered again, and **Ask again** offers them all once more:
+the vocabulary grows, and an answer can deserve a second look (Rick
+Wilson, 2026-10-20). On four of Rick's Bridgodex cards it suggests 18–20
+conventions each; the wrong guesses come from generic names ("balancing
+position", "Direct cuebids", "weak 2"), which is why a person confirms.
+Not yet: importers applying matches with a report, the crate's side, and
+the vocabulary's to-do list (UvsU, Leap Mich, Schuler Shift, Mixed raises,
+Baze, Miller super-accepts and more in those cards' notes).
+
 The same names resolve enum values that importers write as prose ("Strong -
 Suction" for the defence to 1NT).
 
