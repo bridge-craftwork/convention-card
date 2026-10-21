@@ -335,7 +335,8 @@ export const STRUCTURED_FIELDS = {
       kind: 'select', options: ['weak', 'mixed', 'invitational'] },
     { label: 'Cuebid response', cardPath: 'overcalls.responses.cuebids_text',
       kind: 'text', placeholder: 'e.g. limit raise+, fit-showing' },
-    { label: 'Support cuebid', cardPath: 'overcalls.responses.support_cuebid', kind: 'boolean' }
+    { label: 'Support cuebid', cardPath: 'overcalls.responses.support_cuebid', kind: 'boolean' },
+    { label: 'Jump cuebid: mixed raise', cardPath: 'overcalls.responses.jump_cuebid_mixed', kind: 'boolean' }
   ],
   nt_overcalls: [
     { label: 'Direct 1NT range', kind: 'range',

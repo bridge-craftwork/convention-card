@@ -2097,7 +2097,9 @@
    "source": "proposed",
    "level": 7,
    "names": [
-    "Leaping Michaels"
+    "Leaping Michaels",
+    "Leaping Mich",
+    "Leap Mich"
    ],
    "summary": "Over their weak two, a jump to four of a minor shows that minor and the\nother major (or both majors over a minor), five-five with game values.",
    "see": [
@@ -2275,6 +2277,18 @@
     "Mitchell Stayman"
    ],
    "summary": "After partner's minor opening and their 1NT overcall, responder's 2♣ shows\nboth majors (five-four) with modest values, and opener chooses."
+  },
+  "competitive_bidding/mixed_raise": {
+   "id": "competitive_bidding/mixed_raise",
+   "name": "Mixed raise",
+   "source": "proposed",
+   "level": 6,
+   "names": [
+    "Mixed raise",
+    "Mixed raises",
+    "Mixed-raise"
+   ],
+   "summary": "After partner's overcall, advancer's jump cuebid of the opponents' suit\nshows a mixed raise: four-card support with values between a preemptive jump\nraise and a limit raise. The plain cuebid is then a limit raise or better."
   },
   "competitive_bidding/modified_cappelletti": {
    "id": "competitive_bidding/modified_cappelletti",
@@ -2721,8 +2735,10 @@
    "level": 8,
    "names": [
     "Unusual vs Unusual",
+    "Unusual vs. Unusual",
     "Unusual over Unusual",
-    "UvU"
+    "UvU",
+    "UvsU"
    ],
    "summary": "After they show two suits with Michaels or the Unusual 2NT, cue bids of\ntheir suits show hands in the other two suits: one cue bid a raise of\npartner, the other a strong hand in the fourth suit.",
    "see": [
