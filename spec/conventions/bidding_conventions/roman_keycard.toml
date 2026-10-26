@@ -3,6 +3,7 @@ name = "Roman Keycard"
 source = "taxonomy"
 level = 4
 names = ["RKCB", "Roman Keycard", "Roman Key Card Blackwood", "Keycard", "1430", "0314"]
+confirm_names = ["0314", "1430"]
 summary = """
 4NT asks for five keycards, the four aces and the trump king. 1430 answers
 5♣ one or four, 5♦ three or none, 5♥ two without the trump queen, 5♠ two

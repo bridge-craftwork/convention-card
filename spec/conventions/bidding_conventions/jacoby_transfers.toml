@@ -3,6 +3,7 @@ name = "Jacoby Transfers"
 source = "taxonomy"
 level = 3
 names = ["Jacoby transfers", "Jacoby", "transfers", "Texas", "Texas transfers", "4-level transfers"]
+confirm_names = ["Jacoby", "transfers"]
 summary = """
 Over partner's 1NT, 2♦ shows five or more hearts and 2♥ five or more spades;
 opener bids the next suit, so the strong hand declares. Texas does the same

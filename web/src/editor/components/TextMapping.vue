@@ -24,9 +24,12 @@
           <div v-else-if="row.status === 'explained'" class="detail">
             Spelled out by {{ conventionName(row) }}<template v-if="row.standard"> (its own: “{{ row.standard }}”)</template>
           </div>
-          <div v-else-if="row.status === 'pending'" class="detail">
-            Names {{ row.conventions.filter(c => !c.played).map(c => c.name).join(', ') }}: add
-            {{ row.conventions.filter(c => !c.played).length === 1 ? 'it' : 'them' }} above, under “Your notes name…”
+          <div v-else-if="row.status === 'pending'" class="detail add-row">
+            <template v-for="c in row.conventions.filter(c => !c.played)" :key="c.id + c.field">
+              <button v-if="canEdit && suggestionFor(c)" class="add" :title="addTitle(suggestionFor(c))"
+                      @click="$emit('change', data => acceptSuggestion(data, suggestionFor(c)))">+ {{ c.name }}</button>
+              <span v-else class="name">{{ c.name }}<template v-if="!suggestionFor(c)"> (turned down)</template></span>
+            </template>
           </div>
           <div v-else-if="row.status === 'mapped'" class="detail">
             {{ row.conventions.map(c => c.name).join(', ') }}
@@ -40,6 +43,8 @@
 <script setup>
 import { computed } from 'vue'
 import { textMapping, textMappingCounts } from '../../../../js/textMapping.js'
+import { suggestConventions, acceptSuggestion } from '../../../../js/recogniseConventions.js'
+import { field } from '../../../../js/spec.js'
 import { SECTION_META } from '../conventionCatalog.js'
 
 // Every piece of text on the card, by whether a tool can read what it says
@@ -47,13 +52,21 @@ import { SECTION_META } from '../conventionCatalog.js'
 // what is clean. The editor shows it only when "Text mapping" is ticked.
 const props = defineProps({
   cardData: { type: Object, default: null },
+  canEdit: { type: Boolean, default: false },
 })
+// `change`: a function for the editor to apply to the card_data (it goes
+// into edit mode first), as the suggestions panel does.
+defineEmits(['change'])
+
+const suggestions = computed(() => (props.cardData ? suggestConventions(props.cardData).suggestions : []))
+const suggestionFor = c => suggestions.value.find(s => s.id === c.id && (c.field ? s.set.field === c.field : !s.implied))
+const addTitle = s => (s.set.field ? `Tick “${field(s.set.field)?.label || s.set.field}”` : 'Add it to the card’s other agreements')
 
 const ORDER = [
   { id: 'differs', short: 'differ', title: 'Differs from its convention', open: true,
     hint: 'The card names a convention, but spells a bid out differently. A tool reading the convention plays it the convention’s way.' },
   { id: 'pending', short: 'to add', title: 'Names conventions not yet ticked', open: true,
-    hint: 'Ticking them (Add, under “Your notes name…”) lets tools see them.' },
+    hint: 'Ticking them lets tools see them. Import ticks conventions a card names specifically; ordinary words (“weak 2”, “balancing”) and names that could mean two things (“Jacoby”) wait for you.' },
   { id: 'unmapped', short: 'not mapped', title: 'Not mapped', open: true,
     hint: 'No box holds this, so only a person reading the card sees it.' },
   { id: 'explained', short: 'explained', title: 'Explained by a convention', open: false,
@@ -105,5 +118,8 @@ li { padding: 5px 0 5px 10px; border-left: 3px solid #ddd; margin: 4px 0; }
 .where { font-size: 12px; color: var(--text-secondary, #6b7280); }
 .text { white-space: pre-wrap; overflow-wrap: anywhere; }
 .detail { font-size: 12px; color: var(--text-secondary, #6b7280); margin-top: 1px; }
+.add-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.add { font: inherit; font-size: 12px; padding: 2px 9px; border: 1px solid var(--green-dark, #2d6a4f); border-radius: 999px; background: #fff; color: var(--green-dark, #2d6a4f); font-weight: 600; cursor: pointer; }
+.add:hover { background: var(--green-pale, #d8f3dc); }
 @media print { .text-mapping { display: none; } }
 </style>

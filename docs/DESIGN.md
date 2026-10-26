@@ -95,13 +95,19 @@ spec treats them as agreements, named by their convention IDs
 2. **The library and the crate recognise names in text.** "Exclusion
    Blackwood, 5NT Pick-a-slam" yields two conventions. The typed text is never
    rewritten.
-3. **A person confirms before a match becomes an agreement.** The editor
-   suggests ("This mentions Exclusion Blackwood: add it?"). Confirming sets the
-   convention's fixed field if it has one, and otherwise adds an
-   `other_agreements` entry with its ID and the text (ADR-0001 D5); either way
-   the typed text stays. Importers may apply matches and report them, as
-   they report other guesses. A bot reads fields and `other_agreements` IDs,
-   never raw matches: a wrong guess there changes its bidding.
+3. **A specific name is ticked on import; a generic one waits for a
+   person** (Rick Wilson, 2026-10-26, replacing "a person confirms every
+   match"). A name that is an ordinary word or could mean another convention
+   ("weak 2", "balancing", "Jacoby", "Drury") is marked in the convention's
+   file (`confirm`, `confirm_names`); text naming a convention only that way
+   is a suggestion the editor offers ("This mentions…: add it?"). Any other
+   name ("Kokish relay", "Minorwood") is specific enough that import ticks it
+   on another tool's card and reports what it ticked. Either way the
+   convention's fixed field is set if it has one, else an `other_agreements`
+   entry is added with its ID and the text (ADR-0001 D5), and the typed text
+   stays. A bot reads fields and `other_agreements` IDs, never raw matches.
+   On Rick's Bridgodex cards every specific match was right and every wrong
+   one generic ("our weak 2", "balancing position", "Direct cuebids").
 4. **Text that matches nothing is the vocabulary's to-do list.** Unmatched
    phrases from real cards and imports show which conventions to add next.
 

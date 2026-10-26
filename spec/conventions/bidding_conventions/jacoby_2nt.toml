@@ -3,6 +3,7 @@ name = "Jacoby 2NT"
 source = "proposed"
 level = 4
 names = ["Jacoby 2NT", "Jacoby 2N", "Jacoby"]
+confirm_names = ["Jacoby"]
 summary = """
 Over partner's 1♥ or 1♠, responder's 2NT shows four or more trumps and game-
 forcing values. Opener's rebid describes the hand: a short suit at the three

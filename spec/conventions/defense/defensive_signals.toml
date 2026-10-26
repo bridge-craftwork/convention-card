@@ -3,6 +3,7 @@ name = "Defensive Signals"
 source = "taxonomy"
 level = 2
 names = ["Standard signals", "Attitude", "Count", "Suit preference", "High encourages"]
+confirm = true
 summary = """
 Defenders' agreements on what their cards say: attitude (like this suit or
 not), count (odd or even length) and suit preference (which other suit to

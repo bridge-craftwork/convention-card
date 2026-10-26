@@ -3,6 +3,7 @@ name = "Multi 2♦"
 source = "proposed"
 level = 8
 names = ["Multi", "Multi 2♦", "Multi-colored 2♦", "Multi 2D"]
+confirm_names = ["Multi"]
 summary = """
 An opening 2♦ that shows a weak two in either major, or one of a few strong
 hands. Responder bids to cater for either major, and opener's rebid resolves

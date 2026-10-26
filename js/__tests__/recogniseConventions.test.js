@@ -115,3 +115,36 @@ describe('accepting, dismissing, asking again', () => {
     expect(readPath(data, DISMISSED_PATH)).toBeUndefined()
   })
 })
+
+describe('generic names and import', () => {
+  it('marks a match by a generic name as needing a person', () => {
+    const [weak] = findConventions('McCabe after opps X our weak 2').filter(f => f.id === 'bidding_conventions/weak_2s')
+    expect(weak.confirm).toBe(true)
+    const [mccabe] = findConventions('McCabe').filter(f => f.id === 'bidding_conventions/mccabe')
+    expect(mccabe.confirm).toBe(false)
+  })
+
+  it('a suggestion needs confirming only when every place names it generically', () => {
+    const generic = suggestConventions(card({ 'competitive.notes': 'McCabe after opps X our weak 2' })).suggestions
+    expect(generic.find(s => s.id === 'bidding_conventions/weak_2s')?.confirm).toBe(true)
+    const named = suggestConventions(card({ 'slam.notes': 'Minorwood' })).suggestions
+    expect(named[0].confirm).toBe(false)
+  })
+
+  it('recogniseOnImport ticks specific names and leaves generic ones as suggestions', async () => {
+    const { recogniseOnImport } = await import('../recogniseConventions.js')
+    const data = card({ 'slam.notes': 'Minorwood, Exclusion', 'competitive.notes': '19-21 in balancing position' })
+    const ticked = recogniseOnImport(data)
+    expect(ticked.map(s => s.id).sort()).toEqual(['bidding_conventions/exclusion_blackwood', 'bidding_conventions/minorwood'])
+    expect(readPath(data, 'slam.minorwood.play')).toBe(true)
+    expect(ids(suggestConventions(data).suggestions)).toEqual(['competitive_bidding/balancing'])
+  })
+
+  it('recogniseOnImport leaves a turned-down convention alone', async () => {
+    const { recogniseOnImport } = await import('../recogniseConventions.js')
+    const data = card({ 'slam.notes': 'Minorwood' })
+    dismissSuggestion(data, 'bidding_conventions/minorwood')
+    expect(recogniseOnImport(data)).toEqual([])
+    expect(readPath(data, 'slam.minorwood.play')).toBeUndefined()
+  })
+})

@@ -3,6 +3,7 @@ name = "Control (Cue) Bids"
 source = "proposed"
 level = 5
 names = ["Control bids", "Cue bids", "Cuebids", "Control-showing bids", "Italian cuebids", "Ace-and-king cuebids"]
+confirm_names = ["Cue bids", "Cuebids"]
 summary = """
 With a trump suit agreed and slam possible, bidding a new suit below game
 shows a control there (an ace or void, and in many styles a king or

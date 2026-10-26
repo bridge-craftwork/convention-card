@@ -150,9 +150,9 @@
 
     <!-- What an import found: hand edits read from a PDF, and boxes it
          could not read (acblPdfImport.js). Cleared by the next import. -->
-    <div v-if="importNotes.length" class="import-notes" role="status">
+    <div v-if="shownImportNotes.length" class="import-notes" role="status">
       <button class="import-notes-close" title="Dismiss" @click="importNotes = []">×</button>
-      <p v-for="(d, i) in importNotes" :key="i" :class="d.severity">{{ d.message }}</p>
+      <p v-for="(d, i) in shownImportNotes" :key="i" :class="d.severity">{{ d.message }}</p>
     </div>
 
     <!-- What checkCard finds on the open card: the same diagnostics
@@ -171,7 +171,7 @@
 
     <!-- Conventions the notes name that the boxes don't (recogniseConventions.js). -->
     <NoteSuggestions :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
-    <TextMapping v-if="showTextMapping" :card-data="cc.editedCardData.value" />
+    <TextMapping v-if="showTextMapping" :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
 
     <!-- Export PDF format picker -->
     <div v-if="exportDialogOpen" class="modal-overlay" @click.self="exportDialogOpen = false">
@@ -306,7 +306,7 @@ import { mergeImported } from './importMerge.js'
 import { askInDialog, tellMatched } from './importDialogs.js'
 import ChoiceDialog from './ChoiceDialog.vue'
 import { checkCard } from '../../../js/checkCard.js'
-import { REGULATORS, field } from '../../../js/spec.js'
+import { REGULATORS } from '../../../js/spec.js'
 import { cardLevel } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import SkillPills from './components/SkillPills.vue'
@@ -315,6 +315,7 @@ import CardTree from './components/CardTree.vue'
 import CardDetail from './components/CardDetail.vue'
 import NoteSuggestions from './components/NoteSuggestions.vue'
 import TextMapping from './components/TextMapping.vue'
+import { importReportNotes } from './importReport.js'
 
 // The convention card editor. Where cards live, and who may edit them, is
 // the host's: `storage` and `overlays` are the adapters useCardEditor.js
@@ -574,8 +575,10 @@ async function onNewCard() {
 
 const importInput = ref(null)
 const dialog = ref(null)
-const importNotes = ref([])
-const FIELD_LABEL = path => field(path)?.label || path
+const importNotes = cc.importNotes
+// Only on the card the import opened (the notes stay in the shared state).
+const shownImportNotes = computed(() =>
+  (cc.importNotesFor.value && cc.importNotesFor.value !== cc.currentCard.value?.id ? [] : importNotes.value))
 
 function onImportClick() {
   saveError.value = null
@@ -602,12 +605,8 @@ async function onImportFile(event) {
     const merged = await mergeImported(records, props.storage, askInDialog(dialog.value))
     await cc.loadUserCardLinks()
     if (merged.lastId) await cc.switchCard(merged.lastId)
-    // Boxes ticked because the card's own text names what they mean.
-    const implied = records.flatMap(r => r.implied || []).map(s => ({
-      severity: 'info',
-      message: `Ticked “${s.label}”: the card's ${FIELD_LABEL(s.from)} says “${s.written}”.`,
-    }))
-    importNotes.value = [...pdfNotes, ...implied]
+    importNotes.value = [...pdfNotes, ...importReportNotes(records)]
+    cc.importNotesFor.value = merged.lastId || null
     await tellMatched(dialog.value, merged)
   } catch (err) {
     console.error('Import failed:', err)
