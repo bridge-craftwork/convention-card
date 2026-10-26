@@ -11,6 +11,7 @@ import { isBboCard, importBboJson } from './bbo.js'
 import { importBridgeodexJson } from './bridgodex.js'
 import { decodeCardFromUrl } from './handoff.js'
 import { isBundle } from './cardBundle.js'
+import { applyImplied } from './textMapping.js'
 
 /** What `importCard` reads, by the name its `from` option takes. */
 export const IMPORT_FORMATS = {
@@ -74,9 +75,13 @@ export function detectFormat(input) {
  * should not be guessed; `name` is the name for a format that carries none
  * (a .bbsa file's name, say). Returns `{ format, name, description,
  * card_data }`, plus `report` for a .bbsa file (`{ mapped, passthrough,
- * warnings }`). Throws, with a sentence a person can act on, when the input
+ * warnings }`), and, for a card from another tool, `implied`: the boxes its
+ * text set (`applyImplied`). Throws, with a sentence a person can act on, when the input
  * is not a card.
  */
+// Formats another tool writes, whose text may name what a box means.
+const FOREIGN = new Set(['bbo', 'bridgeodex', 'bbsa', 'pdf'])
+
 export async function importCard(input, { from = null, name = null } = {}) {
   // 'bridgodex' is the site's own spelling; 'bridgeodex' is the format's
   // name here, kept for saved cards and callers.
@@ -89,11 +94,15 @@ export async function importCard(input, { from = null, name = null } = {}) {
   }
   const text = () => (isBytes(input) ? new TextDecoder().decode(bytesOf(input)) : String(input))
   const json = () => (typeof input === 'object' && !isBytes(input) ? input : JSON.parse(text()))
+  // Another tool's card: tick the boxes its text names where the spec says
+  // which box that text means (textMapping.js, `implies`). The editor's own
+  // cards come back as they were saved.
   const card = (record, extra = {}) => ({
     format,
     name: record.name || name || null,
     description: record.description || null,
     card_data: record.card_data,
+    ...(FOREIGN.has(format) && record.card_data && { implied: applyImplied(record.card_data) }),
     // The editor's own exports carry the card's id and last change, for
     // merging (cardBundle.js); other formats have neither.
     ...(record.id != null && { id: record.id }),
