@@ -3,6 +3,7 @@ name = "Reverse Drury"
 source = "taxonomy"
 level = 5
 names = ["Reverse Drury", "Drury"]
+confirm_names = ["Drury"]
 summary = """
 By a passed hand over partner's third- or fourth-seat 1♥ or 1♠, 2♣ shows a
 limit raise with three or more trumps. Opener rebids two of the major with a

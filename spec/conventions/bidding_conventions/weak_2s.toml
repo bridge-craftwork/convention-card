@@ -3,6 +3,7 @@ name = "Weak Twos"
 source = "taxonomy"
 level = 3
 names = ["Weak twos", "Weak two", "Weak 2", "Weak two-bids"]
+confirm = true
 summary = """
 An opening 2♦, 2♥ or 2♠ shows a good six-card suit and less than an opening
 bid, as a preempt. Responder's 2NT usually asks for more, and a raise

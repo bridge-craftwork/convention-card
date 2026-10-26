@@ -12,6 +12,7 @@ import { importBridgeodexJson } from './bridgodex.js'
 import { decodeCardFromUrl } from './handoff.js'
 import { isBundle } from './cardBundle.js'
 import { applyImplied } from './textMapping.js'
+import { recogniseOnImport } from './recogniseConventions.js'
 
 /** What `importCard` reads, by the name its `from` option takes. */
 export const IMPORT_FORMATS = {
@@ -76,7 +77,9 @@ export function detectFormat(input) {
  * (a .bbsa file's name, say). Returns `{ format, name, description,
  * card_data }`, plus `report` for a .bbsa file (`{ mapped, passthrough,
  * warnings }`), and, for a card from another tool, `implied`: the boxes its
- * text set (`applyImplied`). Throws, with a sentence a person can act on, when the input
+ * text set (`applyImplied`) and `recognised`: the conventions its text names
+ * by a specific name, now ticked (`recogniseOnImport`), `[{ id, name, field,
+ * from, written }]`. Throws, with a sentence a person can act on, when the input
  * is not a card.
  */
 // Formats another tool writes, whose text may name what a box means.
@@ -95,14 +98,19 @@ export async function importCard(input, { from = null, name = null } = {}) {
   const text = () => (isBytes(input) ? new TextDecoder().decode(bytesOf(input)) : String(input))
   const json = () => (typeof input === 'object' && !isBytes(input) ? input : JSON.parse(text()))
   // Another tool's card: tick the boxes its text names where the spec says
-  // which box that text means (textMapping.js, `implies`). The editor's own
-  // cards come back as they were saved.
+  // which box that text means (textMapping.js, `implies`), then the
+  // conventions its text names by a specific name (recogniseConventions.js;
+  // generic names stay suggestions). The editor's own cards come back as
+  // they were saved.
   const card = (record, extra = {}) => ({
     format,
     name: record.name || name || null,
     description: record.description || null,
     card_data: record.card_data,
-    ...(FOREIGN.has(format) && record.card_data && { implied: applyImplied(record.card_data) }),
+    ...(FOREIGN.has(format) && record.card_data && {
+      implied: applyImplied(record.card_data),
+      recognised: recogniseOnImport(record.card_data).map(s => ({ id: s.id, name: s.name, field: s.set.field || null, from: s.found[0]?.path, written: s.found[0]?.written })),
+    }),
     // The editor's own exports carry the card's id and last change, for
     // merging (cardBundle.js); other formats have neither.
     ...(record.id != null && { id: record.id }),

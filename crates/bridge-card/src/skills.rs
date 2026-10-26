@@ -80,6 +80,13 @@ pub struct Skill {
     pub level: Option<u8>,
     /// The ways people write it, for finding it in free text.
     pub names: Vec<String>,
+    /// Every name is an ordinary word or could mean another convention
+    /// (weak twos, balancing): text naming it is a suggestion for a person
+    /// to confirm, never ticked on import.
+    pub confirm: bool,
+    /// The names, of `names`, that are generic in that way ("Jacoby",
+    /// "Drury"); text naming it by another name is specific.
+    pub confirm_names: Vec<String>,
     /// What it is, in a few lines of plain text.
     pub summary: Option<String>,
     pub see: Vec<Citation>,
@@ -95,6 +102,10 @@ struct Entry {
     level: Option<u8>,
     #[serde(default)]
     names: Vec<String>,
+    #[serde(default)]
+    confirm: bool,
+    #[serde(default)]
+    confirm_names: Vec<String>,
     #[serde(default)]
     summary: Option<String>,
     #[serde(default)]
@@ -132,6 +143,8 @@ impl Skills {
             source: e.source,
             level: e.level,
             names: e.names,
+            confirm: e.confirm,
+            confirm_names: e.confirm_names,
             summary: e.summary.map(|s| s.trim().to_string()),
             see: e.see,
         })

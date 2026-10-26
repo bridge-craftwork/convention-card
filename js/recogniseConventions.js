@@ -1,8 +1,11 @@
-// Conventions named in a card's text (DESIGN.md, "Conventions named in
+// Conventions named in a card's text (DESIGN.md, "Conventions written as
 // text"): "Kokish relay; Spiral" in a note names two conventions the card
 // may not yet play as fields. The library finds them and says what playing
-// them would set; a person confirms each one, because a bot reads the
-// fields and a wrong guess changes its bidding. The typed text is never
+// them would set. A name that is an ordinary word, or could mean another
+// convention ("weak 2", "Jacoby": `confirm` and `confirm_names` in the
+// spec), is only suggested, for a person to confirm, because a bot reads the
+// fields and a wrong guess changes its bidding; any other name is specific
+// enough to tick on import (`recogniseOnImport`). The typed text is never
 // rewritten.
 //
 // A suggestion the person turns down is remembered on the card
@@ -18,8 +21,10 @@ export const DISMISSED_PATH = 'metadata.dismissed_conventions'
 
 // Every name of every convention, longest first, so "Exclusion Blackwood"
 // is found before "Blackwood" and "Ingberman 2NT" before "Ingberman".
+const generic = (c, name) => c.confirm === true
+  || (c.confirm_names || []).some(n => n.toLowerCase() === name.toLowerCase())
 const NAMES = Object.entries(CONVENTIONS)
-  .flatMap(([id, c]) => [...new Set([c.name, ...(c.names || [])].filter(Boolean))].map(name => ({ id, name })))
+  .flatMap(([id, c]) => [...new Set([c.name, ...(c.names || [])].filter(Boolean))].map(name => ({ id, name, confirm: generic(c, name) })))
   .filter(n => n.name.trim().length >= 3)
   .sort((a, b) => b.name.length - a.name.length)
 
@@ -28,9 +33,10 @@ const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const PATTERNS = NAMES.map(n => ({ ...n, re: new RegExp(`(?<![\\p{L}\\p{N}])${escape(n.name)}(?![\\p{L}\\p{N}])`, 'giu') }))
 
 /**
- * The conventions `text` names: `[{ id, name, written, index }]`, in the
- * order they appear, none overlapping another. `name` is the spec's name
- * that matched, `written` the text as typed.
+ * The conventions `text` names: `[{ id, name, written, index, confirm }]`,
+ * in the order they appear, none overlapping another. `name` is the spec's
+ * name that matched, `written` the text as typed, `confirm` whether that
+ * name needs a person to confirm it (an ordinary word, or ambiguous).
  */
 export function findConventions(text) {
   if (typeof text !== 'string' || !text.trim()) return []
@@ -43,7 +49,7 @@ export function findConventions(text) {
       const end = start + m[0].length
       if (taken.some(([s, e]) => start < e && end > s)) continue
       taken.push([start, end])
-      found.push({ id: p.id, name: p.name, written: m[0], index: start })
+      found.push({ id: p.id, name: p.name, written: m[0], index: start, confirm: p.confirm })
     }
   }
   return found.sort((a, b) => a.index - b.index)
@@ -98,7 +104,8 @@ function excerpt(text, index, length) {
 /**
  * Conventions the card's text names but the card does not play, one per
  * convention and box: `{ suggestions, dismissed }`, each a list of
- * `{ key, id, name, set, found }`. `name` is the convention's own name; `set`
+ * `{ key, id, name, set, found, confirm }`; `confirm` is true when every
+ * place names it only by a generic name ("weak 2"), so a person should say. `name` is the convention's own name; `set`
  * is what adding it does, `{ field: path }` or `{ other_agreements: true }`
  * (it has no yes/no field); `found` is where the text names it,
  * `[{ path, label, written, excerpt }]`. Where the text field says which box
@@ -132,6 +139,7 @@ export function suggestConventions(card_data) {
         path,
         label: FIELDS[path].label,
         written: m.written,
+        confirm: m.confirm,
         excerpt: excerpt(String(value), m.index, m.written.length),
       })
     }
@@ -139,6 +147,7 @@ export function suggestConventions(card_data) {
   const suggestions = []
   const turnedDown = []
   for (const s of byKey.values()) {
+    s.confirm = s.found.every(f => f.confirm)
     if (s.implied ? isOn(values, s.set.field) : playsConvention(card_data, s.id, values)) continue
     ;(dismissed.has(s.id) ? turnedDown : suggestions).push(s)
   }
@@ -188,4 +197,16 @@ function setDismissed(card_data, set) {
   } else if (card_data.metadata && DISMISSED_PATH.split('.')[1] in card_data.metadata) {
     delete card_data.metadata.dismissed_conventions
   }
+}
+
+/**
+ * Tick every convention the card's text names by a specific name (not one
+ * that needs confirming, and not one the card has turned down), as import
+ * does for another tool's card: changes `card_data` in place and returns the
+ * suggestions it accepted. Generic names are left as suggestions.
+ */
+export function recogniseOnImport(card_data) {
+  const accepted = suggestConventions(card_data).suggestions.filter(s => !s.confirm)
+  for (const s of accepted) acceptSuggestion(card_data, s)
+  return accepted
 }

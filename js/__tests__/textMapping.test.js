@@ -99,8 +99,13 @@ describe('implies', () => {
     expect(readPath(bridgodex.card_data, 'notrump.stayman.puppet_1nt')).toBe(true)
     expect(bridgodex.implied.map(s => s.field)).toEqual(['notrump.stayman.puppet_1nt'])
 
+    const notes = await importCard({ settings: { slams: { other: 'Minorwood, Exclusion' } } }, { from: 'bridgodex' })
+    expect(notes.recognised.map(s => s.name).sort()).toEqual(['Exclusion Blackwood', 'Minorwood'])
+    expect(readPath(notes.card_data, 'slam.minorwood.play')).toBe(true)
+
     const own = await importCard({ name: 'Ours', card_data: puppet() }, { from: 'card' })
     expect(readPath(own.card_data, 'notrump.stayman.puppet_1nt')).toBeUndefined()
     expect(own.implied).toBeUndefined()
+    expect(own.recognised).toBeUndefined()
   })
 })

@@ -83,6 +83,11 @@ function createState(storage, overlays) {
   const regulator = ref('acbl')
   const showCoverage = ref(false)
   const showProf = ref(false)
+  // What the last import found or did, for the card it opens: set by the
+  // editor's Import or the table of cards', shown above the card.
+  const importNotes = ref([])
+  // The card those notes are about (the one the import opened).
+  const importNotesFor = ref(null)
 
   const user = () => storage.user?.value || null
 
@@ -429,6 +434,8 @@ function createState(storage, overlays) {
     regulator,
     showCoverage,
     showProf,
+    importNotes,
+    importNotesFor,
     // derived
     canEdit,
     isEditable,

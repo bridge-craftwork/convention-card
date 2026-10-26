@@ -20,6 +20,7 @@ list (D7) is moving one file.
 | `level` | 1–10, how hard it is to learn: the lowest level at which it is taught. Its extensions carry their own levels on their fields. Named bands are derived, never stored: basic 1–3, intermediate 4–6, advanced 7–8, expert 9–10 (DECISIONS.md, 11–13). |
 | `names` | The ways people write it, for finding it in a card's free text. |
 | `summary` | What it is, in a few lines of our own words, sized for a chat line; suits as ♣♦♥♠. |
+| `confirm`, `confirm_names` | For the recogniser (DESIGN.md, "Conventions written as text"): names that are ordinary words or could mean another convention ("weak 2", "Jacoby", "Drury"). Text naming a convention only by such a name is suggested for a person to confirm; any other name is ticked on import. `confirm = true` covers all of a convention's names. |
 | `see` | Citations only: where to read more, and what informed our treatment. Never another source's text, summaries or levels. Each `{ title, by?, site?, url?, kind? ("book"), chapter? }`. |
 
 See `docs/DESIGN.md`, "Describing a convention" and "Difficulty levels".

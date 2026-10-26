@@ -3,6 +3,7 @@ name = "Gambling 3NT"
 source = "proposed"
 level = 6
 names = ["Gambling 3NT", "Gambling", "Acol 3NT"]
+confirm_names = ["Gambling"]
 summary = """
 An opening 3NT showing a long, solid minor with little outside. Partner
 passes with stoppers in the other suits, and otherwise runs to four or five
