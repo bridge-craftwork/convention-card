@@ -33,6 +33,15 @@
 #            reported as a conflict, so boxes partnerships combine (negative
 #            and penalty doubles at different levels, DOPI and DEPO) are not
 #            grouped
+#   explains (text fields) the field whose agreement this text spells out:
+#            the 2♣ of a defence to 1NT is explained by the defence chosen.
+#            Once that field is set the text says nothing a tool must read,
+#            unless it differs from the convention (DESIGN.md, "Text on the
+#            card")
+#   implies  (text fields) { convention ID = yes/no field }: this text
+#            naming that convention means that box, not just the convention
+#            ("Puppet" as the 1NT 3♣ response is Puppet Stayman over 1NT,
+#            not over 2NT). Import sets it; the editor's suggestions use it
 #
 # Conventions with no field here go in the card's other_agreements list,
 # [{ id?, section?, text }], by their ID (ADR-0001 D5).
@@ -81,7 +90,7 @@
 "one_nt_alt.same_responses" = { kind = "bool", label = "Alternate 1NT uses same responses", level = 7 }
 "dbl.negative"             = { kind = "bool", label = "Double of 1NT interference: negative" }
 "dbl.penalty"              = { kind = "bool", label = "Double of 1NT interference: penalty" }
-"dbl.negative_desc"        = { kind = "text", label = "Negative double notes" }
+"dbl.negative_desc"        = { kind = "text", label = "Negative double notes", explains = "notrump.dbl.negative" }
 "dbl.other"                = { kind = "text", label = "Other double notes" }
 "stayman.play"             = { kind = "bool", label = "Stayman", skill = "bidding_conventions/stayman", level = 3 }
 "stayman.forcing"          = { kind = "bool", label = "Stayman is forcing", skill = "bidding_conventions/stayman", level = 3 }
@@ -113,13 +122,13 @@
 "three_d_response"         = { kind = "enum", label = "1NT–3♦ response", options = ["natural", "majors", "minors", "splinter"] }
 "three_major_splinter"     = { kind = "bool", label = "1NT–3♥/3♠ splinter", level = 6 }
 "lebensohl.over_interference" = { kind = "bool", label = "Lebensohl over interference to 1NT", skill = "competitive_bidding/lebensohl", level = 5 }
-"lebensohl.description"    = { kind = "text", label = "Lebensohl notes" }
+"lebensohl.description"    = { kind = "text", label = "Lebensohl notes", explains = "notrump.lebensohl.over_interference" }
 "rubensohl.over_interference" = { kind = "bool", label = "Rubensohl over interference to 1NT", level = 9, skill = "competitive_bidding/rubensohl" }
 "two_nt.range_min"         = { kind = "int", label = "2NT range: minimum", min = 15, max = 30, default = 20 }
 "two_nt.range_max"         = { kind = "int", label = "2NT range: maximum", min = 15, max = 30, default = 21 }
 "two_nt.puppet"            = { kind = "bool", label = "2NT: Puppet Stayman (3♣)", desc = "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major", skill = "bidding_conventions/puppet_stayman", level = 7 }
 "two_nt.three_s"           = { kind = "bool", label = "2NT: 3♠ relay", level = 8 }
-"two_nt.three_s_desc"      = { kind = "text", label = "2NT 3♠ relay notes" }
+"two_nt.three_s_desc"      = { kind = "text", label = "2NT 3♠ relay notes", explains = "notrump.two_nt.three_s" }
 "two_nt.transfers_3level"  = { kind = "bool", label = "2NT: transfers at 3-level", level = 4, skill = "bidding_conventions/jacoby_transfers" }
 "two_nt.transfers_4level"  = { kind = "bool", label = "2NT: transfers at 4-level", level = 4, skill = "bidding_conventions/jacoby_transfers" }
 "two_nt.neg_dbl"           = { kind = "bool", label = "2NT: negative double", level = 6 }
@@ -133,12 +142,12 @@
 "three_nt.range_min"       = { kind = "int", label = "3NT range: minimum", min = 15, max = 30, aliases = ["three_nt.range_min"] }
 "three_nt.range_max"       = { kind = "int", label = "3NT range: maximum", min = 15, max = 30, aliases = ["three_nt.range_max"] }
 "three_nt.one_suit"        = { kind = "bool", label = "Gambling 3NT", aliases = ["three_nt.one_suit"], level = 6, skill = "bidding_conventions/gambling_3nt" }
-"three_nt.one_suit_desc"   = { kind = "text", label = "Gambling 3NT notes", aliases = ["three_nt.one_suit_desc"] }
+"three_nt.one_suit_desc"   = { kind = "text", label = "Gambling 3NT notes", aliases = ["three_nt.one_suit_desc"], explains = "notrump.three_nt.one_suit" }
 "responses.2d_other"       = { kind = "text", label = "2♦ response" }
 "responses.2h_other"       = { kind = "text", label = "2♥ response" }
 "responses.2s_other"       = { kind = "text", label = "2♠ response" }
 "responses.2nt_other"      = { kind = "text", label = "2NT response" }
-"responses.3c"             = { kind = "text", label = "3♣ response" }
+"responses.3c"             = { kind = "text", label = "3♣ response", implies = { "bidding_conventions/puppet_stayman" = "notrump.stayman.puppet_1nt" } }
 "responses.3d"             = { kind = "text", label = "3♦ response" }
 "responses.3h"             = { kind = "text", label = "3♥ response" }
 "responses.3s"             = { kind = "text", label = "3♠ response" }
@@ -437,20 +446,20 @@
 "unusual_4nt.play"         = { kind = "bool", label = "Unusual 4NT", skill = "competitive_bidding/michaels_unusual", level = 5 }
 "unusual_vs_unusual.play"  = { kind = "bool", label = "Unusual vs Unusual", skill = "competitive_bidding/unusual_vs_unusual", level = 8 }
 "vs_1nt_strong.system"     = { kind = "enum", label = "Defense vs strong 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "other"], aliases = ["competitive.defense_vs_strong_nt.convention"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other" }, desc = "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
-"vs_1nt_strong.dbl"        = { kind = "text", label = "Vs strong 1NT: double" }
-"vs_1nt_strong.2c"         = { kind = "text", label = "Vs strong 1NT: 2♣" }
-"vs_1nt_strong.2d"         = { kind = "text", label = "Vs strong 1NT: 2♦" }
-"vs_1nt_strong.2h"         = { kind = "text", label = "Vs strong 1NT: 2♥" }
-"vs_1nt_strong.2s"         = { kind = "text", label = "Vs strong 1NT: 2♠" }
-"vs_1nt_strong.2nt"        = { kind = "text", label = "Vs strong 1NT: 2NT" }
+"vs_1nt_strong.dbl"        = { kind = "text", label = "Vs strong 1NT: double", explains = "competitive.vs_1nt_strong.system" }
+"vs_1nt_strong.2c"         = { kind = "text", label = "Vs strong 1NT: 2♣", explains = "competitive.vs_1nt_strong.system" }
+"vs_1nt_strong.2d"         = { kind = "text", label = "Vs strong 1NT: 2♦", explains = "competitive.vs_1nt_strong.system" }
+"vs_1nt_strong.2h"         = { kind = "text", label = "Vs strong 1NT: 2♥", explains = "competitive.vs_1nt_strong.system" }
+"vs_1nt_strong.2s"         = { kind = "text", label = "Vs strong 1NT: 2♠", explains = "competitive.vs_1nt_strong.system" }
+"vs_1nt_strong.2nt"        = { kind = "text", label = "Vs strong 1NT: 2NT", explains = "competitive.vs_1nt_strong.system" }
 "vs_1nt_strong.other"      = { kind = "text", label = "Vs strong 1NT: other" }
 "vs_1nt_weak.system"       = { kind = "enum", label = "Defense vs weak 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "other"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other" }, desc = "Not read by the rules yet: vs_1nt_strong.system is played against every range", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
-"vs_1nt_weak.dbl"          = { kind = "text", label = "Vs weak 1NT: double" }
-"vs_1nt_weak.2c"           = { kind = "text", label = "Vs weak 1NT: 2♣" }
-"vs_1nt_weak.2d"           = { kind = "text", label = "Vs weak 1NT: 2♦" }
-"vs_1nt_weak.2h"           = { kind = "text", label = "Vs weak 1NT: 2♥" }
-"vs_1nt_weak.2s"           = { kind = "text", label = "Vs weak 1NT: 2♠" }
-"vs_1nt_weak.2nt"          = { kind = "text", label = "Vs weak 1NT: 2NT" }
+"vs_1nt_weak.dbl"          = { kind = "text", label = "Vs weak 1NT: double", explains = "competitive.vs_1nt_weak.system" }
+"vs_1nt_weak.2c"           = { kind = "text", label = "Vs weak 1NT: 2♣", explains = "competitive.vs_1nt_weak.system" }
+"vs_1nt_weak.2d"           = { kind = "text", label = "Vs weak 1NT: 2♦", explains = "competitive.vs_1nt_weak.system" }
+"vs_1nt_weak.2h"           = { kind = "text", label = "Vs weak 1NT: 2♥", explains = "competitive.vs_1nt_weak.system" }
+"vs_1nt_weak.2s"           = { kind = "text", label = "Vs weak 1NT: 2♠", explains = "competitive.vs_1nt_weak.system" }
+"vs_1nt_weak.2nt"          = { kind = "text", label = "Vs weak 1NT: 2NT", explains = "competitive.vs_1nt_weak.system" }
 "vs_1nt_weak.other"        = { kind = "text", label = "Vs weak 1NT: other" }
 "dont.play"                = { kind = "bool", label = "DONT", desc = "Bridge-Classroom's DONT switch: plays DONT when vs_1nt_strong.system is unset or other", skill = "competitive_bidding/dont", level = 5 }
 "cue_bid_raise.play"       = { kind = "bool", label = "Cue-bid raise", skill = "competitive_bidding/support_cuebids", level = 4 }

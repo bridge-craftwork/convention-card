@@ -135,6 +135,49 @@ A card never states which skill a convention belongs to; the spec does. Some
 saved cards carry `<path>.skill_path` values; they are kept and written back
 like any unknown field, but nothing new writes them.
 
+#### Text on the card, and playing a card with a bot
+
+*Rick Wilson, 2026-10-26.* A card holds both **bidding** agreements and
+**cardplay** ones (carding, leads). They go to different bots:
+rusty-bidding-bot bids, and reads the bidding fields; BEN plays the cards
+and, for now, can't be given a card's settings at all, nor does it signal.
+So for "play my card", carding and leads are recorded and printed but no bot
+uses them yet, and Rusty's `rbb card coverage` already keeps them out of its
+count. On two of Rick's Bridgodex cards, after the suggestions above, Rusty
+reads 45% and 41% of the bidding settings; what it ignores is its work list
+(the weak notrump, inverted minors, Modified Jacoby 2NT first).
+
+A bot reads boxes, never prose, so the editor can sort a card's text by
+whether a tool can see what it says (`textMapping(card)`,
+`js/textMapping.js`; the editor's **Text mapping** view, off unless ticked):
+
+| Status | The text | Example |
+|---|---|---|
+| mapped | names only conventions the card ticks | "Spiral" with Spiral ticked |
+| explained | spells out a convention the card sets, the same way | "♦ or majors" for Suction's 2♣ |
+| differs | spells it out differently: the card's own agreement, which a tool reading the convention misses | "Penalty" for Suction's double |
+| pending | names a convention not ticked (the suggestions) | "Kokish relay" |
+| not mapped | holds an agreement no box holds | "Redouble: denies fit" |
+| cardplay | carding and leads | "Trump suit preference" |
+
+Two field attributes in `fields.toml` say how a text field relates to the
+boxes: **`explains`** names the field whose agreement it spells out (each bid
+of a defence to 1NT, by the defence chosen), so the bid-by-bid lines need
+nothing more once the convention is known, unless they differ; and
+**`implies`** says which box a convention named in it means ("Puppet" as the
+1NT 3♣ response is Puppet Stayman over 1NT, not over 2NT). Import ticks
+implied boxes on another tool's card (`applyImplied`, reported as it goes),
+not on the editor's own; the suggestions use them too. "Differs" compares
+with a convention's standard bids where the library knows them
+(`ntDefenses.js`, matched by exact name only), loosely ("both", "+", "and"
+and "black suits" are spelling).
+
+Not yet: the same text shows twice where the Bridgodex import also gathers
+it into a section's notes; marks beside each text box in the card itself,
+not only in the list; and a box (or `implies`) for what the remaining text
+holds (1NT–3♦ both minors, splinters over 1NT, preempt styles, doubles
+"through" levels).
+
 #### Describing a convention: summary and sources
 
 Each standard convention's entry in `spec/` carries, beside its ID, name,

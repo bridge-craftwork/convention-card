@@ -97,30 +97,38 @@ function excerpt(text, index, length) {
 
 /**
  * Conventions the card's text names but the card does not play, one per
- * convention: `{ suggestions, dismissed }`, each a list of
- * `{ id, name, set, found }`. `name` is the convention's own name; `set` is
- * what adding it does, `{ field: path }` or `{ other_agreements: true }`
+ * convention and box: `{ suggestions, dismissed }`, each a list of
+ * `{ key, id, name, set, found }`. `name` is the convention's own name; `set`
+ * is what adding it does, `{ field: path }` or `{ other_agreements: true }`
  * (it has no yes/no field); `found` is where the text names it,
- * `[{ path, label, written, excerpt }]`. A dismissed convention is listed
- * under `dismissed`, not `suggestions`.
+ * `[{ path, label, written, excerpt }]`. Where the text field says which box
+ * a convention named in it means (`implies` in the spec: "Puppet" as the 1NT
+ * 3♣ response is Puppet Stayman over 1NT), that box is the one suggested, and
+ * it is suggested while that box is off, whatever the convention's other
+ * boxes say. A dismissed convention is listed under `dismissed`, not
+ * `suggestions`.
  */
 export function suggestConventions(card_data) {
   const values = cardValues(card_data)
   const dismissed = dismissedOf(card_data)
-  const byId = new Map()
+  const byKey = new Map()
   for (const [path, value] of values) {
     if (FIELDS[path].kind !== 'text') continue
     for (const m of findConventions(String(value))) {
-      if (!byId.has(m.id)) {
-        const field = baseField(m.id)
-        byId.set(m.id, {
+      const implied = FIELDS[path].implies?.[m.id]
+      const key = implied ? `${m.id}|${implied}` : m.id
+      if (!byKey.has(key)) {
+        const field = implied || baseField(m.id)
+        byKey.set(key, {
+          key,
           id: m.id,
-          name: CONVENTIONS[m.id]?.name || m.name,
+          name: implied ? FIELDS[implied]?.label || CONVENTIONS[m.id]?.name || m.name : CONVENTIONS[m.id]?.name || m.name,
           set: field ? { field } : { other_agreements: true },
+          implied: !!implied,
           found: [],
         })
       }
-      byId.get(m.id).found.push({
+      byKey.get(key).found.push({
         path,
         label: FIELDS[path].label,
         written: m.written,
@@ -130,8 +138,8 @@ export function suggestConventions(card_data) {
   }
   const suggestions = []
   const turnedDown = []
-  for (const s of byId.values()) {
-    if (playsConvention(card_data, s.id, values)) continue
+  for (const s of byKey.values()) {
+    if (s.implied ? isOn(values, s.set.field) : playsConvention(card_data, s.id, values)) continue
     ;(dismissed.has(s.id) ? turnedDown : suggestions).push(s)
   }
   return { suggestions, dismissed: turnedDown }

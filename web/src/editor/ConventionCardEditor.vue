@@ -171,6 +171,7 @@
 
     <!-- Conventions the notes name that the boxes don't (recogniseConventions.js). -->
     <NoteSuggestions :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
+    <TextMapping v-if="showTextMapping" :card-data="cc.editedCardData.value" />
 
     <!-- Export PDF format picker -->
     <div v-if="exportDialogOpen" class="modal-overlay" @click.self="exportDialogOpen = false">
@@ -240,6 +241,14 @@
           <option v-for="(r, id) in REGULATORS" :key="id" :value="id">{{ r.name }}</option>
         </select>
       </div>
+      <div class="control-divider"></div>
+      <div class="control-group">
+        <span class="control-label">TEXT</span>
+        <label class="overlay-toggle" title="Sort the card's text by whether a tool can read what it says">
+          <input type="checkbox" v-model="showTextMapping" />
+          Text mapping
+        </label>
+      </div>
       <div v-if="overlays" class="control-divider"></div>
       <div v-if="overlays" class="control-group">
         <span class="control-label">OVERLAYS</span>
@@ -297,7 +306,7 @@ import { mergeImported } from './importMerge.js'
 import { askInDialog, tellMatched } from './importDialogs.js'
 import ChoiceDialog from './ChoiceDialog.vue'
 import { checkCard } from '../../../js/checkCard.js'
-import { REGULATORS } from '../../../js/spec.js'
+import { REGULATORS, field } from '../../../js/spec.js'
 import { cardLevel } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import SkillPills from './components/SkillPills.vue'
@@ -305,6 +314,7 @@ import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
 import CardDetail from './components/CardDetail.vue'
 import NoteSuggestions from './components/NoteSuggestions.vue'
+import TextMapping from './components/TextMapping.vue'
 
 // The convention card editor. Where cards live, and who may edit them, is
 // the host's: `storage` and `overlays` are the adapters useCardEditor.js
@@ -361,6 +371,12 @@ const cardProblems = computed(() => {
 })
 const canEdit = cc.canEdit
 const isEditable = cc.isEditable
+
+// "Text mapping": off unless this browser turned it on (most people using
+// the editor don't need it).
+const TEXT_MAPPING_KEY = 'convention-card.text-mapping'
+const showTextMapping = ref((() => { try { return localStorage.getItem(TEXT_MAPPING_KEY) === '1' } catch { return false } })())
+watch(showTextMapping, on => { try { localStorage.setItem(TEXT_MAPPING_KEY, on ? '1' : '0') } catch { /* private mode */ } })
 
 // A change made outside the card's own boxes (a suggestion accepted or
 // turned down): into edit mode if need be, then applied as an edit.
@@ -559,6 +575,7 @@ async function onNewCard() {
 const importInput = ref(null)
 const dialog = ref(null)
 const importNotes = ref([])
+const FIELD_LABEL = path => field(path)?.label || path
 
 function onImportClick() {
   saveError.value = null
@@ -585,7 +602,12 @@ async function onImportFile(event) {
     const merged = await mergeImported(records, props.storage, askInDialog(dialog.value))
     await cc.loadUserCardLinks()
     if (merged.lastId) await cc.switchCard(merged.lastId)
-    importNotes.value = pdfNotes
+    // Boxes ticked because the card's own text names what they mean.
+    const implied = records.flatMap(r => r.implied || []).map(s => ({
+      severity: 'info',
+      message: `Ticked “${s.label}”: the card's ${FIELD_LABEL(s.from)} says “${s.written}”.`,
+    }))
+    importNotes.value = [...pdfNotes, ...implied]
     await tellMatched(dialog.value, merged)
   } catch (err) {
     console.error('Import failed:', err)

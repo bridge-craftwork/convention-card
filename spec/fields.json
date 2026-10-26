@@ -225,7 +225,8 @@
   },
   "dbl.negative_desc": {
    "kind": "text",
-   "label": "Negative double notes"
+   "label": "Negative double notes",
+   "explains": "notrump.dbl.negative"
   },
   "dbl.other": {
    "kind": "text",
@@ -417,7 +418,8 @@
   },
   "lebensohl.description": {
    "kind": "text",
-   "label": "Lebensohl notes"
+   "label": "Lebensohl notes",
+   "explains": "notrump.lebensohl.over_interference"
   },
   "rubensohl.over_interference": {
    "kind": "bool",
@@ -453,7 +455,8 @@
   },
   "two_nt.three_s_desc": {
    "kind": "text",
-   "label": "2NT 3♠ relay notes"
+   "label": "2NT 3♠ relay notes",
+   "explains": "notrump.two_nt.three_s"
   },
   "two_nt.transfers_3level": {
    "kind": "bool",
@@ -545,7 +548,8 @@
    "label": "Gambling 3NT notes",
    "aliases": [
     "three_nt.one_suit_desc"
-   ]
+   ],
+   "explains": "notrump.three_nt.one_suit"
   },
   "responses.2d_other": {
    "kind": "text",
@@ -565,7 +569,10 @@
   },
   "responses.3c": {
    "kind": "text",
-   "label": "3♣ response"
+   "label": "3♣ response",
+   "implies": {
+    "bidding_conventions/puppet_stayman": "notrump.stayman.puppet_1nt"
+   }
   },
   "responses.3d": {
    "kind": "text",
@@ -2286,27 +2293,33 @@
   },
   "vs_1nt_strong.dbl": {
    "kind": "text",
-   "label": "Vs strong 1NT: double"
+   "label": "Vs strong 1NT: double",
+   "explains": "competitive.vs_1nt_strong.system"
   },
   "vs_1nt_strong.2c": {
    "kind": "text",
-   "label": "Vs strong 1NT: 2♣"
+   "label": "Vs strong 1NT: 2♣",
+   "explains": "competitive.vs_1nt_strong.system"
   },
   "vs_1nt_strong.2d": {
    "kind": "text",
-   "label": "Vs strong 1NT: 2♦"
+   "label": "Vs strong 1NT: 2♦",
+   "explains": "competitive.vs_1nt_strong.system"
   },
   "vs_1nt_strong.2h": {
    "kind": "text",
-   "label": "Vs strong 1NT: 2♥"
+   "label": "Vs strong 1NT: 2♥",
+   "explains": "competitive.vs_1nt_strong.system"
   },
   "vs_1nt_strong.2s": {
    "kind": "text",
-   "label": "Vs strong 1NT: 2♠"
+   "label": "Vs strong 1NT: 2♠",
+   "explains": "competitive.vs_1nt_strong.system"
   },
   "vs_1nt_strong.2nt": {
    "kind": "text",
-   "label": "Vs strong 1NT: 2NT"
+   "label": "Vs strong 1NT: 2NT",
+   "explains": "competitive.vs_1nt_strong.system"
   },
   "vs_1nt_strong.other": {
    "kind": "text",
@@ -2354,27 +2367,33 @@
   },
   "vs_1nt_weak.dbl": {
    "kind": "text",
-   "label": "Vs weak 1NT: double"
+   "label": "Vs weak 1NT: double",
+   "explains": "competitive.vs_1nt_weak.system"
   },
   "vs_1nt_weak.2c": {
    "kind": "text",
-   "label": "Vs weak 1NT: 2♣"
+   "label": "Vs weak 1NT: 2♣",
+   "explains": "competitive.vs_1nt_weak.system"
   },
   "vs_1nt_weak.2d": {
    "kind": "text",
-   "label": "Vs weak 1NT: 2♦"
+   "label": "Vs weak 1NT: 2♦",
+   "explains": "competitive.vs_1nt_weak.system"
   },
   "vs_1nt_weak.2h": {
    "kind": "text",
-   "label": "Vs weak 1NT: 2♥"
+   "label": "Vs weak 1NT: 2♥",
+   "explains": "competitive.vs_1nt_weak.system"
   },
   "vs_1nt_weak.2s": {
    "kind": "text",
-   "label": "Vs weak 1NT: 2♠"
+   "label": "Vs weak 1NT: 2♠",
+   "explains": "competitive.vs_1nt_weak.system"
   },
   "vs_1nt_weak.2nt": {
    "kind": "text",
-   "label": "Vs weak 1NT: 2NT"
+   "label": "Vs weak 1NT: 2NT",
+   "explains": "competitive.vs_1nt_weak.system"
   },
   "vs_1nt_weak.other": {
    "kind": "text",

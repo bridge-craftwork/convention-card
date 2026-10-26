@@ -14,7 +14,7 @@
     </p>
 
     <ul v-if="result.suggestions.length">
-      <li v-for="s in result.suggestions" :key="s.id">
+      <li v-for="s in result.suggestions" :key="s.key">
         <div class="what">
           <strong>{{ s.name }}</strong>
           <span class="where" :title="s.found.map(f => `${f.label}: ${f.excerpt}`).join('\n')">
