@@ -12,7 +12,9 @@
 //               does ("Penalty" for Suction's double): the card's own
 //               agreement, which a tool reading the convention would miss
 //   unmapped    no tool can read it: an agreement only a person will see
-//   play        carding and leads: for a play bot, not a bidding one
+//   play        carding and leads that name no convention: for a play bot,
+//               not a bidding one (text naming one, such as "Trump suit
+//               preference", is mapped or pending like any other)
 //
 // A field that holds a bid (`bid` in the spec: negative doubles through 4♥)
 // is not text once it holds one, so it is not listed; when it holds words
@@ -94,11 +96,11 @@ export function textMapping(card_data) {
       ? { path: def.explains, label: FIELDS[def.explains]?.label || def.explains, value: values.get(def.explains) ?? true }
       : null
     const standard = explainedBy ? standardBid(values, def.explains, path) : null
-    const status = PLAY_SECTIONS.has(path.slice(0, path.indexOf('.'))) ? 'play'
-      : conventions.some(c => !c.played) ? 'pending'
-        : standard && loose(standard) !== loose(text) ? 'differs'
-          : explainedBy ? 'explained'
-            : conventions.length ? 'mapped'
+    const status = conventions.some(c => !c.played) ? 'pending'
+      : standard && loose(standard) !== loose(text) ? 'differs'
+        : explainedBy ? 'explained'
+          : conventions.length ? 'mapped'
+            : PLAY_SECTIONS.has(path.slice(0, path.indexOf('.'))) ? 'play'
               : 'unmapped'
     out.set(path, { status, label: def.label, text, conventions, explainedBy, standard, ...(def.bid && { notBid: true }) })
   }

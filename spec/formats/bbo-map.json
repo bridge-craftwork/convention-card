@@ -227,11 +227,7 @@
   "UDANT": "carding.nt.upside_down_attitude",
   "smithSuits": "carding.smith_echo_suits",
   "smithNT": "carding.smith_echo_nt",
-  "trumpSP": {
-   "set": {
-    "carding.trump_signals": "Suit Preference"
-   }
-  }
+  "trumpSP": "carding.trump_suit_preference"
  },
  "fields": {
   "approach": "general.system",

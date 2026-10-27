@@ -66,6 +66,9 @@
       </label>
     </div>
 
+    <div class="smith-row">
+      <label class="inline-box"><input type="checkbox" :checked="r('carding.trump_suit_preference')" :disabled="!editable" @change="t('carding.trump_suit_preference', $event.target.checked)" /> Trump suit preference</label>
+    </div>
     <div class="trump-row">
       <span class="smith-label">Trump signals</span>
       <RichSuitField

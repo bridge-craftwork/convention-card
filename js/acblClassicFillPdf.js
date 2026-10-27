@@ -486,7 +486,7 @@ const FIELD_MAP_CLASSIC = [
   // ─── OTHER CARDING ───
   { pdf: 'smith echo vs Suits',  card: 'carding.smith_echo_suits',  kind: 'check' },
   { pdf: 'smith echo vs NT',     card: 'carding.smith_echo_nt',     kind: 'check' },
-  { pdf: 'Trump vs Suits',       card: 'carding.trump_signals',     kind: 'check' },
+  { pdf: 'Trump vs Suits',       card: 'carding.trump_suit_preference', kind: 'check' },  // the card's "Trump Suit Preference" box
   { pdf: 'foster echo vs Suits', card: 'carding.foster_echo_suits', kind: 'check' },
   { pdf: 'foster echo vs NT',    card: 'carding.foster_echo_nt',    kind: 'check' },
 

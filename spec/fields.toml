@@ -561,7 +561,8 @@
 "partner_lead.suit_preference" = { kind = "bool", label = "Primary signal to partner's lead: suit preference", skill = "defense/defensive_signals", level = 5, choice = "carding.partner_lead" }
 "smith_echo_suits"         = { kind = "bool", label = "Smith echo vs suits", skill = "defense/smith_echo", level = 8 }
 "smith_echo_nt"            = { kind = "bool", label = "Smith echo vs NT", skill = "defense/smith_echo", level = 8 }
-"trump_signals"            = { kind = "text", label = "Trump signals" }
+"trump_signals"            = { kind = "text", label = "Trump signals", implies = { "defense/defensive_signals" = "carding.trump_suit_preference", "defense/trump_suit_preference" = "carding.trump_suit_preference" } }
+"trump_suit_preference"    = { kind = "bool", label = "Trump suit preference", desc = "A defender's spot cards in trumps show suit preference (high for the higher side suit), not count", skill = "defense/trump_suit_preference", level = 6 }
 "notes"                    = { kind = "text", label = "Carding notes (card write-in)", note = true }
 # --- end: Bridge-Classroom card fields (bc-export) ---
 

@@ -62,7 +62,20 @@ describe('textMapping', () => {
   })
 
   it('counts carding and leads as play, not bidding', () => {
-    expect(status(card({ 'carding.notes': 'Trump suit preference' }), 'carding.notes')).toBe('play')
+    expect(status(card({ 'carding.notes': 'Low from doubleton' }), 'carding.notes')).toBe('play')
+  })
+
+  it('maps carding text that names a convention', () => {
+    expect(status(card({ 'carding.notes': 'Trump suit preference' }), 'carding.notes')).toBe('pending')
+    expect(status(card({ 'carding.notes': 'Trump suit preference', 'carding.trump_suit_preference': true }), 'carding.notes')).toBe('mapped')
+  })
+
+  it('reads "suit preference" in the trump signals box as trump suit preference', async () => {
+    const bbo = card({ 'carding.trump_signals': 'Suit Preference' })
+    expect(applyImplied(bbo).map(s => s.field)).toEqual(['carding.trump_suit_preference'])
+    expect(status(bbo, 'carding.trump_signals')).toBe('mapped')
+    const dex = await importCard({ settings: { carding: { trump_signals: 'Trump suit preference' } } }, { from: 'bridgodex' })
+    expect(readPath(dex.card_data, 'carding.trump_suit_preference')).toBe(true)
   })
 
   it('counts each status', () => {

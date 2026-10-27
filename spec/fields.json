@@ -2848,7 +2848,18 @@
   },
   "trump_signals": {
    "kind": "text",
-   "label": "Trump signals"
+   "label": "Trump signals",
+   "implies": {
+    "defense/defensive_signals": "carding.trump_suit_preference",
+    "defense/trump_suit_preference": "carding.trump_suit_preference"
+   }
+  },
+  "trump_suit_preference": {
+   "kind": "bool",
+   "label": "Trump suit preference",
+   "desc": "A defender's spot cards in trumps show suit preference (high for the higher side suit), not count",
+   "skill": "defense/trump_suit_preference",
+   "level": 6
   },
   "notes": {
    "kind": "text",

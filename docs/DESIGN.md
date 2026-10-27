@@ -164,7 +164,7 @@ whether a tool can see what it says (`textMapping(card)`,
 | differs | spells it out differently: the card's own agreement, which a tool reading the convention misses | "Penalty" for Suction's double |
 | pending | names a convention not ticked (the suggestions) | "Kokish relay" |
 | not mapped | holds an agreement no box holds | "Redouble: denies fit" |
-| cardplay | carding and leads | "Trump suit preference" |
+| cardplay | carding and leads that name no convention (one that does, "Trump suit preference", is mapped or pending) | "Low from a doubleton" |
 
 Two field attributes in `fields.toml` say how a text field relates to the
 boxes: **`explains`** names the field whose agreement it spells out (each bid
