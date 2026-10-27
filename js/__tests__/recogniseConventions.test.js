@@ -148,3 +148,16 @@ describe('generic names and import', () => {
     expect(readPath(data, 'slam.minorwood.play')).toBeUndefined()
   })
 })
+
+describe('a choice that plays a convention', () => {
+  it('2♥ meaning "weak" plays Weak Twos, so "our weak 2" suggests nothing', () => {
+    const data = card({ 'two_level.two_hearts.meaning': 'weak', 'two_level.two_hearts.notes': 'McCabe after opps X our weak 2', 'two_level.mccabe.play': true })
+    expect(playsConvention(data, 'bidding_conventions/weak_2s')).toBe(true)
+    expect(suggestConventions(data).suggestions).toEqual([])
+  })
+
+  it('another meaning does not', () => {
+    const data = card({ 'two_level.two_hearts.meaning': 'strong' })
+    expect(playsConvention(data, 'bidding_conventions/weak_2s')).toBe(false)
+  })
+})

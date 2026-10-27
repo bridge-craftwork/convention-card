@@ -127,19 +127,20 @@ impl Card {
     }
 
     /// Whether the card plays the convention `id`: a yes/no field whose
-    /// convention it is (its first `skill`) is on, or an `other_agreements`
-    /// entry names it (ADR-0001 D5). Fields that are not yes/no (a range,
-    /// the choice of defence to 1NT) are read by their own paths.
+    /// convention it is (its first `skill`) is on, an enum field holds an
+    /// option the spec says plays it (`plays`: 2♥ meaning `weak` plays Weak
+    /// Twos), or an `other_agreements` entry names it (ADR-0001 D5). Other
+    /// fields (a range, the choice of defence to 1NT) are read by their own
+    /// paths.
     pub fn names_convention(&self, id: &str) -> bool {
         self.other_agreements
             .iter()
             .any(|a| a.id.as_deref() == Some(id))
-            || self
-                .vocab
-                .registry()
-                .fields()
-                .iter()
-                .any(|f| f.skill.first().is_some_and(|s| s == id) && self.is_on(&f.path))
+            || self.vocab.registry().fields().iter().any(|f| {
+                (f.skill.first().is_some_and(|s| s == id) && self.is_on(&f.path))
+                    || matches!(self.effective(&f.path), Some(Value::Text(v))
+                        if f.plays.get(v).is_some_and(|p| p == id))
+            })
     }
 
     /// The stored value at `path` (canonical or alias), if set.
@@ -544,5 +545,16 @@ mod tests {
         assert_eq!(report.unknown, vec!["notrump.stayman.mystery".to_string()]);
         let (again, _) = Card::from_json(card.vocabulary(), &card.to_json_string()).unwrap();
         assert_eq!(card, again);
+    }
+
+    #[test]
+    fn an_enum_option_can_play_a_convention() {
+        // 2♥ meaning "weak" plays Weak Twos (`plays` in fields.toml).
+        let weak = r#"{"two_level": {"two_hearts": {"meaning": "weak"}}}"#;
+        let (card, _) = Card::from_json(crate::test_vocabulary(), weak).unwrap();
+        assert!(card.names_convention("bidding_conventions/weak_2s"));
+        let strong = r#"{"two_level": {"two_hearts": {"meaning": "strong"}}}"#;
+        let (card, _) = Card::from_json(crate::test_vocabulary(), strong).unwrap();
+        assert!(!card.names_convention("bidding_conventions/weak_2s"));
     }
 }

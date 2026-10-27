@@ -119,6 +119,11 @@ pub struct FieldDef {
     /// group as one agreement, and a card's difficulty counts it once.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub choice: Option<String>,
+    /// For an enum: options that play a convention, `{ option: ID }` (2♥
+    /// meaning `weak` plays Weak Twos). [`crate::Card::names_convention`]
+    /// counts them as it counts a yes/no field that is on.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub plays: BTreeMap<String, String>,
 }
 
 /// A string or a list of strings.
