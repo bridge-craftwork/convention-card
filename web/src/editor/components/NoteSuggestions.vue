@@ -17,8 +17,14 @@
       <li v-for="s in result.suggestions" :key="s.key">
         <div class="what">
           <strong>{{ s.name }}</strong>
-          <span class="where" :title="s.found.map(f => `${f.label}: ${f.excerpt}`).join('\n')">
-            in {{ s.found[0].label }}: “{{ s.found[0].excerpt }}”<template v-if="s.found.length > 1"> and {{ s.found.length - 1 }} more</template>
+          <span class="where">
+            {{ s.found[0].label }}: “{{ s.found[0].quote.before }}<mark>{{ s.found[0].quote.match }}</mark>{{ s.found[0].quote.after }}”
+          </span>
+          <span v-if="s.confirm" class="check">
+            Only “{{ s.found[0].written }}”, which may just be ordinary words here: add it if you mean {{ s.name }}.
+          </span>
+          <span v-if="otherPlaces(s).length" class="also" :title="s.found.slice(1).map(f => `${f.label}: ${f.excerpt}`).join('\n')">
+            Also in {{ otherPlaces(s).join(', ') }}
           </span>
         </div>
         <div v-if="canEdit" class="actions">
@@ -65,6 +71,9 @@ const addTitle = s => (s.set.field
   ? `Tick “${field(s.set.field)?.label || s.set.field}”`
   : 'Add it to the card’s other agreements (it has no box of its own)')
 
+// Where else it is named, each place once.
+const otherPlaces = s => [...new Set(s.found.slice(1).map(f => f.label))].filter(l => l !== s.found[0].label)
+
 const accept = s => emit('change', data => acceptSuggestion(data, s))
 const dismiss = s => emit('change', data => dismissSuggestion(data, s.id))
 const reask = () => emit('change', data => askAgain(data))
@@ -90,6 +99,9 @@ ul { list-style: none; margin: 6px 0 0; padding: 0; }
 li { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 5px 0; border-top: 1px solid #dcebe1; }
 .what { min-width: 0; }
 .where { display: block; color: var(--text-secondary, #6b7280); overflow-wrap: anywhere; }
+.where mark { background: #fff1b8; color: inherit; padding: 0 2px; border-radius: 2px; }
+.check { display: block; color: #8a5a00; font-size: 12px; }
+.also { display: block; color: var(--text-muted, #9ca3af); font-size: 12px; }
 .actions { display: flex; gap: 6px; flex-shrink: 0; }
 .btn { font: inherit; font-size: 12px; padding: 3px 10px; border: 1px solid var(--card-border, #e0ddd7); border-radius: var(--radius-button, 6px); background: #fff; cursor: pointer; }
 .btn-add { border-color: var(--green-dark, #2d6a4f); color: var(--green-dark, #2d6a4f); font-weight: 600; }

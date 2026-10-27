@@ -95,11 +95,21 @@ const dismissedOf = card_data => {
   return new Set(Array.isArray(list) ? list.filter(x => typeof x === 'string') : [])
 }
 
-function excerpt(text, index, length) {
-  const from = Math.max(0, index - 30)
-  const to = Math.min(text.length, index + length + 30)
-  return `${from > 0 ? '…' : ''}${text.slice(from, to).replace(/\s+/g, ' ').trim()}${to < text.length ? '…' : ''}`
+// The line of `text` the match is on (a note is a line per bid), at most
+// ~40 characters each side: `{ before, match, after }`, with "…" where cut.
+function quote(text, index, length) {
+  const lineStart = text.lastIndexOf('\n', index - 1) + 1
+  const nl = text.indexOf('\n', index + length)
+  const lineEnd = nl < 0 ? text.length : nl
+  const from = Math.max(lineStart, index - 40)
+  const to = Math.min(lineEnd, index + length + 40)
+  return {
+    before: `${from > lineStart ? '…' : ''}${text.slice(from, index).replace(/\s+/g, ' ').trimStart()}`,
+    match: text.slice(index, index + length),
+    after: `${text.slice(index + length, to).replace(/\s+/g, ' ').trimEnd()}${to < lineEnd ? '…' : ''}`,
+  }
 }
+const excerptOf = q => `${q.before}${q.match}${q.after}`
 
 /**
  * Conventions the card's text names but the card does not play, one per
@@ -108,7 +118,9 @@ function excerpt(text, index, length) {
  * place names it only by a generic name ("weak 2"), so a person should say. `name` is the convention's own name; `set`
  * is what adding it does, `{ field: path }` or `{ other_agreements: true }`
  * (it has no yes/no field); `found` is where the text names it,
- * `[{ path, label, written, excerpt }]`. Where the text field says which box
+ * `[{ path, label, written, quote: { before, match, after }, excerpt }]`, a
+ * box of its own before a gathered note, the shortest first; the quote is
+ * the line it is on. Where the text field says which box
  * a convention named in it means (`implies` in the spec: "Puppet" as the 1NT
  * 3♣ response is Puppet Stayman over 1NT), that box is the one suggested, and
  * it is suggested while that box is off, whatever the convention's other
@@ -140,7 +152,9 @@ export function suggestConventions(card_data) {
         label: FIELDS[path].label,
         written: m.written,
         confirm: m.confirm,
-        excerpt: excerpt(String(value), m.index, m.written.length),
+        quote: quote(String(value), m.index, m.written.length),
+        excerpt: excerptOf(quote(String(value), m.index, m.written.length)),
+        size: String(value).length,
       })
     }
   }
@@ -148,6 +162,9 @@ export function suggestConventions(card_data) {
   const turnedDown = []
   for (const s of byKey.values()) {
     s.confirm = s.found.every(f => f.confirm)
+    // The plainest place first: a box of its own before a gathered note,
+    // then the shortest text.
+    s.found.sort((a, b) => (a.path.startsWith('notes.') - b.path.startsWith('notes.')) || a.size - b.size)
     if (s.implied ? isOn(values, s.set.field) : playsConvention(card_data, s.id, values)) continue
     ;(dismissed.has(s.id) ? turnedDown : suggestions).push(s)
   }
