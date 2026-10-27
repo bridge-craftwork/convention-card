@@ -2118,7 +2118,9 @@
   },
   "negative.through": {
    "kind": "text",
+   "bid": true,
    "label": "Negative doubles through",
+   "desc": "The highest overcall a double of is negative (4♥: a double of 4♠ or higher is not)",
    "aliases": [
     "competitive.negative_doubles.through"
    ],
@@ -2132,7 +2134,9 @@
   },
   "responsive.through": {
    "kind": "text",
-   "label": "Responsive doubles through"
+   "bid": true,
+   "label": "Responsive doubles through",
+   "desc": "The highest raise of their suit, after partner's takeout double or overcall, that a double of is responsive (3♠: a double of 4♣ or higher is not)"
   },
   "support.play": {
    "kind": "bool",
@@ -2142,8 +2146,9 @@
   },
   "support.through": {
    "kind": "text",
+   "bid": true,
    "label": "Support doubles through",
-   "desc": "The highest call by RHO over which the double still shows three-card support, as a bid (2♥, 2S). Unset: two of responder's major"
+   "desc": "The highest call by RHO over which the double still shows three-card support (2♥). Unset: two of responder's major"
   },
   "support.rdbl": {
    "kind": "bool",
@@ -3148,7 +3153,9 @@
   },
   "takeout_double_thru": {
    "kind": "text",
-   "label": "Vs preempts: takeout double through"
+   "bid": true,
+   "label": "Vs preempts: takeout double through",
+   "desc": "The highest preempt a double of is takeout (4♥: a double of 4♠ or higher is penalty)"
   },
   "takeout_double_penalty": {
    "kind": "bool",

@@ -41,6 +41,11 @@
 #   plays    (enum fields) { option = convention ID }: the card plays that
 #            convention when the field holds that option (2♥ meaning "weak"
 #            plays Weak Twos), as a yes/no field does when it is on
+#   bid      (text fields) true: the value is a bid, the highest the
+#            agreement applies through (negative doubles through 4♥: a
+#            double of 4♠ or higher is not negative). "4♥", "4h", "4H" and
+#            "4 ♥" all read as 4♥, "3nt" as 3NT; anything else is kept as
+#            the card wrote it and stays text for a person
 #   implies  (text fields) { convention ID = yes/no field }: this text
 #            naming that convention means that box, not just the convention
 #            ("Puppet" as the 1NT 3♣ response is Puppet Stayman over 1NT,
@@ -421,11 +426,11 @@
 [doubles]
 "takeout_style"            = { kind = "text", label = "Takeout double style", aliases = ["competitive.takeout_doubles.style"], skill = "competitive_bidding/takeout_doubles", level = 2 }
 "negative.play"            = { kind = "bool", label = "Negative doubles", skill = "competitive_bidding/negative_doubles", level = 3 }
-"negative.through"         = { kind = "text", label = "Negative doubles through", aliases = ["competitive.negative_doubles.through"], skill = "competitive_bidding/negative_doubles" }
+"negative.through"         = { kind = "text", bid = true, label = "Negative doubles through", desc = "The highest overcall a double of is negative (4♥: a double of 4♠ or higher is not)", aliases = ["competitive.negative_doubles.through"], skill = "competitive_bidding/negative_doubles" }
 "responsive.play"          = { kind = "bool", label = "Responsive doubles", skill = "competitive_bidding/responsive_doubles", level = 5 }
-"responsive.through"       = { kind = "text", label = "Responsive doubles through" }
+"responsive.through"       = { kind = "text", bid = true, label = "Responsive doubles through", desc = "The highest raise of their suit, after partner's takeout double or overcall, that a double of is responsive (3♠: a double of 4♣ or higher is not)" }
 "support.play"             = { kind = "bool", label = "Support doubles", skill = "competitive_bidding/support_doubles", level = 5 }
-"support.through"          = { kind = "text", label = "Support doubles through", desc = "The highest call by RHO over which the double still shows three-card support, as a bid (2♥, 2S). Unset: two of responder's major" }
+"support.through"          = { kind = "text", bid = true, label = "Support doubles through", desc = "The highest call by RHO over which the double still shows three-card support (2♥). Unset: two of responder's major" }
 "support.rdbl"             = { kind = "bool", label = "Support redouble", skill = "competitive_bidding/support_doubles", level = 5 }
 "maximal"                  = { kind = "bool", label = "Maximal doubles", skill = "competitive_bidding/maximal_doubles", level = 6 }
 "after_overcall_penalty"   = { kind = "bool", label = "Double after overcall: penalty" }
@@ -621,7 +626,7 @@
 
 [vs_preempts]
 "takeout_double"           = { kind = "bool", label = "Vs preempts: double is takeout", skill = "competitive_bidding/takeout_doubles", level = 3, choice = "vs_preempts.double" }
-"takeout_double_thru"      = { kind = "text", label = "Vs preempts: takeout double through" }
+"takeout_double_thru"      = { kind = "text", bid = true, label = "Vs preempts: takeout double through", desc = "The highest preempt a double of is takeout (4♥: a double of 4♠ or higher is penalty)" }
 "takeout_double_penalty"   = { kind = "bool", label = "Vs preempts: double is penalty", level = 5, choice = "vs_preempts.double" }
 "conv_takeout"             = { kind = "text", label = "Vs preempts: conventional takeout" }
 "two_nt_overcall"          = { kind = "text", label = "Vs preempts: 2NT overcall" }

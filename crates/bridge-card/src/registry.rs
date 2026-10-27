@@ -124,6 +124,12 @@ pub struct FieldDef {
     /// counts them as it counts a yes/no field that is on.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub plays: BTreeMap<String, String>,
+    /// For text: the value is a bid, the highest the agreement applies
+    /// through (negative doubles through 4♥). Loading writes a bid the
+    /// card's way ("4h" is "4♥", "3nt" "3NT"); text that is not a bid is
+    /// kept as written.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub bid: bool,
 }
 
 /// A string or a list of strings.
@@ -150,6 +156,23 @@ fn fold(s: &str) -> String {
             c => c.to_ascii_lowercase(),
         })
         .collect()
+}
+
+/// `s` as one bid written the card's way ("4♥", "3NT"), or `None`: "4h",
+/// "4H", "4 ♥", "!4H" and "3nt" are bids; "4♥ unless vulnerable" is not.
+fn bid_of(s: &str) -> Option<String> {
+    let t: String = s.chars().filter(|c| !c.is_whitespace() && *c != '!').collect();
+    let mut chars = t.chars();
+    let level = chars.next().filter(|c| ('1'..='7').contains(c))?;
+    let strain = match chars.as_str().to_uppercase().as_str() {
+        "C" | "♣" => "♣",
+        "D" | "♦" | "♢" => "♦",
+        "H" | "♥" | "♡" => "♥",
+        "S" | "♠" => "♠",
+        "N" | "NT" => "NT",
+        _ => return None,
+    };
+    Some(format!("{level}{strain}"))
 }
 
 impl FieldDef {
@@ -182,6 +205,9 @@ impl FieldDef {
                     return Ok(Value::Text(o.clone()));
                 }
                 Err(format!("{s:?} is not one of {:?}", self.options))
+            }
+            (FieldKind::Text, Value::Text(s)) if self.bid => {
+                Ok(Value::Text(bid_of(&s).unwrap_or(s)))
             }
             (FieldKind::Text, v @ Value::Text(_)) => Ok(v),
             (kind, v) => Err(format!("expected {kind:?}, found {v}")),
@@ -395,5 +421,16 @@ mod tests {
         let len = r.get("minor_openings.one_diamond.min_length").unwrap();
         assert_eq!(len.normalize(Value::Int(4)), Ok(Value::Text("4".into())));
         assert!(len.normalize(Value::Text("7".into())).is_err());
+    }
+
+    #[test]
+    fn a_bid_field_reads_a_bid_and_keeps_other_text() {
+        let f = registry().get("doubles.negative.through").unwrap();
+        assert!(f.bid);
+        for (typed, read) in [("4h", "4♥"), ("4 ♥", "4♥"), ("!4S", "4♠"), ("3nt", "3NT"), ("2♦", "2♦")] {
+            assert_eq!(f.normalize(Value::Text(typed.into())), Ok(Value::Text(read.into())), "{typed}");
+        }
+        let words = Value::Text("4♥ unless vulnerable".into());
+        assert_eq!(f.normalize(words.clone()), Ok(words));
     }
 }
