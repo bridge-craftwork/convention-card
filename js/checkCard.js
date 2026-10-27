@@ -6,6 +6,7 @@
 // (CLAUDE.md). A change to what the crate reports belongs here too.
 
 import { FIELDS, field } from './spec.js'
+import { bidOf } from './suits.js'
 
 /** The `schema` of the editor's "Export content" file: `{schema, name, description, exportedAt, card_data}`. */
 export const EXPORT_SCHEMA = 'bridge-classroom/card_data@v1'
@@ -51,7 +52,11 @@ export function checkValue(def, value) {
       return { problem: `${found} is not one of ${def.options.join(', ')}` }
     }
     case 'text':
-      return typeof value === 'string' ? { value } : { problem: `expected text, found ${found}` }
+      // A field that holds a bid reads "4h" as 4♥; text that is not a bid is
+      // kept as written, for a person (it is not rejected: saved cards keep
+      // loading).
+      if (typeof value !== 'string') return { problem: `expected text, found ${found}` }
+      return { value: (def.bid && bidOf(value)) || value }
     default:
       return { problem: `unknown field kind ${def.kind}` }
   }

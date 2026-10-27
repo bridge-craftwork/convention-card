@@ -12,7 +12,13 @@
 //               does ("Penalty" for Suction's double): the card's own
 //               agreement, which a tool reading the convention would miss
 //   unmapped    no tool can read it: an agreement only a person will see
-//   play        carding and leads: for a play bot, not a bidding one
+//   play        carding and leads that name no convention: for a play bot,
+//               not a bidding one (text naming one, such as "Trump suit
+//               preference", is mapped or pending like any other)
+//
+// A field that holds a bid (`bid` in the spec: negative doubles through 4♥)
+// is not text once it holds one, so it is not listed; when it holds words
+// instead, they are unmapped, with `notBid` set.
 //
 // And `applyImplied` closes the plainest gap at import: a box's text that
 // names the convention the spec says that box means (`implies`), such as
@@ -23,6 +29,7 @@ import { cardValues } from './checkCard.js'
 import { writePath } from './paths.js'
 import { findConventions, playsConvention } from './recogniseConventions.js'
 import { KNOWN_NT_DEFENSES } from './ntDefenses.js'
+import { bidOf } from './suits.js'
 
 const isOn = (values, path) => (values.has(path) ? values.get(path) : FIELDS[path]?.default) === true
 const isSet = (values, path) => FIELDS[path]?.kind === 'bool' ? isOn(values, path) : values.has(path)
@@ -51,13 +58,14 @@ function standardBid(values, explains, path) {
 
 /**
  * Every text field the card fills in, by path: `{ status, label, text,
- * conventions, explainedBy, standard }`. `status` is 'mapped', 'explained',
+ * conventions, explainedBy, standard, notBid? }`. `status` is 'mapped', 'explained',
  * 'differs', 'pending', 'unmapped' or 'play' (above); `conventions` are those it names,
  * `[{ id, name, written, played, field }]`, with `field` the box it means
  * where the spec says (`implies`); `explainedBy` is the field whose
  * agreement it spells out, when that is set, `{ path, label, value }`;
  * `standard` is that convention's own meaning for this bid, where the
- * library knows it, so a person can see whether the card differs.
+ * library knows it, so a person can see whether the card differs. `notBid`
+ * is set on a field meant to hold a bid (`bid`) that holds words instead.
  */
 export function textMapping(card_data) {
   const values = cardValues(card_data)
@@ -66,7 +74,7 @@ export function textMapping(card_data) {
     const def = FIELDS[path]
     if (def.kind !== 'text') continue
     const text = String(value).trim()
-    if (!text) continue
+    if (!text || (def.bid && bidOf(text))) continue
 
     const seen = new Set()
     const conventions = []
@@ -88,13 +96,13 @@ export function textMapping(card_data) {
       ? { path: def.explains, label: FIELDS[def.explains]?.label || def.explains, value: values.get(def.explains) ?? true }
       : null
     const standard = explainedBy ? standardBid(values, def.explains, path) : null
-    const status = PLAY_SECTIONS.has(path.slice(0, path.indexOf('.'))) ? 'play'
-      : conventions.some(c => !c.played) ? 'pending'
-        : standard && loose(standard) !== loose(text) ? 'differs'
-          : explainedBy ? 'explained'
-            : conventions.length ? 'mapped'
+    const status = conventions.some(c => !c.played) ? 'pending'
+      : standard && loose(standard) !== loose(text) ? 'differs'
+        : explainedBy ? 'explained'
+          : conventions.length ? 'mapped'
+            : PLAY_SECTIONS.has(path.slice(0, path.indexOf('.'))) ? 'play'
               : 'unmapped'
-    out.set(path, { status, label: def.label, text, conventions, explainedBy, standard })
+    out.set(path, { status, label: def.label, text, conventions, explainedBy, standard, ...(def.bid && { notBid: true }) })
   }
   return out
 }

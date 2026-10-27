@@ -3,6 +3,8 @@ import { textMapping, textMappingCounts, applyImplied } from '../textMapping.js'
 import { suggestConventions } from '../recogniseConventions.js'
 import { importCard } from '../importCard.js'
 import { readPath, writePath } from '../paths.js'
+import { cardValues } from '../checkCard.js'
+import { bidOf } from '../suits.js'
 
 function card(settings) {
   const data = {}
@@ -60,7 +62,20 @@ describe('textMapping', () => {
   })
 
   it('counts carding and leads as play, not bidding', () => {
-    expect(status(card({ 'carding.notes': 'Trump suit preference' }), 'carding.notes')).toBe('play')
+    expect(status(card({ 'carding.notes': 'Low from doubleton' }), 'carding.notes')).toBe('play')
+  })
+
+  it('maps carding text that names a convention', () => {
+    expect(status(card({ 'carding.notes': 'Trump suit preference' }), 'carding.notes')).toBe('pending')
+    expect(status(card({ 'carding.notes': 'Trump suit preference', 'carding.trump_suit_preference': true }), 'carding.notes')).toBe('mapped')
+  })
+
+  it('reads "suit preference" in the trump signals box as trump suit preference', async () => {
+    const bbo = card({ 'carding.trump_signals': 'Suit Preference' })
+    expect(applyImplied(bbo).map(s => s.field)).toEqual(['carding.trump_suit_preference'])
+    expect(status(bbo, 'carding.trump_signals')).toBe('mapped')
+    const dex = await importCard({ settings: { carding: { trump_signals: 'Trump suit preference' } } }, { from: 'bridgodex' })
+    expect(readPath(dex.card_data, 'carding.trump_suit_preference')).toBe(true)
   })
 
   it('counts each status', () => {
@@ -107,5 +122,27 @@ describe('implies', () => {
     expect(readPath(own.card_data, 'notrump.stayman.puppet_1nt')).toBeUndefined()
     expect(own.implied).toBeUndefined()
     expect(own.recognised).toBeUndefined()
+  })
+})
+
+describe('bid fields', () => {
+  it('reads a level as a bid, however it is typed', () => {
+    const data = card({ 'doubles.negative.through': '4h', 'doubles.support.through': '2 ♥', 'vs_preempts.takeout_double_thru': '3nt' })
+    const values = cardValues(data)
+    expect(values.get('doubles.negative.through')).toBe('4♥')
+    expect(values.get('doubles.support.through')).toBe('2♥')
+    expect(values.get('vs_preempts.takeout_double_thru')).toBe('3NT')
+  })
+
+  it('does not list a bid as text, but flags words where a bid belongs', () => {
+    const m = textMapping(card({ 'doubles.negative.through': '4♥', 'doubles.responsive.through': 'game' }))
+    expect(m.has('doubles.negative.through')).toBe(false)
+    expect(m.get('doubles.responsive.through')).toMatchObject({ status: 'unmapped', notBid: true, text: 'game' })
+  })
+
+  it('bidOf takes one bid, not a sentence', () => {
+    expect(bidOf('!4S')).toBe('4♠')
+    expect(bidOf('4♥ unless vulnerable')).toBeNull()
+    expect(bidOf('8♥')).toBeNull()
   })
 })

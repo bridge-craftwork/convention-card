@@ -31,6 +31,9 @@
               <span v-else class="name">{{ c.name }}<template v-if="!suggestionFor(c)"> (turned down)</template></span>
             </template>
           </div>
+          <div v-else-if="row.notBid" class="detail">
+            Meant to be a bid (4♥, 3NT): the highest it applies through
+          </div>
           <div v-else-if="row.status === 'mapped'" class="detail">
             {{ row.conventions.map(c => c.name).join(', ') }}
           </div>

@@ -1,7 +1,7 @@
 {
  "schema": "taxonomy/v1",
  "version": "0.1.0",
- "generated": "2026-10-20",
+ "generated": "2026-10-26",
  "categories": [
   {
    "id": "basic_bidding",
@@ -938,6 +938,12 @@
    "name": "Third Hand Play",
    "category": "defense",
    "level": "basic"
+  },
+  {
+   "path": "defense/trump_suit_preference",
+   "name": "Trump suit preference",
+   "category": "defense",
+   "level": "intermediate"
   },
   {
    "path": "defense/upside_down_signals",

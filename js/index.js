@@ -5,7 +5,7 @@
 
 export { FIELDS, field, BBSA_MAP, BBSA_LAYOUT, CONVENTIONS, LEVEL_BANDS, levelBand, fieldLevel, REGULATORS, alertsFor, alertBadge, alertSummary } from './spec.js'
 export { readPath, writePath } from './paths.js'
-export { normalizeSuitShorthand } from './suits.js'
+export { normalizeSuitShorthand, bidOf } from './suits.js'
 export { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from './assets.js'
 export { encodeCardForUrl, decodeCardFromUrl } from './handoff.js'
 export { checkCard, checkValue, cardValues, EXPORT_SCHEMA } from './checkCard.js'

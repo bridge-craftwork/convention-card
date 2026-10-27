@@ -702,7 +702,7 @@ function renderCarding(doc, card, x, y, w) {
     { label: 'Rev',   checked: !!r(card, 'carding.smith_echo_reverse') }
   ], 10)
   cy += 3.4
-  drawLabelValue(doc, x + 1.2, cy, w - 2, 'Trump', r(card, 'carding.trump_signals') || '', 10)
+  drawLabelValue(doc, x + 1.2, cy, w - 2, 'Trump', r(card, 'carding.trump_signals') || (r(card, 'carding.trump_suit_preference') ? 'Suit preference' : ''), 10)
   return h
 }
 

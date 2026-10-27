@@ -164,7 +164,7 @@ whether a tool can see what it says (`textMapping(card)`,
 | differs | spells it out differently: the card's own agreement, which a tool reading the convention misses | "Penalty" for Suction's double |
 | pending | names a convention not ticked (the suggestions) | "Kokish relay" |
 | not mapped | holds an agreement no box holds | "Redouble: denies fit" |
-| cardplay | carding and leads | "Trump suit preference" |
+| cardplay | carding and leads that name no convention (one that does, "Trump suit preference", is mapped or pending) | "Low from a doubleton" |
 
 Two field attributes in `fields.toml` say how a text field relates to the
 boxes: **`explains`** names the field whose agreement it spells out (each bid
@@ -183,11 +183,18 @@ with a convention's standard bids where the library knows them
 (`ntDefenses.js`, matched by exact name only), loosely ("both", "+", "and"
 and "black suits" are spelling).
 
+A few text boxes hold a bid, not prose, and **`bid`** marks them: the level
+an agreement applies through, as a 1NT range bounds an opening. Negative
+doubles through 4♥ are negative over overcalls up to 4♥; a double of 4♠ or
+higher is not (likewise responsive and support doubles, and the takeout
+double of a preempt). "4h", "4H" and "4 ♥" read as 4♥, so cards compare by
+the bid; a box holding a bid is not listed as text, and words in one
+("game") are "not mapped", for a person to put as a bid.
+
 Not yet: the same text shows twice where the Bridgodex import also gathers
 it into a section's notes; marks beside each text box in the card itself,
 not only in the list; and a box (or `implies`) for what the remaining text
-holds (1NT–3♦ both minors, splinters over 1NT, preempt styles, doubles
-"through" levels).
+holds (1NT–3♦ both minors, splinters over 1NT, preempt styles).
 
 #### Describing a convention: summary and sources
 

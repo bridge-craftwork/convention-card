@@ -1,0 +1,9 @@
+id = "defense/trump_suit_preference"
+name = "Trump suit preference"
+source = "proposed"
+level = 6
+names = ["Trump suit preference", "Trump suit-preference", "Trump suit pref", "Trump SP", "Suit preference in trumps", "Suit preference in trump"]
+summary = """
+A defender's spot cards in the trump suit show suit preference, not count:
+a high trump asks for the higher of the side suits, a low one for the lower.
+"""

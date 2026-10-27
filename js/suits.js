@@ -26,3 +26,17 @@ export function normalizeSuitShorthand(text) {
     .replace(/\bD\b/g, '♦')
     .replace(/\bC\b/g, '♣')
 }
+
+const STRAIN = { C: '♣', D: '♦', H: '♥', S: '♠', N: 'NT', NT: 'NT', '♣': '♣', '♦': '♦', '♥': '♥', '♠': '♠', '♢': '♦', '♡': '♥' }
+
+/**
+ * `text` as a bid, written the card's way ("4♥", "3NT"), or null when it is
+ * not one bid: "4♥", "4h", "4H", "4 ♥", "!4H" and "3nt" are all bids; "4♥
+ * unless vulnerable" is not. For fields the spec marks `bid` (negative
+ * doubles through 4♥).
+ */
+export function bidOf(text) {
+  if (typeof text !== 'string') return null
+  const m = /^([1-7])(NT|[CDHSN♣♦♥♠♢♡])$/iu.exec(text.replace(/[\s!]/g, ''))
+  return m ? m[1] + STRAIN[m[2].toUpperCase()] : null
+}
