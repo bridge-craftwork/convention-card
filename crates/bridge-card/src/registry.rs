@@ -161,7 +161,10 @@ fn fold(s: &str) -> String {
 /// `s` as one bid written the card's way ("4♥", "3NT"), or `None`: "4h",
 /// "4H", "4 ♥", "!4H" and "3nt" are bids; "4♥ unless vulnerable" is not.
 fn bid_of(s: &str) -> Option<String> {
-    let t: String = s.chars().filter(|c| !c.is_whitespace() && *c != '!').collect();
+    let t: String = s
+        .chars()
+        .filter(|c| !c.is_whitespace() && *c != '!')
+        .collect();
     let mut chars = t.chars();
     let level = chars.next().filter(|c| ('1'..='7').contains(c))?;
     let strain = match chars.as_str().to_uppercase().as_str() {
@@ -427,8 +430,18 @@ mod tests {
     fn a_bid_field_reads_a_bid_and_keeps_other_text() {
         let f = registry().get("doubles.negative.through").unwrap();
         assert!(f.bid);
-        for (typed, read) in [("4h", "4♥"), ("4 ♥", "4♥"), ("!4S", "4♠"), ("3nt", "3NT"), ("2♦", "2♦")] {
-            assert_eq!(f.normalize(Value::Text(typed.into())), Ok(Value::Text(read.into())), "{typed}");
+        for (typed, read) in [
+            ("4h", "4♥"),
+            ("4 ♥", "4♥"),
+            ("!4S", "4♠"),
+            ("3nt", "3NT"),
+            ("2♦", "2♦"),
+        ] {
+            assert_eq!(
+                f.normalize(Value::Text(typed.into())),
+                Ok(Value::Text(read.into())),
+                "{typed}"
+            );
         }
         let words = Value::Text("4♥ unless vulnerable".into());
         assert_eq!(f.normalize(words.clone()), Ok(words));
