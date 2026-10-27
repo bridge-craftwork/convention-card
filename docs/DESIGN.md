@@ -171,7 +171,12 @@ boxes: **`explains`** names the field whose agreement it spells out (each bid
 of a defence to 1NT, by the defence chosen), so the bid-by-bid lines need
 nothing more once the convention is known, unless they differ; and
 **`implies`** says which box a convention named in it means ("Puppet" as the
-1NT 3♣ response is Puppet Stayman over 1NT, not over 2NT). Import ticks
+1NT 3♣ response is Puppet Stayman over 1NT, not over 2NT). A third, on
+choice fields, **`plays`**, says which option plays a convention (2♥ meaning
+"weak" plays Weak Twos), so text naming Weak Twos on a card whose 2♥ is
+weak needs nothing more; the crate's `names_convention` reads it too. That
+is how the card plays, not a separate agreement: McCabe, after the opponents
+double our weak two, is its own convention and box. Import ticks
 implied boxes on another tool's card (`applyImplied`, reported as it goes),
 not on the editor's own; the suggestions use them too. "Differs" compares
 with a convention's standard bids where the library knows them

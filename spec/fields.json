@@ -1314,7 +1314,10 @@
     "conventional"
    ],
    "skill": "bidding_conventions/weak_2s",
-   "level": 3
+   "level": 3,
+   "plays": {
+    "weak": "bidding_conventions/weak_2s"
+   }
   },
   "two_diamonds.min_hcp": {
    "kind": "int",
@@ -1403,7 +1406,10 @@
     "conventional"
    ],
    "skill": "bidding_conventions/weak_2s",
-   "level": 3
+   "level": 3,
+   "plays": {
+    "weak": "bidding_conventions/weak_2s"
+   }
   },
   "two_hearts.min_hcp": {
    "kind": "int",
@@ -1448,7 +1454,10 @@
     "conventional"
    ],
    "skill": "bidding_conventions/weak_2s",
-   "level": 3
+   "level": 3,
+   "plays": {
+    "weak": "bidding_conventions/weak_2s"
+   }
   },
   "two_spades.min_hcp": {
    "kind": "int",

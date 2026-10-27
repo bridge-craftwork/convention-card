@@ -38,6 +38,9 @@
 #            Once that field is set the text says nothing a tool must read,
 #            unless it differs from the convention (DESIGN.md, "Text on the
 #            card")
+#   plays    (enum fields) { option = convention ID }: the card plays that
+#            convention when the field holds that option (2♥ meaning "weak"
+#            plays Weak Twos), as a yes/no field does when it is on
 #   implies  (text fields) { convention ID = yes/no field }: this text
 #            naming that convention means that box, not just the convention
 #            ("Puppet" as the 1NT 3♣ response is Puppet Stayman over 1NT,
@@ -273,7 +276,7 @@
 "two_clubs.2h_response"    = { kind = "enum", label = "2♣–2♥ response", options = ["negative", "steps"] }
 "two_clubs.kokish"         = { kind = "bool", label = "Kokish relay", skill = "bidding_conventions/kokish", level = 8 }
 "two_clubs.parrish_bust"   = { kind = "bool", label = "Parrish 2♥ bust", skill = "bidding_conventions/two_heart_bust", level = 7 }
-"two_diamonds.meaning"     = { kind = "enum", label = "2♦ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 }
+"two_diamonds.meaning"     = { kind = "enum", label = "2♦ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 , plays = { weak = "bidding_conventions/weak_2s" } }
 "two_diamonds.min_hcp"     = { kind = "int", label = "2♦ range: minimum", min = 0, max = 30 }
 "two_diamonds.max_hcp"     = { kind = "int", label = "2♦ range: maximum", min = 0, max = 30 }
 "two_diamonds.min_length"  = { kind = "int", label = "2♦ minimum length", min = 4, max = 8 }
@@ -285,14 +288,14 @@
 "two_diamonds.mini_roman"  = { kind = "bool", label = "Mini-Roman 2♦", skill = "bidding_conventions/mini_roman_2d", level = 7 }
 "two_diamonds.mini_roman_maxi" = { kind = "bool", label = "Mini-Maxi Roman 2♦: also 19+", desc = "The Mini-Roman 2♦ is either the three-suiter of opening strength (Mini) or a 19+ three-suiter (Maxi), which bids again after responder's sign-off. Off: Mini only", skill = "bidding_conventions/mini_roman_2d", level = 8 }
 "two_diamonds.reverse_flannery" = { kind = "bool", label = "Reverse Flannery 2♦", skill = "bidding_conventions/reverse_flannery", level = 8 }
-"two_hearts.meaning"       = { kind = "enum", label = "2♥ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 }
+"two_hearts.meaning"       = { kind = "enum", label = "2♥ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 , plays = { weak = "bidding_conventions/weak_2s" } }
 "two_hearts.min_hcp"       = { kind = "int", label = "2♥ range: minimum", min = 0, max = 30 }
 "two_hearts.max_hcp"       = { kind = "int", label = "2♥ range: maximum", min = 0, max = 30 }
 "two_hearts.min_length"    = { kind = "int", label = "2♥ minimum length", min = 4, max = 8 }
 "two_hearts.two_suited"    = { kind = "bool", label = "2♥ two-suited" }
 "two_hearts.new_suit_nf"   = { kind = "bool", label = "2♥: new suit non-forcing" }
 "two_hearts.rebids_2nt"    = { kind = "text", label = "2♥: 2NT response", aliases = ["two_level.two_hearts.rebid_2nt"] }
-"two_spades.meaning"       = { kind = "enum", label = "2♠ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 }
+"two_spades.meaning"       = { kind = "enum", label = "2♠ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 , plays = { weak = "bidding_conventions/weak_2s" } }
 "two_spades.min_hcp"       = { kind = "int", label = "2♠ range: minimum", min = 0, max = 30 }
 "two_spades.max_hcp"       = { kind = "int", label = "2♠ range: maximum", min = 0, max = 30 }
 "two_spades.min_length"    = { kind = "int", label = "2♠ minimum length", min = 4, max = 8 }

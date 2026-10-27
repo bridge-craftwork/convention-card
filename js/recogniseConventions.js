@@ -79,15 +79,16 @@ const tail = id => id.slice(id.lastIndexOf('/') + 1)
 /**
  * Whether the card plays convention `id`, as the crate's
  * `Card::names_convention` reads it: one of its yes/no fields is on, or an
- * `other_agreements` entry names it; or, for a convention that is a choice
- * among others (Suction as the defence to 1NT), a choice field holds it.
+ * `other_agreements` entry names it; or a choice field holds an option the
+ * spec says plays it (`plays`: 2♥ meaning "weak" plays Weak Twos), or one
+ * named after it (Suction as the defence to 1NT).
  */
 export function playsConvention(card_data, id, values = cardValues(card_data)) {
   if ((BOOL_FIELDS.get(id) || []).some(p => isOn(values, p))) return true
   const agreements = Array.isArray(card_data?.other_agreements) ? card_data.other_agreements : []
   if (agreements.some(a => a?.id === id)) return true
   const option = tail(id)
-  return [...values].some(([p, v]) => FIELDS[p].kind === 'enum' && v === option)
+  return [...values].some(([p, v]) => FIELDS[p].kind === 'enum' && (v === option || FIELDS[p].plays?.[v] === id))
 }
 
 const dismissedOf = card_data => {
