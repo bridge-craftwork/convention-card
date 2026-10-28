@@ -86,7 +86,10 @@
 "Semi forcing 1NT"          = "major_openings.one_nt_response.semi_forcing"
 "1M-3M blocking"            = "major_openings.jump_raise.weak"
 "1M-3M inviting"            = "major_openings.jump_raise.inv"
-"Mixed raise"               = "major_openings.jump_raise.mixed"
+# "Mixed raise" is advancer's jump cuebid, not 1M-3M: with the key on BBA
+# bids (1C) 1S (X) 3C with four spades and 7-9, with it off 2S; 1S-P is
+# the same either way (rusty-bidding-bot probes, 2026-10-28).
+"Mixed raise"               = "overcalls.responses.jump_cuebid_mixed"
 "Jacoby 2NT"                = "major_openings.jacoby_2nt.play"
 "Bergen"                    = "major_openings.bergen_raises.play"
 "Reverse Bergen"            = "major_openings.bergen_raises.reverse"
