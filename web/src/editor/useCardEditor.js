@@ -43,9 +43,13 @@ import {
 //   covered(skillPath) → boolean       whether practice deals exist for it
 //   mastery(user) → { skillPath: tier } the user's lesson mastery
 //                                       ('Exploring' | 'Learning' | 'Mastering' | 'Retaining')
-//   bot (optional) — a bidding bot that can play the card, for its report
-//                    (components/BotReport.vue):
-//     name                              'Rusty'
+//   practice (optional) — deal collections to practise with, for the Solo
+//                    practice report (components/PracticeReport.vue):
+//     [{ id, name, short, unit?,        'pbs', 'Practice Bidding Scenarios', 'PBS', 'scenarios'
+//        load() → { skills: { skillPath: [{ name, href? }] }, version?, url? } }]
+//                                       the deals it has for each skill, loaded once
+//   bot (optional) — a bidding bot that can play the card, for the same report:
+//     name, short?                      'Rusty', 'R'
 //     info() → { version, rules?, statusUrl? }   which bot this is
 //     coverage(card_data) → { read: [path], ignored: [path], other: [path] }
 //                                       the card's bidding settings its rules

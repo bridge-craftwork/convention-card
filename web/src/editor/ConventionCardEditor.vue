@@ -249,13 +249,13 @@
           Text mapping
         </label>
       </div>
-      <template v-if="bot">
+      <template v-if="hasPractice">
         <div class="control-divider"></div>
         <div class="control-group">
-          <span class="control-label">BOT</span>
-          <label class="overlay-toggle" :title="`Which of this card's conventions ${bot.name || 'the bot'} plays`">
-            <input type="checkbox" v-model="showBotReport" />
-            {{ bot.name || 'Bot' }} report
+          <span class="control-label">PRACTICE</span>
+          <label class="overlay-toggle" title="For each of this card's conventions: the deals to practise it, and whether the bot plays it">
+            <input type="checkbox" v-model="showPracticeReport" />
+            Solo practice
           </label>
         </div>
       </template>
@@ -276,7 +276,8 @@
 
     <OverlayLegend v-if="overlays" :show-coverage="showCoverage" :show-prof="showProf" />
 
-    <BotReport v-if="bot && showBotReport" :card-data="cc.editedCardData.value" :bot="bot" />
+    <PracticeReport v-if="hasPractice && showPracticeReport" :card-data="cc.editedCardData.value"
+                    :bot="props.overlays.bot || null" :practice="props.overlays.practice || []" />
 
     <!-- Main grid -->
     <div v-else class="main-grid">
@@ -327,7 +328,7 @@ import CardTree from './components/CardTree.vue'
 import CardDetail from './components/CardDetail.vue'
 import NoteSuggestions from './components/NoteSuggestions.vue'
 import TextMapping from './components/TextMapping.vue'
-import BotReport from './components/BotReport.vue'
+import PracticeReport from './components/PracticeReport.vue'
 import { importReportNotes } from './importReport.js'
 
 // The convention card editor. Where cards live, and who may edit them, is
@@ -392,12 +393,13 @@ const TEXT_MAPPING_KEY = 'convention-card.text-mapping'
 const showTextMapping = ref((() => { try { return localStorage.getItem(TEXT_MAPPING_KEY) === '1' } catch { return false } })())
 watch(showTextMapping, on => { try { localStorage.setItem(TEXT_MAPPING_KEY, on ? '1' : '0') } catch { /* private mode */ } })
 
-// The host's bidding bot, when it has one (`overlays.bot`): its report takes
-// the place of the card's sections while it is shown.
-const bot = computed(() => props.overlays?.bot || null)
-const BOT_REPORT_KEY = 'convention-card.bot-report'
-const showBotReport = ref((() => { try { return localStorage.getItem(BOT_REPORT_KEY) === '1' } catch { return false } })())
-watch(showBotReport, on => { try { localStorage.setItem(BOT_REPORT_KEY, on ? '1' : '0') } catch { /* private mode */ } })
+// The host's ways to practise alone, when it has any (`overlays.practice`,
+// deal collections, and `overlays.bot`): their report takes the place of the
+// card's sections while it is shown.
+const hasPractice = computed(() => !!(props.overlays?.bot || props.overlays?.practice?.length))
+const PRACTICE_REPORT_KEY = 'convention-card.practice-report'
+const showPracticeReport = ref((() => { try { return localStorage.getItem(PRACTICE_REPORT_KEY) === '1' } catch { return false } })())
+watch(showPracticeReport, on => { try { localStorage.setItem(PRACTICE_REPORT_KEY, on ? '1' : '0') } catch { /* private mode */ } })
 
 // A change made outside the card's own boxes (a suggestion accepted or
 // turned down): into edit mode if need be, then applied as an edit.

@@ -164,6 +164,17 @@ grouping is the library's (`botReport.js`). The "Practice deals" overlay
 (formerly "Solo practice coverage") is another thing: whether a lesson
 collection has deals for a convention, not whether a bot plays it.
 
+The same day it became the **Solo practice** report, since there are three
+ways to practise a card alone: Baker Bridge lessons, PBS scenarios (deal
+collections, which tag their deals with skill IDs: Baker Bridge's PBNs,
+PBS's `btn/-scenario-skills.txt` carried into its manifest as
+`scenarios[name].skills`) and the bot. Each tile carries a mark per
+collection and the bot's status; filters pick out conventions with no
+deals, those the bot doesn't play, and those with no way to practise at
+all. The host supplies the collections (`overlays.practice`, each with
+`load() → { skills: { skillId: [{ name, href? }] } }`) beside the bot; the
+merging is the library's (`practiceReport.js`).
+
 A bot reads boxes, never prose, so the editor can sort a card's text by
 whether a tool can see what it says (`textMapping(card)`,
 `js/textMapping.js`; the editor's **Text mapping** view, off unless ticked):
