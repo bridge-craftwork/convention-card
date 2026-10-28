@@ -353,6 +353,7 @@
 "blackwood.notes"          = { kind = "text", label = "4NT notes", aliases = ["other_conventions.blackwood.notes"] }
 "king_ask.five_nt"         = { kind = "bool", label = "King ask by 5NT", skill = "bidding_conventions/roman_keycard", level = 5, choice = "slam.king_ask" }
 "king_ask.next_step"       = { kind = "bool", label = "King ask by next available bid", skill = "bidding_conventions/roman_keycard", level = 7, choice = "slam.king_ask" }
+"king_ask.specific"        = { kind = "bool", label = "King ask: specific kings", desc = "The king ask is answered by the cheapest side king below six of trumps (six of trumps with none) instead of the number of kings. A new suit below trumps then asks for that king: seven of trumps with it, six of a higher suit below trumps with that king instead, six of trumps with neither. The asker places the grand", skill = "bidding_conventions/roman_keycard", level = 7 }
 "quantitative_4nt.play"    = { kind = "bool", label = "Quantitative 4NT", level = 3 }
 "four_nt_opening.play"     = { kind = "bool", label = "4NT opening (specific aces)", level = 8 }
 "gerber.play"              = { kind = "bool", label = "Gerber", aliases = ["other_conventions.gerber.play"], skill = "bidding_conventions/gerber", level = 3 }
