@@ -31,3 +31,22 @@ describe('botReport', () => {
     expect(byId(r, 'bidding_conventions/kokish')).toMatchObject({ status: 'listed', fields: [] })
   })
 })
+
+describe('botReport with the conventions the bot implements', () => {
+  const coverage = {
+    read: ['doubles.negative.play'],
+    ignored: ['notrump.stayman.forcing', 'doubles.negative.through', 'major_openings.bergen_raises.play'],
+    skills: ['bidding_conventions/stayman', 'competitive_bidding/negative_doubles', 'bidding_conventions/kokish'],
+  }
+  const r = botReport({ other_agreements: [{ id: 'bidding_conventions/kokish', text: 'Kokish' }] }, coverage)
+
+  it('plays a convention it implements, though it ignores a setting of it', () => {
+    expect(byId(r, 'bidding_conventions/stayman')).toMatchObject({ status: 'partial', module: true })
+    expect(byId(r, 'competitive_bidding/negative_doubles')).toMatchObject({ status: 'partial', module: true })
+    expect(byId(r, 'bidding_conventions/kokish')).toMatchObject({ status: 'plays', module: true })
+  })
+
+  it('does not play one it has no module for', () => {
+    expect(byId(r, 'bidding_conventions/bergen_raises')).toMatchObject({ status: 'gap', module: false })
+  })
+})

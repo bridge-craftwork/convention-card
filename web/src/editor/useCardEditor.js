@@ -54,6 +54,9 @@ import {
 //     coverage(card_data) → { read: [path], ignored: [path], other: [path] }
 //                                       the card's bidding settings its rules
 //                                       read and ignore (Rusty's WASM `coverage`)
+//     skills() → [skillPath]            optional: the conventions it implements
+//                                       (Rusty's `conventions` modules), so the
+//                                       report says what it plays, not only reads
 
 const NO_OVERLAYS = { covered: () => false, mastery: async () => ({}) }
 

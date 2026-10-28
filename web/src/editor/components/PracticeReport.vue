@@ -101,7 +101,10 @@ const botShort = computed(() => props.bot?.short || botName.value)
 const botInfo = ref(null)
 const botError = ref('')
 const coverage = ref(null)
+const botSkills = ref(null)
 props.bot?.info().then(i => { botInfo.value = i }).catch(e => { botError.value = e.message || String(e) })
+// The conventions it implements, if it says: what it plays, beside what it reads
+if (props.bot?.skills) props.bot.skills().then(s => { botSkills.value = s }).catch(() => { botSkills.value = [] })
 let timer = null
 let asked = 0
 watch(() => props.cardData, data => {
@@ -133,11 +136,13 @@ const sourceRows = computed(() => [
   }] : []),
 ])
 
-const ready = computed(() => props.practice.every(s => loaded[s.id].loaded) && (!props.bot || coverage.value || botError.value))
+const ready = computed(() => props.practice.every(s => loaded[s.id].loaded)
+  && (!props.bot || ((coverage.value || botError.value) && (!props.bot.skills || botSkills.value))))
 const report = computed(() => {
   if (!props.cardData || !ready.value) return null
   const sources = props.practice.filter(s => loaded[s.id].skills).map(s => ({ id: s.id, name: s.name, skills: loaded[s.id].skills }))
-  return practiceReport(props.cardData, { coverage: coverage.value, sources })
+  const c = coverage.value && (botSkills.value?.length ? { ...coverage.value, skills: botSkills.value } : coverage.value)
+  return practiceReport(props.cardData, { coverage: c, sources })
 })
 const shortOf = id => props.practice.find(s => s.id === id)?.short || id
 
@@ -146,6 +151,7 @@ const shortOf = id => props.practice.find(s => s.id === id)?.short || id
 // deals): 'all', 'some' or 'none'.
 const hasDeals = t => Object.values(t.practice).some(d => d.length)
 const botMisses = t => !!report.value?.bot && t.bot !== null && t.bot !== 'plays'
+const botLacks = t => !!report.value?.bot && (t.bot === 'gap' || t.bot === 'listed' || (t.bot === 'partial' && t.module === undefined))
 function reach(t) {
   if (!t.convention) return t.bot === 'plays' ? 'all' : t.bot === 'partial' ? 'some' : 'none'
   if (hasDeals(t)) return botMisses(t) ? 'some' : 'all'
@@ -154,7 +160,8 @@ function reach(t) {
 const FILTERS = [
   { id: 'all', label: 'Everything', keep: () => true },
   { id: 'nodeals', label: 'No deals', keep: t => t.convention && !hasDeals(t) },
-  { id: 'nobot', label: computed(() => `${botName.value} doesn’t play`), keep: t => botMisses(t), bot: true },
+  { id: 'nobot', label: computed(() => `${botName.value} doesn’t play`), keep: t => botLacks(t), bot: true },
+  { id: 'ignores', label: computed(() => `${botName.value} ignores settings`), keep: t => t.bot === 'partial' && t.module, bot: true },
   { id: 'none', label: 'No way to practise', keep: t => t.convention && reach(t) === 'none' },
 ]
 const keep = id => FILTERS.find(f => f.id === id).keep
@@ -170,6 +177,11 @@ function nameOf(t) {
 }
 function botTitle(t) {
   const n = t.fields.filter(f => f.read).length
+  if (t.module === true) {
+    if (t.bot === 'plays') return t.fields.length ? `Plays it, and reads ${t.fields.length > 1 ? `all ${t.fields.length} settings` : 'its setting'}` : 'Plays it'
+    return `Plays it, but ignores ${t.fields.length - n} of the card’s ${t.fields.length} settings of it`
+  }
+  if (t.module === false && !n) return t.fields.length ? `Doesn’t play it (no rules for it; ignores ${t.fields.length > 1 ? `its ${t.fields.length} settings` : 'its setting'})` : 'Doesn’t play it (no rules for it)'
   if (t.bot === 'listed') return `Named in other agreements: ${botName.value} has no setting to read`
   if (t.bot === 'plays') return t.fields.length > 1 ? `Reads all ${t.fields.length} settings` : 'Reads it'
   if (t.bot === 'gap') return t.fields.length > 1 ? `Reads none of its ${t.fields.length} settings` : 'Does not read it'
