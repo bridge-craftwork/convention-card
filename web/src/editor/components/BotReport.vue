@@ -108,10 +108,14 @@ const FILTERS = [
   { id: 'all', label: 'Everything', keep: () => true },
 ]
 const keep = id => FILTERS.find(f => f.id === id).keep
-const countOf = id => report.value?.tiles.filter(t => t.convention).filter(keep(id)).length ?? 0
+const countOf = id => report.value?.tiles.filter(keep(id)).length ?? 0
 
 const SECTION_LABELS = Object.fromEntries(SECTION_META.map(s => [s.id, s.label]))
-const nameOf = t => (t.convention ? t.name : `Other ${SECTION_LABELS[t.id.slice(8)] || t.name.replace(/^Other | settings$/g, '')}`)
+function nameOf(t) {
+  if (t.convention) return t.name
+  const section = SECTION_LABELS[t.id.slice('section:'.length)] || t.name.replace(/^Other | settings$/g, '')
+  return /^other\b/i.test(section) ? section : `Other ${section}`
+}
 function tileTitle(t) {
   const n = t.fields.filter(f => f.read).length
   if (t.status === 'listed') return `Named in other agreements: ${botName.value} has no setting to read`
