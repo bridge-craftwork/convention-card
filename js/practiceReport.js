@@ -19,14 +19,25 @@ import { cardValues } from './checkCard.js'
  * ('plays' | 'partial' | 'gap' | 'listed', null with no bot) and `practice`,
  * `{ sourceId: [{ name, href? }] }`, the deals each collection has for it.
  * Settings of no one convention (tiles `section:…`) come only from the bot.
+ * `coverage.skills`, the conventions the bot implements, makes `bot` say
+ * whether it plays a convention, not only what it reads of it (botReport).
  */
+const PLAY = /^(defense|declarer_play)\//
+
 export function practiceReport(card_data, { coverage = null, sources = [] } = {}) {
   const bot = coverage ? botReport(card_data, coverage) : null
   const tiles = new Map((bot?.tiles || []).map(t => [t.id, { ...t, bot: t.status }]))
   const values = cardValues(card_data)
+  const implemented = coverage?.skills ? new Set(coverage.skills) : null
   for (const [id, c] of Object.entries(CONVENTIONS)) {
     if (tiles.has(id) || !playsConvention(card_data, id, values)) continue
-    tiles.set(id, { id, name: c.name || id, convention: true, level: c.level ?? null, band: levelBand(c.level)?.name || 'other', fields: [], bot: null })
+    // No bidding setting of it for the bot to read: whether it implements
+    // it, if it says (cardplay is not a bidding bot's)
+    const module = implemented && !PLAY.test(id) ? implemented.has(id) : null
+    tiles.set(id, {
+      id, name: c.name || id, convention: true, level: c.level ?? null, band: levelBand(c.level)?.name || 'other', fields: [],
+      bot: module === null ? null : module ? 'plays' : 'gap', ...(module === null ? {} : { module }),
+    })
   }
   for (const t of tiles.values()) {
     delete t.status

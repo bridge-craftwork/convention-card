@@ -5,6 +5,10 @@
 // on); this groups them by the convention each belongs to, so a person sees
 // "Bergen raises: plays it" rather than a list of paths. Conventions the
 // card lists only by name (`other_agreements`) have no setting to read.
+// What the bot reads is not what it plays: it may play Stayman and ignore
+// "Stayman is forcing". When the bot also says which conventions it
+// implements (`skills`: Rusty's `conventions` modules name theirs), a
+// convention it implements counts as played, whatever it ignores of it.
 
 import { FIELDS, CONVENTIONS, levelBand } from './spec.js'
 
@@ -13,17 +17,22 @@ const humanise = s => s.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())
 
 /**
  * The bot's coverage of `card_data` by convention. `coverage` is the bot's
- * answer for this card: `{ read: [path], ignored: [path], other?: [path] }`.
+ * answer for this card: `{ read: [path], ignored: [path], other?: [path],
+ * skills?: [skillId] }`, `skills` the conventions it implements.
  * Returns `{ read, total, score, other, tiles }`: `read` of `total` bidding
  * settings, `other` the cardplay and notes the bot leaves to people, and
  * `tiles`, one per convention (or, for settings of no convention, per card
  * section), by level, then the most needing attention, then name:
  * `{ id, name, convention, level, band, status, fields: [{ path, label, read }] }`.
  * `status` is 'plays' (every setting read), 'partial', 'gap' (none read)
- * or 'listed' (named in other agreements, nothing to read).
+ * or 'listed' (named in other agreements, nothing to read). With `skills`,
+ * a tile also has `module` (whether the bot implements the convention): one
+ * it implements is 'plays', or 'partial' if it ignores some settings of it,
+ * and one it doesn't is never 'plays'.
  */
 export function botReport(card_data, coverage) {
   const read = new Set(coverage?.read || [])
+  const implemented = coverage?.skills ? new Set(coverage.skills) : null
   const paths = [...read, ...(coverage?.ignored || [])]
   const tiles = new Map()
   const tile = (id, convention) => {
@@ -53,9 +62,16 @@ export function botReport(card_data, coverage) {
     tile(a.id, true).status = 'listed'
   }
   for (const t of tiles.values()) {
-    if (t.status) continue
     const n = t.fields.filter(f => f.read).length
-    t.status = n === t.fields.length ? 'plays' : n ? 'partial' : 'gap'
+    const module = implemented && t.convention ? implemented.has(t.id) : null
+    if (module !== null) t.module = module
+    if (t.status === 'listed') {
+      if (module) t.status = 'plays'
+    } else if (module === null) {
+      t.status = n === t.fields.length ? 'plays' : n ? 'partial' : 'gap'
+    } else {
+      t.status = module ? (n === t.fields.length ? 'plays' : 'partial') : n ? 'partial' : 'gap'
+    }
   }
   const ORDER = { gap: 0, partial: 1, listed: 2, plays: 3 }
   const sorted = [...tiles.values()].sort((a, b) =>
