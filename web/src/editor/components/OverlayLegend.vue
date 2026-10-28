@@ -3,7 +3,7 @@
     <span class="legend-label">Legend:</span>
     <span v-if="showCoverage" class="legend-item">
       <span class="bar bar-coverage"></span>
-      Covered in solo practice
+      Has practice deals
     </span>
     <template v-if="showProf">
       <span class="legend-item"><span class="bar bar-prof-none"></span>Not started</span>
