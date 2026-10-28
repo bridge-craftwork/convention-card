@@ -117,7 +117,6 @@
     },
     "jump_raise": {
       "inv": true,
-      "mixed": false,
       "weak": false
     },
     "min_length_1st_2nd": "5",
@@ -226,6 +225,7 @@
   },
   "overcalls": {
     "responses": {
+      "jump_cuebid_mixed": false,
       "natural_in_responders_suit": false
     }
   },
