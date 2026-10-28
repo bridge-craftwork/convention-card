@@ -43,6 +43,13 @@ import {
 //   covered(skillPath) → boolean       whether practice deals exist for it
 //   mastery(user) → { skillPath: tier } the user's lesson mastery
 //                                       ('Exploring' | 'Learning' | 'Mastering' | 'Retaining')
+//   bot (optional) — a bidding bot that can play the card, for its report
+//                    (components/BotReport.vue):
+//     name                              'Rusty'
+//     info() → { version, rules?, statusUrl? }   which bot this is
+//     coverage(card_data) → { read: [path], ignored: [path], other: [path] }
+//                                       the card's bidding settings its rules
+//                                       read and ignore (Rusty's WASM `coverage`)
 
 const NO_OVERLAYS = { covered: () => false, mastery: async () => ({}) }
 

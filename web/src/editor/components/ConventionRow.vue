@@ -11,7 +11,7 @@
       <div class="row-headline">
         <span class="row-name" :class="formClass">
           {{ entry.name }}
-          <span v-if="showCoverage && status.covered" class="bar bar-coverage" title="Covered in solo practice"></span>
+          <span v-if="showCoverage && status.covered" class="bar bar-coverage" title="Has practice deals"></span>
           <span v-if="showProf" class="bar" :class="profClass" :title="profLabel"></span>
         </span>
         <span

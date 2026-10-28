@@ -153,6 +153,17 @@ count. On two of Rick's Bridgodex cards, after the suggestions above, Rusty
 reads 45% and 41% of the bidding settings; what it ignores is its work list
 (the weak notrump, inverted minors, Modified Jacoby 2NT first).
 
+*2026-10-28.* The editor shows this as a **bot report**, a view of its own
+modelled on Rusty's status page: the bot's version, the share it reads, and
+one tile per convention the card plays (plays it, some settings, not read,
+named only), by level band, with a filter for what needs work and a link to
+the convention on the status page. The host supplies the bot
+(`overlays.bot`: `info()` and `coverage(card_data)`, Rusty's WASM call in
+Bridge Classroom); the standalone editor has none and shows no report. The
+grouping is the library's (`botReport.js`). The "Practice deals" overlay
+(formerly "Solo practice coverage") is another thing: whether a lesson
+collection has deals for a convention, not whether a bot plays it.
+
 A bot reads boxes, never prose, so the editor can sort a card's text by
 whether a tool can see what it says (`textMapping(card)`,
 `js/textMapping.js`; the editor's **Text mapping** view, off unless ticked):

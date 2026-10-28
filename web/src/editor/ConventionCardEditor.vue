@@ -249,12 +249,22 @@
           Text mapping
         </label>
       </div>
+      <template v-if="bot">
+        <div class="control-divider"></div>
+        <div class="control-group">
+          <span class="control-label">BOT</span>
+          <label class="overlay-toggle" :title="`Which of this card's conventions ${bot.name || 'the bot'} plays`">
+            <input type="checkbox" v-model="showBotReport" />
+            {{ bot.name || 'Bot' }} report
+          </label>
+        </div>
+      </template>
       <div v-if="overlays" class="control-divider"></div>
       <div v-if="overlays" class="control-group">
         <span class="control-label">OVERLAYS</span>
         <label class="overlay-toggle">
           <input type="checkbox" v-model="showCoverage" />
-          Solo practice coverage
+          Practice deals
         </label>
         <label class="overlay-toggle" :class="{ disabled: !isAuthed }">
           <input type="checkbox" v-model="showProf" :disabled="!isAuthed" />
@@ -266,8 +276,10 @@
 
     <OverlayLegend v-if="overlays" :show-coverage="showCoverage" :show-prof="showProf" />
 
+    <BotReport v-if="bot && showBotReport" :card-data="cc.editedCardData.value" :bot="bot" />
+
     <!-- Main grid -->
-    <div class="main-grid">
+    <div v-else class="main-grid">
       <CardTree
         :active-section="activeSection"
         :section-counts="sectionCounts"
@@ -315,6 +327,7 @@ import CardTree from './components/CardTree.vue'
 import CardDetail from './components/CardDetail.vue'
 import NoteSuggestions from './components/NoteSuggestions.vue'
 import TextMapping from './components/TextMapping.vue'
+import BotReport from './components/BotReport.vue'
 import { importReportNotes } from './importReport.js'
 
 // The convention card editor. Where cards live, and who may edit them, is
@@ -378,6 +391,13 @@ const isEditable = cc.isEditable
 const TEXT_MAPPING_KEY = 'convention-card.text-mapping'
 const showTextMapping = ref((() => { try { return localStorage.getItem(TEXT_MAPPING_KEY) === '1' } catch { return false } })())
 watch(showTextMapping, on => { try { localStorage.setItem(TEXT_MAPPING_KEY, on ? '1' : '0') } catch { /* private mode */ } })
+
+// The host's bidding bot, when it has one (`overlays.bot`): its report takes
+// the place of the card's sections while it is shown.
+const bot = computed(() => props.overlays?.bot || null)
+const BOT_REPORT_KEY = 'convention-card.bot-report'
+const showBotReport = ref((() => { try { return localStorage.getItem(BOT_REPORT_KEY) === '1' } catch { return false } })())
+watch(showBotReport, on => { try { localStorage.setItem(BOT_REPORT_KEY, on ? '1' : '0') } catch { /* private mode */ } })
 
 // A change made outside the card's own boxes (a suggestion accepted or
 // turned down): into edit mode if need be, then applied as an edit.
