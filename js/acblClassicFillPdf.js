@@ -20,6 +20,7 @@
 import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFDict, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
+import { cardValues } from './checkCard.js'
 import { TEMPLATE_INK } from './acblTemplateInk.js'
 import { loadTemplate, loadFont } from './assets.js'
 
@@ -2024,13 +2025,9 @@ function isCheckOn(entry, value) {
 export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false } = {}) {
   const pdf = await buildAcblPdf(card, templateName)
   finalizeForm(pdf, templateName, { flatten })
-  // Draw red ellipses around the user's chosen lead cards for the New
-  // template. The Classic template represents leads via form-field
-  // checkboxes (4th/3rd5/3rdLow) rather than circle-the-card markings,
-  // so we skip this step there.
-  if (templateName === 'new') {
-    drawLeadCircles(pdf, card)
-  }
+  // Red ellipses around the card led from each holding: both templates
+  // have a "circle card led" grid, with no form field for it.
+  drawLeadCircles(pdf, card, templateName)
   return pdf.save()
 }
 
@@ -2042,7 +2039,7 @@ export async function downloadAcblPdf(card, templateName = 'classic', { flatten 
 /** Backwards-compatible alias — defaults to the Classic template. */
 export const downloadAcblClassicPdf = (card) => downloadAcblPdf(card, 'classic')
 
-// ─── Lead-card circling (New template only) ──────────────────────
+// ─── Lead-card circling (both templates) ─────────────────────────
 // Coordinates were extracted from the New template's content stream
 // via pdfplumber. Each entry maps pattern key → array of (x, y) pairs
 // for character positions 1..N, expressed in pdf-lib's bottom-up
@@ -2115,18 +2112,74 @@ const LEAD_COORDS_NEW = {
   }
 }
 
+// The Classic (2023 SS1B) template's grid, from its text positions
+// (pdftotext -bbox): each row's top in top-down points, and each holding's
+// character centres. The Classic prints a slightly different set of
+// holdings from the New: JT9 for JTx, AKJx for AKxx(+), AJT9 for AJTx; no
+// Hxx rows, and no KT9x against notrump. A choice with no place on it is
+// left out (the card itself, inside the PDF, still has it).
+const CLASSIC_PAGE_H = 612
+const CLASSIC_ROW = [430.5, 442.0, 453.5, 465.0, 476.5, 488.0, 499.5]
+// Text centre below a row's top: tuned against renders.
+const CLASSIC_Y_DROP = 6.3
+const classicRow = (row, xs) => xs.map(x => ({ x, y: CLASSIC_PAGE_H - CLASSIC_ROW[row] - CLASSIC_Y_DROP }))
+const LEAD_COORDS_CLASSIC = {
+  vs_suits: {
+    length: {
+      xx:    classicRow(0, [9.0, 16.4]),
+      xxx:   classicRow(1, [9.0, 16.4, 23.7]),
+      xxxx:  classicRow(0, [45.0, 52.4, 59.7, 67.1]),
+      xxxxx: classicRow(1, [45.0, 52.4, 59.7, 67.1, 73.7]),
+    },
+    honors: {
+      akx:   classicRow(2, [9.0, 18.0, 27.0]),
+      t9x:   classicRow(2, [45.0, 54.0, 63.0]),
+      kqx:   classicRow(3, [9.0, 18.0, 27.0]),
+      kjtx:  classicRow(3, [45.0, 54.0, 63.0, 72.0]),
+      qjx:   classicRow(4, [9.0, 18.0, 27.0]),
+      kt9x:  classicRow(4, [45.0, 54.1, 63.1, 72.0]),
+      jtx:   classicRow(5, [9.0, 18.0, 26.8]),
+      qt9x:  classicRow(5, [45.1, 54.1, 63.1, 72.0]),
+    },
+  },
+  vs_nt: {
+    length: {
+      xx:    classicRow(0, [84.0, 91.4]),
+      xxx:   classicRow(1, [84.0, 91.4, 98.7]),
+      xxxx:  classicRow(0, [129.0, 136.4, 143.7, 151.1]),
+      xxxxx: classicRow(1, [129.0, 135.6, 142.2, 148.9, 155.5]),
+    },
+    honors: {
+      akxx:  classicRow(2, [84.0, 93.0, 102.0, 111.0]),
+      aqjx:  classicRow(2, [129.0, 138.1, 147.0, 156.0]),
+      ajtx:  classicRow(3, [84.0, 93.0, 102.0, 110.7]),
+      kqjx:  classicRow(4, [84.0, 93.1, 102.0, 111.0]),
+      kqt9:  classicRow(4, [129.0, 138.1, 147.1, 156.1]),
+      qjtx:  classicRow(5, [84.1, 93.0, 102.1, 111.0]),
+      qt9x:  classicRow(5, [129.1, 138.1, 147.1, 156.0]),
+      jt9x:  classicRow(6, [84.0, 93.0, 102.0, 111.0]),
+    },
+  },
+}
+
 /**
  * Walk the card's lead_choice_* paths and draw red ellipses around
- * each user-chosen lead position. Only invoked for the New template.
+ * each user-chosen lead position, on either template. Values are read as
+ * the spec reads them, so a card holding the old `lead_choice_KT9x`
+ * spelling (an alias) is circled too. Returns what it drew:
+ * `[{ side, type, pattern, n }]`.
  *
  * Card data shape: `leads.vs_suits.length.lead_choice_xxxx = 3` means
  * the user leads the 3rd card in an "xxxx" length-lead pattern; we
  * draw an oval around that character on the page.
  */
-function drawLeadCircles(pdf, card) {
+export function drawLeadCircles(pdf, card, templateName = 'new') {
   const page = pdf.getPages()[0]
   const cardData = card?.card_data
   if (!cardData) return
+  const classic = templateName === 'classic'
+  const coords = classic ? LEAD_COORDS_CLASSIC : LEAD_COORDS_NEW
+  const values = cardValues(cardData)
 
   const red = rgb(0.78, 0.10, 0.12)
   const drawn = []
@@ -2134,10 +2187,10 @@ function drawLeadCircles(pdf, card) {
   const seen = []
   for (const side of ['vs_suits', 'vs_nt']) {
     for (const type of ['length', 'honors']) {
-      const patterns = LEAD_COORDS_NEW[side]?.[type]
+      const patterns = coords[side]?.[type]
       if (!patterns) continue
       for (const [pattern, positions] of Object.entries(patterns)) {
-        const choice = readPath(cardData, `leads.${side}.${type}.lead_choice_${pattern}`)
+        const choice = values.get(`leads.${side}.${type}.lead_choice_${pattern}`)
         seen.push({ side, type, pattern, choice })
         const n = Number(choice)
         if (!Number.isFinite(n) || n < 1 || n > positions.length) {
@@ -2148,10 +2201,13 @@ function drawLeadCircles(pdf, card) {
         }
         const coord = positions[n - 1]
         page.drawEllipse({
-          x: coord.x + CHAR_HALF_W, // pdfplumber gave LEFT edge; shift to char center
-          y: coord.y + Y_OFFSET,    // correct for slightly-overshot character-height estimate
-          xScale: 3.0,
-          yScale: 4.8,              // tall-aspect ellipse approximates a vertical racetrack
+          // New: pdfplumber gave the LEFT edge, so shift to the char center,
+          // and correct a slightly-overshot character-height estimate.
+          // Classic: centres already, and larger type.
+          x: classic ? coord.x : coord.x + CHAR_HALF_W,
+          y: classic ? coord.y : coord.y + Y_OFFSET,
+          xScale: classic ? 3.6 : 3.0,
+          yScale: classic ? 5.4 : 4.8, // tall-aspect ellipse approximates a vertical racetrack
           borderColor: red,
           borderWidth: 0.6
         })
@@ -2187,6 +2243,7 @@ function drawLeadCircles(pdf, card) {
   } else {
     console.log('  (no _bridgeodex_raw on this card)')
   }
+  return drawn
 }
 
 /**
