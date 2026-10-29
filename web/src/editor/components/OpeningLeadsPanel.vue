@@ -109,6 +109,7 @@
 <script setup>
 import RichSuitField from './RichSuitField.vue'
 import PatternSelector from './PatternSelector.vue'
+import { ledCards, ledValue } from '../../../../js/leads.js'
 
 const COLUMNS = [
   { key: 'vs_suits', label: 'vs Suit contracts' },
@@ -184,13 +185,15 @@ const oldLeadPath = (side, group, key) => `leads.${side}.${group}.lead_choice_${
 function leadChoice(side, group, key) {
   return r(leadPath(side, group, key)) ?? r(oldLeadPath(side, group, key))
 }
+// A click circles a card or, if circled, uncircles it: a partnership that
+// leads either the A or the K from AKx circles both ([1, 2]).
 function pickLead(side, group, key, idx) {
   if (!props.editable) return
-  // Click an already-selected card to clear (toggle off)
-  const current = leadChoice(side, group, key)
+  const current = ledCards(leadChoice(side, group, key))
   const old = oldLeadPath(side, group, key)
   if (old !== leadPath(side, group, key) && r(old) !== undefined) props.writeField(old, undefined)
-  props.writeField(leadPath(side, group, key), current === idx ? null : idx)
+  const next = current.includes(idx) ? current.filter(n => n !== idx) : [...current, idx]
+  props.writeField(leadPath(side, group, key), ledValue(next))
 }
 
 function lengthPatterns(col) {

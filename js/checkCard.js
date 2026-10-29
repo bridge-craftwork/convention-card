@@ -33,6 +33,14 @@ export function checkValue(def, value) {
     case 'bool':
       return typeof value === 'boolean' ? { value } : { problem: `expected yes/no (true or false), found ${found}` }
     case 'int':
+      // A `many` field may hold a list (the cards led from a holding: [1, 2])
+      if (def.many && Array.isArray(value)) {
+        for (const v of value) {
+          const one = checkValue({ ...def, many: false }, v)
+          if (one.problem) return one
+        }
+        return { value }
+      }
       if (!Number.isInteger(value)) return { problem: `expected a whole number, found ${found}` }
       if ((def.min != null && value < def.min) || (def.max != null && value > def.max)) {
         return { problem: `${value} is outside ${def.min ?? ''}..${def.max ?? ''}` }

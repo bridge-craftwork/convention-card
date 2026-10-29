@@ -538,6 +538,29 @@ mod tests {
     }
 
     #[test]
+    fn a_lead_choice_may_name_several_cards() {
+        // The A or the K from AKx; a card out of the holding is reported
+        let text = r#"{"leads": {"vs_suits": {"honors": {"lead_choice_akx": [1, 2], "lead_choice_kqx": [1, 4]}}}}"#;
+        let (card, report) = Card::from_json(crate::test_vocabulary(), text).unwrap();
+        assert_eq!(
+            card.get("leads.vs_suits.honors.lead_choice_akx"),
+            Some(&Value::Ints(vec![1, 2]))
+        );
+        assert_eq!(report.invalid.len(), 1);
+        assert_eq!(
+            card.to_json()["leads"]["vs_suits"]["honors"]["lead_choice_akx"],
+            serde_json::json!([1, 2])
+        );
+        // A field without `many` holds one number
+        let (_, report) = Card::from_json(
+            crate::test_vocabulary(),
+            r#"{"notrump": {"one_nt": {"range_min": [15, 16]}}}"#,
+        )
+        .unwrap();
+        assert_eq!(report.invalid.len(), 1);
+    }
+
+    #[test]
     fn json_round_trip_keeps_unknown_leaves() {
         let text = r#"{"notrump": {"stayman": {"play": true, "mystery": 3}},
                        "metadata": {"name": "Test"}}"#;

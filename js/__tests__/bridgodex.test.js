@@ -130,6 +130,14 @@ describe('exportBridgodexJson', () => {
     expect(exportBridgodexJson(c).settings.leads_vs_suits).toEqual({ honor_leads_AKx: 2 })
   })
 
+  it('exports the first of several cards led, as Bridgodex holds one', () => {
+    const { card_data: c } = importBridgeodexJson(bdex({ leads_vs_suits: { honor_leads_AKx: 2 } }))
+    c.leads.vs_suits.honors.lead_choice_akx = [2, 1]
+    expect(exportBridgodexJson(c).settings.leads_vs_suits).toEqual({ honor_leads_AKx: 1 })
+    c.leads.vs_suits.honors.lead_choice_akx = [2]
+    expect(exportBridgodexJson(c).settings.leads_vs_suits).toEqual({ honor_leads_AKx: 2 })
+  })
+
   it('exports a card made elsewhere, which reads back with the same agreements', () => {
     const card = {
       general: { system: '2/1 GF' },

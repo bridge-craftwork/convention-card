@@ -31,4 +31,12 @@ describe('drawLeadCircles', () => {
     const drawn = drawLeadCircles(await template('new'), card, 'new')
     expect(drawn.map(d => `${d.side}.${d.pattern}.${d.n}`).sort()).toEqual(['vs_nt.kt9x.3', 'vs_nt.qt9x.3', 'vs_nt.xxx.2', 'vs_suits.xxxx.2'])
   })
+
+  it('circles each card of a holding led either way (the A and the K of AKx)', async () => {
+    const both = { card_data: { leads: { vs_suits: { honors: { lead_choice_akx: [1, 2] } }, vs_nt: { honors: { lead_choice_akxx: [2, 1] } } } } }
+    for (const name of ['classic', 'new']) {
+      const drawn = drawLeadCircles(await template(name), both, name)
+      expect(drawn.map(d => `${d.side}.${d.pattern}.${d.n}`).sort()).toEqual(['vs_nt.akxx.1', 'vs_nt.akxx.2', 'vs_suits.akx.1', 'vs_suits.akx.2'])
+    }
+  })
 })

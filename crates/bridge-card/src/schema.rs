@@ -61,12 +61,20 @@ fn leaf(field: &FieldDef) -> Json {
             s.insert("type".into(), "boolean".into());
         }
         FieldKind::Int => {
-            s.insert("type".into(), "integer".into());
+            let mut int = Map::new();
+            int.insert("type".into(), "integer".into());
             if let Some(min) = field.min {
-                s.insert("minimum".into(), min.into());
+                int.insert("minimum".into(), min.into());
             }
             if let Some(max) = field.max {
-                s.insert("maximum".into(), max.into());
+                int.insert("maximum".into(), max.into());
+            }
+            if field.many {
+                // One, or a list (the A and the K of AKx)
+                let list = serde_json::json!({ "type": "array", "items": int });
+                s.insert("oneOf".into(), vec![Json::Object(int), list].into());
+            } else {
+                s.extend(int);
             }
         }
         FieldKind::Enum => {

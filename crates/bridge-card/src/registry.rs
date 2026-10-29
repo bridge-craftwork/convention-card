@@ -18,13 +18,16 @@ pub enum FieldKind {
     Text,
 }
 
-/// A value stored on a card. Enum values are stored as `Text`.
+/// A value stored on a card. Enum values are stored as `Text`; `Ints` is
+/// a list for an int field that allows one (`many`: the cards led from a
+/// holding, the A or the K from AKx).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Value {
     Bool(bool),
     Int(i64),
     Text(String),
+    Ints(Vec<i64>),
 }
 
 impl fmt::Display for Value {
@@ -33,6 +36,7 @@ impl fmt::Display for Value {
             Value::Bool(b) => write!(f, "{b}"),
             Value::Int(i) => write!(f, "{i}"),
             Value::Text(s) => write!(f, "{s:?}"),
+            Value::Ints(v) => write!(f, "{v:?}"),
         }
     }
 }
@@ -43,6 +47,11 @@ impl Value {
             serde_json::Value::Bool(b) => Some(Value::Bool(*b)),
             serde_json::Value::Number(n) => n.as_i64().map(Value::Int),
             serde_json::Value::String(s) => Some(Value::Text(s.clone())),
+            serde_json::Value::Array(a) => a
+                .iter()
+                .map(serde_json::Value::as_i64)
+                .collect::<Option<Vec<_>>>()
+                .map(Value::Ints),
             _ => None,
         }
     }
@@ -52,6 +61,7 @@ impl Value {
             Value::Bool(b) => (*b).into(),
             Value::Int(i) => (*i).into(),
             Value::Text(s) => s.clone().into(),
+            Value::Ints(v) => v.clone().into(),
         }
     }
 
@@ -79,6 +89,11 @@ pub struct FieldDef {
     pub min: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub max: Option<i64>,
+    /// For an int: the value may also be a list of them, each in bounds
+    /// (the cards a partnership leads from a holding, when it leads
+    /// either: `[1, 2]`, the A or the K from AKx).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub many: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub default: Option<Value>,
     /// Older paths that load into this field.
@@ -191,6 +206,12 @@ impl FieldDef {
                 } else {
                     Ok(Value::Int(i))
                 }
+            }
+            (FieldKind::Int, Value::Ints(v)) if self.many => {
+                for &i in &v {
+                    self.normalize(Value::Int(i))?;
+                }
+                Ok(Value::Ints(v))
             }
             (FieldKind::Enum, Value::Int(i)) => self.normalize(Value::Text(i.to_string())),
             (FieldKind::Enum, Value::Text(s)) => {

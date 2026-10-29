@@ -3218,6 +3218,7 @@
   },
   "vs_suits.honors.lead_choice_akx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from AKx",
    "min": 1,
    "max": 3,
@@ -3228,6 +3229,7 @@
   },
   "vs_suits.length.lead_choice_xx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from xx",
    "min": 1,
    "max": 2,
@@ -3235,6 +3237,7 @@
   },
   "vs_suits.length.lead_choice_xxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from xxx",
    "min": 1,
    "max": 3,
@@ -3242,6 +3245,7 @@
   },
   "vs_suits.length.lead_choice_xxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from xxxx",
    "min": 1,
    "max": 4,
@@ -3249,6 +3253,7 @@
   },
   "vs_suits.length.lead_choice_xxxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from xxxxx",
    "min": 1,
    "max": 5,
@@ -3256,6 +3261,7 @@
   },
   "vs_suits.length.lead_choice_hxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from Hxx",
    "min": 1,
    "max": 3,
@@ -3266,6 +3272,7 @@
   },
   "vs_suits.length.lead_choice_hxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from Hxxx",
    "min": 1,
    "max": 4,
@@ -3276,6 +3283,7 @@
   },
   "vs_suits.length.lead_choice_hxxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from Hxxxx",
    "min": 1,
    "max": 5,
@@ -3286,6 +3294,7 @@
   },
   "vs_suits.honors.lead_choice_kqx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from KQx",
    "min": 1,
    "max": 3,
@@ -3296,6 +3305,7 @@
   },
   "vs_suits.honors.lead_choice_qjx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from QJx",
    "min": 1,
    "max": 3,
@@ -3306,6 +3316,7 @@
   },
   "vs_suits.honors.lead_choice_jtx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from JTx",
    "min": 1,
    "max": 3,
@@ -3316,6 +3327,7 @@
   },
   "vs_suits.honors.lead_choice_t9x": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from T9x",
    "min": 1,
    "max": 3,
@@ -3326,6 +3338,7 @@
   },
   "vs_suits.honors.lead_choice_kjtx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from KJTx",
    "min": 1,
    "max": 4,
@@ -3336,6 +3349,7 @@
   },
   "vs_suits.honors.lead_choice_kt9x": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from KT9x",
    "min": 1,
    "max": 4,
@@ -3346,6 +3360,7 @@
   },
   "vs_suits.honors.lead_choice_qt9x": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs suits from QT9x",
    "min": 1,
    "max": 4,
@@ -3356,6 +3371,7 @@
   },
   "vs_nt.length.lead_choice_xx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from xx",
    "min": 1,
    "max": 2,
@@ -3363,6 +3379,7 @@
   },
   "vs_nt.length.lead_choice_xxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from xxx",
    "min": 1,
    "max": 3,
@@ -3370,6 +3387,7 @@
   },
   "vs_nt.length.lead_choice_xxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from xxxx",
    "min": 1,
    "max": 4,
@@ -3377,6 +3395,7 @@
   },
   "vs_nt.length.lead_choice_xxxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from xxxxx",
    "min": 1,
    "max": 5,
@@ -3384,6 +3403,7 @@
   },
   "vs_nt.length.lead_choice_hxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from Hxx",
    "min": 1,
    "max": 3,
@@ -3394,6 +3414,7 @@
   },
   "vs_nt.length.lead_choice_hxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from Hxxx",
    "min": 1,
    "max": 4,
@@ -3404,6 +3425,7 @@
   },
   "vs_nt.length.lead_choice_hxxxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from Hxxxx",
    "min": 1,
    "max": 5,
@@ -3414,6 +3436,7 @@
   },
   "vs_nt.honors.lead_choice_akxx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from AKxx",
    "min": 1,
    "max": 4,
@@ -3424,6 +3447,7 @@
   },
   "vs_nt.honors.lead_choice_kqjx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from KQJx",
    "min": 1,
    "max": 4,
@@ -3434,6 +3458,7 @@
   },
   "vs_nt.honors.lead_choice_kqt9": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from KQT9",
    "min": 1,
    "max": 4,
@@ -3444,6 +3469,7 @@
   },
   "vs_nt.honors.lead_choice_qjtx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from QJTx",
    "min": 1,
    "max": 4,
@@ -3454,6 +3480,7 @@
   },
   "vs_nt.honors.lead_choice_jt9x": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from JT9x",
    "min": 1,
    "max": 4,
@@ -3464,6 +3491,7 @@
   },
   "vs_nt.honors.lead_choice_aqjx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from AQJx",
    "min": 1,
    "max": 4,
@@ -3474,6 +3502,7 @@
   },
   "vs_nt.honors.lead_choice_ajtx": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from AJTx",
    "min": 1,
    "max": 4,
@@ -3484,6 +3513,7 @@
   },
   "vs_nt.honors.lead_choice_kt9x": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from KT9x",
    "min": 1,
    "max": 4,
@@ -3494,6 +3524,7 @@
   },
   "vs_nt.honors.lead_choice_qt9x": {
    "kind": "int",
+   "many": true,
    "label": "Lead vs NT from QT9x",
    "min": 1,
    "max": 4,

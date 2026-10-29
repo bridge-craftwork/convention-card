@@ -211,6 +211,19 @@ describe('importBboJson', () => {
     expect(c.leads.vs_nt.length.lead_choice_xxxx).toBe(3)     // bare digit position
   })
 
+  it('reads two circles in one holding as a list, and writes both back', () => {
+    const fx = bboFixture({})
+    fx.cards[0].leads = { 'ls-akx-a': 'y', 'ls-akx-k': 'y' }
+    const { card_data: c } = importBboJson(fx)
+    expect(c.leads.vs_suits.honors.lead_choice_akx).toEqual([1, 2])
+    expect(exportBboCard(c).leads).toEqual({ 'ls-akx-a': 'y', 'ls-akx-k': 'y' })
+    c.leads.vs_suits.honors.lead_choice_akx = 2
+    expect(exportBboCard(c).leads).toEqual({ 'ls-akx-k': 'y' })
+    c.leads.vs_suits.honors.lead_choice_akx = [2, 1]
+    c.leads.vs_nt = { honors: { lead_choice_akxx: [1, 2] } }
+    expect(exportBboCard(c).leads).toEqual({ 'ls-akx-a': 'y', 'ls-akx-k': 'y', 'ln-akxx-a': 'y', 'ln-akxx-k': 'y' })
+  })
+
   it('reads a small card as x1, x2… and files Hxx with the lengths, as the spec does', () => {
     const fx = bboFixture({})
     fx.cards[0].leads = { 'ls-xx-x1': 'y', 'ln-hxx-x2': 'y' }
