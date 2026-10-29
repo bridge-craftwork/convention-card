@@ -312,6 +312,13 @@
    "level": 6,
    "skill": "bidding_conventions/jacoby_transfers"
   },
+  "transfers.texas_2_under": {
+   "kind": "bool",
+   "label": "2-under Texas",
+   "desc": "Texas one step lower: 4♣ transfers to ♥ and 4♦ to ♠. Opener's bid of the suit in between (4♦ over 4♣, 4♥ over 4♦) is a super-accept; four of the major is a plain completion",
+   "level": 7,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
   "minor_transfers": {
    "kind": "enum",
    "label": "Minor-suit responses to 1NT",
