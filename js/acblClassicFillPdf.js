@@ -21,6 +21,7 @@ import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFDict, PDFHexString,
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
 import { cardValues } from './checkCard.js'
+import { ledCards } from './leads.js'
 import { TEMPLATE_INK } from './acblTemplateInk.js'
 import { loadTemplate, loadFont } from './assets.js'
 
@@ -2192,26 +2193,26 @@ export function drawLeadCircles(pdf, card, templateName = 'new') {
       for (const [pattern, positions] of Object.entries(patterns)) {
         const choice = values.get(`leads.${side}.${type}.lead_choice_${pattern}`)
         seen.push({ side, type, pattern, choice })
-        const n = Number(choice)
-        if (!Number.isFinite(n) || n < 1 || n > positions.length) {
-          if (choice !== undefined && choice !== null) {
+        // One card, or several when either is led (the A and the K of AKx)
+        for (const n of ledCards(choice)) {
+          if (n > positions.length) {
             missing.push({ side, type, pattern, choice })
+            continue
           }
-          continue
+          const coord = positions[n - 1]
+          page.drawEllipse({
+            // New: pdfplumber gave the LEFT edge, so shift to the char center,
+            // and correct a slightly-overshot character-height estimate.
+            // Classic: centres already, and larger type.
+            x: classic ? coord.x : coord.x + CHAR_HALF_W,
+            y: classic ? coord.y : coord.y + Y_OFFSET,
+            xScale: classic ? 3.6 : 3.0,
+            yScale: classic ? 5.4 : 4.8, // tall-aspect ellipse approximates a vertical racetrack
+            borderColor: red,
+            borderWidth: 0.6
+          })
+          drawn.push({ side, type, pattern, n })
         }
-        const coord = positions[n - 1]
-        page.drawEllipse({
-          // New: pdfplumber gave the LEFT edge, so shift to the char center,
-          // and correct a slightly-overshot character-height estimate.
-          // Classic: centres already, and larger type.
-          x: classic ? coord.x : coord.x + CHAR_HALF_W,
-          y: classic ? coord.y : coord.y + Y_OFFSET,
-          xScale: classic ? 3.6 : 3.0,
-          yScale: classic ? 5.4 : 4.8, // tall-aspect ellipse approximates a vertical racetrack
-          borderColor: red,
-          borderWidth: 0.6
-        })
-        drawn.push({ side, type, pattern, n })
       }
     }
   }

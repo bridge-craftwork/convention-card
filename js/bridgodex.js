@@ -16,6 +16,7 @@
 import { field, BRIDGODEX_MAP } from './spec.js'
 import { readPath, writePath } from './paths.js'
 import { normalizeSuitShorthand } from './suits.js'
+import { ledCards, ledValue, sameLead } from './leads.js'
 
 const { any: ANY = [], notes: NOTES = [], ...BLOCKS } = BRIDGODEX_MAP
 
@@ -187,7 +188,7 @@ function leadKey(path) {
   return prefix + holding.replace(/[^x]/g, c => c.toUpperCase())
 }
 
-/** The lead choices a card holds, by side: lower-case path → position. */
+/** The lead choices a card holds, by side: lower-case path → position, or a list of them. */
 function leadChoices(cardData, side) {
   const out = new Map()
   for (const group of ['length', 'honors']) {
@@ -235,8 +236,9 @@ export function importBridgeodexJson(input) {
   for (const [block, side] of Object.entries(LEAD_BLOCKS)) {
     for (const [key, v] of Object.entries(s[block] || {})) {
       const path = leadPath(side, key)
-      const n = path && num(v)
-      if (n != null) writePath(card_data, path, n)
+      // A PDF read can give several circles in a holding (bridgodexPdf.js)
+      const choice = path && ledValue(Array.isArray(v) ? v : num(v))
+      if (choice != null) writePath(card_data, path, choice)
     }
   }
   if (input.notes) writePath(card_data, 'notes.general', String(input.notes))
@@ -297,12 +299,15 @@ export function exportBridgodexJson(cardData) {
     const then = leadChoices(before, side)
     for (const key of Object.keys(out[block] || {})) {
       const path = leadPath(side, key)
-      if (path && now.get(path) !== then.get(path)) delete out[block][key]
+      if (path && !sameLead(now.get(path), then.get(path))) delete out[block][key]
     }
-    for (const [path, pos] of now) {
-      if (pos === then.get(path)) continue
+    for (const [path, choice] of now) {
+      if (sameLead(choice, then.get(path))) continue
+      // Bridgodex holds one card per holding: of several (the A and the K
+      // of AKx), the first
       const key = leadKey(path)
-      if (key) put(block, { [key]: Number(pos) })
+      const [pos] = ledCards(choice)
+      if (key && pos) put(block, { [key]: pos })
     }
   }
 

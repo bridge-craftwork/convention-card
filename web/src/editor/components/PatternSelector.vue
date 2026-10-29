@@ -5,7 +5,7 @@
       :key="idx"
       type="button"
       class="pattern-token"
-      :class="{ selected: selected === idx + 1, readonly: !editable }"
+      :class="{ selected: [selected].flat().includes(idx + 1), readonly: !editable }"
       :disabled="!editable"
       @click="$emit('pick', idx + 1)"
     >{{ token }}</button>
@@ -17,7 +17,8 @@ import { computed } from 'vue'
 
 const props = defineProps({
   pattern: { type: String, required: true },
-  selected: { type: Number, default: null },
+  // The card led (1-based), or a list when either is led (A or K from AKx)
+  selected: { type: [Number, Array], default: null },
   editable: { type: Boolean, default: false }
 })
 

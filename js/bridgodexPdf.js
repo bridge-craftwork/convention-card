@@ -197,7 +197,11 @@ function set(settings, name, value) {
   const [block, key] = name.split('#')
   if (!key) return
   const lead = key.match(/^(.*)-(\d+)$/)
-  ;(settings[block] ||= {})[lead ? lead[1] : key] = lead ? parseInt(lead[2], 10) : value
+  const at = (settings[block] ||= {})
+  if (!lead) { at[key] = value; return }
+  // Two circles in one holding (the A and the K of AKx) are a list
+  const n = parseInt(lead[2], 10)
+  at[lead[1]] = at[lead[1]] == null ? n : [at[lead[1]], n].flat()
 }
 
 /**

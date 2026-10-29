@@ -22,6 +22,7 @@
 import { field, BBO_MAP } from './spec.js'
 import { readPath, writePath } from './paths.js'
 import { normalizeSuitShorthand } from './suits.js'
+import { ledCards, ledValue, sameLead } from './leads.js'
 
 const known = path => {
   if (!field(path)) throw new Error(`BBO map: unknown field ${path}`)
@@ -203,7 +204,7 @@ function leadKey(path, pos) {
   return `${m[1] === 'vs_suits' ? 'ls' : 'ln'}-${pattern}-${led}`
 }
 
-/** The lead choices a card holds: lower-case path → position. */
+/** The lead choices a card holds: lower-case path → position, or a list of them. */
 function leadChoices(cardData) {
   const out = new Map()
   for (const side of Object.values(SIDES)) {
@@ -248,10 +249,13 @@ export function importBboJson(input) {
   for (const e of ENTRIES.filter(e => e.group === 'conventions')) {
     for (const [path, v] of e.read(slots.conventions)) writePath(card_data, path, v)
   }
+  // Circles in one holding (the A and the K of AKx) are a list of cards.
+  const led = new Map()
   for (const [key, v] of Object.entries(slots.leads)) {
     const lead = on(v) && leadPath(key)
-    if (lead) writePath(card_data, lead[0], lead[1])
+    if (lead) led.set(lead[0], [...(led.get(lead[0]) || []), lead[1]])
   }
+  for (const [path, cards] of led) writePath(card_data, path, ledValue(cards))
   for (const e of ENTRIES.filter(e => e.group === 'fields')) {
     for (const [path, v] of e.read(slots.fields)) writePath(card_data, path, v)
   }
@@ -314,12 +318,14 @@ export function exportBboCard(cardData, { name } = {}) {
   for (const [key, v] of Object.entries(out.leads)) {
     const lead = on(v) && leadPath(key)
     const path = lead && lead[0].toLowerCase()
-    if (path && now.get(path) !== then.get(path)) delete out.leads[key]
+    if (path && !sameLead(now.get(path), then.get(path))) delete out.leads[key]
   }
-  for (const [path, pos] of now) {
-    if (pos === then.get(path)) continue
-    const key = leadKey(path, Number(pos))
-    if (key) out.leads[key] = 'y'
+  for (const [path, choice] of now) {
+    if (sameLead(choice, then.get(path))) continue
+    for (const pos of ledCards(choice)) {
+      const key = leadKey(path, pos)
+      if (key) out.leads[key] = 'y'
+    }
   }
 
   const partnerNames = cardData?.metadata?.partner_names
