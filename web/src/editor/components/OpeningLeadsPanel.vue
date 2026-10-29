@@ -59,9 +59,9 @@
               v-for="pat in lengthPatterns(col)"
               :key="pat.key"
               :pattern="pat.label"
-              :selected="r(`leads.${col.key}.length.lead_choice_${pat.key}`)"
+              :selected="leadChoice(col.key, 'length', pat.key)"
               :editable="editable"
-              @pick="(idx) => onPickPosition(`leads.${col.key}.length.lead_choice_${pat.key}`, idx)"
+              @pick="(idx) => pickLead(col.key, 'length', pat.key, idx)"
             />
           </span>
         </div>
@@ -73,9 +73,9 @@
               v-for="pat in honorPatterns(col)"
               :key="pat.key"
               :pattern="pat.label"
-              :selected="r(`leads.${col.key}.honors.lead_choice_${pat.key}`)"
+              :selected="leadChoice(col.key, 'honors', pat.key)"
               :editable="editable"
-              @pick="(idx) => onPickPosition(`leads.${col.key}.honors.lead_choice_${pat.key}`, idx)"
+              @pick="(idx) => pickLead(col.key, 'honors', pat.key, idx)"
             />
           </span>
         </div>
@@ -176,11 +176,21 @@ function writeField(path, value) {
   props.writeField(path, value || null)
 }
 
-function onPickPosition(path, idx) {
+// A lead choice lives at the spec's path, `lead_choice_kt9x`; cards saved
+// before 0.23 hold `lead_choice_KT9x` (an alias), which is read and, on the
+// next pick, moved to the spec's path.
+const leadPath = (side, group, key) => `leads.${side}.${group}.lead_choice_${key.toLowerCase()}`
+const oldLeadPath = (side, group, key) => `leads.${side}.${group}.lead_choice_${key}`
+function leadChoice(side, group, key) {
+  return r(leadPath(side, group, key)) ?? r(oldLeadPath(side, group, key))
+}
+function pickLead(side, group, key, idx) {
   if (!props.editable) return
   // Click an already-selected card to clear (toggle off)
-  const current = r(path)
-  props.writeField(path, current === idx ? null : idx)
+  const current = leadChoice(side, group, key)
+  const old = oldLeadPath(side, group, key)
+  if (old !== leadPath(side, group, key) && r(old) !== undefined) props.writeField(old, undefined)
+  props.writeField(leadPath(side, group, key), current === idx ? null : idx)
 }
 
 function lengthPatterns(col) {
