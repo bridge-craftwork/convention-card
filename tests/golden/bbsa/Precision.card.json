@@ -238,8 +238,7 @@
       "rkcb_1430": false
     },
     "king_ask": {
-      "five_nt": true,
-      "next_step": false
+      "style": "five_nt"
     },
     "pick_a_slam_5nt": {
       "play": true

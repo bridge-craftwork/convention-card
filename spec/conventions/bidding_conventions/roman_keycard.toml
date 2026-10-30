@@ -8,6 +8,8 @@ summary = """
 4NT asks for five keycards, the four aces and the trump king. 1430 answers
 5♣ one or four, 5♦ three or none, 5♥ two without the trump queen, 5♠ two
 with it; 0314 swaps 5♣ and 5♦. The next step asks for the trump queen.
+5NT then confirms every keycard and the trump queen and asks for side
+kings, by number or, with specific kings, the cheapest one held.
 """
 see = [
   { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 9 },

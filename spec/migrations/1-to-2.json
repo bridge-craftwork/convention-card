@@ -105,6 +105,20 @@
      "value": "0314"
     }
    ]
+  },
+  {
+   "style": "slam.king_ask.style",
+   "off": "none",
+   "options": [
+    {
+     "box": "slam.king_ask.five_nt",
+     "value": "five_nt"
+    },
+    {
+     "box": "slam.king_ask.next_step",
+     "value": "next_step"
+    }
+   ]
   }
  ]
 }

@@ -432,8 +432,16 @@
  "Blackwood 0123": "slam.blackwood.play",
  "Kickback 1430": "slam.kickback.rkcb_1430",
  "Kickback 0314": "slam.kickback.rkcb_0314",
- "King ask by 5NT": "slam.king_ask.five_nt",
- "King ask by available bid": "slam.king_ask.next_step",
+ "King ask by 5NT": {
+  "set": {
+   "slam.king_ask.style": "five_nt"
+  }
+ },
+ "King ask by available bid": {
+  "set": {
+   "slam.king_ask.style": "next_step"
+  }
+ },
  "Quantitative 4NT": "slam.quantitative_4nt.play",
  "4NT opening": "slam.four_nt_opening.play",
  "5NT pick a slam": "slam.pick_a_slam_5nt.play",

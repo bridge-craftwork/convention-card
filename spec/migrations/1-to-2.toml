@@ -38,8 +38,12 @@
 # [[select]]    yes/no boxes, alternatives, that become a convention's switch
 #               and its style:
 #                 play     the 2.0 switch: true when any box is on, false
-#                          when the card has some of them and none is on
+#                          when the card has some of them and none is on.
+#                          Optional: an agreement that is no convention (the
+#                          king ask) has only the style
 #                 style    the 2.0 enum: the option of the first box on
+#                 off      the style written when the card has some of the
+#                          boxes and none is on (optional)
 #                 options  [{ box = "1.x path", value = "style option" }],
 #                          in order; every box listed is taken off the card
 #
@@ -140,6 +144,15 @@ options = [
   { box = "other_conventions.blackwood.rkcb_1430", value = "1430" },
   { box = "slam.blackwood.rkcb_0314", value = "0314" },
   { box = "other_conventions.blackwood.rkcb_0314", value = "0314" },
+]
+
+# The king ask: two alternative boxes become one choice (#72)
+[[select]]
+style = "slam.king_ask.style"
+off = "none"
+options = [
+  { box = "slam.king_ask.five_nt", value = "five_nt" },
+  { box = "slam.king_ask.next_step", value = "next_step" },
 ]
 
 # Reverse Flannery is played when any of its openings is.

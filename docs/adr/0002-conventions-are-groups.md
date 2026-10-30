@@ -119,8 +119,14 @@ on.
 | `slam.blackwood.queen_ask` | `slam.rkcb.queen_ask` |
 
 `slam.blackwood.play` and `slam.rkcb.play` form the choice group
-`slam.ace_ask`. `slam.blackwood.notes` (the 4NT box's text) and
-`slam.king_ask.*` (shared by every ace or keycard ask) stay as they are.
+`slam.ace_ask`. `slam.blackwood.notes` (the 4NT box's text) stays as it is.
+
+The king ask is shared by every ace or keycard ask, so it is no convention
+(decision 2), and 5NT or the next step are versions of it (decision 3):
+
+| From | To |
+|---|---|
+| `slam.king_ask.five_nt`, `slam.king_ask.next_step` | value: the first on → `slam.king_ask.style = "five_nt"` / `"next_step"`; present and none on → `"none"`; unset, the default `five_nt` (#72) |
 
 ### general
 

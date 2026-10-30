@@ -165,7 +165,7 @@ def check_migration(path: pathlib.Path) -> None:
         written += [s["play"], s["style"]]
     for s in doc.get("select", []):
         taken += [o["box"] for o in s["options"]]
-        written += [s["play"], s["style"]]
+        written += [p for p in (s.get("play"), s["style"]) if p]
     for a in doc.get("any", []):
         written.append(a["set"])
     problems = [f"writes {p!r}, which is not a field" for p in written if p not in fields]
