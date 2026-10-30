@@ -81,10 +81,11 @@
           :disabled="saving"
           title="Import a card: this editor's JSON, BBO or Bridgodex JSON, a BBA .bbsa file, or a PDF exported from this editor"
         >Import</button>
+        <!-- No accept filter: a file picker greys out a card whose file lacks the
+             extension it expects. importCard tells the format from the bytes. -->
         <input
           ref="importInput"
           type="file"
-          accept="application/json,.json,application/pdf,.pdf,.bbsa"
           style="display:none"
           @change="onImportFile"
         />
