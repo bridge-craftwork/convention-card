@@ -17,7 +17,7 @@
  * user clicks Export (no impact on initial page load).
  */
 
-import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFDict, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFRef, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
 import { cardValues } from './checkCard.js'
@@ -2411,7 +2411,9 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
     }
 
     if (flatten) {
+      fitButtonAppearances(form)
       form.flatten()
+      dropDeletedAnnots(pdf)
       return
     }
     // Fillable path: keep the fields live but tell viewers to render the
@@ -2423,6 +2425,47 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
     } catch { /* template without a writable AcroForm dict — ignore */ }
   } catch (err) {
     console.warn('Form finalize failed (saving as-is):', err)
+  }
+}
+
+// pdf-lib's flatten() (1.17) draws each widget's appearance at the
+// widget's corner, unscaled. A viewer fits the appearance's BBox to the
+// widget's Rect, and some Classic checkboxes draw their tick in an 8 x 6
+// box inside a 14.4 square, so flattened they came out as specks in the
+// corner. A /Matrix doing that fit makes flatten() draw them as a viewer
+// does.
+function fitButtonAppearances(form) {
+  for (const field of form.getFields()) {
+    if (!(field instanceof PDFCheckBox || field instanceof PDFRadioGroup)) continue
+    for (const widget of field.acroField.getWidgets()) {
+      const rect = widget.getRectangle()
+      const normal = widget.getNormalAppearance()
+      const refs = normal instanceof PDFDict ? normal.values() : [normal]
+      for (const ref of refs) {
+        const stream = widget.dict.context.lookup(ref)
+        const bbox = stream?.dict?.lookup(PDFName.of('BBox'))?.asRectangle?.()
+        if (!bbox || bbox.width <= 0 || bbox.height <= 0) continue
+        const sx = rect.width / bbox.width
+        const sy = rect.height / bbox.height
+        if (Math.abs(sx - 1) < 0.01 && Math.abs(sy - 1) < 0.01 && !bbox.x && !bbox.y) continue
+        stream.dict.set(PDFName.of('Matrix'), widget.dict.context.obj([sx, 0, 0, sy, -bbox.x * sx, -bbox.y * sy]))
+      }
+    }
+  }
+}
+
+// pdf-lib's removeField() (1.17) takes the widget's appearance, not the
+// widget, off the page, so a field whose widget is a separate kid (most
+// of the Classic's) leaves the page listing a deleted object: viewers
+// report "Invalid XRef entry". Drop what flatten() deleted.
+function dropDeletedAnnots(pdf) {
+  for (const page of pdf.getPages()) {
+    const annots = page.node.Annots()
+    if (!annots) continue
+    for (let i = annots.size() - 1; i >= 0; i--) {
+      const ref = annots.get(i)
+      if (ref instanceof PDFRef && !pdf.context.lookup(ref)) annots.remove(i)
+    }
   }
 }
 
@@ -2493,7 +2536,7 @@ export async function downloadAcblFieldDebugPdf(templateName = 'classic') {
 
   // ── Pass 2: flatten the form. This appends each field's appearance
   // (checkmark glyphs, text values) to the page content stream.
-  flattenForm(pdf, templateName)
+  finalizeForm(pdf, templateName, { flatten: true })
 
   // ── Pass 3: draw checkbox labels AFTER flatten so they sit on top
   // of the flattened field appearances rather than getting covered.
