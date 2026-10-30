@@ -95,10 +95,11 @@
           <button v-if="compare" class="btn" :disabled="selected.length < 2"
                   :title="selected.length < 2 ? 'Tick two or more cards to compare them' : 'See where the ticked cards differ'"
                   @click="$emit('compare', selected)">Compare<template v-if="selected.length"> ({{ selected.length }})</template></button>
+          <!-- No accept filter: a file picker greys out a card whose file lacks the
+               extension it expects. importCard tells the format from the bytes. -->
           <input
             ref="fileInput"
             type="file"
-            accept="application/json,.json,application/pdf,.pdf,.bbsa"
             style="display:none"
             @change="onFile"
           />
