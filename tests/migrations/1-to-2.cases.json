@@ -105,6 +105,21 @@
       "after": { "schema_version": "2.0", "slam": { "rkcb": { "play": true, "style": "1430" } } }
     },
     {
+      "name": "King ask: the next step becomes the style; specific kings stays",
+      "before": { "schema_version": "1.0", "slam": { "king_ask": { "five_nt": false, "next_step": true, "specific": true } } },
+      "after": { "schema_version": "2.0", "slam": { "king_ask": { "specific": true, "style": "next_step" } } }
+    },
+    {
+      "name": "King ask: 5NT becomes the style",
+      "before": { "schema_version": "1.0", "slam": { "king_ask": { "five_nt": true, "next_step": false } } },
+      "after": { "schema_version": "2.0", "slam": { "king_ask": { "style": "five_nt" } } }
+    },
+    {
+      "name": "King ask: both boxes off is none",
+      "before": { "schema_version": "1.0", "slam": { "king_ask": { "five_nt": false, "next_step": false } } },
+      "after": { "schema_version": "2.0", "slam": { "king_ask": { "style": "none" } } }
+    },
+    {
       "name": "Reverse Flannery: 2♦ moves, and the switch is on",
       "before": { "schema_version": "1.0", "two_level": { "two_diamonds": { "reverse_flannery": true }, "reverse_flannery": { "two_h": false } } },
       "after": { "schema_version": "2.0", "two_level": { "reverse_flannery": { "two_h": false, "two_d": true, "play": true } } }

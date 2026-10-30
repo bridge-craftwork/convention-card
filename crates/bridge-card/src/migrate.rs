@@ -44,8 +44,14 @@ struct Split {
 
 #[derive(Debug, Deserialize)]
 struct Select {
-    play: String,
+    /// The convention's switch; none for an agreement that is no
+    /// convention (the king ask).
+    #[serde(default)]
+    play: Option<String>,
     style: String,
+    /// The style when the card has some of the boxes and none is on.
+    #[serde(default)]
+    off: Option<String>,
     options: Vec<SelectOption>,
 }
 
@@ -152,10 +158,19 @@ fn apply(m: &Migration, card: &mut Map<String, Json>, original: &Map<String, Jso
         }
         match style {
             Some(style) => {
-                writes.push((s.play.clone(), Json::Bool(true)));
+                if let Some(play) = &s.play {
+                    writes.push((play.clone(), Json::Bool(true)));
+                }
                 writes.push((s.style.clone(), Json::String(style)));
             }
-            None if found => writes.push((s.play.clone(), Json::Bool(false))),
+            None if found => {
+                if let Some(play) = &s.play {
+                    writes.push((play.clone(), Json::Bool(false)));
+                }
+                if let Some(off) = &s.off {
+                    writes.push((s.style.clone(), Json::String(off.clone())));
+                }
+            }
             None => {}
         }
     }
@@ -346,7 +361,8 @@ mod tests {
                 taken.push(&s.from);
             }
             for s in &m.select {
-                written.extend([s.play.as_str(), s.style.as_str()]);
+                written.extend(s.play.as_deref());
+                written.push(s.style.as_str());
                 taken.extend(s.options.iter().map(|o| o.path.as_str()));
             }
             written.extend(m.any.iter().map(|a| a.set.as_str()));

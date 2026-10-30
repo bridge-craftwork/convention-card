@@ -1726,19 +1726,18 @@
    "skill": "bidding_conventions/roman_keycard",
    "level": 6
   },
-  "king_ask.five_nt": {
-   "kind": "bool",
-   "label": "King ask by 5NT",
+  "king_ask.style": {
+   "kind": "enum",
+   "options": [
+    "five_nt",
+    "next_step",
+    "none"
+   ],
+   "default": "five_nt",
+   "label": "King ask",
+   "desc": "How the asker, once every keycard (and the trump queen) is known to be held, asks for side kings: 5NT, the next available bid, or not at all. A card that does not say plays 5NT, the standard companion of keycard",
    "skill": "bidding_conventions/roman_keycard",
-   "level": 5,
-   "choice": "slam.king_ask"
-  },
-  "king_ask.next_step": {
-   "kind": "bool",
-   "label": "King ask by next available bid",
-   "skill": "bidding_conventions/roman_keycard",
-   "level": 7,
-   "choice": "slam.king_ask"
+   "level": 5
   },
   "king_ask.specific": {
    "kind": "bool",

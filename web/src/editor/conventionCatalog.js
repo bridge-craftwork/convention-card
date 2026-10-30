@@ -377,6 +377,14 @@ export const STRUCTURED_FIELDS = {
       ] },
     { label: '4NT notes', cardPath: 'other_conventions.blackwood.notes',
       kind: 'text', placeholder: 'e.g. 0314 if used for minor suit' },
+    // Unset plays 5NT (the field's default); ticking a box says so outright
+    { label: 'King ask (unset: 5NT)', cardPath: 'slam.king_ask.style', kind: 'radio_inline',
+      options: [
+        { value: 'five_nt',   label: '5NT' },
+        { value: 'next_step', label: 'Next step' },
+        { value: 'none',      label: 'None' }
+      ] },
+    { label: 'King ask: specific kings', cardPath: 'slam.king_ask.specific', kind: 'boolean' },
     { label: 'Vs Blackwood interference', kind: 'inline_checks',
       paths: [
         { label: 'DOPI', cardPath: 'slam.dopi' },

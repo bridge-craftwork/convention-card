@@ -77,8 +77,13 @@ function apply(migration, card, original) {
       found = true
       if (v === true && style === undefined) style = o.value
     }
-    if (style !== undefined) writes.push([s.play, true], [s.style, style])
-    else if (found) writes.push([s.play, false])
+    if (style !== undefined) {
+      if (s.play) writes.push([s.play, true])
+      writes.push([s.style, style])
+    } else if (found) {
+      if (s.play) writes.push([s.play, false])
+      if (s.off) writes.push([s.style, s.off])
+    }
   }
   for (const a of migration.any || []) {
     if (a.from.some(p => leaf(original, p) === true)) writes.push([a.set, true])
