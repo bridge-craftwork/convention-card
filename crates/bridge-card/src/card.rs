@@ -180,14 +180,23 @@ impl Card {
 
     /// Apply a change written `path=value` (`general.style=bba`,
     /// `notrump.stayman.play=false`): `true`/`false` are booleans, whole
-    /// numbers integers, anything else text.
+    /// numbers integers, anything else text. An enum or text field takes the
+    /// value as written, so an option spelt with digits keeps its leading
+    /// zeros (`slam.rkcb.style=0314`).
     pub fn apply_change(&mut self, change: &str) -> Result<(), Error> {
         let (path, value) = change
             .split_once('=')
             .ok_or_else(|| Error::new(format!("card change {change:?}: expected path=value")))?;
+        let as_written = self.vocab.registry().get(path).is_some_and(|f| {
+            matches!(
+                f.kind,
+                crate::registry::FieldKind::Enum | crate::registry::FieldKind::Text
+            )
+        });
         let value = match value {
             "true" => Value::Bool(true),
             "false" => Value::Bool(false),
+            v if as_written => Value::Text(v.to_string()),
             v => v
                 .parse::<i64>()
                 .map(Value::Int)
@@ -438,6 +447,23 @@ fn write_path(root: &mut Json, path: &str, value: Json) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_change_keeps_an_enum_option_as_written() {
+        let mut card = Card::new(crate::test_vocabulary());
+        card.apply_change("slam.rkcb.style=0314").unwrap();
+        assert_eq!(
+            card.get("slam.rkcb.style"),
+            Some(&Value::Text("0314".into()))
+        );
+        card.apply_change("slam.rkcb.style=1430").unwrap();
+        assert_eq!(
+            card.get("slam.rkcb.style"),
+            Some(&Value::Text("1430".into()))
+        );
+        card.apply_change("notrump.one_nt.range_min=14").unwrap();
+        assert_eq!(card.get("notrump.one_nt.range_min"), Some(&Value::Int(14)));
+    }
 
     #[test]
     fn set_validates_and_resolves_aliases() {
