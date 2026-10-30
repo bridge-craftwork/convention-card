@@ -21,9 +21,12 @@ consumer by a new tag here and a pin bump there.
 ## Ground rules
 
 - **Saved cards must keep loading.** The interchange format is Bridge
-  Classroom's nested `card_data` JSON, and real cards live in its database. Never
-  rename a field without keeping the old path as an alias. Keep and write back
-  fields you don't recognise.
+  Classroom's nested `card_data` JSON, and real cards live in its database. A
+  rename migrates saved cards by schema version, not by an alias (ADR-0002 §5,
+  Rick 2026-10-30): bump the card schema version, add the rename to a
+  `spec/migrations/<from>-to-<to>.toml` that the JS library and the crate
+  apply on read, and never delete a migration. Keep and write back fields you
+  don't recognise.
 - **The spec is the single source.** Don't add a field list, an enum, or a skill
   list to JS or Rust code; add it to `spec/` and read it from there.
 - **The card records agreements, not bid meanings.** "We play Smolen" belongs
