@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { checkCard, checkValue } from '../checkCard.js'
 import { field, FIELDS } from '../spec.js'
+import { upgradeCardData } from '../migrate.js'
 
 const ROOT = path.resolve(__dirname, '../..')
 const read = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'))
@@ -35,7 +36,15 @@ describe('checkCard', () => {
     const r = checkCard({ schema: 'bridge-classroom/card_data@v1', name: 'Ours', card_data: SEED })
     expect(r.report.wrapper).toBe('bridge-classroom/card_data@v1')
     expect(r.name).toBe('Ours')
-    expect(r.card_data).toBe(SEED)
+    // A saved 1.0 card is checked, and returned, upgraded.
+    expect(r.report.migrated).toBe('1.0')
+    expect(r.card_data).toEqual(upgradeCardData(SEED))
+    expect(r.diagnostics.find(d => /schema 1\.0/.test(d.message)).severity).toBe('info')
+    // A 2.0 card comes back as it was.
+    const current = upgradeCardData(SEED)
+    const again = checkCard(current)
+    expect(again.report.migrated).toBe(null)
+    expect(again.card_data).toBe(current)
   })
 
   it('refuses a newer export', () => {
@@ -46,7 +55,7 @@ describe('checkCard', () => {
   it('reports unknown paths, bad values, aliases and conflicts, and changes nothing', () => {
     const card = {
       notrump: { one_nt: { range_min: 40 }, mystery: true },
-      other_conventions: { blackwood: { rkcb_1430: true } },
+      other_conventions: { gerber: { play: true } },
       _bbo_raw: { anything: 1 },
       metadata: { name: 'x' },
     }
@@ -56,7 +65,7 @@ describe('checkCard', () => {
     expect(r.report.unknown).toEqual(['notrump.mystery'])
     expect(r.report.invalid.map(([p]) => p)).toEqual(['notrump.one_nt.range_min'])
     expect(r.report.ignored).toEqual(['_bbo_raw'])
-    expect(r.report.aliased.map(([from]) => from)).toContain('other_conventions.blackwood.rkcb_1430')
+    expect(r.report.aliased.map(([from]) => from)).toContain('other_conventions.gerber.play')
     expect(errors(r).map(d => d.path)).toEqual(['notrump.one_nt.range_min'])
     expect(r.diagnostics.find(d => d.path === 'notrump.mystery').severity).toBe('warning')
   })

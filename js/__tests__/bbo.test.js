@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import { isBboCard, importBboJson, exportBboCard } from '../bbo.js'
 import { field } from '../spec.js'
+import { upgradeCardData } from '../migrate.js'
 
 // A compact fixture modelled on a real BBO ACBL export
 // (source: "bbo-acbl", cards[].fields with flat slot keys).
@@ -183,11 +184,12 @@ describe('importBboJson', () => {
     }
     const { card_data: c } = importBboJson(fx)
     expect(c.notrump.stayman.forcing).toBe(true)
-    expect(c.notrump.transfers.jacoby).toBe(true)
-    expect(c.notrump.transfers.texas).toBe(true)
+    expect(c.schema_version).toBe('2.0')
+    expect(c.notrump.jacoby_transfers.play).toBe(true)
+    expect(c.notrump.texas.play).toBe(true)
     expect(c.major_openings.jacoby_2nt.play).toBe(true)
     expect(c.major_openings.splinters.play).toBe(true)
-    expect(c.other_conventions.blackwood.rkcb_1430).toBe(true)
+    expect(c.slam.rkcb).toEqual({ play: true, style: '1430' })
     expect(c.two_level.two_clubs.meaning).toBe('strong')
     expect(c.other_conventions.new_minor_forcing.play).toBe(true)
   })
@@ -326,7 +328,7 @@ describe('exportBboCard', () => {
     expect(card.fields.names).toBe('Rick and Dan')
   })
 
-  it('ticks every BBO box a card field stands for', () => {
+  it('ticks every BBO box a card field stands for (a 1.x card: upgraded first)', () => {
     const card = exportBboCard({
       major_openings: { min_length_1st_2nd: 5, drury: { play: true, reverse: true } },
       notrump: { transfers: { jacoby: true } },
@@ -335,6 +337,8 @@ describe('exportBboCard', () => {
     expect(card.conventions).toEqual({
       'major12-5': 'y', drury: 'y', druryRev: 'y', '1N2DTrans': 'y', '1N2HTrans': 'y', '2CStrong': 'y',
     })
+    expect(exportBboCard({ schema_version: '1.0', slam: { blackwood: { rkcb_0314: true } } }).conventions).toEqual({ rkc: 'y' })
+    expect(exportBboCard({ schema_version: '2.0', slam: { rkcb: { play: true, style: '1430' } } }).conventions).toEqual({ 1430: 'y' })
     expect(card.style).toBe('ACBL')
   })
 
@@ -346,7 +350,8 @@ describe('exportBboCard', () => {
   })
 
   it('exports a card made elsewhere, which reads back the same where BBO has room', () => {
-    const card = dense()
+    // A saved 1.0 card: it exports as its upgrade, and reads back as that.
+    const card = upgradeCardData(dense())
     const back = importBboJson(exportBboCard(card, { name: 'Dense' })).card_data
     const flat = (o, p = '', out = {}) => {
       for (const [k, v] of Object.entries(o || {})) {

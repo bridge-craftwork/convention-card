@@ -85,7 +85,7 @@ describe('textMapping', () => {
 })
 
 describe('implies', () => {
-  const puppet = () => card({ 'notrump.responses.3c': 'Puppet, opener shows 5', 'notrump.two_nt.puppet': true })
+  const puppet = () => card({ 'notrump.responses.3c': 'Puppet, opener shows 5', 'notrump.stayman.puppet_2nt': true })
 
   it('a box its text names is the one suggested, whatever the convention\'s other boxes say', () => {
     const { suggestions } = suggestConventions(puppet())

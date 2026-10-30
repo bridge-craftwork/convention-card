@@ -11,6 +11,7 @@
 import { importCard, IMPORT_FORMATS } from '../../js/importCard.js'
 import { checkCard, EXPORT_SCHEMA } from '../../js/checkCard.js'
 import { encodeCardForUrl } from '../../js/handoff.js'
+import { upgradeCard } from '../../js/migrate.js'
 import { bridgeClassroomUrl } from './handoffToBridgeClassroom.js'
 import PACKAGE from '../../package.json' with { type: 'json' }
 
@@ -78,6 +79,8 @@ async function pdfBytes(record, to) {
 }
 
 async function produce(record, to) {
+  // Every output is in the current card schema (js/migrate.js).
+  record = upgradeCard(record)
   switch (to) {
     case 'card':
       return { schema: EXPORT_SCHEMA, name: record.name, description: record.description, exportedAt: new Date().toISOString(), card_data: record.card_data }

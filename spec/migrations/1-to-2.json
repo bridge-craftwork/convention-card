@@ -1,0 +1,110 @@
+{
+ "schema": "migration/v1",
+ "generated_from": "spec/migrations/1-to-2.toml (do not edit)",
+ "from": "1",
+ "to": "2.0",
+ "rename": {
+  "notrump.transfers.jacoby": "notrump.jacoby_transfers.play",
+  "notrump.transfers.super_accept": "notrump.jacoby_transfers.super_accept",
+  "notrump.transfers.super_accept_doubleton": "notrump.jacoby_transfers.super_accept_doubleton",
+  "notrump.transfers.vs_double": "notrump.jacoby_transfers.vs_double",
+  "notrump.transfers.vs_2c": "notrump.jacoby_transfers.vs_2c",
+  "notrump.two_nt.transfers_3level": "notrump.jacoby_transfers.over_2nt",
+  "notrump.transfers.texas": "notrump.texas.play",
+  "notrump.transfers.texas_2_under": "notrump.texas.two_under",
+  "notrump.transfers.texas_4c": "notrump.texas.bid_4c",
+  "notrump.transfers.texas_4d": "notrump.texas.bid_4d",
+  "notrump.transfers.texas_4h": "notrump.texas.bid_4h",
+  "notrump.transfers.texas_4s": "notrump.texas.bid_4s",
+  "notrump.two_nt.transfers_4level": "notrump.texas.over_2nt",
+  "notrump.transfers.spades_relay": "notrump.minor_transfers.two_s",
+  "notrump.transfers.two_s_clubs": "notrump.minor_transfers.two_s_clubs",
+  "notrump.transfers.two_nt": "notrump.minor_transfers.two_nt",
+  "notrump.transfers.two_nt_clubs": "notrump.minor_transfers.two_nt_clubs",
+  "notrump.transfers.two_nt_diamonds": "notrump.minor_transfers.two_nt_diamonds",
+  "notrump.transfers.three_c_diamonds": "notrump.minor_transfers.three_c_diamonds",
+  "notrump.two_nt.minor_transfers": "notrump.minor_transfers.over_2nt",
+  "notrump.two_nt.transfer_3s_clubs": "notrump.minor_transfers.over_2nt_3s_clubs",
+  "notrump.two_nt.transfer_4c_diamonds": "notrump.minor_transfers.over_2nt_4c_diamonds",
+  "notrump.two_nt.puppet": "notrump.stayman.puppet_2nt",
+  "notrump.two_nt.three_c_3nt_both_majors": "notrump.stayman.over_2nt_both_majors",
+  "notrump.two_nt.minor_stayman": "notrump.minor_suit_stayman.over_2nt",
+  "notrump.lebensohl.over_interference": "notrump.lebensohl.play",
+  "notrump.rubensohl.over_interference": "notrump.rubensohl.play",
+  "notrump.three_nt.one_suit": "notrump.gambling_3nt.play",
+  "three_nt.one_suit": "notrump.gambling_3nt.play",
+  "notrump.three_nt.one_suit_desc": "notrump.gambling_3nt.description",
+  "three_nt.one_suit_desc": "notrump.gambling_3nt.description",
+  "major_openings.two_over_one.game_force": "major_openings.two_over_one.play",
+  "two_level.two_clubs.kokish": "two_level.kokish.play",
+  "two_level.two_clubs.parrish_bust": "two_level.parrish_bust.play",
+  "two_level.two_diamonds.multi": "two_level.multi.play",
+  "two_level.two_diamonds.multi_strong": "two_level.multi.strong_option",
+  "two_level.two_diamonds.mini_roman": "two_level.mini_roman.play",
+  "two_level.two_diamonds.mini_roman_maxi": "two_level.mini_roman.maxi",
+  "two_level.two_diamonds.reverse_flannery": "two_level.reverse_flannery.two_d",
+  "slam.blackwood.standard": "slam.blackwood.play",
+  "other_conventions.blackwood.standard": "slam.blackwood.play",
+  "slam.blackwood.minor_0314": "slam.rkcb.minor_0314",
+  "slam.blackwood.queen_ask": "slam.rkcb.queen_ask",
+  "other_conventions.blackwood.queen_ask": "slam.rkcb.queen_ask",
+  "general.jump_shifts.soloway": "general.soloway.play",
+  "general.jump_shifts.soloway_extended": "general.soloway.extended"
+ },
+ "split": [
+  {
+   "from": "notrump.minor_transfers",
+   "play": "notrump.minor_transfers.play",
+   "style": "notrump.minor_transfers.style",
+   "off": "none"
+  }
+ ],
+ "any": [
+  {
+   "set": "notrump.minor_transfers.play",
+   "from": [
+    "notrump.transfers.spades_relay",
+    "notrump.transfers.two_s_clubs",
+    "notrump.transfers.two_nt",
+    "notrump.transfers.two_nt_clubs",
+    "notrump.transfers.two_nt_diamonds",
+    "notrump.transfers.three_c_diamonds",
+    "notrump.two_nt.minor_transfers",
+    "notrump.two_nt.transfer_3s_clubs",
+    "notrump.two_nt.transfer_4c_diamonds"
+   ]
+  },
+  {
+   "set": "two_level.reverse_flannery.play",
+   "from": [
+    "two_level.two_diamonds.reverse_flannery",
+    "two_level.reverse_flannery.two_h",
+    "two_level.reverse_flannery.two_s"
+   ]
+  }
+ ],
+ "select": [
+  {
+   "play": "slam.rkcb.play",
+   "style": "slam.rkcb.style",
+   "options": [
+    {
+     "box": "slam.blackwood.rkcb_1430",
+     "value": "1430"
+    },
+    {
+     "box": "other_conventions.blackwood.rkcb_1430",
+     "value": "1430"
+    },
+    {
+     "box": "slam.blackwood.rkcb_0314",
+     "value": "0314"
+    },
+    {
+     "box": "other_conventions.blackwood.rkcb_0314",
+     "value": "0314"
+    }
+   ]
+  }
+ ]
+}

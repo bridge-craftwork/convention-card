@@ -5,8 +5,8 @@ const byId = (r, id) => r.tiles.find(t => t.id === id)
 
 describe('botReport', () => {
   const coverage = {
-    read: ['major_openings.bergen_raises.play', 'notrump.transfers.jacoby'],
-    ignored: ['notrump.transfers.texas_4d', 'minor_openings.one_club.single_raise.inv', 'notrump.one_nt.seat_vul'],
+    read: ['major_openings.bergen_raises.play', 'notrump.jacoby_transfers.play'],
+    ignored: ['notrump.texas.bid_4d', 'minor_openings.one_club.single_raise.inv', 'notrump.one_nt.seat_vul'],
     other: ['carding.smith_echo_suits'],
   }
   const report = botReport({}, coverage)

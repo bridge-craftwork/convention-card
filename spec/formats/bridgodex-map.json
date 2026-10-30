@@ -209,20 +209,20 @@
   },
   "2c_stayman": "notrump.stayman.forcing",
   "2c_puppet": "notrump.stayman.puppet",
-  "2d_tfr": "notrump.transfers.jacoby",
+  "2d_tfr": "notrump.jacoby_transfers.play",
   "2d_other": {
    "text": "notrump.responses.2d_other"
   },
-  "2h_tfr": "notrump.transfers.jacoby",
+  "2h_tfr": "notrump.jacoby_transfers.play",
   "2h_other": {
    "text": "notrump.responses.2h_other"
   },
-  "2s_tfr": "notrump.transfers.spades_relay",
+  "2s_tfr": "notrump.minor_transfers.two_s",
   "2s_other": {
    "text": "notrump.responses.2s_other"
   },
   "2nt_nat": "notrump.two_nt_natural",
-  "2nt_tfr": "notrump.transfers.two_nt",
+  "2nt_tfr": "notrump.minor_transfers.two_nt",
   "2nt_other": {
    "text": "notrump.responses.2nt_other"
   },
@@ -239,9 +239,9 @@
    "text": "notrump.responses.3s"
   },
   "smolen": "notrump.smolen.play",
-  "tfr_4c": "notrump.transfers.texas_4c",
-  "tfr_4d": "notrump.transfers.texas_4d",
-  "tfr_4h": "notrump.transfers.texas_4h",
+  "tfr_4c": "notrump.texas.bid_4c",
+  "tfr_4d": "notrump.texas.bid_4d",
+  "tfr_4h": "notrump.texas.bid_4h",
   "dbl_neg": "notrump.dbl.negative",
   "dbl_neg_desc": {
    "text": "notrump.dbl.negative_desc"
@@ -250,7 +250,7 @@
   "dbl_other": {
    "text": "notrump.dbl.other"
   },
-  "lebensohl": "notrump.lebensohl.over_interference",
+  "lebensohl": "notrump.lebensohl.play",
   "lebensohl_desc": {
    "text": "notrump.lebensohl.description"
   },
@@ -265,13 +265,13 @@
   "range_max": {
    "range": "notrump.two_nt.range_max"
   },
-  "puppet": "notrump.two_nt.puppet",
+  "puppet": "notrump.stayman.puppet_2nt",
   "3s": "notrump.two_nt.three_s",
   "3s_desc": {
    "text": "notrump.two_nt.three_s_desc"
   },
-  "tfr_3lvl": "notrump.two_nt.transfers_3level",
-  "tfr_4lvl": "notrump.two_nt.transfers_4level",
+  "tfr_3lvl": "notrump.jacoby_transfers.over_2nt",
+  "tfr_4lvl": "notrump.texas.over_2nt",
   "neg_dbl": "notrump.two_nt.neg_dbl",
   "other": {
    "text": "notrump.two_nt.notes"
@@ -284,9 +284,9 @@
   "range_max": {
    "range": "three_nt.range_max"
   },
-  "one_suit": "three_nt.one_suit",
+  "one_suit": "notrump.gambling_3nt.play",
   "one_suit_desc": {
-   "text": "three_nt.one_suit_desc"
+   "text": "notrump.gambling_3nt.description"
   }
  },
  "two_level": {
@@ -447,9 +447,19 @@
   "gerber_directly_over_nt": "other_conventions.gerber.directly_over_nt",
   "gerber_over_nt_seq": "other_conventions.gerber.over_nt_seq",
   "gerber_over_non_nt_seq": "other_conventions.gerber.non_nt_seq",
-  "4nt_blackwood": "other_conventions.blackwood.standard",
-  "4nt_rkc_0314": "other_conventions.blackwood.rkcb_0314",
-  "4nt_rkc_1430": "other_conventions.blackwood.rkcb_1430",
+  "4nt_blackwood": "slam.blackwood.play",
+  "4nt_rkc_0314": {
+   "set": {
+    "slam.rkcb.play": true,
+    "slam.rkcb.style": "0314"
+   }
+  },
+  "4nt_rkc_1430": {
+   "set": {
+    "slam.rkcb.play": true,
+    "slam.rkcb.style": "1430"
+   }
+  },
   "4nt_more": {
    "text": "other_conventions.blackwood.notes"
   },
@@ -823,7 +833,7 @@
  },
  "any": [
   {
-   "path": "notrump.transfers.texas",
+   "path": "notrump.texas.play",
    "keys": [
     "1_no_trump.tfr_4c",
     "1_no_trump.tfr_4d",
@@ -833,6 +843,14 @@
     "1_no_trump.tfr_4d",
     "1_no_trump.tfr_4h"
    ]
+  },
+  {
+   "path": "notrump.minor_transfers.play",
+   "keys": [
+    "1_no_trump.2s_tfr",
+    "1_no_trump.2nt_tfr"
+   ],
+   "export": []
   },
   {
    "path": "other_conventions.gerber.play",

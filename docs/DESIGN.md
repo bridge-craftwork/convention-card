@@ -52,7 +52,13 @@ Language-neutral files that every other part reads:
   description, **aliases** (older paths that still load) and the **skill(s)** it
   is taught under. This starts from the bot's `fields.toml`, which is already
   the more rigorous of the two lists, merged with the display text from
-  `conventionCatalog.js`.
+  `conventionCatalog.js`. A convention is a group with a `play` switch
+  (`notrump.jacoby_transfers.play`), its other fields its treatments
+  (ADR-0002).
+- **Migrations** (`migrations/<from>-to-<to>.toml`): how a card saved in an
+  older schema version is read in the current one (renames and the few value
+  changes), applied once on read by the JS library and the crate. Permanent:
+  they are how old cards, files and PDFs keep loading.
 - **Format maps**: how each outside format lands on the fields, read both
   ways (import and export). The first was the bot's `bbsa-map.toml`; BBO's
   ACBL card (`bbo-map.toml`) and Bridgodex's (`bridgodex-map.toml`) followed
@@ -74,8 +80,11 @@ Language-neutral files that every other part reads:
   changes `conventions/`, committing the result. Never edited by hand.
 
 **The interchange format is Bridge Classroom's existing nested `card_data`
-JSON.** Cards already saved in Bridge Classroom must keep loading unchanged. A
-field is never renamed without adding the old path as an alias, and fields a
+JSON.** Cards already saved in Bridge Classroom must keep loading. A card
+records its `schema_version`; a rename moves saved cards by schema version
+(ADR-0002): reading a card older than the current version applies the
+migration in `spec/migrations/` once (`js/migrate.js`, the crate's
+`migrate.rs`), and the card is written back in the current version. Fields a
 reader does not know are kept and written back untouched, as the Rust crate
 already does.
 
@@ -581,8 +590,8 @@ built-in cards are the same kind of thing, shipped with the editor.
     PDF to tell apart templates that share field names (decided 2026-10-02).
   - **Paths are the spec's:** a mapping names card paths and their aliases,
     and is checked against the spec version it declares. A newer spec still
-    reads an older mapping, because paths keep their aliases (the spec's own
-    compatibility promise).
+    reads an older mapping by moving its paths through the card schema's
+    migrations (`spec/migrations/`).
   - **What the library does with each entry, both ways:** the export rule
     and the import rule (the reverse mapping in `js/acblPdfImport.js`, written
     down), including what is reported rather than guessed.
@@ -834,5 +843,6 @@ Tags `vX.Y.Z`; consumers pin a tag. **Cut a tag only after CI's
 `conventions.json` commit for that change has landed on `main`**, so the tagged
 tree's combined file matches its sources. The spec's compatibility promise is the
 important one: **a card that loaded under an older version loads under a newer
-one**, through aliases. Removing a field or changing its kind is a major
-version.
+one**, through aliases or, for a renamed field, the card schema's migration
+(`spec/migrations/`, ADR-0002). Removing a field or changing its kind is a
+major version.

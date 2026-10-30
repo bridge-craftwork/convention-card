@@ -12,6 +12,9 @@
   is one the format allows.
   bbsa-map.json also carries BBA's file layout (bbsa-layout.txt) as
   `layout`, the key order an export writes.
+- spec/migrations/<from>-to-<to>.json: each card-schema migration as JSON,
+  checked first: every path it writes is a field of fields.toml, and no path
+  it takes off a card still is one.
 
 One file per convention is the source (spec/conventions/README.md); readers
 that cannot list a directory (the JS library in a browser, lesson-studio) read
@@ -49,6 +52,7 @@ LEVELS_JSON = ROOT / "spec" / "levels.json"
 ALERTS_TOML = ROOT / "spec" / "alerts.toml"
 ALERTS_JSON = ROOT / "spec" / "alerts.json"
 ALERT_RULES = {"alert", "announce", "delayed", "none"}
+MIGRATIONS = ROOT / "spec" / "migrations"
 
 # DECISIONS.md, 12: the named bands are ranges of the 1-10 level
 # (spec/levels.toml).
@@ -150,6 +154,26 @@ def check_alerts() -> None:
         sys.exit("spec/alerts.toml:\n  " + "\n  ".join(problems))
 
 
+def check_migration(path: pathlib.Path) -> None:
+    """A migration writes only fields that exist and takes off only paths that
+    are no longer fields (else the upgrade would move a current value)."""
+    doc = tomllib.loads(path.read_text(encoding="utf-8"))
+    fields = field_paths()
+    taken, written = list(doc.get("rename", {})), list(doc.get("rename", {}).values())
+    for s in doc.get("split", []):
+        taken.append(s["from"])
+        written += [s["play"], s["style"]]
+    for s in doc.get("select", []):
+        taken += [o["box"] for o in s["options"]]
+        written += [s["play"], s["style"]]
+    for a in doc.get("any", []):
+        written.append(a["set"])
+    problems = [f"writes {p!r}, which is not a field" for p in written if p not in fields]
+    problems += [f"takes {p!r} off a card, but it is still a field" for p in taken if p in fields]
+    if problems:
+        sys.exit(f"{path.relative_to(ROOT)}:\n  " + "\n  ".join(problems))
+
+
 def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str:
     """A TOML file as JSON, with its tables and keys in the file's order."""
     data = tomllib.loads(source.read_text(encoding="utf-8"))
@@ -160,6 +184,9 @@ def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str
 def main() -> None:
     conventions = load()
     check_alerts()
+    migrations = sorted(MIGRATIONS.glob("*.toml"))
+    for m in migrations:
+        check_migration(m)
     outputs = {
         OUT: build(conventions),
         TAXONOMY: build_taxonomy(conventions),
@@ -170,6 +197,7 @@ def main() -> None:
                            {"layout": BBSA_LAYOUT.read_text(encoding="utf-8").splitlines()}),
         BBO_JSON: as_json(BBO_TOML, "bbo-map/v1"),
         BRIDGODEX_JSON: as_json(BRIDGODEX_TOML, "bridgodex-map/v1"),
+        **{m.with_suffix(".json"): as_json(m, "migration/v1") for m in migrations},
     }
     if "--check" in sys.argv[1:]:
         stale = [p.name for p, text in outputs.items()

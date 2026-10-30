@@ -21,6 +21,7 @@ import { PDFDocument, PDFCheckBox, PDFTextField, PDFName, PDFDict, PDFHexString,
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
 import { cardValues } from './checkCard.js'
+import { upgradeCard, upgradeCardData } from './migrate.js'
 import { ledCards } from './leads.js'
 import { TEMPLATE_INK } from './acblTemplateInk.js'
 import { loadTemplate, loadFont } from './assets.js'
@@ -125,7 +126,9 @@ async function loadTemplateBytes(templateName = 'classic') {
 // Convention: `value: true` means the checkbox represents the boolean
 // truthy state directly; `value: {match}` means "check this box when
 // the card_data value === match" (used for enum fields where one of
-// several checkboxes is on).
+// several checkboxes is on). `play: path` reads the entry only while that
+// convention's switch is on (RKCB's style: the 1430 box is RKCB played
+// 1430), and an import that ticks the box turns the switch on.
 
 // Field mappings are built from the labelled debug PDF (Shift+click
 // Export from the editor). The "_N" suffixed names are auto-generated
@@ -159,7 +162,7 @@ const FIELD_MAP_CLASSIC = [
 
   // ─── GENERAL APPROACH ───
   { pdf: 'GENERAL APPROACH',                       card: 'general.system',                     kind: 'text' },
-  { pdf: 'Two Over One Game Forcing',              card: 'major_openings.two_over_one.game_force', kind: 'check' },
+  { pdf: 'Two Over One Game Forcing',              card: 'major_openings.two_over_one.play', kind: 'check' },
   // Very Light per-area checkboxes
   { pdf: 'Openings', card: 'general.very_light.openings',  kind: 'check' },
   { pdf: '3rd Hand', card: 'general.very_light.third_hand', kind: 'check' },
@@ -176,12 +179,12 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'System on over',     card: 'notrump.one_nt.sys_on_vs',        kind: 'text' },
   { pdf: '2c Stayman',         card: 'notrump.stayman.forcing',         kind: 'check' },
   { pdf: 'Puppet',             card: 'notrump.stayman.puppet',          kind: 'check' },
-  { pdf: '2d Transfer to h',   card: 'notrump.transfers.jacoby',        kind: 'check' },
-  { pdf: '2h Transfer to s',   card: 'notrump.transfers.jacoby',        kind: 'check' },
-  { pdf: '4d  4h  Transfer',   card: 'notrump.transfers.texas',         kind: 'check' },
+  { pdf: '2d Transfer to h',   card: 'notrump.jacoby_transfers.play',        kind: 'check' },
+  { pdf: '2h Transfer to s',   card: 'notrump.jacoby_transfers.play',        kind: 'check' },
+  { pdf: '4d  4h  Transfer',   card: 'notrump.texas.play',         kind: 'check' },
   { pdf: 'Forcing Stayman',    card: 'notrump.stayman.garbage',         kind: 'check' },
   { pdf: 'Smolen',             card: 'notrump.smolen.play',             kind: 'check' },
-  { pdf: 'Lebensohl',          card: 'notrump.lebensohl.over_interference', kind: 'check' },
+  { pdf: 'Lebensohl',          card: 'notrump.lebensohl.play', kind: 'check' },
   { pdf: 'Neg Double',         card: 'notrump.dbl.negative',            kind: 'check' },
   // Text fields inside the NT opening box (responses)
   { pdf: 'to_4',                              card: 'notrump.one_nt.range_min',     kind: 'text' },
@@ -213,9 +216,9 @@ const FIELD_MAP_CLASSIC = [
   // ─── 2NT side panel ───
   { pdf: '2NT',             card: 'notrump.two_nt.range_min', kind: 'text' },
   { pdf: 'to_5',            card: 'notrump.two_nt.range_max', kind: 'text' },
-  { pdf: 'Puppet Stayman',  card: 'notrump.two_nt.puppet',    kind: 'check' },
-  { pdf: 'Jacoby',          card: 'notrump.two_nt.transfers_3level', kind: 'check' },
-  { pdf: 'Texas',           card: 'notrump.two_nt.transfers_4level', kind: 'check' },
+  { pdf: 'Puppet Stayman',  card: 'notrump.stayman.puppet_2nt',    kind: 'check' },
+  { pdf: 'Jacoby',          card: 'notrump.jacoby_transfers.over_2nt', kind: 'check' },
+  { pdf: 'Texas',           card: 'notrump.texas.over_2nt', kind: 'check' },
   { pdf: 'undefined_6',     card: 'notrump.two_nt.three_s_desc', kind: 'text' },
 
   // ─── 3NT ───
@@ -400,9 +403,9 @@ const FIELD_MAP_CLASSIC = [
 
   // ─── SLAM CONVENTIONS ───
   { pdf: 'SLAM CONVENTIONS   Gerber', card: 'other_conventions.gerber.play', kind: 'check' },
-  { pdf: '4NT Blackwood',             card: 'other_conventions.blackwood.standard', kind: 'check' },
-  { pdf: 'RKC',                       card: 'other_conventions.blackwood.rkcb_0314', kind: 'check' },
-  { pdf: '1430',                      card: 'other_conventions.blackwood.rkcb_1430', kind: 'check' },
+  { pdf: '4NT Blackwood',             card: 'slam.blackwood.play', kind: 'check' },
+  { pdf: 'RKC',                       card: 'slam.rkcb.style', kind: 'check', value: '0314', play: 'slam.rkcb.play' },
+  { pdf: '1430',                      card: 'slam.rkcb.style', kind: 'check', value: '1430', play: 'slam.rkcb.play' },
   { pdf: 'vs Interference DOPI',      card: 'slam.dopi', kind: 'check' },
   { pdf: 'DEPO',                       card: 'slam.depo', kind: 'check' },
   { pdf: 'ROPI',                       card: 'slam.ropi', kind: 'check' },
@@ -566,19 +569,19 @@ const FIELD_MAP_NEW = [
   // and is intentionally left unmapped so it stays unchecked for a
   // transfer-playing pair. (Mapping transfers to the first box checked
   // "Nat" instead of "Tfr" — a silent mismap, since the field exists.)
-  { pdf: '1NT.c.10', card: 'notrump.transfers.jacoby', kind: 'check' },
+  { pdf: '1NT.c.10', card: 'notrump.jacoby_transfers.play', kind: 'check' },
   { pdf: '1NT.t.11', card: 'notrump.responses.2d_other', kind: 'text' },
-  { pdf: '1NT.c.13', card: 'notrump.transfers.jacoby', kind: 'check' },
+  { pdf: '1NT.c.13', card: 'notrump.jacoby_transfers.play', kind: 'check' },
   { pdf: '1NT.t.14', card: 'notrump.responses.2h_other', kind: 'text' },
-  { pdf: '1NT.c.16', card: 'notrump.transfers.spades_relay', kind: 'check' },
+  { pdf: '1NT.c.16', card: 'notrump.minor_transfers.two_s', kind: 'check' },
   { pdf: '1NT.t.17', card: 'notrump.responses.2s_other', kind: 'text' },
   { pdf: '1NT.c.18', card: 'notrump.two_nt_natural', kind: 'check' },
-  { pdf: '1NT.c.19', card: 'notrump.transfers.two_nt', kind: 'check' },
+  { pdf: '1NT.c.19', card: 'notrump.minor_transfers.two_nt', kind: 'check' },
   { pdf: '1NT.t.20', card: 'notrump.responses.2nt_other', kind: 'text' },
   { pdf: '1NT.c.21', card: 'notrump.smolen.play',      kind: 'check' },
-  { pdf: '1NT.c.22', card: 'notrump.transfers.texas_4c', kind: 'check' },
-  { pdf: '1NT.c.23', card: 'notrump.transfers.texas_4d', kind: 'check' },
-  { pdf: '1NT.c.24', card: 'notrump.transfers.texas_4h', kind: 'check' },
+  { pdf: '1NT.c.22', card: 'notrump.texas.bid_4c', kind: 'check' },
+  { pdf: '1NT.c.23', card: 'notrump.texas.bid_4d', kind: 'check' },
+  { pdf: '1NT.c.24', card: 'notrump.texas.bid_4h', kind: 'check' },
   { pdf: '1NT.c.25', card: 'notrump.dbl.negative',     kind: 'check' },
   { pdf: '1NT.t.26', card: 'notrump.dbl.negative_desc', kind: 'text' },
   { pdf: '1NT.c.27', card: 'notrump.dbl.penalty',      kind: 'check' },
@@ -590,25 +593,25 @@ const FIELD_MAP_NEW = [
   { pdf: '1NT.t.34', card: 'notrump.responses.3h',     kind: 'text' },
   { pdf: '1NT.t.35', card: 'notrump.responses.3s',     kind: 'text' },
   { pdf: '1NT.t.38', card: 'notrump.dbl.other',        kind: 'text' },
-  { pdf: '1NT.c.39', card: 'notrump.lebensohl.over_interference', kind: 'check' },
+  { pdf: '1NT.c.39', card: 'notrump.lebensohl.play', kind: 'check' },
   { pdf: '1NT.t.40', card: 'notrump.lebensohl.description', kind: 'text' },
 
   // ─── 2NT ───
   { pdf: '2NT.t.1',  card: 'notrump.two_nt.range_min', kind: 'text' },
   { pdf: '2NT.t.2',  card: 'notrump.two_nt.range_max', kind: 'text' },
-  { pdf: '2NT.c.3',  card: 'notrump.two_nt.puppet',    kind: 'check' },
+  { pdf: '2NT.c.3',  card: 'notrump.stayman.puppet_2nt',    kind: 'check' },
   { pdf: '2NT.c.4',  card: 'notrump.two_nt.three_s',   kind: 'check' },
   { pdf: '2NT.t.5',  card: 'notrump.two_nt.three_s_desc', kind: 'text' },
-  { pdf: '2NT.c.8',  card: 'notrump.two_nt.transfers_3level', kind: 'check' },
-  { pdf: '2NT.c.9',  card: 'notrump.two_nt.transfers_4level', kind: 'check' },
+  { pdf: '2NT.c.8',  card: 'notrump.jacoby_transfers.over_2nt', kind: 'check' },
+  { pdf: '2NT.c.9',  card: 'notrump.texas.over_2nt', kind: 'check' },
   { pdf: '2NT.c.10', card: 'notrump.two_nt.neg_dbl',   kind: 'check' },
   { pdf: '2NT.t.11', card: 'notrump.two_nt.notes',     kind: 'text' },
 
   // ─── 3NT ───
   { pdf: '3NT.t.1', card: 'three_nt.range_min', kind: 'text' },
   { pdf: '3NT.t.2', card: 'three_nt.range_max', kind: 'text' },
-  { pdf: '3NT.c.3', card: 'three_nt.one_suit',  kind: 'check' },
-  { pdf: '3NT.t.4', card: 'three_nt.one_suit_desc', kind: 'text' },
+  { pdf: '3NT.c.3', card: 'notrump.gambling_3nt.play',  kind: 'check' },
+  { pdf: '3NT.t.4', card: 'notrump.gambling_3nt.description', kind: 'text' },
 
   // ─── Major opening (1H1S) ───
   { pdf: '1H1S.c.1',  card: 'major_openings.min_length_1st_2nd', kind: 'check', value: '4' },
@@ -832,9 +835,9 @@ const FIELD_MAP_NEW = [
   { pdf: 'SL.c.1',  card: 'other_conventions.gerber.directly_over_nt', kind: 'check' },
   { pdf: 'SL.c.2',  card: 'other_conventions.gerber.over_nt_seq',      kind: 'check' },
   { pdf: 'SL.c.3',  card: 'other_conventions.gerber.non_nt_seq',       kind: 'check' },
-  { pdf: 'SL.c.5',  card: 'other_conventions.blackwood.standard',      kind: 'check' },
-  { pdf: 'SL.c.6',  card: 'other_conventions.blackwood.rkcb_0314',     kind: 'check' },
-  { pdf: 'SL.c.7',  card: 'other_conventions.blackwood.rkcb_1430',     kind: 'check' },
+  { pdf: 'SL.c.5',  card: 'slam.blackwood.play',      kind: 'check' },
+  { pdf: 'SL.c.6',  card: 'slam.rkcb.style', kind: 'check', value: '0314', play: 'slam.rkcb.play' },
+  { pdf: 'SL.c.7',  card: 'slam.rkcb.style', kind: 'check', value: '1430', play: 'slam.rkcb.play' },
   { pdf: 'SL.t.8',  card: 'other_conventions.blackwood.notes',         kind: 'text' },
   { pdf: 'SL.t.9',  card: 'slam.control_bids',                          kind: 'text' },
   { pdf: 'SL.t.10', card: 'slam.vs_interference',                       kind: 'text' },
@@ -1663,6 +1666,7 @@ function addMissingFields(pdf, form) {
 }
 
 export async function buildAcblPdf(card, templateName = 'classic') {
+  card = upgradeCard(card)
   const bytes = await loadTemplateBytes(templateName)
   const pdf = await PDFDocument.load(bytes)
   const form = pdf.getForm()
@@ -1688,7 +1692,7 @@ export async function buildAcblPdf(card, templateName = 'classic') {
   const missingFields = []
   const droppedPaths = []
   for (const entry of fieldMap) {
-    const cardValue = readPath(card?.card_data, entry.card)
+    const cardValue = entryValue(entry, card?.card_data)
     try {
       applyEntry(form, entry, cardValue, card?.card_data)
     } catch (e) {
@@ -1906,7 +1910,8 @@ export async function extractCardDataFromPdf(bytes) {
   return {
     name: payload.name || 'Imported convention card',
     description: payload.description || 'Imported from PDF',
-    card_data: payload.card_data || payload // backward-compat if older PDFs stored the bare card_data
+    // Older PDFs stored the bare card_data; an older card schema is read as the current one.
+    card_data: upgradeCardData(payload.card_data || payload),
   }
 }
 
@@ -1946,7 +1951,7 @@ export function readEmbeddedPayload(pdf) {
 /** The fill maps and split groups, by template, for reading a PDF's boxes back (acblPdfImport.js). */
 export const ACBL_FIELD_MAPS = { classic: FIELD_MAP_CLASSIC, new: FIELD_MAP_NEW }
 export const ACBL_SPLIT_GROUPS = SPLIT_GROUPS
-export { isCheckOn, sanitizeForWinAnsi }
+export { isCheckOn, entryValue, sanitizeForWinAnsi }
 
 function plusSuffixFor(entry, cardData) {
   if (entry.kind !== 'text' || !entry.card) return ''
@@ -1994,6 +1999,12 @@ function sanitizeForWinAnsi(str) {
     .replace(/[^\x00-\xff]/g, '')
 }
 
+/** The card's value for a map entry: none while its convention (`play`) is off. */
+function entryValue(entry, cardData) {
+  if (entry.play && readPath(cardData, entry.play) !== true) return undefined
+  return readPath(cardData, entry.card)
+}
+
 function isCheckOn(entry, value) {
   // Plain boolean checkbox
   if (entry.value === undefined) return !!value
@@ -2024,6 +2035,7 @@ function isCheckOn(entry, value) {
  * through a click.
  */
 export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false } = {}) {
+  card = upgradeCard(card)
   const pdf = await buildAcblPdf(card, templateName)
   finalizeForm(pdf, templateName, { flatten })
   // Red ellipses around the card led from each holding: both templates

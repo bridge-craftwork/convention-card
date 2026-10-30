@@ -8,7 +8,7 @@ use serde_json::{Map, Value as Json};
 use crate::registry::Value;
 use crate::{Error, Vocabulary};
 
-pub(crate) const SCHEMA_VERSION: &str = "1.0";
+pub(crate) const SCHEMA_VERSION: &str = crate::migrate::CARD_SCHEMA_VERSION;
 const FORMAT: &str = "bridge_classroom";
 
 /// The `schema` of Bridge-Classroom's card export: `{schema, name,
@@ -100,6 +100,10 @@ pub struct LoadReport {
     /// The export wrapper the card came in (its `schema`,
     /// [`EXPORT_SCHEMA`]), when it was not bare `card_data`.
     pub wrapper: Option<String>,
+    /// The schema version the card was saved in, when it was older than
+    /// [`crate::migrate::CARD_SCHEMA_VERSION`] and so was upgraded on load
+    /// (`spec/migrations/`): its renamed fields were read at their new paths.
+    pub migrated: Option<String>,
 }
 
 impl LoadReport {
@@ -176,14 +180,23 @@ impl Card {
 
     /// Apply a change written `path=value` (`general.style=bba`,
     /// `notrump.stayman.play=false`): `true`/`false` are booleans, whole
-    /// numbers integers, anything else text.
+    /// numbers integers, anything else text. An enum or text field takes the
+    /// value as written, so an option spelt with digits keeps its leading
+    /// zeros (`slam.rkcb.style=0314`).
     pub fn apply_change(&mut self, change: &str) -> Result<(), Error> {
         let (path, value) = change
             .split_once('=')
             .ok_or_else(|| Error::new(format!("card change {change:?}: expected path=value")))?;
+        let as_written = self.vocab.registry().get(path).is_some_and(|f| {
+            matches!(
+                f.kind,
+                crate::registry::FieldKind::Enum | crate::registry::FieldKind::Text
+            )
+        });
         let value = match value {
             "true" => Value::Bool(true),
             "false" => Value::Bool(false),
+            v if as_written => Value::Text(v.to_string()),
             v => v
                 .parse::<i64>()
                 .map(Value::Int)
@@ -216,6 +229,8 @@ impl Card {
     /// and `description` then become the card's. Keys starting with `_`
     /// (`_bbo_raw`, the raw record of a BBO import) are not settings: they
     /// are kept for the round trip and listed in [`LoadReport::ignored`].
+    /// A card whose `schema_version` is missing or older than the current
+    /// one is upgraded first ([`crate::migrate`], [`LoadReport::migrated`]).
     pub fn from_json(vocab: &Vocabulary, text: &str) -> Result<(Card, LoadReport), Error> {
         let json: Json = serde_json::from_str(text).map_err(|e| Error::new(e.to_string()))?;
         let Json::Object(mut top) = json else {
@@ -247,6 +262,12 @@ impl Card {
             };
             top = inner;
         }
+        // A card saved in an older schema is read as the current one.
+        let mut data = Json::Object(top);
+        report.migrated = crate::migrate::upgrade(&mut data);
+        let Json::Object(top) = data else {
+            unreachable!("still an object");
+        };
         let mut leaves = Vec::new();
         for (key, value) in top {
             if key.starts_with('_') {
@@ -428,11 +449,32 @@ mod tests {
     use super::*;
 
     #[test]
+    fn a_change_keeps_an_enum_option_as_written() {
+        let mut card = Card::new(crate::test_vocabulary());
+        card.apply_change("slam.rkcb.style=0314").unwrap();
+        assert_eq!(
+            card.get("slam.rkcb.style"),
+            Some(&Value::Text("0314".into()))
+        );
+        card.apply_change("slam.rkcb.style=1430").unwrap();
+        assert_eq!(
+            card.get("slam.rkcb.style"),
+            Some(&Value::Text("1430".into()))
+        );
+        card.apply_change("notrump.one_nt.range_min=14").unwrap();
+        assert_eq!(card.get("notrump.one_nt.range_min"), Some(&Value::Int(14)));
+    }
+
+    #[test]
     fn set_validates_and_resolves_aliases() {
         let mut card = Card::new(crate::test_vocabulary());
-        card.set("other_conventions.blackwood.rkcb_1430", Value::Bool(true))
+        card.set("other_conventions.gerber.play", Value::Bool(true))
             .unwrap();
-        assert!(card.is_on("slam.blackwood.rkcb_1430"));
+        assert!(card.is_on("slam.gerber.play"));
+        // A renamed field has no alias: cards move by schema version.
+        assert!(card
+            .set("slam.blackwood.rkcb_1430", Value::Bool(true))
+            .is_err());
         assert!(card
             .set("notrump.one_nt.range_min", Value::Text("x".into()))
             .is_err());

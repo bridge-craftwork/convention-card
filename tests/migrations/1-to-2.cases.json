@@ -1,0 +1,133 @@
+{
+  "about": "Cards saved in schema 1.x and what spec/migrations/1-to-2.toml makes of them. Read by js/__tests__/migrate.test.js and crates/bridge-card/tests/migrations.rs, so both readers agree.",
+  "cases": [
+    {
+      "name": "plain renames, with leaves no rule names left where they were",
+      "before": {
+        "schema_version": "1.0",
+        "general": { "jump_shifts": { "soloway": true, "soloway_extended": false, "weak_2": true } },
+        "notrump": {
+          "transfers": { "jacoby": true, "super_accept": true, "texas": true, "texas_4d": true, "texas_4h": true, "texas_2_under": false, "skill_path": "bidding_conventions/jacoby_transfers" },
+          "two_nt": { "range_min": 20, "puppet": true, "transfers_3level": true, "transfers_4level": false, "three_c_3nt_both_majors": true, "minor_stayman": false },
+          "lebensohl": { "over_interference": true, "description": "fast denies" },
+          "rubensohl": { "over_interference": false },
+          "three_nt": { "one_suit": true, "one_suit_desc": "solid minor", "range_min": 25 }
+        },
+        "major_openings": { "two_over_one": { "game_force": true, "rebid_style": "bergen" } },
+        "two_level": {
+          "two_clubs": { "meaning": "strong", "kokish": true, "parrish_bust": false },
+          "two_diamonds": { "meaning": "conventional", "multi": true, "multi_strong": "balanced_20_21", "mini_roman": false, "mini_roman_maxi": false }
+        },
+        "slam": { "blackwood": { "standard": false, "queen_ask": true, "minor_0314": true, "notes": "x" } }
+      },
+      "after": {
+        "schema_version": "2.0",
+        "general": { "jump_shifts": { "weak_2": true }, "soloway": { "play": true, "extended": false } },
+        "notrump": {
+          "transfers": { "skill_path": "bidding_conventions/jacoby_transfers" },
+          "two_nt": { "range_min": 20 },
+          "lebensohl": { "play": true, "description": "fast denies" },
+          "rubensohl": { "play": false },
+          "three_nt": { "range_min": 25 },
+          "jacoby_transfers": { "play": true, "super_accept": true, "over_2nt": true },
+          "texas": { "play": true, "bid_4d": true, "bid_4h": true, "two_under": false, "over_2nt": false },
+          "stayman": { "puppet_2nt": true, "over_2nt_both_majors": true },
+          "minor_suit_stayman": { "over_2nt": false },
+          "gambling_3nt": { "play": true, "description": "solid minor" }
+        },
+        "major_openings": { "two_over_one": { "play": true, "rebid_style": "bergen" } },
+        "two_level": {
+          "two_clubs": { "meaning": "strong" },
+          "two_diamonds": { "meaning": "conventional" },
+          "kokish": { "play": true },
+          "parrish_bust": { "play": false },
+          "multi": { "play": true, "strong_option": "balanced_20_21" },
+          "mini_roman": { "play": false, "maxi": false }
+        },
+        "slam": {
+          "blackwood": { "play": false, "notes": "x" },
+          "rkcb": { "queen_ask": true, "minor_0314": true }
+        }
+      }
+    },
+    {
+      "name": "older spellings (1.x aliases) fold in; the field's own path wins",
+      "before": {
+        "three_nt": { "one_suit": false, "one_suit_desc": "old" },
+        "notrump": { "three_nt": { "one_suit": true } },
+        "other_conventions": { "blackwood": { "standard": true, "queen_ask": true, "notes": "kept" } }
+      },
+      "after": {
+        "schema_version": "2.0",
+        "notrump": { "gambling_3nt": { "play": true, "description": "old" } },
+        "other_conventions": { "blackwood": { "notes": "kept" } },
+        "slam": { "blackwood": { "play": true }, "rkcb": { "queen_ask": true } }
+      }
+    },
+    {
+      "name": "the minor-transfer enum becomes the switch and its style",
+      "before": { "schema_version": "1.0", "notrump": { "minor_transfers": "four_way", "transfers": { "two_s_clubs": true } } },
+      "after": { "schema_version": "2.0", "notrump": { "minor_transfers": { "play": true, "style": "four_way", "two_s_clubs": true } } }
+    },
+    {
+      "name": "minor transfers: none is the switch off, whatever the boxes say",
+      "before": { "schema_version": "1.0", "notrump": { "minor_transfers": "none", "transfers": { "spades_relay": true } } },
+      "after": { "schema_version": "2.0", "notrump": { "minor_transfers": { "play": false, "two_s": true } } }
+    },
+    {
+      "name": "minor transfers: with no enum, any box on plays them",
+      "before": { "schema_version": "1.1", "notrump": { "transfers": { "two_nt": true }, "two_nt": { "minor_transfers": false, "transfer_3s_clubs": true, "transfer_4c_diamonds": false } } },
+      "after": { "schema_version": "2.0", "notrump": { "minor_transfers": { "two_nt": true, "over_2nt": false, "over_2nt_3s_clubs": true, "over_2nt_4c_diamonds": false, "play": true } } }
+    },
+    {
+      "name": "minor transfers: with no enum and no box on, the switch is left unset",
+      "before": { "schema_version": "1.0", "notrump": { "transfers": { "two_nt_clubs": false } } },
+      "after": { "schema_version": "2.0", "notrump": { "minor_transfers": { "two_nt_clubs": false } } }
+    },
+    {
+      "name": "RKCB 1430: the switch on, style 1430",
+      "before": { "schema_version": "1.0", "slam": { "blackwood": { "rkcb_1430": true, "rkcb_0314": false, "standard": false } } },
+      "after": { "schema_version": "2.0", "slam": { "blackwood": { "play": false }, "rkcb": { "play": true, "style": "1430" } } }
+    },
+    {
+      "name": "RKCB 0314, through the editor's older path",
+      "before": { "other_conventions": { "blackwood": { "rkcb_0314": true } } },
+      "after": { "schema_version": "2.0", "slam": { "rkcb": { "play": true, "style": "0314" } } }
+    },
+    {
+      "name": "RKCB: both boxes off is the switch off",
+      "before": { "schema_version": "1.0", "slam": { "blackwood": { "rkcb_1430": false, "rkcb_0314": false } } },
+      "after": { "schema_version": "2.0", "slam": { "rkcb": { "play": false } } }
+    },
+    {
+      "name": "RKCB: both boxes on (a conflict) keeps the first, 1430",
+      "before": { "schema_version": "1.0", "slam": { "blackwood": { "rkcb_1430": true, "rkcb_0314": true } } },
+      "after": { "schema_version": "2.0", "slam": { "rkcb": { "play": true, "style": "1430" } } }
+    },
+    {
+      "name": "Reverse Flannery: 2♦ moves, and the switch is on",
+      "before": { "schema_version": "1.0", "two_level": { "two_diamonds": { "reverse_flannery": true }, "reverse_flannery": { "two_h": false } } },
+      "after": { "schema_version": "2.0", "two_level": { "reverse_flannery": { "two_h": false, "two_d": true, "play": true } } }
+    },
+    {
+      "name": "Reverse Flannery: 2♠ alone turns the switch on; none on leaves it unset",
+      "before": { "schema_version": "1.0", "two_level": { "reverse_flannery": { "two_h": false, "two_s": true } }, "notrump": { "transfers": { "vs_2c": true } } },
+      "after": { "schema_version": "2.0", "two_level": { "reverse_flannery": { "two_h": false, "two_s": true, "play": true } }, "notrump": { "jacoby_transfers": { "vs_2c": true } } }
+    },
+    {
+      "name": "a value the card already has at a new path wins",
+      "before": { "schema_version": "1.0", "notrump": { "transfers": { "jacoby": false }, "jacoby_transfers": { "play": true } } },
+      "after": { "schema_version": "2.0", "notrump": { "jacoby_transfers": { "play": true } } }
+    },
+    {
+      "name": "a card already in 2.0 is not changed",
+      "before": { "schema_version": "2.0", "notrump": { "minor_transfers": { "play": true, "style": "relay" } }, "three_nt": { "one_suit": true } },
+      "after": { "schema_version": "2.0", "notrump": { "minor_transfers": { "play": true, "style": "relay" } }, "three_nt": { "one_suit": true } }
+    },
+    {
+      "name": "a card with no version already in 2.0 paths is not disturbed",
+      "before": { "notrump": { "minor_transfers": { "play": true, "style": "relay" }, "texas": { "play": true } }, "_bbo_raw": { "x": 1 } },
+      "after": { "schema_version": "2.0", "notrump": { "minor_transfers": { "play": true, "style": "relay" }, "texas": { "play": true } }, "_bbo_raw": { "x": 1 } }
+    }
+  ]
+}

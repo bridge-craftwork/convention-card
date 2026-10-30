@@ -430,10 +430,8 @@ mod tests {
 
     #[test]
     fn aliases_resolve_to_canonical_field() {
-        let f = registry()
-            .get("other_conventions.blackwood.rkcb_1430")
-            .unwrap();
-        assert_eq!(f.path, "slam.blackwood.rkcb_1430");
+        let f = registry().get("other_conventions.gerber.play").unwrap();
+        assert_eq!(f.path, "slam.gerber.play");
     }
 
     #[test]

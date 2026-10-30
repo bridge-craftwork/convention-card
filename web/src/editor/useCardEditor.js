@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { alertSummary, alertsFor } from '../../../js/spec.js'
+import { upgradeCard, upgradeCardData } from '../../../js/migrate.js'
 import {
   CONVENTION_CATALOG,
   SECTION_META,
@@ -8,6 +9,7 @@ import {
   getLevelForEntry,
   getLevelNumberForEntry,
   setEntryChecked,
+  alertPathOf,
   writePath
 } from './conventionCatalog.js'
 
@@ -111,7 +113,10 @@ function createState(storage, overlays) {
     try { return JSON.parse(JSON.stringify(card.card_data)) } catch { return {} }
   }
 
+  // A card saved in an older schema is shown, and saved again, in the
+  // current one (js/migrate.js). The upgrade alone is not an unsaved edit.
   function setCurrentCard(card) {
+    card = upgradeCard(card)
     currentCard.value = card
     editedCardData.value = cloneCardData(card)
     activeSection.value = pickInitialSection(card)
@@ -214,8 +219,8 @@ function createState(storage, overlays) {
         profStatus: tierToProf(tier),
         checked: cardData ? isEntryChecked(entry, cardData) : false,
         level: getLevelForEntry(entry),
-        alert: alertSummary(entry.cardPath, regulator.value),
-        alertCalls: alertsFor(entry.cardPath, regulator.value),
+        alert: alertSummary(alertPathOf(entry), regulator.value),
+        alertCalls: alertsFor(alertPathOf(entry), regulator.value),
         levelNumber: getLevelNumberForEntry(entry) ?? null
       })
     }
@@ -333,7 +338,7 @@ function createState(storage, overlays) {
    */
   async function overwriteCard(cardId, { name, description, cardData }) {
     if (!user()) throw new Error('Must be signed in')
-    await storage.overwrite(cardId, { name, description, cardData })
+    await storage.overwrite(cardId, { name, description, cardData: upgradeCardData(cardData) })
     await loadUserCardLinks()
     await switchCard(cardId)
   }
@@ -364,7 +369,7 @@ function createState(storage, overlays) {
     // A new card opens first only when it is the person's first card; after
     // that, which card is primary is their choice (makePrimary).
     const primary = !userCardLinks.value.length
-    const cardId = await storage.create({ name: name || 'My convention card', description, cardData, visibility, primary })
+    const cardId = await storage.create({ name: name || 'My convention card', description, cardData: upgradeCardData(cardData), visibility, primary })
     await loadUserCardLinks()
     await switchCard(cardId)
     return cardId

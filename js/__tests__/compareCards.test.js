@@ -47,10 +47,19 @@ describe('compareCards', () => {
 
   it('shows both alternatives where a card has two on', () => {
     const r = compareCards([
-      card({ 'slam.blackwood.rkcb_1430': true, 'slam.blackwood.rkcb_0314': true }),
-      card({ 'slam.blackwood.rkcb_1430': true }),
+      card({ 'slam.blackwood.play': true, 'slam.rkcb.play': true }),
+      card({ 'slam.rkcb.play': true }),
     ])
-    expect(texts(row(r, 'slam.keycard_responses'))).toEqual(['RKCB 1430 + RKCB 0314', 'RKCB 1430'])
+    expect(texts(row(r, 'slam.ace_ask'))).toEqual(['Standard + Roman Keycard', 'Roman Keycard'])
+  })
+
+  it('compares a saved 1.x card as its upgrade', () => {
+    const r = compareCards([
+      card({ 'slam.blackwood.rkcb_0314': true }, { schema_version: '1.0' }),
+      card({ 'slam.rkcb.play': true, 'slam.rkcb.style': '0314' }, { schema_version: '2.0' }),
+    ])
+    expect(row(r, 'slam.ace_ask').status).toBe('same')
+    expect(row(r, 'slam.rkcb.style').status).toBe('same')
   })
 
   it('folds a range and its plus and minus into one row', () => {

@@ -93,12 +93,16 @@ fn default_card_imports_expected_settings() {
         card.get("major_openings.min_length_1st_2nd"),
         Some(&Value::Text("5".into()))
     );
-    assert!(card.is_on("major_openings.two_over_one.game_force"));
+    assert!(card.is_on("major_openings.two_over_one.play"));
     assert!(card.is_on("general.forcing_opening_2c"));
     assert!(!card.is_on("general.forcing_opening_1c"));
     assert!(!card.is_on("minor_openings.one_club.art_forcing"));
     assert!(card.is_on("notrump.smolen.play"));
-    assert!(card.is_on("slam.blackwood.rkcb_1430"));
+    assert!(card.is_on("slam.rkcb.play"));
+    assert_eq!(
+        card.get("slam.rkcb.style"),
+        Some(&Value::Text("1430".into()))
+    );
     assert!(!card.is_on("major_openings.drury.play"));
     // Passthrough keys are exactly the unmapped ones.
     for (key, _) in &report.passthrough {
@@ -124,7 +128,7 @@ fn sayc_card_opens_five_card_majors() {
     );
     // A 2/1 in SAYC is forcing for one round, not to game.
     assert_eq!(
-        card.get("major_openings.two_over_one.game_force"),
+        card.get("major_openings.two_over_one.play"),
         Some(&Value::Bool(false))
     );
 }
@@ -152,7 +156,7 @@ fn precision_card_selects_precision() {
 }
 
 #[test]
-fn seed_card_loads_through_aliases() {
+fn seed_card_loads_through_aliases_and_the_migration() {
     let text = fs::read_to_string(
         Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/21_intermediate_card.json"),
     )
@@ -160,8 +164,22 @@ fn seed_card_loads_through_aliases() {
     let (card, report) = Card::from_json(&vocab(), &text).unwrap();
     assert!(report.invalid.is_empty(), "{:?}", report.invalid);
     assert_eq!(card.metadata.name.as_deref(), Some("2/1 Intermediate"));
-    assert!(card.is_on("notrump.transfers.jacoby"));
-    assert!(card.is_on("slam.blackwood.rkcb_1430"));
+    // A saved 1.0 card: its renamed fields are read at their 2.0 paths.
+    assert_eq!(report.migrated.as_deref(), Some("1.0"));
+    assert!(card.is_on("notrump.jacoby_transfers.play"));
+    assert!(card.is_on("notrump.texas.bid_4h"));
+    assert!(card.is_on("major_openings.two_over_one.play"));
+    assert!(card.is_on("slam.rkcb.play"));
+    assert_eq!(
+        card.get("slam.rkcb.style"),
+        Some(&Value::Text("1430".into()))
+    );
+    assert!(card.is_on("slam.rkcb.queen_ask"));
+    assert!(
+        report.unknown.iter().all(|p| !p.contains("transfers.")),
+        "{:?}",
+        report.unknown
+    );
     // `game_forcing` in the seed is `game_force` in the catalog.
     assert!(card.is_on("other_conventions.fourth_suit_forcing.game_force"));
     assert!(report
@@ -169,9 +187,13 @@ fn seed_card_loads_through_aliases() {
         .iter()
         .any(|(from, _)| from == "competitive.takeout_doubles.style"));
 
-    // Saving and reloading keeps everything, including unknown leaves.
-    let (again, _) = Card::from_json(&vocab(), &card.to_json_string()).unwrap();
+    // Saving and reloading keeps everything, including unknown leaves; the
+    // saved card is 2.0 and needs no upgrade.
+    let saved = card.to_json();
+    assert_eq!(saved["schema_version"], "2.0");
+    let (again, report) = Card::from_json(&vocab(), &card.to_json_string()).unwrap();
     assert_eq!(again, card);
+    assert_eq!(report.migrated, None);
 }
 
 #[test]
@@ -182,21 +204,33 @@ fn minor_transfer_treatment_is_derived_from_bba_switches() {
         )
         .unwrap();
         let (card, _) = bbsa::import(&vocab(), &text, None).unwrap();
-        card.get("notrump.minor_transfers").cloned()
+        (
+            card.get("notrump.minor_transfers.play").cloned(),
+            card.get("notrump.minor_transfers.style").cloned(),
+        )
     };
+    let text = |s: &str| Some(Value::Text(s.into()));
     // 2S clubs and 3C diamonds: BBA's own treatment.
-    assert_eq!(style("21GF-DEFAULT"), Some(Value::Text("bba".into())));
+    assert_eq!(
+        style("21GF-DEFAULT"),
+        (Some(Value::Bool(true)), text("bba"))
+    );
     // 2NT clubs and 3C diamonds, 2S Minor Suit Stayman.
     assert_eq!(
         style("21GF-MSTandMSS"),
-        Some(Value::Text("two_nt_three_c".into()))
+        (Some(Value::Bool(true)), text("two_nt_three_c"))
     );
     // Minor Suit Stayman over 1NT, or 3C Puppet Stayman: not modelled.
-    assert_eq!(style("21GF-MSS"), Some(Value::Text("none".into())));
-    assert_eq!(style("21GF-Puppet"), Some(Value::Text("none".into())));
-    // A card that never names it plays the default relay.
+    assert_eq!(style("21GF-MSS"), (Some(Value::Bool(false)), None));
+    assert_eq!(style("21GF-Puppet"), (Some(Value::Bool(false)), None));
+    // The style defaults to relay; whether they are played at all is
+    // the card's to say.
     assert_eq!(
-        Card::new(&vocab()).effective("notrump.minor_transfers"),
-        Some(&Value::Text("relay".into()))
+        Card::new(&vocab()).effective("notrump.minor_transfers.style"),
+        text("relay").as_ref()
+    );
+    assert_eq!(
+        Card::new(&vocab()).effective("notrump.minor_transfers.play"),
+        None
     );
 }

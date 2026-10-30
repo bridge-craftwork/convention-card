@@ -89,7 +89,7 @@
   },
   {
    "fields": [
-    "notrump.transfers.jacoby"
+    "notrump.jacoby_transfers.play"
    ],
    "call": "2♦/2♥",
    "after": "1NT",
@@ -100,7 +100,7 @@
   },
   {
    "fields": [
-    "notrump.transfers.jacoby"
+    "notrump.jacoby_transfers.play"
    ],
    "call": "3♦/3♥",
    "after": "2NT",
@@ -111,7 +111,7 @@
   },
   {
    "fields": [
-    "notrump.transfers.jacoby"
+    "notrump.jacoby_transfers.play"
    ],
    "call": "2♥/2♠",
    "after": "1NT–2♦/2♥",
@@ -122,7 +122,7 @@
   },
   {
    "fields": [
-    "notrump.transfers.jacoby"
+    "notrump.jacoby_transfers.play"
    ],
    "call": "3♥/3♠",
    "after": "1NT–2♦/2♥",
@@ -133,7 +133,7 @@
   },
   {
    "fields": [
-    "notrump.transfers.jacoby"
+    "notrump.jacoby_transfers.play"
    ],
    "call": "3♥",
    "when": "responder's rebid has an agreed artificial meaning",
@@ -144,7 +144,7 @@
   },
   {
    "fields": [
-    "notrump.transfers.texas"
+    "notrump.texas.play"
    ],
    "call": "4♦/4♥",
    "after": "1NT",
@@ -155,7 +155,7 @@
   },
   {
    "fields": [
-    "notrump.transfers.texas"
+    "notrump.texas.play"
    ],
    "call": "4♥/4♠",
    "after": "1NT–4♦/4♥",
@@ -261,7 +261,7 @@
   },
   {
    "fields": [
-    "notrump.lebensohl.over_interference"
+    "notrump.lebensohl.play"
    ],
    "call": "2NT",
    "after": "1NT–(2x)",
@@ -271,7 +271,7 @@
   },
   {
    "fields": [
-    "notrump.lebensohl.over_interference"
+    "notrump.lebensohl.play"
    ],
    "call": "3♣",
    "after": "1NT–(2x)–2NT",
@@ -281,7 +281,7 @@
   },
   {
    "fields": [
-    "notrump.lebensohl.over_interference"
+    "notrump.lebensohl.play"
    ],
    "call": "3 of their suit",
    "after": "1NT–(2x)",
@@ -292,7 +292,7 @@
   },
   {
    "fields": [
-    "notrump.lebensohl.over_interference"
+    "notrump.lebensohl.play"
    ],
    "call": "3NT",
    "after": "1NT–(2x)",
@@ -336,7 +336,7 @@
   },
   {
    "fields": [
-    "major_openings.two_over_one.game_force"
+    "major_openings.two_over_one.play"
    ],
    "call": "2♣/2♦/2♥",
    "after": "1♥/1♠",
@@ -347,7 +347,7 @@
   },
   {
    "fields": [
-    "major_openings.two_over_one.game_force"
+    "major_openings.two_over_one.play"
    ],
    "call": "2♣ (may be short)",
    "when": "the 2♣ response may hold fewer than three clubs",
@@ -977,7 +977,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.multi"
+    "two_level.multi.play"
    ],
    "call": "2♦",
    "after": "opening",
@@ -987,7 +987,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.multi"
+    "two_level.multi.play"
    ],
    "call": "2♥/2♠",
    "after": "2♦",
@@ -997,7 +997,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.multi"
+    "two_level.multi.play"
    ],
    "call": "2NT",
    "after": "2♦",
@@ -1008,7 +1008,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.multi"
+    "two_level.multi.play"
    ],
    "call": "3-level replies",
    "after": "2♦–2NT",
@@ -1018,7 +1018,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.mini_roman"
+    "two_level.mini_roman.play"
    ],
    "call": "2♦",
    "after": "opening",
@@ -1028,7 +1028,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.mini_roman"
+    "two_level.mini_roman.play"
    ],
    "call": "2NT",
    "after": "2♦",
@@ -1038,7 +1038,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.mini_roman"
+    "two_level.mini_roman.play"
    ],
    "call": "3-level replies",
    "after": "2♦–2NT",
@@ -1048,7 +1048,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.mini_roman"
+    "two_level.mini_roman.play"
    ],
    "call": "2♥/2♠/3♣",
    "after": "2♦",
@@ -1058,7 +1058,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.reverse_flannery"
+    "two_level.reverse_flannery.two_d"
    ],
    "call": "2♦",
    "after": "opening",
@@ -1068,7 +1068,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.reverse_flannery"
+    "two_level.reverse_flannery.two_d"
    ],
    "call": "2♥/2♠/3♥/3♠",
    "after": "2♦",
@@ -1078,7 +1078,7 @@
   },
   {
    "fields": [
-    "two_level.two_diamonds.reverse_flannery"
+    "two_level.reverse_flannery.two_d"
    ],
    "call": "2NT",
    "after": "2♦",
@@ -1088,7 +1088,7 @@
   },
   {
    "fields": [
-    "two_level.two_clubs.kokish"
+    "two_level.kokish.play"
    ],
    "call": "2♥",
    "after": "2♣–2♦",
@@ -1098,7 +1098,7 @@
   },
   {
    "fields": [
-    "two_level.two_clubs.kokish"
+    "two_level.kokish.play"
    ],
    "call": "2♠",
    "after": "2♣–2♦–2♥",
@@ -1108,7 +1108,7 @@
   },
   {
    "fields": [
-    "two_level.two_clubs.kokish"
+    "two_level.kokish.play"
    ],
    "call": "2NT",
    "after": "2♣–2♦–2♥–2♠",
@@ -1119,7 +1119,7 @@
   },
   {
    "fields": [
-    "two_level.two_clubs.kokish"
+    "two_level.kokish.play"
    ],
    "call": "3♥ (natural)",
    "after": "2♣–2♦–2♥–2♠",
@@ -1129,7 +1129,7 @@
   },
   {
    "fields": [
-    "two_level.two_clubs.parrish_bust"
+    "two_level.parrish_bust.play"
    ],
    "call": "2♥",
    "after": "2♣",
@@ -1170,7 +1170,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.standard"
+    "slam.blackwood.play"
    ],
    "call": "4NT",
    "after": "suit agreed",
@@ -1181,7 +1181,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.standard"
+    "slam.blackwood.play"
    ],
    "call": "5♣/5♦/5♥/5♠",
    "after": "4NT",
@@ -1193,7 +1193,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.standard"
+    "slam.blackwood.play"
    ],
    "call": "5NT and replies",
    "after": "4NT–5x",
@@ -1205,7 +1205,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.rkcb_1430"
+    "slam.rkcb.play"
    ],
    "call": "4NT",
    "after": "suit agreed",
@@ -1216,7 +1216,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.rkcb_1430"
+    "slam.rkcb.play"
    ],
    "call": "5♣/5♦/5♥/5♠",
    "after": "4NT",
@@ -1228,7 +1228,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.rkcb_1430"
+    "slam.rkcb.play"
    ],
    "call": "5NT and replies",
    "after": "4NT–5x",
@@ -1240,42 +1240,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.rkcb_0314"
-   ],
-   "call": "4NT",
-   "after": "suit agreed",
-   "by": "either",
-   "rule": "none",
-   "wbf": "alert",
-   "note": "Ace or keycard ask. Exempt in the ACBL and above 3NT in the EBU; the WBF has no level cut-off."
-  },
-  {
-   "fields": [
-    "slam.blackwood.rkcb_0314"
-   ],
-   "call": "5♣/5♦/5♥/5♠",
-   "after": "4NT",
-   "by": "either",
-   "rule": "delayed",
-   "ebu": "none",
-   "wbf": "alert",
-   "note": "Replies to the ask. The ACBL gives a delayed alert; the EBU does not alert above 3NT; the WBF alerts them."
-  },
-  {
-   "fields": [
-    "slam.blackwood.rkcb_0314"
-   ],
-   "call": "5NT and replies",
-   "after": "4NT–5x",
-   "by": "either",
-   "rule": "delayed",
-   "ebu": "none",
-   "wbf": "alert",
-   "note": "King ask and its replies. Delayed in the ACBL, not alerted in the EBU, alerted in the WBF."
-  },
-  {
-   "fields": [
-    "slam.blackwood.queen_ask"
+    "slam.rkcb.queen_ask"
    ],
    "call": "Next step / 5NT",
    "after": "4NT–5♣/5♦",
@@ -1287,7 +1252,7 @@
   },
   {
    "fields": [
-    "slam.blackwood.queen_ask"
+    "slam.rkcb.queen_ask"
    ],
    "call": "Replies",
    "after": "4NT–5x–ask",
@@ -2184,7 +2149,7 @@
   },
   {
    "fields": [
-    "notrump.three_nt.one_suit"
+    "notrump.gambling_3nt.play"
    ],
    "call": "3NT",
    "after": "opening",
