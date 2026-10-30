@@ -10,6 +10,7 @@
 
 import { field, BBSA_MAP, BBSA_LAYOUT } from './spec.js'
 import { writePath } from './paths.js'
+import { upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
 
 const PADDING = 'Not defined'
 const { implied: IMPLIED = {}, derived: DERIVED = [], ...KEYS } = BBSA_MAP
@@ -116,7 +117,7 @@ function applyDerived(card) {
 }
 
 function toCardData(card, passthrough, name) {
-  const out = { schema_version: '1.0', format: 'bridge_classroom', metadata: name ? { name } : {} }
+  const out = { schema_version: CARD_SCHEMA_VERSION, format: 'bridge_classroom', metadata: name ? { name } : {} }
   for (const [path, v] of [...card.values].sort(([a], [b]) => (a < b ? -1 : 1))) writePath(out, path, v)
   if (Object.keys(passthrough).length) out.bba_passthrough = Object.fromEntries(Object.entries(passthrough).sort())
   return out
@@ -132,7 +133,7 @@ function fromCardData(cardData) {
       else if (field(path)) card.set(path, v)
     }
   }
-  const { metadata, bba_passthrough, schema_version, format, ...settings } = cardData || {}
+  const { metadata, bba_passthrough, schema_version, format, ...settings } = upgradeCardData(cardData || {})
   walk(settings, '')
   return { card, passthrough: bba_passthrough || {} }
 }

@@ -2,14 +2,24 @@
  "schema": "bbo-map/v1",
  "generated_from": "spec/formats/bbo-map.toml (do not edit)",
  "conventions": {
-  "1430": "other_conventions.blackwood.rkcb_1430",
-  "rkc": "other_conventions.blackwood.rkcb_0314",
-  "blackwood": "other_conventions.blackwood.standard",
+  "1430": {
+   "set": {
+    "slam.rkcb.play": true,
+    "slam.rkcb.style": "1430"
+   }
+  },
+  "rkc": {
+   "set": {
+    "slam.rkcb.play": true,
+    "slam.rkcb.style": "0314"
+   }
+  },
+  "blackwood": "slam.blackwood.play",
   "gerber": "other_conventions.gerber.play",
   "dopi": "slam.dopi",
   "depo": "slam.depo",
   "ropi": "slam.ropi",
-  "2over1GF": "major_openings.two_over_one.game_force",
+  "2over1GF": "major_openings.two_over_one.play",
   "F1C": "general.forcing_opening_1c",
   "F2C": "general.forcing_opening_2c",
   "major12-4": {
@@ -145,15 +155,15 @@
   },
   "1NStayman": "notrump.stayman.forcing",
   "1NPuppet": "notrump.stayman.puppet",
-  "1N2DTrans": "notrump.transfers.jacoby",
-  "1N2HTrans": "notrump.transfers.jacoby",
-  "1NTexas": "notrump.transfers.texas",
+  "1N2DTrans": "notrump.jacoby_transfers.play",
+  "1N2HTrans": "notrump.jacoby_transfers.play",
+  "1NTexas": "notrump.texas.play",
   "1NSmolen": "notrump.smolen.play",
-  "1NLeb": "notrump.lebensohl.over_interference",
+  "1NLeb": "notrump.lebensohl.play",
   "1NNeg": "notrump.dbl.negative",
-  "2NPuppet": "notrump.two_nt.puppet",
-  "2NJacoby": "notrump.two_nt.transfers_3level",
-  "2NTexas": "notrump.two_nt.transfers_4level",
+  "2NPuppet": "notrump.stayman.puppet_2nt",
+  "2NJacoby": "notrump.jacoby_transfers.over_2nt",
+  "2NTexas": "notrump.texas.over_2nt",
   "dblNegative": "doubles.negative.play",
   "dblResponsive": "doubles.responsive.play",
   "dblMaximal": "doubles.maximal",
@@ -260,9 +270,9 @@
   },
   "2N3S": "notrump.two_nt.three_s_desc",
   "3NOther": {
-   "text": "three_nt.one_suit_desc",
+   "text": "notrump.gambling_3nt.description",
    "also": {
-    "three_nt.one_suit": true
+    "notrump.gambling_3nt.play": true
    }
   },
   "major3NTMin": {

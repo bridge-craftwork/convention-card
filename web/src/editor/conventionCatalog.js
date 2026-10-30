@@ -116,20 +116,20 @@ export const STRUCTURED_FIELDS = {
       kind: 'text', placeholder: 'e.g. fast denies stopper' },
     { label: 'Texas transfers', kind: 'inline_checks',
       paths: [
-        { label: '4♣',  cardPath: 'notrump.transfers.texas_4c' },
-        { label: '4♦',  cardPath: 'notrump.transfers.texas_4d' },
-        { label: '4♥',  cardPath: 'notrump.transfers.texas_4h' },
-        { label: '4♠',  cardPath: 'notrump.transfers.texas_4s' }
+        { label: '4♣',  cardPath: 'notrump.texas.bid_4c' },
+        { label: '4♦',  cardPath: 'notrump.texas.bid_4d' },
+        { label: '4♥',  cardPath: 'notrump.texas.bid_4h' },
+        { label: '4♠',  cardPath: 'notrump.texas.bid_4s' }
       ] },
     // ─── 2NT ───
     { label: '2NT range', kind: 'range',
       from: 'notrump.two_nt.range_min', to: 'notrump.two_nt.range_max' },
     { label: '2NT options', kind: 'inline_checks',
       paths: [
-        { label: 'Puppet',           cardPath: 'notrump.two_nt.puppet' },
+        { label: 'Puppet',           cardPath: 'notrump.stayman.puppet_2nt' },
         { label: '3♠ relay',         cardPath: 'notrump.two_nt.three_s' },
-        { label: 'Transfer 3-level', cardPath: 'notrump.two_nt.transfers_3level' },
-        { label: 'Transfer 4-level', cardPath: 'notrump.two_nt.transfers_4level' },
+        { label: 'Transfer 3-level', cardPath: 'notrump.jacoby_transfers.over_2nt' },
+        { label: 'Transfer 4-level', cardPath: 'notrump.texas.over_2nt' },
         { label: 'Negative double',  cardPath: 'notrump.two_nt.neg_dbl' }
       ] },
     { label: '2NT 3♠ relay notes', cardPath: 'notrump.two_nt.three_s_desc',
@@ -137,8 +137,8 @@ export const STRUCTURED_FIELDS = {
     // ─── 3NT ───
     { label: '3NT range', kind: 'range',
       from: 'three_nt.range_min', to: 'three_nt.range_max' },
-    { label: '3NT one suit (gambling)', cardPath: 'three_nt.one_suit', kind: 'boolean' },
-    { label: '3NT one-suit notes', cardPath: 'three_nt.one_suit_desc',
+    { label: '3NT one suit (gambling)', cardPath: 'notrump.gambling_3nt.play', kind: 'boolean' },
+    { label: '3NT one-suit notes', cardPath: 'notrump.gambling_3nt.description',
       kind: 'text', placeholder: 'e.g. solid minor, no outside A or K' },
     // ─── Responses (right column) ───
     { label: '2♦ response', cardPath: 'notrump.responses.2d_other', column: 2,
@@ -403,6 +403,12 @@ export const STRUCTURED_FIELDS = {
  *   - desc:      One-line description (suit glyphs OK — use HTML entities)
  *   - cardPath:  Dotted path into card_data whose truthiness decides
  *                whether this row is checked
+ *   - (truthy)   The value(s) of cardPath that check the row, for an enum
+ *   - (play)     The convention's switch, when the row is one of its
+ *                styles or boxes: checked only while it is on, and checking
+ *                the row turns it on (RKCB 1430: slam.rkcb.play with style
+ *                1430; Reverse Flannery 2♦)
+ *   - (alertsFrom) The field whose alerts the row shows, when not cardPath
  *   - skillPath: Underlying skill in BAKER_BRIDGE_TAXONOMY (or null if
  *                this convention has no corresponding lesson yet)
  *   - (level)    Not set here: a row's level is its cardPath's level in the
@@ -420,12 +426,12 @@ export const CONVENTION_CATALOG = [
   {
     id: 'jacoby_transfers', section: 'notrump', name: 'Jacoby transfers',
     desc: '2♦ → 2♥, 2♥ → 2♠',
-    cardPath: 'notrump.transfers.jacoby', skillPath: 'bidding_conventions/jacoby_transfers'
+    cardPath: 'notrump.jacoby_transfers.play', skillPath: 'bidding_conventions/jacoby_transfers'
   },
   {
     id: 'texas_transfers', section: 'notrump', name: 'Texas transfers',
     desc: '4♦/4♥ at game level',
-    cardPath: 'notrump.transfers.texas', skillPath: 'bidding_conventions/jacoby_transfers'
+    cardPath: 'notrump.texas.play', skillPath: 'bidding_conventions/jacoby_transfers'
   },
   {
     id: 'smolen', section: 'notrump', name: 'Smolen',
@@ -440,7 +446,7 @@ export const CONVENTION_CATALOG = [
   {
     id: 'lebensohl_interference', section: 'notrump', name: 'Lebensohl (over interference)',
     desc: '2NT relay after interference to 1NT',
-    cardPath: 'notrump.lebensohl.over_interference', skillPath: 'competitive_bidding/lebensohl'
+    cardPath: 'notrump.lebensohl.play', skillPath: 'competitive_bidding/lebensohl'
   },
   {
     id: 'garbage_stayman', section: 'notrump', name: 'Garbage Stayman',
@@ -452,7 +458,7 @@ export const CONVENTION_CATALOG = [
   {
     id: 'two_over_one', section: 'major_openings', name: 'Two-over-one game force',
     desc: '2♣/2♦/2♥ response = GF',
-    cardPath: 'major_openings.two_over_one.game_force', skillPath: 'bidding_conventions/two_over_one'
+    cardPath: 'major_openings.two_over_one.play', skillPath: 'bidding_conventions/two_over_one'
   },
   {
     id: 'jacoby_2nt', section: 'major_openings', name: 'Jacoby 2NT',
@@ -550,27 +556,27 @@ export const CONVENTION_CATALOG = [
   {
     id: 'multi_2d', section: 'two_level', name: 'Multi 2♦',
     desc: 'Weak 2 in a major (or strong variants)',
-    cardPath: 'two_level.two_diamonds.multi', skillPath: null
+    cardPath: 'two_level.multi.play', skillPath: null
   },
   {
     id: 'mini_roman_2d', section: 'two_level', name: 'Mini-Roman 2♦',
     desc: '3-suited hand, short in a specified suit',
-    cardPath: 'two_level.two_diamonds.mini_roman', skillPath: null
+    cardPath: 'two_level.mini_roman.play', skillPath: null
   },
   {
     id: 'reverse_flannery_2d', section: 'two_level', name: 'Reverse Flannery 2♦',
     desc: '5+ ♥ and 4+ ♠, 11-15 HCP',
-    cardPath: 'two_level.two_diamonds.reverse_flannery', skillPath: null
+    cardPath: 'two_level.reverse_flannery.two_d', play: 'two_level.reverse_flannery.play', skillPath: null
   },
   {
     id: 'kokish', section: 'two_level', name: 'Kokish relay',
     desc: 'After 2♣–2♦, 2♥ asks; rebid shows hearts',
-    cardPath: 'two_level.two_clubs.kokish', skillPath: null
+    cardPath: 'two_level.kokish.play', skillPath: null
   },
   {
     id: 'parrish_2h_bust', section: 'two_level', name: 'Parrish 2♥ bust',
     desc: 'After 2♣, 2♥ shows a flat 0-3 HCP',
-    cardPath: 'two_level.two_clubs.parrish_bust', skillPath: null
+    cardPath: 'two_level.parrish_bust.play', skillPath: null
   },
   {
     id: 'mccabe', section: 'two_level', name: 'McCabe adjunct',
@@ -579,29 +585,27 @@ export const CONVENTION_CATALOG = [
   },
 
   // ─── Slam bidding ───
-  // Schema note: the seed previously used `slam.blackwood.*` paths,
-  // but `cardToTaxonomyMapping.js` looks for `other_conventions.*`.
-  // We follow the mapping so toggling these conventions in the editor
-  // also lights up the corresponding skill in coverage detection.
+  // RKCB is one convention (`slam.rkcb.play`) with a style; each of its two
+  // rows is the switch on with that style (`play` below).
   {
     id: 'standard_blackwood', section: 'slam', name: 'Standard Blackwood',
     desc: '4NT asks for aces (4 / 5 / 6 / 7 = 0–3 aces)',
-    cardPath: 'other_conventions.blackwood.standard', skillPath: 'bidding_conventions/blackwood'
+    cardPath: 'slam.blackwood.play', skillPath: 'bidding_conventions/blackwood'
   },
   {
     id: 'rkcb_1430', section: 'slam', name: 'RKCB 1430',
     desc: 'Roman Keycard Blackwood — 1-or-4 then 3-or-0',
-    cardPath: 'other_conventions.blackwood.rkcb_1430', skillPath: 'bidding_conventions/roman_keycard'
+    cardPath: 'slam.rkcb.style', truthy: '1430', play: 'slam.rkcb.play', alertsFrom: 'slam.rkcb.play', skillPath: 'bidding_conventions/roman_keycard'
   },
   {
     id: 'rkcb_0314', section: 'slam', name: 'RKCB 0314',
     desc: 'Roman Keycard Blackwood — 0-or-3 then 1-or-4',
-    cardPath: 'other_conventions.blackwood.rkcb_0314', skillPath: 'bidding_conventions/roman_keycard'
+    cardPath: 'slam.rkcb.style', truthy: '0314', play: 'slam.rkcb.play', alertsFrom: 'slam.rkcb.play', skillPath: 'bidding_conventions/roman_keycard'
   },
   {
     id: 'queen_ask', section: 'slam', name: 'Queen ask',
     desc: '5NT (or next step) asks for trump queen',
-    cardPath: 'other_conventions.blackwood.queen_ask', skillPath: 'bidding_conventions/roman_keycard'
+    cardPath: 'slam.rkcb.queen_ask', skillPath: 'bidding_conventions/roman_keycard'
   },
   {
     id: 'gerber', section: 'slam', name: 'Gerber',
@@ -778,6 +782,11 @@ export function getCatalogEntries(sectionId) {
   return CONVENTION_CATALOG.filter(e => e.section === sectionId)
 }
 
+/** The field whose alerts a catalog row shows (spec/alerts.toml). */
+export function alertPathOf(entry) {
+  return entry.alertsFrom || entry.cardPath
+}
+
 /** Single entry lookup by id (not cardPath — id is the stable key). */
 export function getCatalogEntry(id) {
   return CONVENTION_CATALOG.find(e => e.id === id) || null
@@ -845,6 +854,20 @@ export function writePath(obj, dotted, value) {
  * value or list-of-allowed). Mutates cardData.
  */
 export function setEntryChecked(entry, cardData, checked) {
+  if (entry.play) {
+    // A style or a box of a convention: on turns the convention on too. Off
+    // clears it when it is the one set; a style also turns the convention
+    // off (its other boxes, Reverse Flannery's 2♥ and 2♠, stay as they are).
+    const value = entry.truthy ?? true
+    if (checked) {
+      writePath(cardData, entry.play, true)
+      writePath(cardData, entry.cardPath, value)
+    } else if (readPath(cardData, entry.cardPath) === value) {
+      writePath(cardData, entry.cardPath, entry.truthy === undefined ? false : null)
+      if (entry.truthy !== undefined) writePath(cardData, entry.play, false)
+    }
+    return
+  }
   if (entry.truthy === undefined) {
     writePath(cardData, entry.cardPath, !!checked)
     return
@@ -873,6 +896,7 @@ export function setEntryChecked(entry, cardData, checked) {
  * `two_clubs.meaning === 'strong'`.
  */
 export function isEntryChecked(entry, cardData) {
+  if (entry.play && readPath(cardData, entry.play) !== true) return false
   const value = readPath(cardData, entry.cardPath)
   if (value === undefined || value === null) return false
   if (entry.truthy === undefined) return !!value

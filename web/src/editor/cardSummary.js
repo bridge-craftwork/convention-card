@@ -8,6 +8,7 @@ import { SKILL_LEVELS, bandOf } from './levels.js'
 import { readPath } from '../../../js/paths.js'
 import { field } from '../../../js/spec.js'
 import { namesTwoOverOne } from '../../../js/bridgodex.js'
+import { upgradeCardData } from '../../../js/migrate.js'
 
 const SYSTEM_NAMES = {
   two_over_one: '2/1',
@@ -97,7 +98,7 @@ export const DISTINGUISHING = [
     label: '2/1',
     // The field, or, for a card imported from Bridgodex before its
     // importer read it, the system's own words.
-    value: data => (on(data, 'major_openings.two_over_one.game_force') || namesTwoOverOne(readPath(data, 'general.system')) ? 'GF' : ''),
+    value: data => (on(data, 'major_openings.two_over_one.play') || namesTwoOverOne(readPath(data, 'general.system')) ? 'GF' : ''),
   },
   {
     key: 'attitude',
@@ -114,9 +115,8 @@ export const DISTINGUISHING = [
   {
     key: 'keycard',
     label: 'Keycard',
-    value: data => (on(data, 'slam.blackwood.rkcb_1430') ? '1430'
-      : on(data, 'slam.blackwood.rkcb_0314') ? '0314'
-        : on(data, 'slam.blackwood.standard') ? 'Blackwood' : ''),
+    value: data => (on(data, 'slam.rkcb.play') ? (['1430', '0314'].includes(readPath(data, 'slam.rkcb.style')) ? readPath(data, 'slam.rkcb.style') : 'RKCB')
+      : on(data, 'slam.blackwood.play') ? 'Blackwood' : ''),
   },
 ]
 
@@ -124,13 +124,14 @@ export const DISTINGUISHING = [
 export function distinguishing(cards, max = 3) {
   if (cards.length < 2) return []
   return DISTINGUISHING
-    .filter(d => new Set(cards.map(c => d.value(c.card_data || {}))).size > 1)
+    .filter(d => new Set(cards.map(c => d.value(upgradeCardData(c.card_data || {})))).size > 1)
     .slice(0, max)
 }
 
 /** One row of the table. */
 export function summarize(card) {
-  const data = card.card_data || {}
+  // A card saved in an older schema is read as the current one.
+  const data = upgradeCardData(card.card_data || {})
   return {
     id: card.id,
     name: card.name || 'Untitled card',
@@ -145,8 +146,8 @@ export function summarize(card) {
 // The paths above must stay real fields (a renamed field would quietly show blanks).
 export const PATHS = [
   'general.system', 'general.system_category', 'notrump.one_nt.range_min', 'notrump.one_nt.range_max',
-  'major_openings.two_over_one.game_force', 'carding.suits.standard_attitude', 'carding.suits.upside_down_attitude',
-  'carding.suits.standard_count', 'carding.suits.upside_down_count', 'slam.blackwood.rkcb_1430',
-  'slam.blackwood.rkcb_0314', 'slam.blackwood.standard',
+  'major_openings.two_over_one.play', 'carding.suits.standard_attitude', 'carding.suits.upside_down_attitude',
+  'carding.suits.standard_count', 'carding.suits.upside_down_count', 'slam.rkcb.play',
+  'slam.rkcb.style', 'slam.blackwood.play',
 ]
 export const unknownPaths = () => PATHS.filter(p => !field(p))

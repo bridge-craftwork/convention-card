@@ -55,8 +55,9 @@ describe('importBridgeodexJson — key-name regression guards', () => {
     const { card_data } = importBridgeodexJson(bdex({
       '1_no_trump': { '2d_tfr': 'on', '2h_tfr': 'on', '2s_tfr': 'on' }
     }))
-    expect(card_data.notrump.transfers.jacoby).toBe(true)
-    expect(card_data.notrump.transfers.spades_relay).toBe(true)
+    expect(card_data.notrump.jacoby_transfers.play).toBe(true)
+    // The 2♠ transfer box is a minor-suit transfer: it plays them.
+    expect(card_data.notrump.minor_transfers).toEqual({ play: true, two_s: true })
   })
 
   it('captures the 1NT range including the maximum', () => {
@@ -101,7 +102,7 @@ describe('2/1 from the general approach', async () => {
   })
   it('sets the 2/1 game-force field', () => {
     const { card_data } = importBridgeodexJson(bdex({ overview: { general_approach: '2/1' } }))
-    expect(card_data.major_openings.two_over_one.game_force).toBe(true)
+    expect(card_data.major_openings.two_over_one.play).toBe(true)
   })
 })
 
@@ -139,6 +140,7 @@ describe('exportBridgodexJson', () => {
   })
 
   it('exports a card made elsewhere, which reads back with the same agreements', () => {
+    // No schema_version: read as 1.x, and upgraded before the export.
     const card = {
       general: { system: '2/1 GF' },
       notrump: { one_nt: { range_min: 15, range_max: 17 }, stayman: { forcing: true }, transfers: { jacoby: true, texas: true } },
@@ -155,8 +157,9 @@ describe('exportBridgodexJson', () => {
     expect(out.settings.slams.other).toBe('Exclusion Blackwood')
     expect(out.settings.names.names).toBe('Pat and Sam')
     const back = importBridgeodexJson(out).card_data
-    expect(back.notrump.transfers).toMatchObject({ jacoby: true, texas: true })
-    expect(back.major_openings.two_over_one.game_force).toBe(true)
+    expect(back.notrump.jacoby_transfers.play).toBe(true)
+    expect(back.notrump.texas.play).toBe(true)
+    expect(back.major_openings.two_over_one.play).toBe(true)
     expect(back.leads.vs_nt.honors.lead_choice_kt9x).toBe(2)
     expect(back.notes.slam_notes).toBe('Exclusion Blackwood')
   })

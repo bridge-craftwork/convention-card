@@ -4,6 +4,7 @@ import path from 'path'
 import { createTool, OUTPUTS } from '../src/tool.js'
 import { decodeCardFromUrl } from '../../js/handoff.js'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../../js/assets.js'
+import { upgradeCardData } from '../../js/migrate.js'
 
 // window.card, the bridge-craftwork tool contract, driven as the page drives
 // it but with a stand-in editor: `current` is the open card, `open` records
@@ -12,6 +13,8 @@ const ROOT = path.resolve(__dirname, '../..')
 const SEED = JSON.parse(fs.readFileSync(path.join(ROOT, 'crates/bridge-card/tests/fixtures/21_intermediate_card.json'), 'utf8'))
 const BBSA = fs.readFileSync(path.join(ROOT, 'crates/bridge-card/tests/fixtures/bbsa/21GF-DEFAULT.bbsa'), 'utf8')
 const OPEN = { name: 'Open card', description: null, card_data: SEED }
+// SEED is a saved 1.0 card; what the tool writes is in schema 2.0.
+const SEED_2 = upgradeCardData(SEED)
 
 function tool(current = OPEN) {
   const opened = []
@@ -66,7 +69,7 @@ describe('window.card', () => {
     expect(pdf.output).toBeInstanceOf(Uint8Array)
     const back = await t.run(pdf.output, { to: 'card_data' })
     expect(back).toMatchObject({ ok: true, from: 'pdf', name: 'Open card' })
-    expect(back.output).toEqual(SEED)
+    expect(back.output).toEqual(SEED_2)
   })
 
   it('makes the drawn PDF', async () => {
@@ -79,11 +82,11 @@ describe('window.card', () => {
     const { t } = tool()
     const link = await t.getOutput({ to: 'link' })
     expect(link.output).toMatch(/^https:\/\/bridge-craftwork\.com\/card\/#import=v1\./)
-    expect((await decodeCardFromUrl(link.output.split('#import=')[1])).card_data).toEqual(SEED)
+    expect((await decodeCardFromUrl(link.output.split('#import=')[1])).card_data).toEqual(SEED_2)
     const bc = await t.getOutput({ to: 'bridge-classroom' })
     expect(bc.output).toMatch(/^https:\/\/bridge-classroom\.com\/solo-practice-app\/#\/convention-card\?import=v1\./)
     // A link reads straight back in.
-    expect((await t.run(link.output, { to: 'card_data' })).output).toEqual(SEED)
+    expect((await t.run(link.output, { to: 'card_data' })).output).toEqual(SEED_2)
   })
 
   it('setInput opens the card it read', async () => {

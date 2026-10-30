@@ -17,6 +17,7 @@
 
 import { jsPDF } from 'jspdf'
 import { readPath } from './paths.js'
+import { upgradeCard } from './migrate.js'
 
 // ─── Page constants (mm) ───────────────────────────────────────
 const PAGE_W = 215.9   // letter portrait
@@ -333,13 +334,13 @@ function renderOneNt(doc, card, x, y, w) {
   // Conventions in use
   drawCheckRow(doc, x + 1.2, cy, w - 2, 'Conv', [
     { label: 'Stay', checked: !!r(card, 'notrump.stayman.forcing') },
-    { label: 'Jac',  checked: !!r(card, 'notrump.transfers.jacoby') },
-    { label: 'Tex',  checked: !!r(card, 'notrump.transfers.texas') }
+    { label: 'Jac',  checked: !!r(card, 'notrump.jacoby_transfers.play') },
+    { label: 'Tex',  checked: !!r(card, 'notrump.texas.play') }
   ], 10)
   cy += 3.4
   drawCheckRow(doc, x + 1.2, cy, w - 2, '', [
     { label: 'Smol', checked: !!r(card, 'notrump.smolen.play') },
-    { label: 'Lebn', checked: !!r(card, 'notrump.lebensohl.over_interference') },
+    { label: 'Lebn', checked: !!r(card, 'notrump.lebensohl.play') },
     { label: 'Pup',  checked: !!r(card, 'notrump.stayman.puppet') }
   ], 4)
   return h
@@ -353,9 +354,9 @@ function renderTwoNt(doc, card, x, y, w) {
   drawLabelValue(doc, x + 1.2, cy, w - 2, 'Range', range(card, 'notrump.two_nt.range_min', 'notrump.two_nt.range_max'), 10)
   cy += 3.4
   drawCheckRow(doc, x + 1.2, cy, w - 2, 'Conv', [
-    { label: 'Pup',  checked: !!r(card, 'notrump.two_nt.puppet') },
-    { label: 'Tfr3', checked: !!r(card, 'notrump.two_nt.transfers_3level') },
-    { label: 'Tfr4', checked: !!r(card, 'notrump.two_nt.transfers_4level') }
+    { label: 'Pup',  checked: !!r(card, 'notrump.stayman.puppet_2nt') },
+    { label: 'Tfr3', checked: !!r(card, 'notrump.jacoby_transfers.over_2nt') },
+    { label: 'Tfr4', checked: !!r(card, 'notrump.texas.over_2nt') }
   ], 10)
   return h
 }
@@ -368,7 +369,7 @@ function renderThreeNt(doc, card, x, y, w) {
   drawLabelValue(doc, x + 1.2, cy, w - 2, 'Range', range(card, 'three_nt.range_min', 'three_nt.range_max'), 10)
   cy += 3.4
   drawCheckRow(doc, x + 1.2, cy, w - 2, '', [
-    { label: 'Gambling', checked: !!r(card, 'three_nt.one_suit') }
+    { label: 'Gambling', checked: !!r(card, 'notrump.gambling_3nt.play') }
   ], 2)
   return h
 }
@@ -540,9 +541,9 @@ function renderSlams(doc, card, x, y, w) {
   drawSectionTitle(doc, x, y, 'Slams')
   let cy = y + 6
   drawCheckRow(doc, x + 1.2, cy, w - 2, '4NT', [
-    { label: 'BW',   checked: !!r(card, 'other_conventions.blackwood.standard') },
-    { label: '0314', checked: !!r(card, 'other_conventions.blackwood.rkcb_0314') },
-    { label: '1430', checked: !!r(card, 'other_conventions.blackwood.rkcb_1430') }
+    { label: 'BW',   checked: !!r(card, 'slam.blackwood.play') },
+    { label: '0314', checked: r(card, 'slam.rkcb.play') === true && r(card, 'slam.rkcb.style') === '0314' },
+    { label: '1430', checked: r(card, 'slam.rkcb.play') === true && r(card, 'slam.rkcb.style') === '1430' }
   ], 10)
   cy += 3.4
   drawCheckRow(doc, x + 1.2, cy, w - 2, 'Gerber', [
@@ -802,6 +803,7 @@ function renderHeader(doc, card) {
  * decides what to do (`doc.save('filename.pdf')`, blob URL, etc.).
  */
 export function buildAcblCardPdf(card) {
+  card = upgradeCard(card)
   const doc = new jsPDF({ unit: 'mm', format: 'letter', orientation: 'portrait' })
   const layout = makeLayout()
 

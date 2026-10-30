@@ -23,11 +23,13 @@ import {
   ACBL_FIELD_MAPS,
   ACBL_SPLIT_GROUPS,
   isCheckOn,
+  entryValue,
   readEmbeddedPayload,
   sanitizeForWinAnsi,
 } from './acblClassicFillPdf.js'
 import { readPath, writePath } from './paths.js'
 import { field } from './spec.js'
+import { needsUpgrade, upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
 import { checkValue } from './checkCard.js'
 
 // The suffix of the box the export adds for a value's second line (trySplitIntoTwoLines).
@@ -63,7 +65,7 @@ function detectTemplate(boxes) {
 function predictWritten(cardData, template) {
   const values = {}
   for (const e of ACBL_FIELD_MAPS[template]) {
-    const v = readPath(cardData, e.card)
+    const v = entryValue(e, cardData)
     if (e.kind === 'check') values[e.pdf] = isCheckOn(e, v)
     else if (v != null) values[e.pdf] = sanitizeForWinAnsi(shaped(e, v, cardData))
   }
@@ -124,10 +126,12 @@ function parseText(path, text) {
 /**
  * Read a card from an ACBL PDF's bytes: `{ name, description, card_data,
  * report }`, or null when the PDF holds neither our card nor an ACBL form.
- * `report` is `{ source, template, edits, skipped }`: `source` is "card"
+ * `report` is `{ source, template, edits, skipped, migrated }`: `source` is "card"
  * (embedded, nothing changed), "card+boxes" (embedded, with hand edits
  * applied) or "boxes" (no card inside: read from the boxes); each edit is
  * `{ box, path, from, to }` and each skipped box `{ box, found, reason }`.
+ * `migrated` is the schema version of an embedded card older than the
+ * current one (it is read upgraded, js/migrate.js), else null.
  */
 export async function readCardFromPdf(bytes) {
   let pdf
@@ -137,7 +141,9 @@ export async function readCardFromPdf(bytes) {
     throw new Error(`Could not parse PDF (${err?.message || err})`)
   }
   const payload = readEmbeddedPayload(pdf)
-  const embedded = payload && (payload.card_data || payload)
+  // A card saved in an older schema is read as the current one (migrate.js).
+  const saved = payload && (payload.card_data || payload)
+  const embedded = saved ? upgradeCardData(saved) : null
   let boxes = {}
   try { boxes = readBoxes(pdf.getForm()) } catch { /* no form */ }
   const template = payload?.pdf_fields?.template || detectTemplate(boxes)
@@ -147,9 +153,9 @@ export async function readCardFromPdf(bytes) {
     ...(payload?.updatedAt && { updatedAt: payload.updatedAt }),
     name: payload?.name || null,
     description: payload?.description || null,
-    card_data: JSON.parse(JSON.stringify(embedded || { schema_version: '1.0', format: 'bridge_classroom', metadata: {} })),
+    card_data: JSON.parse(JSON.stringify(embedded || { schema_version: CARD_SCHEMA_VERSION, format: 'bridge_classroom', metadata: {} })),
   }
-  const report = { source: embedded ? 'card' : 'boxes', template, edits: [], skipped: [] }
+  const report = { source: embedded ? 'card' : 'boxes', template, edits: [], skipped: [], migrated: saved && needsUpgrade(saved) ? String(saved.schema_version ?? '1.0') : null }
   if (!template || !Object.keys(boxes).length) {
     // A flattened PDF, or not an ACBL card: only the embedded card, if any.
     return embedded ? { ...record, report } : null
@@ -255,7 +261,8 @@ export async function readCardFromPdf(bytes) {
   for (const [path, entries] of paths) {
     const box = entries.map(e => e.pdf).find(b => changed.has(b))
     const on = entries.filter(e => boxes[e.pdf] === true)
-    const current = readPath(cardData, path)
+    const current = entryValue(entries[0], cardData)
+    const play = entries[0].play
     if (entries.every(e => e.value === undefined)) {
       // Yes/no, perhaps printed more than once (Jacoby: the 2♦ and 2♥ boxes).
       if (on.length && on.length < entries.length) {
@@ -274,8 +281,11 @@ export async function readCardFromPdf(bytes) {
       const v = on[0].value
       const values = (Array.isArray(v) ? v : [v]).map(String)
       if (!values.includes(String(current))) set(box, path, values[0])
+      // RKCB's 1430 box: RKCB played 1430.
+      if (play) set(box, play, true)
     } else if (entries.some(e => isCheckOn(e, current))) {
       set(box, path, undefined)
+      if (play) set(box, play, false)
     }
   }
 

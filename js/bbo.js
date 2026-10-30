@@ -23,6 +23,7 @@ import { field, BBO_MAP } from './spec.js'
 import { readPath, writePath } from './paths.js'
 import { normalizeSuitShorthand } from './suits.js'
 import { ledCards, ledValue, sameLead } from './leads.js'
+import { upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
 
 const known = path => {
   if (!field(path)) throw new Error(`BBO map: unknown field ${path}`)
@@ -241,7 +242,7 @@ export function importBboJson(input) {
   const partnerNames = (slots.fields.names && String(slots.fields.names).trim()) || name
 
   const card_data = {
-    schema_version: '1.0',
+    schema_version: CARD_SCHEMA_VERSION,
     format: 'bridge_classroom',
     metadata: { name, source: 'bbo', partner_names: partnerNames },
   }
@@ -276,7 +277,7 @@ function settings(cardData) {
       else if (field(path) && !blank(v)) values.set(canonical(path), v)
     }
   }
-  const { metadata, _bbo_raw, _bridgeodex_raw, bba_passthrough, schema_version, format, ...rest } = cardData || {}
+  const { metadata, _bbo_raw, _bridgeodex_raw, bba_passthrough, schema_version, format, ...rest } = upgradeCardData(cardData || {})
   walk(rest, '')
   return path => values.get(canonical(path))
 }

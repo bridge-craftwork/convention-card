@@ -518,13 +518,13 @@ set = { "notrump.smolen.play" = true }
             two_over_one.get("major_openings.min_length_1st_2nd"),
             Some(&Value::Text("5".into()))
         );
-        assert!(two_over_one.is_on("major_openings.two_over_one.game_force"));
+        assert!(two_over_one.is_on("major_openings.two_over_one.play"));
         assert!(!two_over_one.is_on("general.forcing_opening_1c"));
 
         let sayc = card(1);
         assert!(sayc.is_on("major_openings.five_card_majors"));
         assert_eq!(
-            sayc.get("major_openings.two_over_one.game_force"),
+            sayc.get("major_openings.two_over_one.play"),
             Some(&Value::Bool(false))
         );
 

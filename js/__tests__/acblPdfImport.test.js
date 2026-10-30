@@ -5,6 +5,7 @@ import { PDFDocument, PDFName, PDFHexString } from 'pdf-lib'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
 import { readCardFromPdf, mergeTyped } from '../acblPdfImport.js'
+import { upgradeCardData } from '../migrate.js'
 
 // Reading a card back from an ACBL PDF, with what was changed in its boxes
 // after export. The edits are made the way a PDF editor makes them: pdf-lib
@@ -39,11 +40,14 @@ beforeAll(async () => {
 
 describe.each(TEMPLATES)('the %s card', template => {
   it('reads an untouched export back as it was, with no edits', async () => {
+    // Both cards are saved 1.0 cards: the export embeds them upgraded.
     for (const [which, card] of [['dense', DENSE.card_data], ['seed', SEED]]) {
       const read = await readCardFromPdf(exported[template][which])
       expect([which, read.report.edits, read.report.skipped]).toEqual([which, [], []])
       expect(read.report.source).toBe('card')
-      expect(read.card_data).toEqual(card)
+      expect(read.report.migrated).toBe(null)
+      expect(read.card_data).toEqual(upgradeCardData(card))
+      expect(read.card_data.schema_version).toBe('2.0')
     }
   })
 
@@ -114,11 +118,11 @@ describe.each(TEMPLATES)('the %s card', template => {
 describe('readCardFromPdf', () => {
   it('flags a yes/no field printed twice when only one box is ticked', async () => {
     // Jacoby transfers: the Classic card has a 2♦ box and a 2♥ box.
-    const boxes = ACBL_FIELD_MAPS.classic.filter(e => e.card === 'notrump.transfers.jacoby').map(e => e.pdf)
+    const boxes = ACBL_FIELD_MAPS.classic.filter(e => e.card === 'notrump.jacoby_transfers.play').map(e => e.pdf)
     expect(boxes.length).toBe(2)
     const bytes = await edit(exported.classic.dense, form => form.getCheckBox(boxes[0]).uncheck())
     const read = await readCardFromPdf(bytes)
-    expect(read.card_data.notrump.transfers.jacoby).toBe(true)
+    expect(read.card_data.notrump.jacoby_transfers.play).toBe(true)
     expect(read.report.skipped[0].reason).toMatch(/only some are ticked/)
   })
 
@@ -135,18 +139,37 @@ describe('readCardFromPdf', () => {
   })
 
   it.each(TEMPLATES)('reads a %s PDF exported before the record of written boxes', async template => {
-    // Rewrite the embedded card without `pdf_fields`, as older exports were.
-    // The dense card has lines moved into added boxes and enum values
-    // written as prose, which the prediction has to account for.
+    // Rewrite the embedded card without `pdf_fields`, and in schema 1.0, as
+    // older exports were. The dense card has lines moved into added boxes
+    // and enum values written as prose, which the prediction has to account
+    // for; the 1.0 card is read upgraded.
     const bytes = await edit(exported[template].dense, (form, pdf) => {
       const key = PDFName.of('BridgeClassroomCard')
       const payload = JSON.parse(pdf.getInfoDict().get(key).decodeText())
       delete payload.pdf_fields
+      payload.card_data = DENSE.card_data
       pdf.getInfoDict().set(key, PDFHexString.fromText(JSON.stringify(payload)))
     })
     const read = await readCardFromPdf(bytes)
     expect([read.report.edits, read.report.skipped]).toEqual([[], []])
-    expect(read.card_data).toEqual(DENSE.card_data)
+    expect(read.report.migrated).toBe('1.0')
+    expect(read.card_data).toEqual(upgradeCardData(DENSE.card_data))
+    expect(read.card_data.notrump.jacoby_transfers.play).toBe(true)
+    expect(read.card_data.slam.rkcb).toEqual({ play: true, style: '1430' })
+  })
+
+  it('reads RKCB from its two boxes', async () => {
+    // The 1430 box is RKCB played 1430; untick it and tick RKC (0314).
+    const box = v => ACBL_FIELD_MAPS.classic.find(e => e.card === 'slam.rkcb.style' && e.value === v).pdf
+    const bytes = await edit(exported.classic.dense, form => {
+      form.getCheckBox(box('1430')).uncheck()
+      form.getCheckBox(box('0314')).check()
+    })
+    const read = await readCardFromPdf(bytes)
+    expect(read.report.skipped).toEqual([])
+    expect(read.card_data.slam.rkcb).toEqual({ play: true, style: '0314' })
+    const off = await readCardFromPdf(await edit(exported.classic.dense, form => form.getCheckBox(box('1430')).uncheck()))
+    expect(off.card_data.slam.rkcb.play).toBe(false)
   })
 
   it('refuses a blank form', async () => {

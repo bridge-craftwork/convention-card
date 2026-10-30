@@ -17,6 +17,7 @@ import { field, BRIDGODEX_MAP } from './spec.js'
 import { readPath, writePath } from './paths.js'
 import { normalizeSuitShorthand } from './suits.js'
 import { ledCards, ledValue, sameLead } from './leads.js'
+import { upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
 
 const { any: ANY = [], notes: NOTES = [], ...BLOCKS } = BRIDGODEX_MAP
 
@@ -220,7 +221,7 @@ export function importBridgeodexJson(input) {
   for (const e of ENTRIES) e.read(s[e.block] || {}, values)
   // Bridgodex has no 2/1 box: its general approach names the system in
   // words, and "2/1" there is the ACBL card's Two Over One Game Forcing box.
-  if (namesTwoOverOne(s.overview?.general_approach)) values.set('major_openings.two_over_one.game_force', true)
+  if (namesTwoOverOne(s.overview?.general_approach)) values.set('major_openings.two_over_one.play', true)
   for (const a of ANY) if (a.keys.some(k => on(at(s, k)))) values.set(a.path, true)
   for (const n of NOTES) {
     const lines = noteLines(n, s)
@@ -228,7 +229,7 @@ export function importBridgeodexJson(input) {
   }
 
   const card_data = {
-    schema_version: '1.0',
+    schema_version: CARD_SCHEMA_VERSION,
     format: 'bridge_classroom',
     metadata: { name: deriveName(s), source: 'bridgeodex' },
   }
@@ -260,7 +261,7 @@ function settingsOf(cardData) {
       else if (field(path) && !blank(v)) values.set(canonical(path), v)
     }
   }
-  const { metadata, _bbo_raw, _bridgeodex_raw, bba_passthrough, schema_version, format, ...rest } = cardData || {}
+  const { metadata, _bbo_raw, _bridgeodex_raw, bba_passthrough, schema_version, format, ...rest } = upgradeCardData(cardData || {})
   walk(rest, '')
   const get = path => values.get(canonical(path))
   get.values = values

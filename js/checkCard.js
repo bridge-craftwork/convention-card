@@ -7,6 +7,7 @@
 
 import { FIELDS, field } from './spec.js'
 import { bidOf } from './suits.js'
+import { needsUpgrade, upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
 
 /** The `schema` of the editor's "Export content" file: `{schema, name, description, exportedAt, card_data}`. */
 export const EXPORT_SCHEMA = 'bridge-classroom/card_data@v1'
@@ -89,12 +90,14 @@ function leaves(prefix, value, out, ignored) {
  * card_data }` (the editor's export, with or without its `schema`). Returns
  * `{ name, description, card_data, report, diagnostics }`; `report` has the
  * crate's lists (`aliased`, `unknown`, `invalid`, `ignored`, `conflicts`,
- * `wrapper`), and `diagnostics` says the same in sentences:
+ * `wrapper`, and `migrated`: the schema version a card older than
+ * CARD_SCHEMA_VERSION was saved in, else null), and `diagnostics` says the same in sentences:
  * `{ severity: 'error' | 'warning' | 'info', message, path?, hint? }`.
- * A card is valid when no diagnostic is an error.
+ * A card is valid when no diagnostic is an error. An older card is checked,
+ * and returned, as upgraded (js/migrate.js).
  */
 export function checkCard(input) {
-  const report = { aliased: [], unknown: [], invalid: [], ignored: [], conflicts: [], wrapper: null }
+  const report = { aliased: [], unknown: [], invalid: [], ignored: [], conflicts: [], wrapper: null, migrated: null }
   const diagnostics = []
   const result = (extra = {}) => ({ name: null, description: null, card_data: null, report, diagnostics, ...extra })
 
@@ -121,6 +124,10 @@ export function checkCard(input) {
     const text = v => (typeof v === 'string' && v.trim() ? v : null)
     name = text(input.name)
     description = text(input.description)
+  }
+  if (needsUpgrade(card_data)) {
+    report.migrated = String(card_data.schema_version ?? '1.0')
+    card_data = upgradeCardData(card_data)
   }
   name ??= card_data.metadata?.name ?? null
   description ??= card_data.metadata?.description ?? null
@@ -150,6 +157,9 @@ export function checkCard(input) {
       message: `${path}: not a field of the card; kept as it is`,
       path,
     })
+  }
+  if (report.migrated) {
+    diagnostics.push({ severity: 'info', message: `Saved in card schema ${report.migrated}: read as ${CARD_SCHEMA_VERSION}, its renamed fields moved (spec/migrations)` })
   }
   for (const [from, to] of report.aliased) {
     diagnostics.push({ severity: 'info', message: `${from}: an older name for ${to}`, path: from })
@@ -188,13 +198,13 @@ function readValues(card_data, report) {
 
 /**
  * A card's settings as the spec reads them: canonical path → value, with
- * aliases followed and enum spellings normalised. Unknown and invalid
+ * an older card upgraded, aliases followed and enum spellings normalised. Unknown and invalid
  * values are left out (checkCard reports them); unset fields are absent,
  * not filled with their defaults.
  */
 export function cardValues(card_data) {
-  const report = { aliased: [], unknown: [], invalid: [], ignored: [], conflicts: [], wrapper: null }
-  return card_data && typeof card_data === 'object' ? readValues(card_data, report) : new Map()
+  const report = { aliased: [], unknown: [], invalid: [], ignored: [], conflicts: [], wrapper: null, migrated: null }
+  return card_data && typeof card_data === 'object' ? readValues(upgradeCardData(card_data), report) : new Map()
 }
 
 // ADR-0001 D5: `[{ id?, section?, text }]`, extra keys kept.

@@ -13,6 +13,7 @@ import { decodeCardFromUrl } from './handoff.js'
 import { isBundle } from './cardBundle.js'
 import { applyImplied } from './textMapping.js'
 import { recogniseOnImport } from './recogniseConventions.js'
+import { upgradeCard } from './migrate.js'
 
 /** What `importCard` reads, by the name its `from` option takes. */
 export const IMPORT_FORMATS = {
@@ -79,7 +80,8 @@ export function detectFormat(input) {
  * warnings }`), and, for a card from another tool, `implied`: the boxes its
  * text set (`applyImplied`) and `recognised`: the conventions its text names
  * by a specific name, now ticked (`recogniseOnImport`), `[{ id, name, field,
- * from, written }]`. Throws, with a sentence a person can act on, when the input
+ * from, written }]`. The card_data is always in the current schema
+ * (CARD_SCHEMA_VERSION): an older card is upgraded (js/migrate.js). Throws, with a sentence a person can act on, when the input
  * is not a card.
  */
 // Formats another tool writes, whose text may name what a box means.
@@ -102,7 +104,9 @@ export async function importCard(input, { from = null, name = null } = {}) {
   // conventions its text names by a specific name (recogniseConventions.js;
   // generic names stay suggestions). The editor's own cards come back as
   // they were saved.
-  const card = (record, extra = {}) => ({
+  // Every card comes back in the current schema: one saved in an older one
+  // (a file, a PDF's embedded card, a hand-off) is upgraded (migrate.js).
+  const card = (given, extra = {}, record = upgradeCard(given)) => ({
     format,
     name: record.name || name || null,
     description: record.description || null,

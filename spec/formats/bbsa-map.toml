@@ -46,31 +46,31 @@
 "Garbage Stayman"           = "notrump.stayman.garbage"
 "SMOLEN"                    = "notrump.smolen.play"
 "1N-2S Minor Suit Stayman"  = "notrump.minor_suit_stayman.play"
-"1N-2S transfer to clubs"   = "notrump.transfers.two_s_clubs"
-"1N-2N transfer to clubs"   = "notrump.transfers.two_nt_clubs"
-"1N-2N transfer to diamonds" = "notrump.transfers.two_nt_diamonds"
-"1N-3C transfer to diamonds" = "notrump.transfers.three_c_diamonds"
+"1N-2S transfer to clubs"   = "notrump.minor_transfers.two_s_clubs"
+"1N-2N transfer to clubs"   = "notrump.minor_transfers.two_nt_clubs"
+"1N-2N transfer to diamonds" = "notrump.minor_transfers.two_nt_diamonds"
+"1N-3C transfer to diamonds" = "notrump.minor_transfers.three_c_diamonds"
 "1N-3C Puppet Stayman"      = "notrump.stayman.puppet_1nt"
 "1N-3D natural"             = { set = { "notrump.three_d_response" = "natural" } }
 "1N-3D majors"              = { set = { "notrump.three_d_response" = "majors" } }
 "1N-3D minors"              = { set = { "notrump.three_d_response" = "minors" } }
 "1N-3D splinter"            = { set = { "notrump.three_d_response" = "splinter" } }
 "1N-3M splinter"            = "notrump.three_major_splinter"
-"Texas"                     = "notrump.transfers.texas"
-"Super acceptance after NT" = "notrump.transfers.super_accept"
-"Extended acceptance after NT" = "notrump.transfers.super_accept_doubleton"
-"Transfers if RHO doubles"  = "notrump.transfers.vs_double"
-"Transfers if RHO bids clubs" = "notrump.transfers.vs_2c"
-"Lebensohl after 1NT"       = "notrump.lebensohl.over_interference"
-"Rubensohl after 1NT"       = "notrump.rubensohl.over_interference"
-"2N-3C Puppet Stayman"      = "notrump.two_nt.puppet"
-"2N-3S transfer to clubs"   = "notrump.two_nt.transfer_3s_clubs"
-"2N-4C transfer to diamonds" = "notrump.two_nt.transfer_4c_diamonds"
+"Texas"                     = "notrump.texas.play"
+"Super acceptance after NT" = "notrump.jacoby_transfers.super_accept"
+"Extended acceptance after NT" = "notrump.jacoby_transfers.super_accept_doubleton"
+"Transfers if RHO doubles"  = "notrump.jacoby_transfers.vs_double"
+"Transfers if RHO bids clubs" = "notrump.jacoby_transfers.vs_2c"
+"Lebensohl after 1NT"       = "notrump.lebensohl.play"
+"Rubensohl after 1NT"       = "notrump.rubensohl.play"
+"2N-3C Puppet Stayman"      = "notrump.stayman.puppet_2nt"
+"2N-3S transfer to clubs"   = "notrump.minor_transfers.over_2nt_3s_clubs"
+"2N-4C transfer to diamonds" = "notrump.minor_transfers.over_2nt_4c_diamonds"
 "Minor Suit Slam Try after 2NT"  = "notrump.two_nt.minor_slam_try"
-"Minor Suit Stayman after 2NT"   = "notrump.two_nt.minor_stayman"
-"Minor Suit Transfers after 2NT" = "notrump.two_nt.minor_transfers"
-"2N-3C-3N both majors"      = "notrump.two_nt.three_c_3nt_both_majors"
-"Gambling"                  = "notrump.three_nt.one_suit"
+"Minor Suit Stayman after 2NT"   = "notrump.minor_suit_stayman.over_2nt"
+"Minor Suit Transfers after 2NT" = "notrump.minor_transfers.over_2nt"
+"2N-3C-3N both majors"      = "notrump.stayman.over_2nt_both_majors"
+"Gambling"                  = "notrump.gambling_3nt.play"
 
 # ── General / jump shifts ──────────────────────────────────────────
 "Strong jump shifts 2"      = "general.jump_shifts.strong_2"
@@ -78,8 +78,8 @@
 "Weak Jump Shifts 2"        = "general.jump_shifts.weak_2"
 "Weak Jump Shifts 3"        = "general.jump_shifts.weak_3"
 "Inviting Jump Shifts"      = "general.jump_shifts.invitational"
-"Soloway Jump Shifts"       = "general.jump_shifts.soloway"
-"Soloway Jump Shifts Extended" = "general.jump_shifts.soloway_extended"
+"Soloway Jump Shifts"       = "general.soloway.play"
+"Soloway Jump Shifts Extended" = "general.soloway.extended"
 
 # ── Major openings ─────────────────────────────────────────────────
 "Forcing 1NT"               = "major_openings.one_nt_response.forcing"
@@ -116,7 +116,7 @@
 "Strong natural 2D"         = { set = { "two_level.two_diamonds.meaning" = "strong" } }
 "Weak natural 2M"           = { set = { "two_level.two_hearts.meaning" = "weak", "two_level.two_spades.meaning" = "weak" } }
 "Strong natural 2M"         = { set = { "two_level.two_hearts.meaning" = "strong", "two_level.two_spades.meaning" = "strong" } }
-"Multi"                     = "two_level.two_diamonds.multi"
+"Multi"                     = "two_level.multi.play"
 "Flannery"                  = "two_level.flannery.play"
 "Reverse Flannery 2H"       = "two_level.reverse_flannery.two_h"
 "Reverse Flannery 2S"       = "two_level.reverse_flannery.two_s"
@@ -126,16 +126,16 @@
 "Polish two suiters"        = "two_level.polish_two_suiters.play"
 "Wilkosz"                   = "two_level.wilkosz.play"
 "Ogust"                     = "two_level.ogust.play"
-"Kokish Relay"              = "two_level.two_clubs.kokish"
+"Kokish Relay"              = "two_level.kokish.play"
 
 # ── Preempts ───────────────────────────────────────────────────────
 "Namyats"                   = "preempts.namyats.play"
 
 # ── Slam ───────────────────────────────────────────────────────────
 "Cue bid"                   = "slam.cue_bids.play"
-"Blackwood 1430"            = "slam.blackwood.rkcb_1430"
-"Blackwood 0314"            = "slam.blackwood.rkcb_0314"
-"Blackwood 0123"            = "slam.blackwood.standard"      # plain Blackwood, not keycard
+"Blackwood 1430"            = { set = { "slam.rkcb.play" = true, "slam.rkcb.style" = "1430" } }
+"Blackwood 0314"            = { set = { "slam.rkcb.play" = true, "slam.rkcb.style" = "0314" } }
+"Blackwood 0123"            = "slam.blackwood.play"      # plain Blackwood, not keycard
 "Kickback 1430"             = "slam.kickback.rkcb_1430"
 "Kickback 0314"             = "slam.kickback.rkcb_0314"
 "King ask by 5NT"           = "slam.king_ask.five_nt"
@@ -216,24 +216,33 @@
 
 [implied]
 "notrump.stayman.play"     = true
-"notrump.transfers.jacoby" = true
+"notrump.jacoby_transfers.play" = true
 
 # Minor-suit responses to 1NT. BBA's switches stay as they are (they
 # round-trip); the treatment our rules read is derived from them. Only the
 # combinations BBA's stock cards play are mapped (21GF-DEFAULT and
 # 21GF-MSTandMSS); the others are not modelled.
 [[derived]]
-when = { "notrump.transfers.two_s_clubs" = true, "notrump.transfers.three_c_diamonds" = true, "notrump.minor_suit_stayman.play" = false, "notrump.transfers.two_nt_clubs" = false, "notrump.transfers.two_nt_diamonds" = false }
-set  = { "notrump.minor_transfers" = "bba" }
+when = { "notrump.minor_transfers.two_s_clubs" = true, "notrump.minor_transfers.three_c_diamonds" = true, "notrump.minor_suit_stayman.play" = false, "notrump.minor_transfers.two_nt_clubs" = false, "notrump.minor_transfers.two_nt_diamonds" = false }
+set  = { "notrump.minor_transfers.play" = true, "notrump.minor_transfers.style" = "bba" }
 
 # 2NT clubs, 3C diamonds (21GF-MSTandMSS): 2S stays free, for minor-suit
 # Stayman when that is on.
 [[derived]]
-when = { "notrump.transfers.two_nt_clubs" = true, "notrump.transfers.three_c_diamonds" = true, "notrump.transfers.two_s_clubs" = false, "notrump.transfers.two_nt_diamonds" = false }
-set  = { "notrump.minor_transfers" = "two_nt_three_c" }
+when = { "notrump.minor_transfers.two_nt_clubs" = true, "notrump.minor_transfers.three_c_diamonds" = true, "notrump.minor_transfers.two_s_clubs" = false, "notrump.minor_transfers.two_nt_diamonds" = false }
+set  = { "notrump.minor_transfers.play" = true, "notrump.minor_transfers.style" = "two_nt_three_c" }
 
 [[derived]]
-set  = { "notrump.minor_transfers" = "none" }
+set  = { "notrump.minor_transfers.play" = false }
+
+# Reverse Flannery is played when either of BBA's openings is.
+[[derived]]
+when = { "two_level.reverse_flannery.two_h" = true }
+set  = { "two_level.reverse_flannery.play" = true }
+
+[[derived]]
+when = { "two_level.reverse_flannery.two_s" = true }
+set  = { "two_level.reverse_flannery.play" = true }
 
 # Ogust replaces the feature answer to 2NT over a weak two.
 [[derived]]
@@ -268,7 +277,7 @@ when = { "general.system_category" = "two_over_one" }
 "minor_openings.one_club.art_forcing"    = false
 "major_openings.five_card_majors"        = true
 "major_openings.min_length_1st_2nd"      = "5"
-"major_openings.two_over_one.game_force" = true
+"major_openings.two_over_one.play" = true
 
 # SAYC: five-card majors too, but a 2/1 response is forcing for one round
 # only.
@@ -280,7 +289,7 @@ when = { "general.system_category" = "sayc" }
 "minor_openings.one_club.art_forcing"    = false
 "major_openings.five_card_majors"        = true
 "major_openings.min_length_1st_2nd"      = "5"
-"major_openings.two_over_one.game_force" = false
+"major_openings.two_over_one.play" = false
 
 # Acol: four-card majors in every seat; the strong opening is still 2C.
 [[derived]]
@@ -292,7 +301,7 @@ when = { "general.system_category" = "acol" }
 "major_openings.five_card_majors"        = false
 "major_openings.min_length_1st_2nd"      = "4"
 "major_openings.min_length_3rd_4th"      = "4"
-"major_openings.two_over_one.game_force" = false
+"major_openings.two_over_one.play" = false
 
 # Precision: the strong, artificial and forcing opening is 1C, which leaves
 # 2C a natural opening; the majors are five-card.

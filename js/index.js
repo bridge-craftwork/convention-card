@@ -5,6 +5,7 @@
 
 export { FIELDS, field, BBSA_MAP, BBSA_LAYOUT, CONVENTIONS, LEVEL_BANDS, levelBand, fieldLevel, REGULATORS, alertsFor, alertBadge, alertSummary } from './spec.js'
 export { readPath, writePath } from './paths.js'
+export { upgradeCardData, upgradeCard, needsUpgrade, CARD_SCHEMA_VERSION } from './migrate.js'
 export { ledCards, ledValue, sameLead } from './leads.js'
 export { normalizeSuitShorthand, bidOf } from './suits.js'
 export { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from './assets.js'

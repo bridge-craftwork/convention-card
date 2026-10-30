@@ -103,15 +103,15 @@
    "level": 5,
    "choice": "general.jump_shifts_2"
   },
-  "jump_shifts.soloway": {
+  "soloway.play": {
    "kind": "bool",
    "label": "Soloway jump shifts",
    "skill": "bidding_conventions/soloway",
    "level": 8
   },
-  "jump_shifts.soloway_extended": {
+  "soloway.extended": {
    "kind": "bool",
-   "label": "Soloway jump shifts (extended)",
+   "label": "Soloway jump shifts: extended",
    "skill": "bidding_conventions/soloway",
    "level": 9
   },
@@ -260,6 +260,20 @@
    "skill": "bidding_conventions/puppet_stayman",
    "level": 7
   },
+  "stayman.puppet_2nt": {
+   "kind": "bool",
+   "label": "2NT: Puppet Stayman (3♣)",
+   "desc": "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major",
+   "skill": "bidding_conventions/puppet_stayman",
+   "level": 7
+  },
+  "stayman.over_2nt_both_majors": {
+   "kind": "bool",
+   "label": "2NT–3♣–3NT shows both majors",
+   "desc": "Stayman-style 3♣ over 2NT; opener's 3NT shows 4-4 in the majors",
+   "level": 4,
+   "skill": "bidding_conventions/stayman"
+  },
   "smolen.play": {
    "kind": "bool",
    "label": "Smolen",
@@ -272,135 +286,177 @@
    "level": 6,
    "skill": "bidding_conventions/minor_suit_stayman"
   },
-  "transfers.jacoby": {
+  "minor_suit_stayman.over_2nt": {
+   "kind": "bool",
+   "label": "Minor Suit Stayman over 2NT",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_stayman"
+  },
+  "jacoby_transfers.play": {
    "kind": "bool",
    "label": "Jacoby transfers",
    "skill": "bidding_conventions/jacoby_transfers",
    "level": 3
   },
-  "transfers.texas": {
-   "kind": "bool",
-   "label": "Texas transfers",
-   "skill": "bidding_conventions/jacoby_transfers",
-   "level": 4
-  },
-  "transfers.texas_4c": {
-   "kind": "bool",
-   "label": "4♣ is a transfer",
-   "desc": "The bid: 4♣ over 1NT transfers (South African Texas: to ♥, with 4♦ to ♠)",
-   "level": 6,
-   "skill": "bidding_conventions/jacoby_transfers"
-  },
-  "transfers.texas_4d": {
-   "kind": "bool",
-   "label": "4♦ is a transfer",
-   "desc": "The bid: 4♦ over 1NT transfers (Texas: to ♥)",
-   "level": 4,
-   "skill": "bidding_conventions/jacoby_transfers"
-  },
-  "transfers.texas_4h": {
-   "kind": "bool",
-   "label": "4♥ is a transfer",
-   "desc": "The bid: 4♥ over 1NT transfers (Texas: to ♠)",
-   "level": 4,
-   "skill": "bidding_conventions/jacoby_transfers"
-  },
-  "transfers.texas_4s": {
-   "kind": "bool",
-   "label": "4♠ is a transfer",
-   "desc": "The bid: 4♠ over 1NT transfers (to a minor); no printed card has a box for it",
-   "level": 6,
-   "skill": "bidding_conventions/jacoby_transfers"
-  },
-  "transfers.texas_2_under": {
-   "kind": "bool",
-   "label": "2-under Texas",
-   "desc": "Texas one step lower: 4♣ transfers to ♥ and 4♦ to ♠. Opener's bid of the suit in between (4♦ over 4♣, 4♥ over 4♦) is a super-accept; four of the major is a plain completion",
-   "level": 7,
-   "skill": "bidding_conventions/jacoby_transfers"
-  },
-  "minor_transfers": {
-   "kind": "enum",
-   "label": "Minor-suit responses to 1NT",
-   "options": [
-    "relay",
-    "four_way",
-    "four_way_reversed",
-    "bba",
-    "two_nt_three_c",
-    "none"
-   ],
-   "default": "relay",
-   "desc": "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). two_nt_three_c: 2NT clubs, 3♣ diamonds, leaving 2♠ free (for minor-suit Stayman); BBA's 21GF-MSTandMSS. none: not played",
-   "skill": "bidding_conventions/minor_suit_transfers",
-   "level": 5
-  },
-  "transfers.spades_relay": {
-   "kind": "bool",
-   "label": "1NT–2♠ transfer",
-   "desc": "The card's 2♠ transfer box, as Bridgodex marks it; what it transfers to is in the card's notes",
-   "skill": "bidding_conventions/minor_suit_transfers",
-   "level": 5
-  },
-  "transfers.two_s_clubs": {
-   "kind": "bool",
-   "label": "1NT–2♠ transfer to clubs",
-   "level": 5,
-   "skill": "bidding_conventions/minor_suit_transfers"
-  },
-  "transfers.two_nt": {
-   "kind": "bool",
-   "label": "1NT–2NT transfer",
-   "desc": "The card's 2NT transfer box, as Bridgodex marks it",
-   "skill": "bidding_conventions/minor_suit_transfers",
-   "level": 5
-  },
-  "two_nt_natural": {
-   "kind": "bool",
-   "label": "1NT–2NT natural (invitational)"
-  },
-  "transfers.two_nt_clubs": {
-   "kind": "bool",
-   "label": "1NT–2NT transfer to clubs",
-   "level": 5,
-   "skill": "bidding_conventions/minor_suit_transfers"
-  },
-  "transfers.two_nt_diamonds": {
-   "kind": "bool",
-   "label": "1NT–2NT transfer to diamonds",
-   "level": 5,
-   "skill": "bidding_conventions/minor_suit_transfers"
-  },
-  "transfers.three_c_diamonds": {
-   "kind": "bool",
-   "label": "1NT–3♣ transfer to diamonds",
-   "level": 5,
-   "skill": "bidding_conventions/minor_suit_transfers"
-  },
-  "transfers.super_accept": {
+  "jacoby_transfers.super_accept": {
    "kind": "bool",
    "label": "Super-acceptance of transfers",
    "skill": "bidding_conventions/super_accept",
    "level": 5
   },
-  "transfers.super_accept_doubleton": {
+  "jacoby_transfers.super_accept_doubleton": {
    "kind": "bool",
    "label": "Super-accept by bidding a doubleton",
    "desc": "With 4+ trumps and a maximum, bid the doubleton suit (or 2NT when it cannot be shown below it). BBA: Extended acceptance after NT",
    "skill": "bidding_conventions/super_accept",
    "level": 7
   },
-  "transfers.vs_double": {
+  "jacoby_transfers.vs_double": {
    "kind": "bool",
    "label": "Transfers on if RHO doubles",
    "level": 6,
    "skill": "bidding_conventions/jacoby_transfers"
   },
-  "transfers.vs_2c": {
+  "jacoby_transfers.vs_2c": {
    "kind": "bool",
    "label": "Transfers on if RHO bids clubs",
    "level": 6,
    "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "jacoby_transfers.over_2nt": {
+   "kind": "bool",
+   "label": "Jacoby transfers over 2NT (3♦/3♥)",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "texas.play": {
+   "kind": "bool",
+   "label": "Texas transfers",
+   "skill": "bidding_conventions/jacoby_transfers",
+   "level": 4
+  },
+  "texas.bid_4c": {
+   "kind": "bool",
+   "label": "4♣ is a transfer",
+   "desc": "The bid: 4♣ over 1NT transfers (South African Texas: to ♥, with 4♦ to ♠)",
+   "level": 6,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "texas.bid_4d": {
+   "kind": "bool",
+   "label": "4♦ is a transfer",
+   "desc": "The bid: 4♦ over 1NT transfers (Texas: to ♥)",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "texas.bid_4h": {
+   "kind": "bool",
+   "label": "4♥ is a transfer",
+   "desc": "The bid: 4♥ over 1NT transfers (Texas: to ♠)",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "texas.bid_4s": {
+   "kind": "bool",
+   "label": "4♠ is a transfer",
+   "desc": "The bid: 4♠ over 1NT transfers (to a minor); no printed card has a box for it",
+   "level": 6,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "texas.two_under": {
+   "kind": "bool",
+   "label": "2-under Texas",
+   "desc": "Texas one step lower: 4♣ transfers to ♥ and 4♦ to ♠. Opener's bid of the suit in between (4♦ over 4♣, 4♥ over 4♦) is a super-accept; four of the major is a plain completion",
+   "level": 7,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "texas.over_2nt": {
+   "kind": "bool",
+   "label": "Texas transfers over 2NT (4♦/4♥)",
+   "level": 4,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
+  "minor_transfers.play": {
+   "kind": "bool",
+   "label": "Minor-suit transfers",
+   "desc": "Minor-suit transfers over 1NT; style says which structure",
+   "skill": "bidding_conventions/minor_suit_transfers",
+   "level": 5
+  },
+  "minor_transfers.style": {
+   "kind": "enum",
+   "label": "Minor-suit transfers: style",
+   "options": [
+    "relay",
+    "four_way",
+    "four_way_reversed",
+    "bba",
+    "two_nt_three_c"
+   ],
+   "default": "relay",
+   "desc": "relay: 2♠ relays to 3♣, pass or correct to 3♦. four_way: 2♠ clubs, 2NT diamonds; the step below the suit shows good support. four_way_reversed: the suit itself shows good support. bba: 2♠ clubs, 3♣ diamonds, always completed (BBA). two_nt_three_c: 2NT clubs, 3♣ diamonds, leaving 2♠ free (for minor-suit Stayman); BBA's 21GF-MSTandMSS.",
+   "skill": "bidding_conventions/minor_suit_transfers",
+   "level": 5
+  },
+  "minor_transfers.two_s": {
+   "kind": "bool",
+   "label": "1NT–2♠ transfer",
+   "desc": "The card's 2♠ transfer box, as Bridgodex marks it; what it transfers to is in the card's notes",
+   "skill": "bidding_conventions/minor_suit_transfers",
+   "level": 5
+  },
+  "minor_transfers.two_s_clubs": {
+   "kind": "bool",
+   "label": "1NT–2♠ transfer to clubs",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "minor_transfers.two_nt": {
+   "kind": "bool",
+   "label": "1NT–2NT transfer",
+   "desc": "The card's 2NT transfer box, as Bridgodex marks it",
+   "skill": "bidding_conventions/minor_suit_transfers",
+   "level": 5
+  },
+  "minor_transfers.two_nt_clubs": {
+   "kind": "bool",
+   "label": "1NT–2NT transfer to clubs",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "minor_transfers.two_nt_diamonds": {
+   "kind": "bool",
+   "label": "1NT–2NT transfer to diamonds",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "minor_transfers.three_c_diamonds": {
+   "kind": "bool",
+   "label": "1NT–3♣ transfer to diamonds",
+   "level": 5,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "minor_transfers.over_2nt": {
+   "kind": "bool",
+   "label": "Minor-suit transfers over 2NT",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "minor_transfers.over_2nt_3s_clubs": {
+   "kind": "bool",
+   "label": "2NT–3♠ transfer to clubs",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "minor_transfers.over_2nt_4c_diamonds": {
+   "kind": "bool",
+   "label": "2NT–4♣ transfer to diamonds",
+   "level": 6,
+   "skill": "bidding_conventions/minor_suit_transfers"
+  },
+  "two_nt_natural": {
+   "kind": "bool",
+   "label": "1NT–2NT natural (invitational)"
   },
   "three_d_response": {
    "kind": "enum",
@@ -417,7 +473,7 @@
    "label": "1NT–3♥/3♠ splinter",
    "level": 6
   },
-  "lebensohl.over_interference": {
+  "lebensohl.play": {
    "kind": "bool",
    "label": "Lebensohl over interference to 1NT",
    "skill": "competitive_bidding/lebensohl",
@@ -426,9 +482,9 @@
   "lebensohl.description": {
    "kind": "text",
    "label": "Lebensohl notes",
-   "explains": "notrump.lebensohl.over_interference"
+   "explains": "notrump.lebensohl.play"
   },
-  "rubensohl.over_interference": {
+  "rubensohl.play": {
    "kind": "bool",
    "label": "Rubensohl over interference to 1NT",
    "level": 9,
@@ -448,13 +504,6 @@
    "max": 30,
    "default": 21
   },
-  "two_nt.puppet": {
-   "kind": "bool",
-   "label": "2NT: Puppet Stayman (3♣)",
-   "desc": "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major",
-   "skill": "bidding_conventions/puppet_stayman",
-   "level": 7
-  },
   "two_nt.three_s": {
    "kind": "bool",
    "label": "2NT: 3♠ relay",
@@ -465,58 +514,15 @@
    "label": "2NT 3♠ relay notes",
    "explains": "notrump.two_nt.three_s"
   },
-  "two_nt.transfers_3level": {
-   "kind": "bool",
-   "label": "2NT: transfers at 3-level",
-   "level": 4,
-   "skill": "bidding_conventions/jacoby_transfers"
-  },
-  "two_nt.transfers_4level": {
-   "kind": "bool",
-   "label": "2NT: transfers at 4-level",
-   "level": 4,
-   "skill": "bidding_conventions/jacoby_transfers"
-  },
   "two_nt.neg_dbl": {
    "kind": "bool",
    "label": "2NT: negative double",
    "level": 6
   },
-  "two_nt.transfer_3s_clubs": {
-   "kind": "bool",
-   "label": "2NT–3♠ transfer to clubs",
-   "level": 6,
-   "skill": "bidding_conventions/minor_suit_transfers"
-  },
-  "two_nt.transfer_4c_diamonds": {
-   "kind": "bool",
-   "label": "2NT–4♣ transfer to diamonds",
-   "level": 6,
-   "skill": "bidding_conventions/minor_suit_transfers"
-  },
   "two_nt.minor_slam_try": {
    "kind": "bool",
    "label": "Minor suit slam try after 2NT",
    "level": 8
-  },
-  "two_nt.minor_stayman": {
-   "kind": "bool",
-   "label": "Minor Suit Stayman after 2NT",
-   "level": 6,
-   "skill": "bidding_conventions/minor_suit_stayman"
-  },
-  "two_nt.minor_transfers": {
-   "kind": "bool",
-   "label": "Minor suit transfers after 2NT",
-   "level": 6,
-   "skill": "bidding_conventions/minor_suit_transfers"
-  },
-  "two_nt.three_c_3nt_both_majors": {
-   "kind": "bool",
-   "label": "2NT–3♣–3NT shows both majors",
-   "desc": "Stayman-style 3♣ over 2NT; opener's 3NT shows 4-4 in the majors",
-   "level": 4,
-   "skill": "bidding_conventions/stayman"
   },
   "two_nt.notes": {
    "kind": "text",
@@ -541,22 +547,16 @@
     "three_nt.range_max"
    ]
   },
-  "three_nt.one_suit": {
+  "gambling_3nt.play": {
    "kind": "bool",
    "label": "Gambling 3NT",
-   "aliases": [
-    "three_nt.one_suit"
-   ],
    "level": 6,
    "skill": "bidding_conventions/gambling_3nt"
   },
-  "three_nt.one_suit_desc": {
+  "gambling_3nt.description": {
    "kind": "text",
    "label": "Gambling 3NT notes",
-   "aliases": [
-    "three_nt.one_suit_desc"
-   ],
-   "explains": "notrump.three_nt.one_suit"
+   "explains": "notrump.gambling_3nt.play"
   },
   "responses.2d_other": {
    "kind": "text",
@@ -750,7 +750,7 @@
    "label": "1NT may bypass 1♠ over 1♥",
    "level": 4
   },
-  "two_over_one.game_force": {
+  "two_over_one.play": {
    "kind": "bool",
    "label": "2/1 game force",
    "skill": "bidding_conventions/two_over_one",
@@ -1299,13 +1299,13 @@
     "steps"
    ]
   },
-  "two_clubs.kokish": {
+  "kokish.play": {
    "kind": "bool",
    "label": "Kokish relay",
    "skill": "bidding_conventions/kokish",
    "level": 8
   },
-  "two_clubs.parrish_bust": {
+  "parrish_bust.play": {
    "kind": "bool",
    "label": "Parrish 2♥ bust",
    "skill": "bidding_conventions/two_heart_bust",
@@ -1359,13 +1359,13 @@
     "two_level.two_diamonds.rebid_2nt"
    ]
   },
-  "two_diamonds.multi": {
+  "multi.play": {
    "kind": "bool",
    "label": "Multi 2♦",
    "skill": "bidding_conventions/multi_2d",
    "level": 8
   },
-  "two_diamonds.multi_strong": {
+  "multi.strong_option": {
    "kind": "enum",
    "label": "Multi 2♦: strong option",
    "options": [
@@ -1384,23 +1384,17 @@
    ],
    "level": 9
   },
-  "two_diamonds.mini_roman": {
+  "mini_roman.play": {
    "kind": "bool",
    "label": "Mini-Roman 2♦",
    "skill": "bidding_conventions/mini_roman_2d",
    "level": 7
   },
-  "two_diamonds.mini_roman_maxi": {
+  "mini_roman.maxi": {
    "kind": "bool",
-   "label": "Mini-Maxi Roman 2♦: also 19+",
+   "label": "Mini-Roman 2♦: Mini-Maxi (also 19+)",
    "desc": "The Mini-Roman 2♦ is either the three-suiter of opening strength (Mini) or a 19+ three-suiter (Maxi), which bids again after responder's sign-off. Off: Mini only",
    "skill": "bidding_conventions/mini_roman_2d",
-   "level": 8
-  },
-  "two_diamonds.reverse_flannery": {
-   "kind": "bool",
-   "label": "Reverse Flannery 2♦",
-   "skill": "bidding_conventions/reverse_flannery",
    "level": 8
   },
   "two_hearts.meaning": {
@@ -1528,6 +1522,19 @@
    "label": "Flannery 2♦",
    "skill": "bidding_conventions/flannery",
    "level": 6
+  },
+  "reverse_flannery.play": {
+   "kind": "bool",
+   "label": "Reverse Flannery",
+   "desc": "A two-level opening showing five or more spades and four or more hearts with less than an opening; which openings: two_d, two_h, two_s",
+   "skill": "bidding_conventions/reverse_flannery",
+   "level": 8
+  },
+  "reverse_flannery.two_d": {
+   "kind": "bool",
+   "label": "Reverse Flannery 2♦",
+   "skill": "bidding_conventions/reverse_flannery",
+   "level": 8
   },
   "reverse_flannery.two_h": {
    "kind": "bool",
@@ -1675,50 +1682,12 @@
   }
  },
  "slam": {
-  "blackwood.standard": {
+  "blackwood.play": {
    "kind": "bool",
    "label": "Standard Blackwood",
-   "aliases": [
-    "other_conventions.blackwood.standard"
-   ],
    "skill": "bidding_conventions/blackwood",
    "level": 2,
-   "choice": "slam.keycard_responses"
-  },
-  "blackwood.rkcb_1430": {
-   "kind": "bool",
-   "label": "RKCB 1430",
-   "aliases": [
-    "other_conventions.blackwood.rkcb_1430"
-   ],
-   "skill": "bidding_conventions/roman_keycard",
-   "level": 4,
-   "choice": "slam.keycard_responses"
-  },
-  "blackwood.rkcb_0314": {
-   "kind": "bool",
-   "label": "RKCB 0314",
-   "aliases": [
-    "other_conventions.blackwood.rkcb_0314"
-   ],
-   "skill": "bidding_conventions/roman_keycard",
-   "level": 4,
-   "choice": "slam.keycard_responses"
-  },
-  "blackwood.minor_0314": {
-   "kind": "bool",
-   "label": "RKCB 0314 with a minor as trumps (1430 in the majors)",
-   "skill": "bidding_conventions/roman_keycard",
-   "level": 6
-  },
-  "blackwood.queen_ask": {
-   "kind": "bool",
-   "label": "Queen ask",
-   "aliases": [
-    "other_conventions.blackwood.queen_ask"
-   ],
-   "skill": "bidding_conventions/roman_keycard",
-   "level": 6
+   "choice": "slam.ace_ask"
   },
   "blackwood.notes": {
    "kind": "text",
@@ -1726,6 +1695,36 @@
    "aliases": [
     "other_conventions.blackwood.notes"
    ]
+  },
+  "rkcb.play": {
+   "kind": "bool",
+   "label": "Roman Keycard Blackwood",
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 4,
+   "choice": "slam.ace_ask"
+  },
+  "rkcb.style": {
+   "kind": "enum",
+   "label": "RKCB responses",
+   "options": [
+    "1430",
+    "0314"
+   ],
+   "desc": "1430: the first step shows one or four keycards, the second none or three. 0314: the first step none or three, the second one or four",
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 4
+  },
+  "rkcb.minor_0314": {
+   "kind": "bool",
+   "label": "RKCB 0314 with a minor as trumps (1430 in the majors)",
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 6
+  },
+  "rkcb.queen_ask": {
+   "kind": "bool",
+   "label": "Queen ask",
+   "skill": "bidding_conventions/roman_keycard",
+   "level": 6
   },
   "king_ask.five_nt": {
    "kind": "bool",

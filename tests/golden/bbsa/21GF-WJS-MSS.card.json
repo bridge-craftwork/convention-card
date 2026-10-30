@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "format": "bridge_classroom",
   "metadata": {
     "name": "21GF-WJS-MSS"
@@ -87,12 +87,14 @@
     "forcing_opening_2c": true,
     "jump_shifts": {
       "invitational": false,
-      "soloway": false,
-      "soloway_extended": false,
       "strong_2": true,
       "strong_3": false,
       "weak_2": true,
       "weak_3": true
+    },
+    "soloway": {
+      "extended": false,
+      "play": false
     },
     "system_category": "two_over_one"
   },
@@ -131,7 +133,7 @@
       "play": true
     },
     "two_over_one": {
-      "game_force": true
+      "play": true
     }
   },
   "minor_openings": {
@@ -147,13 +149,34 @@
     }
   },
   "notrump": {
+    "gambling_3nt": {
+      "play": true
+    },
+    "jacoby_transfers": {
+      "play": true,
+      "super_accept": true,
+      "super_accept_doubleton": false,
+      "vs_2c": true,
+      "vs_double": false
+    },
     "lebensohl": {
-      "over_interference": true
+      "play": true
     },
     "minor_suit_stayman": {
+      "over_2nt": true,
       "play": false
     },
-    "minor_transfers": "bba",
+    "minor_transfers": {
+      "over_2nt": false,
+      "over_2nt_3s_clubs": false,
+      "over_2nt_4c_diamonds": false,
+      "play": true,
+      "style": "bba",
+      "three_c_diamonds": true,
+      "two_nt_clubs": false,
+      "two_nt_diamonds": false,
+      "two_s_clubs": true
+    },
     "one_nt": {
       "allow_4441": false,
       "allow_5422": true,
@@ -164,40 +187,24 @@
       "range_min": 15
     },
     "rubensohl": {
-      "over_interference": false
+      "play": false
     },
     "smolen": {
       "play": true
     },
     "stayman": {
       "garbage": false,
+      "over_2nt_both_majors": false,
       "play": true,
-      "puppet_1nt": false
+      "puppet_1nt": false,
+      "puppet_2nt": false
+    },
+    "texas": {
+      "play": true
     },
     "three_major_splinter": false,
-    "three_nt": {
-      "one_suit": true
-    },
-    "transfers": {
-      "jacoby": true,
-      "super_accept": true,
-      "super_accept_doubleton": false,
-      "texas": true,
-      "three_c_diamonds": true,
-      "two_nt_clubs": false,
-      "two_nt_diamonds": false,
-      "two_s_clubs": true,
-      "vs_2c": true,
-      "vs_double": false
-    },
     "two_nt": {
-      "minor_slam_try": false,
-      "minor_stayman": true,
-      "minor_transfers": false,
-      "puppet": false,
-      "three_c_3nt_both_majors": false,
-      "transfer_3s_clubs": false,
-      "transfer_4c_diamonds": false
+      "minor_slam_try": false
     }
   },
   "other_conventions": {
@@ -235,9 +242,7 @@
   },
   "slam": {
     "blackwood": {
-      "rkcb_0314": false,
-      "rkcb_1430": true,
-      "standard": false
+      "play": false
     },
     "cue_bids": {
       "play": true
@@ -268,6 +273,10 @@
     "quantitative_4nt": {
       "play": true
     },
+    "rkcb": {
+      "play": true,
+      "style": "1430"
+    },
     "ropi": true
   },
   "two_level": {
@@ -278,6 +287,12 @@
       "play": false
     },
     "french_2d": {
+      "play": false
+    },
+    "kokish": {
+      "play": false
+    },
+    "multi": {
       "play": false
     },
     "ogust": {
@@ -293,12 +308,8 @@
       "two_h": false,
       "two_s": false
     },
-    "two_clubs": {
-      "kokish": false
-    },
     "two_diamonds": {
-      "meaning": "weak",
-      "multi": false
+      "meaning": "weak"
     },
     "two_hearts": {
       "meaning": "weak"
