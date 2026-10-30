@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import ALERTS from '../../spec/alerts.json' with { type: 'json' }
 import { alertsFor, alertBadge, alertSummary, REGULATORS, field } from '../../js/spec.js'
-import { CONVENTION_CATALOG } from '../src/editor/conventionCatalog.js'
+import { CONVENTION_CATALOG, alertPathOf } from '../src/editor/conventionCatalog.js'
 
 const row = id => CONVENTION_CATALOG.find(e => e.id === id)
 const RULES = ['alert', 'announce', 'delayed', 'none']
@@ -26,7 +26,7 @@ describe('spec/alerts.toml', () => {
   })
 
   it('has alerting for every row of the editor', () => {
-    const missing = CONVENTION_CATALOG.filter(e => !alertsFor(e.cardPath, 'acbl').length).map(e => e.id)
+    const missing = CONVENTION_CATALOG.filter(e => !alertsFor(alertPathOf(e), 'acbl').length).map(e => e.id)
     expect(missing).toEqual([])
   })
 
@@ -44,7 +44,7 @@ describe('spec/alerts.toml', () => {
     // Michaels' cuebid is exempt in the ACBL; the 2NT asking for the minor is not.
     expect(alertSummary(row('michaels').cardPath, 'acbl')).toEqual({ main: 'none', more: 'alert' })
     // RKCB's 4NT is not alerted in the ACBL; its replies get a delayed alert.
-    expect(alertSummary(row('rkcb_1430').cardPath, 'acbl')).toEqual({ main: 'none', more: 'delayed' })
+    expect(alertSummary(alertPathOf(row('rkcb_1430')), 'acbl')).toEqual({ main: 'none', more: 'delayed' })
     expect(alertSummary(row('stayman').cardPath, 'acbl')).toEqual({ main: 'none', more: null })
   })
 

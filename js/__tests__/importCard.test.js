@@ -5,6 +5,7 @@ import { importCard, detectFormat } from '../importCard.js'
 import { encodeCardForUrl } from '../handoff.js'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { renderAcblPdfBytes } from '../acblClassicFillPdf.js'
+import { upgradeCardData } from '../migrate.js'
 
 const ROOT = path.resolve(__dirname, '../..')
 const DENSE = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/dense-convention-card.json'), 'utf8'))
@@ -17,6 +18,8 @@ const EXPORT = {
   exportedAt: '2026-10-01T00:00:00Z',
   card_data: SEED,
 }
+// SEED is a saved 1.0 card: every reader gives it back in schema 2.0.
+const SEED_2 = upgradeCardData(SEED)
 
 describe('detectFormat', () => {
   it("tells the editor's own JSON from bridgeodex's", () => {
@@ -49,13 +52,16 @@ describe('importCard', () => {
   it("reads back the editor's own export unchanged", async () => {
     // It used to go to the bridgeodex importer, which kept 2 of 88 settings.
     const card = await importCard(JSON.stringify(EXPORT))
-    expect(card).toEqual({ format: 'card', name: 'Our card', description: 'With Pat', card_data: SEED })
+    expect(card).toEqual({ format: 'card', name: 'Our card', description: 'With Pat', card_data: SEED_2 })
+    expect(card.card_data.schema_version).toBe('2.0')
   })
 
   it('reads bare card_data, named from its metadata', async () => {
     const card = await importCard(SEED)
-    expect(card.card_data).toBe(SEED)
+    expect(card.card_data).toEqual(SEED_2)
     expect(card.name).toBe(SEED.metadata.name)
+    // A card already in 2.0 comes back as it was.
+    expect((await importCard(SEED_2)).card_data).toBe(SEED_2)
   })
 
   it('reads a .bbsa file, named by the caller', async () => {
@@ -70,7 +76,7 @@ describe('importCard', () => {
     const handoff = await encodeCardForUrl({ name: 'Handed over', card_data: SEED })
     const card = await importCard(`…/card/#import=${handoff}`)
     expect(card.name).toBe('Handed over')
-    expect(card.card_data).toEqual(SEED)
+    expect(card.card_data).toEqual(SEED_2)
   })
 
   it('honours `from` over the guess', async () => {
@@ -96,7 +102,7 @@ describe('importCard', () => {
       const card = await importCard(bytes)
       expect(card.format).toBe('pdf')
       expect(card.name).toBe('Our card')
-      expect(card.card_data).toEqual(SEED)
+      expect(card.card_data).toEqual(SEED_2)
     })
 
     it('refuses a PDF with no card inside', async () => {

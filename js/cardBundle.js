@@ -9,6 +9,7 @@
 // chooses: keep theirs, or use the imported one.
 
 import { EXPORT_SCHEMA } from './checkCard.js'
+import { upgradeCardData } from './migrate.js'
 
 /** The `schema` of an "Export all" file: `{ schema, exportedAt, cards: [<card export>] }`. */
 export const BUNDLE_SCHEMA = 'bridge-classroom/cards@v1'
@@ -25,7 +26,7 @@ export function exportRecord(card, exportedAt = new Date().toISOString()) {
     description: card.description || null,
     updatedAt: card.updated_at || card.updatedAt || null,
     exportedAt,
-    card_data: card.card_data || {},
+    card_data: upgradeCardData(card.card_data || {}),
   }
 }
 
@@ -44,7 +45,9 @@ const time = t => {
   return Number.isFinite(n) ? n : null
 }
 
-const sameSettings = (a, b) => JSON.stringify(a || {}) === JSON.stringify(b || {})
+// Compared in the current schema, so a kept card saved before an upgrade
+// matches its own export.
+const sameSettings = (a, b) => JSON.stringify(upgradeCardData(a || {})) === JSON.stringify(upgradeCardData(b || {}))
 
 /**
  * What to do with each imported card. `incoming`: records `{ id?, name,

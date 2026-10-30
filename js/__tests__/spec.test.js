@@ -33,7 +33,10 @@ describe('the spec as the library reads it', () => {
   })
 
   it('resolves aliases to the canonical path', () => {
-    expect(field('other_conventions.blackwood.rkcb_1430').path).toBe('slam.blackwood.rkcb_1430')
+    expect(field('other_conventions.gerber.play').path).toBe('slam.gerber.play')
+    // A renamed field has no alias: a saved card moves by schema version (migrate.js).
+    expect(field('other_conventions.blackwood.rkcb_1430')).toBeUndefined()
+    expect(field('notrump.transfers.jacoby')).toBeUndefined()
     expect(field('leads.vs_suits.honors.lead_choice_AKx').path).toBe('leads.vs_suits.honors.lead_choice_akx')
     // 1NT Puppet, as the editor, the PDFs and the importers write it; not 2NT Puppet.
     expect(field('notrump.stayman.puppet').path).toBe('notrump.stayman.puppet_1nt')

@@ -1,13 +1,15 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "format": "bridge_classroom",
-
   "metadata": {
     "name": "2/1 Intermediate",
     "description": "Standard 2/1 Game Force system with common conventions for intermediate players",
-    "tags": ["2/1", "intermediate", "system-card"]
+    "tags": [
+      "2/1",
+      "intermediate",
+      "system-card"
+    ]
   },
-
   "general": {
     "system": "2/1 Game Force",
     "system_category": "two_over_one",
@@ -17,7 +19,6 @@
     "forcing_opening_2c": true,
     "nt_open_style": "strong"
   },
-
   "notrump": {
     "one_nt": {
       "range_min": 15,
@@ -35,15 +36,16 @@
       "forcing": true,
       "skill_path": "bidding_conventions/stayman"
     },
-    "transfers": {
-      "jacoby": true,
-      "texas": true,
-      "texas_4d": true,
-      "texas_4h": true,
+    "jacoby_transfers": {
+      "play": true,
       "skill_path": "bidding_conventions/jacoby_transfers"
+    },
+    "texas": {
+      "play": true,
+      "bid_4d": true,
+      "bid_4h": true
     }
   },
-
   "major_openings": {
     "five_card_majors": true,
     "one_nt_response": {
@@ -51,7 +53,7 @@
       "semi_forcing": true
     },
     "two_over_one": {
-      "game_force": true,
+      "play": true,
       "skill_path": "bidding_conventions/two_over_one"
     },
     "jacoby_2nt": {
@@ -70,7 +72,6 @@
       "skill_path": "bidding_conventions/reverse_drury"
     }
   },
-
   "two_level": {
     "two_clubs": {
       "meaning": "strong",
@@ -98,7 +99,6 @@
       "skill_path": "bidding_conventions/ogust"
     }
   },
-
   "other_conventions": {
     "new_minor_forcing": {
       "play": true,
@@ -118,10 +118,10 @@
       "skill_path": "bidding_conventions/reverse_bids"
     }
   },
-
   "slam": {
-    "blackwood": {
-      "rkcb_1430": true,
+    "rkcb": {
+      "play": true,
+      "style": "1430",
       "queen_ask": true,
       "skill_path": "bidding_conventions/roman_keycard"
     },
@@ -131,7 +131,6 @@
       "skill_path": "bidding_conventions/blackwood"
     }
   },
-
   "competitive": {
     "takeout_doubles": {
       "style": "moderate",
@@ -164,7 +163,6 @@
       "skill_path": null
     }
   },
-
   "conventions_list": [
     "gerber",
     "cue_bid_raise",
