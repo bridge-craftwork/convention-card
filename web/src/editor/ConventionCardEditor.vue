@@ -1,6 +1,8 @@
 <template>
   <div class="convention-card" :class="{ embedded }">
     <ChoiceDialog ref="dialog" />
+    <ConflictDialog :merge="cc.pendingMerge.value" @done="onMergeDone" />
+    <ShareDialog v-if="cc.canShare" ref="shareDialog" :storage="storage" :card="currentCard" @left="onLeftCard" />
     <!-- Standalone-page header. Hidden inside the lobby tab. -->
     <header v-if="!embedded" class="page-header">
       <h1>Convention card</h1>
@@ -96,6 +98,13 @@
           :disabled="saving"
         >Duplicate</button>
         <button
+          v-if="canShareCard"
+          class="btn"
+          @click="shareDialog.show()"
+          :disabled="saving || cardLoading"
+          title="Invite your partner, see who has this card, or get a link to its PDF"
+        >Share</button>
+        <button
           v-if="canMakePrimary"
           class="btn"
           @click="onMakePrimary"
@@ -119,7 +128,7 @@
         <!-- A built-in or public card shows Delete only to an admin (canEdit),
              behind a stronger warning (onDelete). -->
         <button
-          v-if="canEdit"
+          v-if="cc.canDelete.value"
           class="btn btn-danger"
           @click="onDelete"
           :disabled="saving"
@@ -330,6 +339,8 @@ import CardDetail from './components/CardDetail.vue'
 import NoteSuggestions from './components/NoteSuggestions.vue'
 import TextMapping from './components/TextMapping.vue'
 import PracticeReport from './components/PracticeReport.vue'
+import ConflictDialog from './ConflictDialog.vue'
+import ShareDialog from './ShareDialog.vue'
 import { importReportNotes } from './importReport.js'
 
 // The convention card editor. Where cards live, and who may edit them, is
@@ -449,6 +460,23 @@ function onToggle(entryId, checked) {
 
 async function onSave() {
   await cc.saveCard()
+}
+
+// A partner saved while this card was being edited, and some fields both
+// changed: the conflict dialog's choices are saved, or editing goes on.
+async function onMergeDone(choices) {
+  await cc.finishMerge(choices)
+}
+
+const shareDialog = ref(null)
+// A saved card of the user's, when the host shares cards
+const canShareCard = computed(() =>
+  cc.canShare && !!currentUser.value && !!currentCard.value && !isSystemCard.value &&
+  userCardLinks.value.some(l => l.card_id === currentCard.value.id))
+
+async function onLeftCard(cardId) {
+  await cc.loadCardForCurrentUser()
+  emit('deleted', cardId)
 }
 
 async function onSwitchCard(event) {

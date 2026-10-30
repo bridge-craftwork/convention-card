@@ -26,6 +26,80 @@ function memoryStorage({ signedIn = true } = {}) {
   }
 }
 
+// A shared card that keeps its versions, as Bridge Classroom's does: a
+// save against an old version is refused with the card as it is now.
+function sharedStorage(role = 'owner') {
+  const storage = memoryStorage()
+  const versions = [{ schema_version: '2.0', notrump: { one_nt: { range_min: 15, range_max: 17 }, stayman: { play: true } } }]
+  const card = () => ({ id: 's1', name: 'Ours', owner_id: 'u1', role, visibility: 'private', version: versions.length, card_data: structuredClone(versions.at(-1)) })
+  Object.assign(storage, {
+    versions,
+    async loadDefault() { return card() },
+    async load() { return card() },
+    async listLinks() { return [{ card_id: 's1', card_name: 'Ours', is_primary: true, role }] },
+    async save(c, cardData) {
+      if (c.version !== versions.length) throw Object.assign(new Error('409'), { conflict: { version: versions.length, card_data: structuredClone(versions.at(-1)) } })
+      versions.push(structuredClone(cardData))
+    },
+    async loadVersion(_id, v) { return structuredClone(versions[v - 1]) },
+    canEdit: () => role !== 'viewer',
+    // A partner's save, made while this editor has the card open
+    partnerSaves(change) { const d = structuredClone(versions.at(-1)); change(d); versions.push(d) },
+  })
+  return storage
+}
+
+describe('a shared card saved while a partner saved too', () => {
+  it('merges edits to different fields by itself', async () => {
+    const storage = sharedStorage()
+    const ed = useCardEditor(storage)
+    await ed.loadCardForCurrentUser()
+    ed.enterEditMode()
+    ed.writeField('notrump.one_nt.range_min', 14)
+    storage.partnerSaves(d => { d.notrump.stayman.puppet_2nt = true })
+    expect(await ed.saveCard()).toBe(true)
+    expect(storage.versions.at(-1).notrump).toEqual({ one_nt: { range_min: 14, range_max: 17 }, stayman: { play: true, puppet_2nt: true } })
+    expect(ed.currentCard.value.version).toBe(3)
+    expect(ed.pendingMerge.value).toBeNull()
+  })
+
+  it('asks about a field both changed, then saves the choice', async () => {
+    const storage = sharedStorage()
+    const ed = useCardEditor(storage)
+    await ed.loadCardForCurrentUser()
+    ed.enterEditMode()
+    ed.writeField('notrump.one_nt.range_min', 14)
+    ed.writeField('notrump.one_nt.range_max', 16)
+    storage.partnerSaves(d => { d.notrump.one_nt.range_min = 16; d.notrump.stayman.garbage = true })
+    expect(await ed.saveCard()).toBe('conflict')
+    expect(ed.pendingMerge.value.conflicts).toEqual([{ path: 'notrump.one_nt.range_min', base: 15, mine: 14, theirs: 16 }])
+    expect(storage.versions).toHaveLength(2)
+    expect(await ed.finishMerge({ 'notrump.one_nt.range_min': 'theirs' })).toBe(true)
+    expect(storage.versions.at(-1).notrump).toEqual({ one_nt: { range_min: 16, range_max: 16 }, stayman: { play: true, garbage: true } })
+  })
+
+  it('keeps the edits when the person goes on editing instead', async () => {
+    const storage = sharedStorage()
+    const ed = useCardEditor(storage)
+    await ed.loadCardForCurrentUser()
+    ed.enterEditMode()
+    ed.writeField('notrump.one_nt.range_min', 14)
+    storage.partnerSaves(d => { d.notrump.one_nt.range_min = 16 })
+    expect(await ed.saveCard()).toBe('conflict')
+    expect(await ed.finishMerge(null)).toBe(false)
+    expect(ed.editedCardData.value.notrump.one_nt.range_min).toBe(14)
+    expect(ed.isDirty.value).toBe(true)
+  })
+
+  it('lets only an owner delete a shared card', async () => {
+    for (const [role, can] of [['owner', true], ['editor', false]]) {
+      const ed = useCardEditor(sharedStorage(role))
+      await ed.loadCardForCurrentUser()
+      expect(ed.canDelete.value).toBe(can)
+    }
+  })
+})
+
 describe('the editor state, against a storage adapter', () => {
   it('takes a built-in card off the list without deleting it, when the adapter can', async () => {
     const storage = memoryStorage()
