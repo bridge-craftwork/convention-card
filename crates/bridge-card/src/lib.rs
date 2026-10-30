@@ -1,7 +1,7 @@
 //! Convention card schema and `.bbsa` import.
 //!
 //! The card records partnership agreements ("we play Smolen", "1NT is 15-17"),
-//! addressed by dotted paths such as `notrump.transfers.jacoby`. It does not
+//! addressed by dotted paths such as `notrump.jacoby_transfers.play`. It does not
 //! define what bids mean; that lives in the `conventions/` rule files.
 //!
 //! The fields a card can hold, and how BBA's `.bbsa` keys map onto them, are
@@ -14,6 +14,7 @@
 pub mod bbsa;
 mod card;
 mod error;
+pub mod migrate;
 mod registry;
 pub mod schema;
 pub mod skills;
