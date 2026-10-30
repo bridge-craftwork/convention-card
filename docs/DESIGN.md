@@ -663,6 +663,13 @@ in Bridge Classroom (DECISIONS, 7); the API side is
 - **History.** Each save is kept with who made it, so partners can see who
   changed what ("our 1NT range went from 15-17 to 14-16 on Tuesday").
 
+In the editor, a host whose storage adapter shares cards (useCardEditor.js)
+gets a Share dialog: who has the card and their roles, invitation links
+(owners), and the card's read-only PDF link. A save a partner's save got in
+before is merged with `mergeCards` (js/mergeCards.js): by itself where the
+two changed different fields, else in a dialog that asks, field by field,
+whose value to keep.
+
 The standalone editor has no account, so it shares only by file or by
 handing the card to Bridge Classroom (DECISIONS, open question 4).
 

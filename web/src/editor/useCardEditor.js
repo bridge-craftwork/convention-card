@@ -1,6 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import { alertSummary, alertsFor } from '../../../js/spec.js'
 import { upgradeCard, upgradeCardData } from '../../../js/migrate.js'
+import { mergeCards, resolveConflicts } from '../../../js/mergeCards.js'
 import {
   CONVENTION_CATALOG,
   SECTION_META,
@@ -29,7 +30,13 @@ import {
 //                 says an owned card is shared. The table of cards shows them
 //                 as Bridgodex does ("Editor · by …", "Read only · by …",
 //                 "Shared")
-//   save(card, cardData)                       write a card's card_data
+//   save(card, cardData)                       write a card's card_data. A
+//                 shared card (Bridge Classroom #436) saves against the version
+//                 it was loaded at, card.version: if a partner saved since,
+//                 save throws an error whose `conflict` is the card as it is
+//                 now, { version, card_data }, and the editor merges
+//   loadVersion(id, version) → card_data   optional: a saved version, the
+//                 base of that merge; without it a conflict is only reported
 //   overwrite(id, { name, description, cardData })   (also how a card is renamed)
 //   create({ name, description, cardData, visibility, primary }) → the new card's id
 //                 primary: whether it becomes the card that opens first
@@ -40,6 +47,19 @@ import {
 //                   it (a built-in or public card, or one shared with them);
 //                   the editor offers "Remove from my list" only when given
 //   canEdit(card, user) → boolean
+//                 A card's role ('owner' | 'editor' | 'viewer', from load) says
+//                 more: only an owner deletes it.
+//
+// Sharing (optional; the editor offers Share only when members is given).
+// All for one card, by id; role is 'owner', 'editor' or 'viewer':
+//   members(id) → [{ user_id, name, role }]
+//   setRole(id, userId, role)              owner only; a card keeps an owner
+//   removeMember(id, userId)               owner, or the member themself
+//   invitations(id) → [{ token, url, role, expires_at }]   owner only
+//   invite(id, role) → { token, url, expires_at }   role 'editor' | 'viewer'
+//   revokeInvitation(id, token)
+//   printLink(id, template) → { url }      template 'classic' | 'new': a
+//                 permanent read-only link to the card's PDF, as it is now
 //
 // overlays (optional) — extra information beside each convention:
 //   covered(skillPath) → boolean       whether practice deals exist for it
@@ -91,6 +111,9 @@ function createState(storage, overlays) {
   const viewMode = ref(true)           // Cards open in view mode; click Edit to modify
   const lessonMasteryMap = ref({})     // { skillPath → tier }
   const userCardLinks = ref([])        // [{ card_id, card_name, is_primary, label, ... }]
+  // A save a partner's save got in before: { conflicts, card, version } for
+  // the conflict view, until it is settled (finishMerge) or dropped
+  const pendingMerge = ref(null)
 
   const activeSection = ref('notrump')
   const visibleLevels = ref(new Set(['basic']))
@@ -188,6 +211,10 @@ function createState(storage, overlays) {
     const card = currentCard.value
     return !!card && storage.canEdit(card, user())
   })
+
+  // A shared card's editors and viewers don't delete it; its owners do
+  const canDelete = computed(() => canEdit.value && !['editor', 'viewer'].includes(currentCard.value?.role))
+  const canShare = typeof storage.members === 'function'
 
   // Fields and toggles only accept input when the user has edit
   // permissions *and* has explicitly entered Edit mode (clicked the
@@ -298,18 +325,62 @@ function createState(storage, overlays) {
     return section.notes.some(n => !!getNote(n.key)?.trim())
   }
 
+  // Save `cardData` as the next version after `version`. A partner's save
+  // since then is merged in: by itself where the two touched different
+  // fields, else kept in pendingMerge for a person to settle.
+  async function saveAgainst(card, version, cardData) {
+    try {
+      await storage.save({ ...card, version }, cardData)
+    } catch (err) {
+      const now = err?.conflict
+      if (!now || typeof storage.loadVersion !== 'function') throw err
+      const base = await storage.loadVersion(card.id, version)
+      const merged = mergeCards(base, cardData, now.card_data)
+      if (merged.conflicts.length) {
+        pendingMerge.value = { ...merged, version: now.version }
+        return 'conflict'
+      }
+      return saveAgainst(card, now.version, merged.card)
+    }
+    // Reload so timestamps + persisted state match (also resets to
+    // view mode via setCurrentCard).
+    setCurrentCard(await storage.load(card.id))
+    lastSavedAt.value = new Date().toISOString()
+    return true
+  }
+
+  /** Save the edits. True when saved; 'conflict' when a partner's edits need settling (pendingMerge). */
   async function saveCard() {
     const card = currentCard.value
     if (!card || !user() || !canEdit.value) return false
     saving.value = true
     saveError.value = null
     try {
-      await storage.save(card, editedCardData.value)
-      // Reload so timestamps + persisted state match (also resets to
-      // view mode via setCurrentCard).
-      setCurrentCard(await storage.load(card.id))
-      lastSavedAt.value = new Date().toISOString()
-      return true
+      return await saveAgainst(card, card.version, editedCardData.value)
+    } catch (err) {
+      console.error('Save card failed:', err)
+      saveError.value = err.message || 'Failed to save card'
+      return false
+    } finally {
+      saving.value = false
+    }
+  }
+
+  /**
+   * Settle pendingMerge: `choices` is { path: 'mine' | 'theirs' } (mine
+   * where not given), and the result is saved. Null drops the merge and
+   * keeps the edits unsaved.
+   */
+  async function finishMerge(choices) {
+    const merge = pendingMerge.value
+    pendingMerge.value = null
+    if (!merge || !choices) return false
+    const cardData = resolveConflicts(merge.card, merge.conflicts, c => choices[c.path] || 'mine')
+    editedCardData.value = cardData
+    saving.value = true
+    saveError.value = null
+    try {
+      return await saveAgainst(currentCard.value, merge.version, cardData)
     } catch (err) {
       console.error('Save card failed:', err)
       saveError.value = err.message || 'Failed to save card'
@@ -415,7 +486,7 @@ function createState(storage, overlays) {
 
   async function deleteCurrentCard() {
     const card = currentCard.value
-    if (!card || !user() || !canEdit.value) return false
+    if (!card || !user() || !canDelete.value) return false
     try {
       await storage.remove(card.id)
     } catch (err) {
@@ -455,8 +526,11 @@ function createState(storage, overlays) {
     showProf,
     importNotes,
     importNotesFor,
+    pendingMerge,
     // derived
     canEdit,
+    canDelete,
+    canShare,
     isEditable,
     isDirty,
     coverageByEntry,
@@ -474,6 +548,7 @@ function createState(storage, overlays) {
     setNote,
     sectionHasNotes,
     saveCard,
+    finishMerge,
     enterEditMode,
     revertEdits,
     overwriteCard,
