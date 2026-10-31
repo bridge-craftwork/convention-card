@@ -213,6 +213,8 @@ export const STRUCTURED_FIELDS = {
     // Responses, as on the ACBL card's "Resp" line.
     { label: '1♣ responses', kind: 'heading' },
     { label: 'Bypass 5+ ♦ to bid 1♥/1♠', cardPath: 'minor_openings.bypass_5_plus', kind: 'boolean' },
+    { label: '1♣ other responses', cardPath: 'minor_openings.one_club.responses', kind: 'text',
+      placeholder: 'e.g. Walsh' },
     { label: '1♣ 1NT range', kind: 'range',
       from: 'minor_openings.one_club.one_nt_range_min', to: 'minor_openings.one_club.one_nt_range_max' },
     { label: '1♣ 2NT range', kind: 'range',
@@ -249,6 +251,8 @@ export const STRUCTURED_FIELDS = {
     // the 1♦ response rows hide (hiddenWhen), unless one already holds a value.
     { label: '1♦ responses', kind: 'heading', column: 2 },
     { label: 'Same as responses to 1♣', cardPath: 'minor_openings.one_diamond.same_as_1c', kind: 'boolean', column: 2 },
+    { label: '1♦ other responses', cardPath: 'minor_openings.one_diamond.responses', kind: 'text', column: 2,
+      hiddenWhen: 'minor_openings.one_diamond.same_as_1c' },
     { label: '1♦ 1NT range', kind: 'range', column: 2,
       hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
       from: 'minor_openings.one_diamond.one_nt_range_min', to: 'minor_openings.one_diamond.one_nt_range_max' },
