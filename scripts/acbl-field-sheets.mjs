@@ -24,7 +24,7 @@ import { fileURLToPath } from 'url'
 import { PDFDocument, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../js/assets.js'
-import { ACBL_FIELD_MAPS, leadCirclePositions } from '../js/acblClassicFillPdf.js'
+import { ACBL_FIELD_MAPS, ACBL_SPLIT_GROUPS, leadCirclePositions } from '../js/acblClassicFillPdf.js'
 import { field, FIELDS } from '../js/spec.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -72,8 +72,16 @@ async function sheet(template) {
   const map = ACBL_FIELD_MAPS[template]
 
   // Number the boxes: filled ones in map order, then the rest top-to-bottom.
+  // A field written across two ruled lines (ACBL_SPLIT_GROUPS) fills its
+  // later lines too: they are numbered right after its first.
+  const continues = new Map() // later line -> { card, line }
+  for (const g of ACBL_SPLIT_GROUPS[template] || []) g.fields.slice(1).forEach((f, i) => continues.set(f, { card: g.card, line: i + 2, after: g.fields[0] }))
   const order = []
-  for (const e of map) if (boxes.has(e.pdf) && !order.includes(e.pdf)) order.push(e.pdf)
+  for (const e of map) {
+    if (!boxes.has(e.pdf) || order.includes(e.pdf)) continue
+    order.push(e.pdf)
+    for (const [f, c] of continues) if (c.after === e.pdf && boxes.has(f) && !order.includes(f)) order.push(f)
+  }
   const missingFromTemplate = [...new Set(map.filter(e => !boxes.has(e.pdf)).map(e => e.pdf))]
   const { height: H } = cardPage.getSize()
   // Lead circles: one number per printed holding, after the filled boxes.
@@ -137,11 +145,16 @@ async function sheet(template) {
       continue
     }
     const entries = map.filter(e => e.pdf === name)
+    if (continues.has(name)) {
+      const c = continues.get(name)
+      rows.push({ n, name, kind: boxes.get(name).kind, card: `${c.card} (line ${c.line})`, label: field(c.card)?.label ?? 'NOT IN THE SPEC', filled: true, missing: !field(c.card) })
+      continue
+    }
     if (!entries.length) { rows.push({ n, name, kind: boxes.get(name).kind, card: '', label: 'not filled', filled: false }); continue }
     entries.forEach((e, i) => {
       const def = field(e.card)
       const label = def ? def.label : (e.card.startsWith('metadata.') ? 'card metadata' : 'NOT IN THE SPEC')
-      const card = e.card + (e.value !== undefined ? ` = ${e.value}` : '')
+      const card = e.card + (e.value !== undefined ? ` = ${e.value}` : '') + (e.when === 'filled' ? ' (ticked when filled)' : '')
       rows.push({ n: i ? '' : n, name: i ? '' : name, kind: i ? '' : boxes.get(name).kind, card, label, filled: true, missing: !def && !e.card.startsWith('metadata.') })
     })
   }

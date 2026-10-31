@@ -247,6 +247,15 @@ export async function readCardFromPdf(bytes) {
   for (const box of changed) {
     if (typeof boxes[box] !== 'boolean') continue
     const entries = (entriesFor.get(box) || []).filter(e => e.kind === 'check')
+    // A "see the line" box (when: 'filled') holds no value of its own: its
+    // text does. A tick with no text, or text with no tick, is reported.
+    const seeLine = entries.filter(e => e.when === 'filled')
+    if (seeLine.length) {
+      const filled = isCheckOn(seeLine[0], entryValue(seeLine[0], cardData))
+      if (boxes[box] && !filled) skip(box, true, `ticked, but ${seeLine[0].card} (the line beside it) is empty`)
+      if (!boxes[box] && filled) skip(box, false, `unticked, but ${seeLine[0].card} (the line beside it) is still filled`)
+      continue
+    }
     if (!entries.length) {
       if (boxes[box]) skip(box, true, 'not a box this editor fills in')
       continue
@@ -280,7 +289,9 @@ export async function readCardFromPdf(bytes) {
     if (on.length === 1) {
       const v = on[0].value
       const values = (Array.isArray(v) ? v : [v]).map(String)
-      if (!values.includes(String(current))) set(box, path, values[0])
+      // A yes/no field printed as two boxes (Same Resp: Y □ N □) stores a boolean.
+      const stored = field(path)?.kind === 'bool' ? values[0] === 'true' : values[0]
+      if (!values.includes(String(current))) set(box, path, stored)
       // RKCB's 1430 box: RKCB played 1430.
       if (play) set(box, play, true)
     } else if (entries.some(e => isCheckOn(e, current))) {
