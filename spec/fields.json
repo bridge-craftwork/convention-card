@@ -3610,67 +3610,134 @@
  "notes": {
   "general": {
    "kind": "text",
-   "label": "General notes"
+   "label": "General notes",
+   "about": [
+    "general"
+   ],
+   "heading": "General approach"
   },
   "partnership_understandings": {
    "kind": "text",
-   "label": "Partnership understandings"
+   "label": "Partnership understandings",
+   "heading": "Partnership understandings"
   },
   "special_agreements": {
    "kind": "text",
-   "label": "Special agreements"
+   "label": "Special agreements",
+   "heading": "Special agreements"
   },
   "notrump_notes": {
    "kind": "text",
-   "label": "NT notes"
+   "label": "NT notes",
+   "about": [
+    "notrump"
+   ],
+   "heading": "Notrump openings"
   },
   "major_notes": {
    "kind": "text",
-   "label": "Major opening notes"
+   "label": "Major opening notes",
+   "about": [
+    "major_openings"
+   ],
+   "heading": "Major openings"
   },
   "minor_notes": {
    "kind": "text",
-   "label": "Minor opening notes"
+   "label": "Minor opening notes",
+   "about": [
+    "minor_openings"
+   ],
+   "heading": "Minor openings"
   },
   "two_level_notes": {
    "kind": "text",
-   "label": "Two-level notes"
+   "label": "Two-level notes",
+   "about": [
+    "two_level"
+   ],
+   "heading": "Two-level openings"
   },
   "slam_notes": {
    "kind": "text",
-   "label": "Slam notes"
+   "label": "Slam notes",
+   "about": [
+    "slam"
+   ],
+   "heading": "Slam bidding"
   },
   "preempts_notes": {
    "kind": "text",
-   "label": "Preempt notes"
+   "label": "Preempt notes",
+   "about": [
+    "preempts"
+   ],
+   "heading": "Preempts"
   },
   "overcalls_notes": {
    "kind": "text",
-   "label": "Overcall notes"
+   "label": "Overcall notes",
+   "about": [
+    "overcalls",
+    "direct_cuebids"
+   ],
+   "heading": "Overcalls"
   },
   "nt_overcalls_notes": {
    "kind": "text",
-   "label": "NT overcall notes"
+   "label": "NT overcall notes",
+   "about": [
+    "nt_overcalls"
+   ],
+   "heading": "Notrump overcalls"
   },
   "doubles_notes": {
    "kind": "text",
-   "label": "Double notes"
+   "label": "Double notes",
+   "about": [
+    "doubles"
+   ],
+   "heading": "Doubles"
   },
   "competitive_notes": {
    "kind": "text",
-   "label": "Competitive notes"
+   "label": "Competitive notes",
+   "about": [
+    "competitive",
+    "vs_to_double",
+    "vs_preempts"
+   ],
+   "heading": "Competitive bidding"
   },
   "carding_notes": {
    "kind": "text",
-   "label": "Carding notes"
+   "label": "Carding notes",
+   "about": [
+    "carding"
+   ],
+   "heading": "Carding and signals"
   },
   "leads_notes": {
    "kind": "text",
-   "label": "Opening lead notes"
+   "label": "Opening lead notes",
+   "about": [
+    "leads"
+   ],
+   "heading": "Opening leads"
   },
   "other_notes": {
    "kind": "text",
-   "label": "Other notes"
+   "label": "Other notes",
+   "about": [
+    "other_conventions"
+   ],
+   "heading": "Other conventions"
+  },
+  "supplementary": {
+   "kind": "text",
+   "label": "Supplementary pages",
+   "heading": "Supplementary notes",
+   "desc": "Material the card has no room for (relay schemes, defences, sequences), printed on the PDF's notes page after the card. A line starting with # is a heading"
   }
  }
 }

@@ -25,6 +25,8 @@ import { upgradeCard, upgradeCardData } from './migrate.js'
 import { ledCards } from './leads.js'
 import { TEMPLATE_INK } from './acblTemplateInk.js'
 import { loadTemplate, loadFont } from './assets.js'
+import { drawMark, markWidth } from './pdfMark.js'
+import { addNotesPages } from './notesPage.js'
 
 // Custom Info-dict key under which we embed the source card_data as
 // JSON, so a generated PDF can be re-imported into the editor with
@@ -1409,6 +1411,8 @@ function growWidget(box, boxes, wanted, opts) {
  * the box where the content needs it and the space exists.
  */
 function applyTypography(pdf, form, narrow, templateName, cardData) {
+  // The size each value ends at, by field and by split group's card path
+  const sizes = new Map(), groups = new Map()
   zeroTextFieldBorders(form)
   const boxes = collectWidgetBoxes(pdf, form, templateName)
   const byName = new Map()
@@ -1457,6 +1461,7 @@ function applyTypography(pdf, form, narrow, templateName, cardData) {
       field.setFontSize(chosen.size)
       handled.add(groupBoxes[i].name)
     }
+    groups.set(group.card, chosen.size)
     // Any box beyond the text simply stays empty.
     for (let i = groupBoxes.length; i < group.fields.length; i++) handled.add(group.fields[i])
   }
@@ -1548,6 +1553,7 @@ function applyTypography(pdf, form, narrow, templateName, cardData) {
         field.setFontSize(split.size)
         split.second.setText(split.lowerLine)
         split.second.setFontSize(split.size)
+        sizes.set(name, split.size)
         continue
       }
     }
@@ -1555,9 +1561,11 @@ function applyTypography(pdf, form, narrow, templateName, cardData) {
     if (fit.lines.length > 1) field.enableMultiline()
     field.setText(fit.lines.join('\n'))
     field.setFontSize(fit.size)
+    sizes.set(name, fit.size)
   }
 
   raiseGrownWidgets(pdf)
+  return { sizes, groups }
 }
 
 /**
@@ -1666,22 +1674,21 @@ function addMissingFields(pdf, form) {
 }
 
 /**
- * The scoresheet a PDF ends with, after the card page. The default is
- * 'none'; 'acbl' is the Classic template's own second page (`true` means
- * 'acbl').
- * The New card has no scoresheet of its own. More may come (a team
+ * What a PDF holds after the card page. The default is 'none'. 'acbl' is
+ * the Classic template's own second page, the ACBL scoresheet (the New
+ * card has none). 'notes' is the card's notes, other agreements,
+ * supplementary pages and any value too small to read on the card
+ * (notesPage.js), on as many pages as they take. More may come (a team
  * scoresheet).
  */
-export const SCORESHEETS = ['none', 'acbl']
-const scoresheetOf = s => (s === true ? 'acbl' : s === false || s == null ? 'none' : s)
+export const SECOND_PAGES = ['none', 'acbl', 'notes']
 
-export async function buildAcblPdf(card, templateName = 'classic', { scoresheet = 'none' } = {}) {
+export async function buildAcblPdf(card, templateName = 'classic', { secondPage = 'none' } = {}) {
   card = upgradeCard(card)
-  scoresheet = scoresheetOf(scoresheet)
-  if (!SCORESHEETS.includes(scoresheet)) throw new Error(`No scoresheet "${scoresheet}" (${SCORESHEETS.join(', ')})`)
+  if (!SECOND_PAGES.includes(secondPage)) throw new Error(`No second page "${secondPage}" (${SECOND_PAGES.join(', ')})`)
   const bytes = await loadTemplateBytes(templateName)
   const pdf = await PDFDocument.load(bytes)
-  if (scoresheet !== 'acbl') dropScoresheet(pdf)
+  if (secondPage !== 'acbl') dropScoresheet(pdf)
   const form = pdf.getForm()
   const fieldMap = templateName === 'new' ? FIELD_MAP_NEW : FIELD_MAP_CLASSIC
 
@@ -1726,15 +1733,44 @@ export async function buildAcblPdf(card, templateName = 'classic', { scoresheet 
     console.warn(`ACBL fill (${templateName}): ${droppedPaths.length} value(s) had no destination field`, droppedPaths)
     await drawDiagnosticFooter(pdf, templateName, droppedPaths, card)
   }
+  const markFont = await pdf.embedFont(StandardFonts.Helvetica)
+  makeRoomForMark(pdf, form, templateName, markFont)
+  let small = []
   if (narrow) {
     try {
-      applyTypography(pdf, form, narrow, templateName, card?.card_data)
+      small = smallPaths(applyTypography(pdf, form, narrow, templateName, card?.card_data), fieldMap, templateName)
     } catch (err) {
       console.warn('Typography pass failed; values keep the template default:', err)
     }
   }
   embedCardDataInPdf(pdf, card, writtenFields(form, templateName, MOVED_BY_DOC.get(pdf)))
+  if (secondPage === 'notes') {
+    addNotesPages(pdf, card, { font: narrow || markFont, markFont, small, plain: !narrow })
+  }
   return pdf
+}
+
+// The partnership's names field on each template: the mark takes the
+// right end of its line
+const NAMES_FIELD = { classic: 'NAMES', new: 'Name.t.1' }
+
+function makeRoomForMark(pdf, form, templateName, font) {
+  const widget = form.getTextField(NAMES_FIELD[templateName]).acroField.getWidgets()[0]
+  const r = widget.getRectangle()
+  const w = markWidth(font, r.height)
+  widget.setRectangle({ ...r, width: r.width - w - 6 })
+  drawMark(pdf.getPage(0), { x: r.x + r.width - w, y: r.y, height: r.height, font })
+}
+
+// The card paths of values the typography pass set below SMALL_SIZE: the
+// notes page repeats them in full
+const SMALL_SIZE = 5
+function smallPaths({ sizes, groups }, fieldMap, templateName) {
+  const byPdf = new Map(fieldMap.filter(e => e.card).map(e => [e.pdf, e.card]))
+  const paths = new Set()
+  for (const [name, size] of sizes) if (size < SMALL_SIZE && byPdf.has(name)) paths.add(byPdf.get(name))
+  for (const [card, size] of groups) if (size < SMALL_SIZE) paths.add(card)
+  return [...paths]
 }
 
 // The Classic's second page is the ACBL's scoresheet, with fields of its
@@ -2047,6 +2083,12 @@ function sanitizeForWinAnsi(str) {
     .replace(/♦/g, 'D')
     .replace(/♥/g, 'H')
     .replace(/♠/g, 'S')
+    // Typed punctuation outside Latin-1, as its plain form rather than
+    // dropped (a partnership's "Rick – Pat" kept its dash)
+    .replace(/[\u2013\u2014\u2212]/g, '-')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201c\u201d]/g, '"')
+    .replace(/\u2026/g, '...')
     // Drop any remaining non-Latin-1 codepoints — they'd also fail
     // WinAnsi encoding. Most card values should be plain ASCII by now.
     .replace(/[^\x00-\xff]/g, '')
@@ -2087,9 +2129,9 @@ function isCheckOn(entry, value) {
  * without a browser download — the export is otherwise only reachable
  * through a click.
  */
-export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false, scoresheet = 'none' } = {}) {
+export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false, secondPage = 'none' } = {}) {
   card = upgradeCard(card)
-  const pdf = await buildAcblPdf(card, templateName, { scoresheet })
+  const pdf = await buildAcblPdf(card, templateName, { secondPage })
   finalizeForm(pdf, templateName, { flatten })
   // Red ellipses around the card led from each holding: both templates
   // have a "circle card led" grid, with no form field for it.
@@ -2101,8 +2143,8 @@ export async function renderAcblPdfBytes(card, templateName = 'classic', { flatt
   return pdf.save()
 }
 
-export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false, scoresheet = 'none' } = {}) {
-  const bytes = await renderAcblPdfBytes(card, templateName, { flatten, scoresheet })
+export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false, secondPage = 'none' } = {}) {
+  const bytes = await renderAcblPdfBytes(card, templateName, { flatten, secondPage })
   triggerDownload(bytes, pdfFilename(card, templateName))
 }
 
