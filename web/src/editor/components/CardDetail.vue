@@ -37,10 +37,12 @@
         v-for="f in visibleStructuredFields"
         :key="f.label"
         class="field-row"
+        :class="{ 'field-heading': f.kind === 'heading' }"
         :style="useTwoColumn ? fieldGridStyle(f) : null"
       >
         <span class="field-label" v-html="colorizeSuits(f.label)"></span>
-        <span class="field-value">
+        <!-- A heading row is a label only: it titles the rows below it. -->
+        <span v-if="f.kind !== 'heading'" class="field-value">
           <!-- Read-only display -->
           <template v-if="!editable">{{ renderField(f) }}</template>
 
@@ -529,6 +531,18 @@ function renderField(field) {
 }
 
 .field-row:last-child { border-bottom: none; }
+
+/* A sub-heading inside a column (kind: 'heading'), e.g. "1♣ responses". */
+.field-row.field-heading {
+  padding: 16px 0 6px;
+}
+.field-row.field-heading .field-label {
+  flex: 1 1 auto;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
 .field-label {
   flex: 0 0 200px;

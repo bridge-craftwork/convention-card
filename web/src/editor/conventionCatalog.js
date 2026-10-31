@@ -210,6 +210,8 @@ export const STRUCTURED_FIELDS = {
         { label: 'NF0',                cardPath: 'minor_openings.one_club.nf0' },
         { label: 'Artificial forcing', cardPath: 'minor_openings.one_club.art_forcing' }
       ] },
+    // Responses, as on the ACBL card's "Resp" line.
+    { label: '1♣ responses', kind: 'heading' },
     { label: 'Bypass 5+ ♦ to bid 1♥/1♠', cardPath: 'minor_openings.bypass_5_plus', kind: 'boolean' },
     { label: '1♣ 1NT range', kind: 'range',
       from: 'minor_openings.one_club.one_nt_range_min', to: 'minor_openings.one_club.one_nt_range_max' },
@@ -234,10 +236,6 @@ export const STRUCTURED_FIELDS = {
         { label: 'Invitational', cardPath: 'minor_openings.one_club.jump_raise_after_overcall.inv' }
       ] },
     // ─── 1♦ (right column) ───
-    // "Same as over 1♣" heads the column; while it is ticked the 1♦ response
-    // rows hide (hiddenWhen), unless one already holds a value. The opening's
-    // own agreements (min length, flags) stay, since "same" is about responses.
-    { label: 'Same as over 1♣', cardPath: 'minor_openings.one_diamond.same_as_1c', kind: 'boolean', column: 2 },
     { label: '1♦ min length', cardPath: 'minor_openings.one_diamond.min_length', column: 2,
       kind: 'select', options: ['3', '4', '5'] },
     { label: '1♦ flags', kind: 'inline_checks', column: 2,
@@ -246,6 +244,11 @@ export const STRUCTURED_FIELDS = {
         { label: 'NF2 (4432 only)',    cardPath: 'minor_openings.one_diamond.nf2_4432_only' },
         { label: 'Artificial forcing', cardPath: 'minor_openings.one_diamond.art_forcing' }
       ] },
+    // "Same as responses to 1♣" heads the 1♦ responses, as the ACBL card's
+    // "Same as over 1♣" box sits on its 1♦ "Resp" line. While it is ticked
+    // the 1♦ response rows hide (hiddenWhen), unless one already holds a value.
+    { label: '1♦ responses', kind: 'heading', column: 2 },
+    { label: 'Same as responses to 1♣', cardPath: 'minor_openings.one_diamond.same_as_1c', kind: 'boolean', column: 2 },
     { label: '1♦ 1NT range', kind: 'range', column: 2,
       hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
       from: 'minor_openings.one_diamond.one_nt_range_min', to: 'minor_openings.one_diamond.one_nt_range_max' },
