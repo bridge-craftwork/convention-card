@@ -1036,11 +1036,30 @@ const TYPO = {
 //
 // `notrump.two_nt.three_s_desc`: the 2NT-opening 3♠-response row has a
 // second ruled line underneath (`3s`, unmapped and otherwise unused).
+// The rest are the free ruled lines under a field's own (see
+// docs/acbl-field-sheets and convention-card#96): space to keep writing,
+// not a field of their own.
 const SPLIT_GROUPS = {
   classic: [
     { card: 'notrump.two_nt.three_s_desc', fields: ['undefined_6', '3s'] },
+    // 1NT 3♠ response ('3h 2' is the 3♠ row), then the two unlabelled lines
+    // under it, above "4♦, 4♥ Transfer".
+    { card: 'notrump.responses.3s', fields: ['3h 2', '3s 1', '3s 2'] },
   ],
-  new: [],
+  new: [
+    { card: 'general.bids_requiring_prep', fields: ['OV.t.10', 'OV.t.11'] },
+    { card: 'preempts.three_level_style', fields: ['P.t.1', 'P.t.2'] },
+    { card: 'minor_openings.one_diamond.responses', fields: ['1D.t.9', '1D.t.11'] },
+    // Majors "Other": its line, then the space beside Drury's In Comp box
+    // (free text, not Drury's).
+    { card: 'major_openings.art_raises_other', fields: ['1H1S.t.11', '1H1S.t.15'] },
+    // NT "Other" and the line under it (not Smolen's).
+    { card: 'notrump.notes', fields: ['1NT.t.36', '1NT.t.37'] },
+    // Other Carding, then the free line under the Smith Echo row.
+    { card: 'carding.notes', fields: ['C.t.10', 'C.t.14'] },
+    // Under the first-discard row: "Other" described, and signal notes.
+    { card: 'carding.first_discard.notes', fields: ['SI.t.14', 'SI.t.15'] },
+  ],
 }
 
 /**

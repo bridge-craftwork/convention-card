@@ -4,7 +4,7 @@ import path from 'path'
 import { PDFDocument, PDFCheckBox } from 'pdf-lib'
 import { readCardFromPdf } from '../acblPdfImport.js'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
-import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
+import { renderAcblPdfBytes, ACBL_FIELD_MAPS, ACBL_SPLIT_GROUPS } from '../acblClassicFillPdf.js'
 
 // Boxes the Classic map once sent to the wrong place: the major and 1♣ jump
 // raises were crossed between the Major and Minor columns, major Weak landed
@@ -106,6 +106,21 @@ describe('ACBL Classic field map', () => {
     const back = await readCardFromPdf(await pdf.save({ updateFieldAppearances: false }))
     expect(back.card_data.overcalls?.conv_text).toBeUndefined()
     expect(back.report.skipped.map(s => s.box)).toContain('OC.c.9')
+  })
+
+  // Group B: free ruled lines under a field's own, written as more of it.
+  const LONG = 'Two-suited hands with both majors at least five-four, and strong jump shifts in competition after a double'
+  const groups = Object.entries(ACBL_SPLIT_GROUPS).flatMap(([template, gs]) => gs.map(g => [template, g.card, g.fields]))
+  it.each(groups)('%s: %s runs on across its lines', async (template, card, fields) => {
+    const card_data = {}
+    let at = card_data
+    const parts = card.split('.')
+    parts.slice(0, -1).forEach(k => { at = at[k] = {} })
+    at[parts.at(-1)] = LONG
+    const form = (await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data }, template))).getForm()
+    const lines = fields.map(f => form.getTextField(f).getText() || '')
+    expect(lines[1]).not.toBe('') // it reached the second line
+    expect(lines.join(' ').replace(/\s+/g, ' ').trim()).toBe(LONG)
   })
 })
 
