@@ -654,6 +654,7 @@ const FIELD_MAP_NEW = [
   { pdf: '1C.c.7', card: 'minor_openings.one_club.nf0', kind: 'check' },
   { pdf: '1C.c.8', card: 'minor_openings.one_club.art_forcing', kind: 'check' },
   { pdf: '1C.c.10', card: 'minor_openings.one_club.transfer_resp', kind: 'check' },
+  { pdf: '1C.t.9',  card: 'minor_openings.one_club.responses', kind: 'text' },
   { pdf: '1C.t.11', card: 'minor_openings.notes', kind: 'text' },
   { pdf: '1C.c.13', card: 'minor_openings.bypass_5_plus', kind: 'check' },
   { pdf: '1C.t.14', card: 'minor_openings.one_club.one_nt_range_min', kind: 'text' },
@@ -677,6 +678,7 @@ const FIELD_MAP_NEW = [
   { pdf: '1D.c.5', card: 'minor_openings.one_diamond.nf2_4432_only', kind: 'check' },
   { pdf: '1D.c.8', card: 'minor_openings.one_diamond.art_forcing',  kind: 'check' },
   { pdf: '1D.c.10', card: 'minor_openings.one_diamond.same_as_1c', kind: 'check' },
+  { pdf: '1D.t.9',  card: 'minor_openings.one_diamond.responses', kind: 'text' },
   // 1♦ raises mirror the 1♣ schema if the user keeps separate flags;
   // when same_as_1c is set, the editor leaves these empty.
   { pdf: '1D.t.12', card: 'minor_openings.one_diamond.one_nt_range_min', kind: 'text' },

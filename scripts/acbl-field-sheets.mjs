@@ -80,6 +80,10 @@ async function sheet(template) {
   const number = new Map(order.map((n, i) => [n, i + 1]))
 
   const doc = await PDFDocument.create()
+  // A fixed date, so re-running with nothing changed leaves the files unchanged.
+  doc.setCreationDate(new Date(0))
+  doc.setModificationDate(new Date(0))
+  doc.setProducer('scripts/acbl-field-sheets.mjs')
   doc.registerFontkit(fontkit)
   const font = await doc.embedFont(fs.readFileSync(path.join(ROOT, 'assets/fonts', FONT_FILE)))
   const filledCount = order.length - unfilled.length

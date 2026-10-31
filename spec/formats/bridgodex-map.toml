@@ -86,6 +86,8 @@
 "1d_min_len_unbal"             = "minor_openings.one_diamond.unbalanced"
 "1d_min_len_art_f"             = "minor_openings.one_diamond.art_forcing"
 "1d_same_as_1c"                = "minor_openings.one_diamond.same_as_1c"
+"1c_response"                  = { text = "minor_openings.one_club.responses" }
+"1d_response"                  = { text = "minor_openings.one_diamond.responses" }
 "1d_1nt_min"                   = { number = "minor_openings.one_diamond.one_nt_range_min" }
 "1d_1nt_max"                   = { number = "minor_openings.one_diamond.one_nt_range_max" }
 "1d_2nt_min"                   = { number = "minor_openings.one_diamond.two_nt_range_min" }
@@ -469,9 +471,7 @@ export_to = "minors.1c_more"
 lines = [
   { key = "minors.1c_more", label = "1♣: " },
   { key = "minors.1c_1d", label = "1♣–1♦: " },
-  { key = "minors.1c_response", label = "1♣, other responses: " },
   { key = "minors.1d_more", label = "1♦: " },
-  { key = "minors.1d_response", label = "1♦, other responses: " },
 ]
 
 [[notes]]

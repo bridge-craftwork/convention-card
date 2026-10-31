@@ -264,6 +264,8 @@
 "one_diamond.unbalanced"   = { kind = "bool", label = "1♦ unbalanced" }
 "one_diamond.nf2_4432_only" = { kind = "bool", label = "1♦ NF2 (4-4-3-2 only)" }
 "one_diamond.same_as_1c"   = { kind = "bool", label = "1♦ responses same as over 1♣" }
+"one_club.responses"       = { kind = "text", label = "1♣ responses: other agreements", desc = "The ACBL card's 1♣ \"Resp\" line" }
+"one_diamond.responses"    = { kind = "text", label = "1♦ responses: other agreements", desc = "The ACBL card's 1♦ \"Resp\" line" }
 "bypass_5_plus"            = { kind = "bool", label = "Bypass 5+ ♦ to bid 1♥/1♠" }
 "may_hold_5_card_major"   = { kind = "bool", label = "1♣/1♦ may hold a 5-card major", desc = "Usually a longer minor (6+) with reverse strength, planning to rebid the major" }
 "inverted_minors.play"     = { kind = "bool", label = "Inverted minors", skill = "bidding_conventions/inverted_minors", level = 5 }

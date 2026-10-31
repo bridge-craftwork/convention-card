@@ -1113,6 +1113,16 @@
    "kind": "bool",
    "label": "1♦ responses same as over 1♣"
   },
+  "one_club.responses": {
+   "kind": "text",
+   "label": "1♣ responses: other agreements",
+   "desc": "The ACBL card's 1♣ \"Resp\" line"
+  },
+  "one_diamond.responses": {
+   "kind": "text",
+   "label": "1♦ responses: other agreements",
+   "desc": "The ACBL card's 1♦ \"Resp\" line"
+  },
   "bypass_5_plus": {
    "kind": "bool",
    "label": "Bypass 5+ ♦ to bid 1♥/1♠"
