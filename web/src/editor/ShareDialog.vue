@@ -147,6 +147,7 @@ async function show() {
   invitations.value = null
   printUrl.value = null
   error.value = null
+  copied.value = null
   await run('Could not load who has this card', refresh)
 }
 
@@ -185,13 +186,19 @@ const revoke = inv => run('Could not revoke the link', async () => {
 })
 
 const getPrintLink = () => run('Could not get the link', async () => {
+  copied.value = null
   printUrl.value = (await props.storage.printLink(props.card.id, template.value)).url
 })
 
+// "Copied" shows for a moment, so it never claims a copy that wasn't made
+// (it stayed on through reopening the dialog and a new link)
+let copiedTimer = null
 async function copy(text, key) {
   try {
     await navigator.clipboard.writeText(text)
     copied.value = key
+    clearTimeout(copiedTimer)
+    copiedTimer = setTimeout(() => { copied.value = null }, 2000)
   } catch {
     error.value = 'Could not copy: select the link and copy it'
   }
