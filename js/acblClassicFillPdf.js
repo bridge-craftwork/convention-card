@@ -236,10 +236,13 @@ const FIELD_MAP_CLASSIC = [
   // weak/mixed/inv as three separate booleans; ACBL has Force/Inv/Weak.
   // "Force" has no card_data equivalent and "Mixed" has no ACBL Classic
   // equivalent (Bergen-style raises would be noted in `art_raises_other`).
-  { pdf: 'Inv_3',              card: 'major_openings.jump_raise.inv',  kind: 'check' },
-  { pdf: 'Weak_3',             card: 'major_openings.jump_raise.weak', kind: 'check' },
+  // The Major column's boxes: Inv_4/Weak_5 on the Double Raise row, Inv_5/
+  // Weak_6 on After Overcall. (These once pointed at the Minor column's boxes
+  // and at Weak_3, which is the vs-takeout-double Jump Shift: Weak box.)
+  { pdf: 'Inv_4',              card: 'major_openings.jump_raise.inv',  kind: 'check' },
+  { pdf: 'Weak_5',             card: 'major_openings.jump_raise.weak', kind: 'check' },
   { pdf: 'Inv_5',              card: 'major_openings.jump_raise_after_overcall.inv',  kind: 'check' },
-  { pdf: 'Weak_4',             card: 'major_openings.jump_raise_after_overcall.weak', kind: 'check' },
+  { pdf: 'Weak_6',             card: 'major_openings.jump_raise_after_overcall.weak', kind: 'check' },
   { pdf: 'Conv Raise 2NT',    card: 'major_openings.jacoby_2nt.play', kind: 'check' },
   { pdf: '3NT_2',             card: 'major_openings.three_nt_raise.play', kind: 'check' },
   { pdf: 'Splinter',          card: 'major_openings.splinters.play',  kind: 'check' },
@@ -270,10 +273,12 @@ const FIELD_MAP_CLASSIC = [
   // Minor Double Raise = jump raise of opener's minor. Same Force/Inv/Weak
   // structure as Major. Our card_data only has weak/mixed/inv on the
   // minor.one_club.jump_raise object; we map inv + weak.
-  { pdf: 'Inv_4',                  card: 'minor_openings.one_club.jump_raise.inv',  kind: 'check' },
-  { pdf: 'Weak_5',                 card: 'minor_openings.one_club.jump_raise.weak', kind: 'check' },
+  // The Minor column's boxes: Inv_3/Weak_4 on Double Raise, Inv_6/Weak_7 on
+  // After Overcall.
+  { pdf: 'Inv_3',                  card: 'minor_openings.one_club.jump_raise.inv',  kind: 'check' },
+  { pdf: 'Weak_4',                 card: 'minor_openings.one_club.jump_raise.weak', kind: 'check' },
   { pdf: 'Inv_6',                  card: 'minor_openings.one_club.jump_raise_after_overcall.inv',  kind: 'check' },
-  { pdf: 'Weak_6',                 card: 'minor_openings.one_club.jump_raise_after_overcall.weak', kind: 'check' },
+  { pdf: 'Weak_7',                 card: 'minor_openings.one_club.jump_raise_after_overcall.weak', kind: 'check' },
   { pdf: 'Forcing Raise JS in other minor', card: 'minor_openings.inverted_minors.play', kind: 'check' },
   // "Single raise" on ACBL is a single checkbox indicating you play one.
   // Our data has three booleans (nf/inv/gf); check the ACBL box if any are set.
@@ -449,7 +454,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Jump Shift Forcing',        card: 'vs_to_double.jump_shift', kind: 'check', value: 'forcing' },
   { pdf: 'Inv_2',                     card: 'vs_to_double.jump_shift', kind: 'check', value: 'inv' },
   { pdf: 'Weak_3',                    card: 'vs_to_double.jump_shift', kind: 'check', value: 'weak' },
-  { pdf: 'Fit',                       card: 'vs_to_double.jump_shift', kind: 'check', value: 'fit' },
+  // No 'fit' box: the Classic card's Jump Shift row is Forcing/Inv/Weak only.
+  // ('Fit' is Drury's box in the Major column.)
   { pdf: 'Redbl implies no fit',      card: 'vs_to_double.redouble.denies_fit',       kind: 'check' },
   { pdf: 'Transfer Resp',             card: 'vs_to_double.new_suit_forcing_tfr',      kind: 'check' },
   // 2NT Over matrix
