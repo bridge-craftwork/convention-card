@@ -1735,6 +1735,7 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
   }
   const markFont = await pdf.embedFont(StandardFonts.Helvetica)
   makeRoomForMark(pdf, form, templateName, markFont)
+  drawLastEdit(pdf, form, templateName, card, narrow || markFont, markFont)
   let small = []
   if (narrow) {
     try {
@@ -1760,6 +1761,47 @@ function makeRoomForMark(pdf, form, templateName, font) {
   const w = markWidth(font, r.height)
   widget.setRectangle({ ...r, width: r.width - w - 6 })
   drawMark(pdf.getPage(0), { x: r.x + r.width - w, y: r.y, height: r.height, font })
+}
+
+// When the card was last saved, as Bridge Winners and Bridgodex print it.
+// Classic: "Last edit:" at the right of the GENERAL APPROACH heading, the
+// date at the right of the line under it. New: both at the right of the
+// General Approach line. That line's box gives up the room. A card with no
+// saved date (one never saved) prints neither.
+const LAST_EDIT = {
+  classic: { field: 'GENERAL APPROACH', labelAbove: true },
+  new: { field: 'OV.t.1', labelAbove: false },
+}
+
+export function lastEditDate(card) {
+  const when = new Date(card?.updated_at || card?.updatedAt || NaN)
+  if (Number.isNaN(when.getTime())) return null
+  return when.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function drawLastEdit(pdf, form, templateName, card, font, labelFont) {
+  const date = lastEditDate(card)
+  const at = LAST_EDIT[templateName]
+  if (!date || !at) return
+  const widget = form.getTextField(at.field).acroField.getWidgets()[0]
+  const r = widget.getRectangle()
+  const page = pdf.getPage(0)
+  const right = r.x + r.width - 1
+  const label = 'Last edit:'
+  const size = Math.min(9, r.height - 1)
+  const labelSize = at.labelAbove ? 7.5 : 6.5
+  const dateW = font.widthOfTextAtSize(date, size)
+  const dateY = r.y + (r.height - size * 0.7) / 2
+  page.drawText(date, { x: right - dateW, y: dateY, size, font })
+  let used = dateW
+  if (at.labelAbove) {
+    page.drawText(label, { x: right - labelFont.widthOfTextAtSize(label, labelSize), y: r.y + r.height + 2, size: labelSize, font: labelFont })
+  } else {
+    const lw = labelFont.widthOfTextAtSize(label, labelSize)
+    page.drawText(label, { x: right - dateW - 3 - lw, y: dateY, size: labelSize, font: labelFont, color: rgb(0.3, 0.3, 0.3) })
+    used += 3 + lw
+  }
+  widget.setRectangle({ ...r, width: r.width - used - 6 })
 }
 
 // The card paths of values the typography pass set below SMALL_SIZE: the

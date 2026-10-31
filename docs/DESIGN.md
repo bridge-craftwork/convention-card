@@ -748,9 +748,15 @@ Bridgodex already offers).
   columns, as many pages as it takes, suit symbols drawn in the card's
   colours. Numbered footnotes are still to come.
 - **The mark.** Every ACBL PDF the library makes carries bridge-craftwork's
-  wrench and `bridge-craftwork.com/card` at the right end of the NAMES line
+  wrench and `bridge-craftwork.com` at the right end of the NAMES line
   (the templates have no free space; Bridge Winners puts its logo there),
-  and at the foot of each notes page (`js/pdfMark.js`; Rick, 2026-10-31).
+  and at the foot of each notes page (`js/pdfMark.js`; Rick, 2026-10-31:
+  the address alone, easier to remember than `/card`).
+- **Last edit.** The card page prints when the card was last saved (its
+  record's `updated_at`), as Bridge Winners and Bridgodex do: on the
+  Classic, "Last edit:" at the right of the GENERAL APPROACH heading and the
+  date at the right of the line under it; on the New, both at the right of
+  the General Approach line. A card never saved prints neither.
 - **Other card services.** Bridgodex's "config files" are a minimal JSON
   form of its card that RSVP Bridge reads and writes too, so our Bridgodex
   importer may read RSVP Bridge cards as well; to be checked against a
