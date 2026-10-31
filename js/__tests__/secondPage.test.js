@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { PDFDocument, PDFRef } from 'pdf-lib'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
-import { renderAcblPdfBytes } from '../acblClassicFillPdf.js'
+import { renderAcblPdfBytes, lastEditDate } from '../acblClassicFillPdf.js'
 import { notesPageContent } from '../notesPage.js'
 import { MARK_TEXT } from '../pdfMark.js'
 import { importCard } from '../importCard.js'
@@ -93,8 +93,19 @@ describe('the page after the card', () => {
       const pdf = await PDFDocument.load(await renderAcblPdfBytes(noted, t))
       const field = pdf.getForm().getTextField(t === 'new' ? 'Name.t.1' : 'NAMES')
       expect(field.getText()).toBe('Rick - Pat')
-      expect(field.acroField.getWidgets()[0].getRectangle().width).toBeLessThan(160)
+      expect(field.acroField.getWidgets()[0].getRectangle().width).toBeLessThan(190)
     }
-    expect(MARK_TEXT).toBe('bridge-craftwork.com/card')
+    expect(MARK_TEXT).toBe('bridge-craftwork.com')
+  })
+
+  it('prints when the card was last saved, and nothing for a card never saved', async () => {
+    const saved = { ...noted, updated_at: '2026-10-29T15:00:00Z' }
+    expect(lastEditDate(saved)).toBe('Oct 29, 2026')
+    expect(lastEditDate(noted)).toBe(null)
+    for (const t of ['classic', 'new']) {
+      const field = t === 'new' ? 'OV.t.1' : 'GENERAL APPROACH'
+      const width = async c => (await PDFDocument.load(await renderAcblPdfBytes(c, t))).getForm().getTextField(field).acroField.getWidgets()[0].getRectangle().width
+      expect(await width(saved)).toBeLessThan(await width(noted) - 30)
+    }
   })
 })

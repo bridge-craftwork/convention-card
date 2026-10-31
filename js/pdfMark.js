@@ -5,7 +5,9 @@
 
 import { rgb } from 'pdf-lib'
 
-export const MARK_TEXT = 'bridge-craftwork.com/card'
+// The site's address alone: easier to remember, and the card editor is a
+// click from its front page
+export const MARK_TEXT = 'bridge-craftwork.com'
 
 const SLATE = rgb(0.278, 0.333, 0.412) // the site's #475569
 const TEXT_SIZE = 6.2
