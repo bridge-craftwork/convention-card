@@ -147,6 +147,7 @@ async function show() {
   invitations.value = null
   printUrl.value = null
   error.value = null
+  copied.value = null
   await run('Could not load who has this card', refresh)
 }
 
@@ -177,6 +178,9 @@ const invite = () => run('Could not make the link', async () => {
   await refresh()
   copied.value = null
   if (!invitations.value) invitations.value = [{ ...made, role: inviteRole.value }]
+  // The address as the list shows it
+  const url = invitations.value.find(i => i.token === made.token)?.url || made.url
+  if (url) await copy(url, made.token, { quiet: true })
 })
 
 const revoke = inv => run('Could not revoke the link', async () => {
@@ -185,15 +189,25 @@ const revoke = inv => run('Could not revoke the link', async () => {
 })
 
 const getPrintLink = () => run('Could not get the link', async () => {
+  copied.value = null
   printUrl.value = (await props.storage.printLink(props.card.id, template.value)).url
+  await copy(printUrl.value, 'print', { quiet: true })
 })
 
-async function copy(text, key) {
+// A link is copied as it is made. "Copied" shows for a moment, so it never
+// claims a copy that wasn't made (it stayed on through reopening the dialog
+// and a new link). `quiet`: a browser may refuse a copy that comes after a
+// network wait rather than straight from a click (Safari does); the Copy
+// button is still there, so say nothing.
+let copiedTimer = null
+async function copy(text, key, { quiet = false } = {}) {
   try {
     await navigator.clipboard.writeText(text)
     copied.value = key
+    clearTimeout(copiedTimer)
+    copiedTimer = setTimeout(() => { copied.value = null }, 2000)
   } catch {
-    error.value = 'Could not copy: select the link and copy it'
+    if (!quiet) error.value = 'Could not copy: select the link and copy it'
   }
 }
 
