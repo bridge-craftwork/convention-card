@@ -192,11 +192,11 @@
             ? 'Debug mode — every field will be filled with its own name (overrides card data). Useful for identifying which field is which when authoring or debugging a template.'
             : 'Pick which fillable PDF format to generate.' }}
         </p>
-        <!-- After the card: no scoresheet by default (a team scoresheet may join the ACBL's) -->
-        <label v-if="!exportDebug" class="scoresheet-choice">
+        <!-- After the card: nothing by default (a team scoresheet may join these) -->
+        <label v-if="!exportDebug" class="second-page-choice">
           Second page
-          <select v-model="exportScoresheet">
-            <option v-for="s in SCORESHEET_CHOICES" :key="s.id" :value="s.id">{{ s.name }}</option>
+          <select v-model="exportSecondPage">
+            <option v-for="s in SECOND_PAGE_CHOICES" :key="s.id" :value="s.id">{{ s.name }}</option>
           </select>
         </label>
         <div class="format-list">
@@ -500,12 +500,13 @@ const EXPORT_FORMATS = [
 
 const exportDialogOpen = ref(false)
 const exportDebug = ref(false)
-// The library's SCORESHEETS, named for people
-const SCORESHEET_CHOICES = [
+// The library's SECOND_PAGES, named for people
+const SECOND_PAGE_CHOICES = [
   { id: 'none', name: 'None: the card only' },
+  { id: 'notes', name: 'Notes: the card\'s notes and supplementary pages' },
   { id: 'acbl', name: 'ACBL scoresheet (ACBL Classic)' },
 ]
-const exportScoresheet = ref('none')
+const exportSecondPage = ref('none')
 
 const availableFormats = computed(() => EXPORT_FORMATS)
 
@@ -523,7 +524,7 @@ async function doExport(formatId) {
     if (debug) {
       await mod.downloadAcblFieldDebugPdf(formatId)
     } else {
-      await mod.downloadAcblPdf(currentCard.value, formatId, { scoresheet: exportScoresheet.value })
+      await mod.downloadAcblPdf(currentCard.value, formatId, { secondPage: exportSecondPage.value })
     }
   } catch (err) {
     console.error('PDF export failed:', err)
@@ -1086,7 +1087,7 @@ watch(() => currentUser.value?.id, async (uid) => {
   padding: 20px;
 }
 
-.scoresheet-choice {
+.second-page-choice {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1094,7 +1095,7 @@ watch(() => currentUser.value?.id, async (uid) => {
   color: var(--text-secondary, #6b7280);
   margin: 0 0 12px;
 }
-.scoresheet-choice select { font: inherit; font-size: 13px; padding: 4px 6px; }
+.second-page-choice select { font: inherit; font-size: 13px; padding: 4px 6px; }
 .modal-content.export-dialog {
   background: white;
   border-radius: var(--radius-card, 10px);

@@ -34,7 +34,8 @@ export const SECTION_META = [
     notes: [
       { key: 'general',                    label: 'General notes',             hint: 'Anything about overall style, tendencies, partnership history…' },
       { key: 'partnership_understandings', label: 'Partnership understandings', hint: "Specific agreements that don't fit elsewhere…" },
-      { key: 'special_agreements',         label: 'Special agreements',        hint: 'Unusual treatments, opponent-specific tactics…' }
+      { key: 'special_agreements',         label: 'Special agreements',        hint: 'Unusual treatments, opponent-specific tactics…' },
+      { key: 'supplementary',              label: 'Supplementary pages',       hint: 'Relay schemes, defences, sequences the card has no room for. Export PDF prints them with the other notes (second page: Notes). Start a line with # for a heading.' }
     ]
   },
   { id: 'notrump',           label: 'NT openings',         icon: 'cards',           notes: [{ key: 'notrump_notes',     hint: 'Specific agreements for NT auctions…' }] },

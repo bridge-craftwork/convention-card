@@ -740,6 +740,17 @@ Bridgodex already offers).
   belong in the card as data (sections of text the editor edits and the
   PDF lays out), so they survive import, export and a hand-off like any
   other agreement. The WBF card's "supplementary sheets" are the same idea.
+  **Built (0.31.0):** the PDF's second page may be **Notes** (`secondPage:
+  'notes'`, `js/notesPage.js`): the card's `[notes]` section (which no ACBL
+  box takes) under each note's `heading`, with the `other_agreements` and
+  any value the card page set below 5pt of the sections it is `about`, then
+  `notes.supplementary`, free text whose `# ` lines are headings. Two
+  columns, as many pages as it takes, suit symbols drawn in the card's
+  colours. Numbered footnotes are still to come.
+- **The mark.** Every ACBL PDF the library makes carries bridge-craftwork's
+  wrench and `bridge-craftwork.com/card` at the right end of the NAMES line
+  (the templates have no free space; Bridge Winners puts its logo there),
+  and at the foot of each notes page (`js/pdfMark.js`; Rick, 2026-10-31).
 - **Other card services.** Bridgodex's "config files" are a minimal JSON
   form of its card that RSVP Bridge reads and writes too, so our Bridgodex
   importer may read RSVP Bridge cards as well; to be checked against a

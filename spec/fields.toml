@@ -55,6 +55,11 @@
 #            naming that convention means that box, not just the convention
 #            ("Puppet" as the 1NT 3♣ response is Puppet Stayman over 1NT,
 #            not over 2NT). Import sets it; the editor's suggestions use it
+#   about    ([notes] fields) the sections the notes are about: the PDF's
+#            notes page prints them under `heading`, with those sections'
+#            write-ins (`note`), their other_agreements, and any of their
+#            values too long to read on the card
+#   heading  ([notes] fields) the heading they print under on the notes page
 #
 # A convention is a group with a `play` switch (ADR-0002):
 # `<section>.<convention>.play` turns it on, and every other field of the
@@ -699,19 +704,20 @@
 "vs_nt.exceptions"         = { kind = "text", label = "Leads vs NT: exceptions" }
 
 [notes]
-"general"                  = { kind = "text", label = "General notes" }
-"partnership_understandings" = { kind = "text", label = "Partnership understandings" }
-"special_agreements"       = { kind = "text", label = "Special agreements" }
-"notrump_notes"            = { kind = "text", label = "NT notes" }
-"major_notes"              = { kind = "text", label = "Major opening notes" }
-"minor_notes"              = { kind = "text", label = "Minor opening notes" }
-"two_level_notes"          = { kind = "text", label = "Two-level notes" }
-"slam_notes"               = { kind = "text", label = "Slam notes" }
-"preempts_notes"           = { kind = "text", label = "Preempt notes" }
-"overcalls_notes"          = { kind = "text", label = "Overcall notes" }
-"nt_overcalls_notes"       = { kind = "text", label = "NT overcall notes" }
-"doubles_notes"            = { kind = "text", label = "Double notes" }
-"competitive_notes"        = { kind = "text", label = "Competitive notes" }
-"carding_notes"            = { kind = "text", label = "Carding notes" }
-"leads_notes"              = { kind = "text", label = "Opening lead notes" }
-"other_notes"              = { kind = "text", label = "Other notes" }
+"general"                  = { kind = "text", label = "General notes", about = ["general"], heading = "General approach" }
+"partnership_understandings" = { kind = "text", label = "Partnership understandings", heading = "Partnership understandings" }
+"special_agreements"       = { kind = "text", label = "Special agreements", heading = "Special agreements" }
+"notrump_notes"            = { kind = "text", label = "NT notes", about = ["notrump"], heading = "Notrump openings" }
+"major_notes"              = { kind = "text", label = "Major opening notes", about = ["major_openings"], heading = "Major openings" }
+"minor_notes"              = { kind = "text", label = "Minor opening notes", about = ["minor_openings"], heading = "Minor openings" }
+"two_level_notes"          = { kind = "text", label = "Two-level notes", about = ["two_level"], heading = "Two-level openings" }
+"slam_notes"               = { kind = "text", label = "Slam notes", about = ["slam"], heading = "Slam bidding" }
+"preempts_notes"           = { kind = "text", label = "Preempt notes", about = ["preempts"], heading = "Preempts" }
+"overcalls_notes"          = { kind = "text", label = "Overcall notes", about = ["overcalls", "direct_cuebids"], heading = "Overcalls" }
+"nt_overcalls_notes"       = { kind = "text", label = "NT overcall notes", about = ["nt_overcalls"], heading = "Notrump overcalls" }
+"doubles_notes"            = { kind = "text", label = "Double notes", about = ["doubles"], heading = "Doubles" }
+"competitive_notes"        = { kind = "text", label = "Competitive notes", about = ["competitive", "vs_to_double", "vs_preempts"], heading = "Competitive bidding" }
+"carding_notes"            = { kind = "text", label = "Carding notes", about = ["carding"], heading = "Carding and signals" }
+"leads_notes"              = { kind = "text", label = "Opening lead notes", about = ["leads"], heading = "Opening leads" }
+"other_notes"              = { kind = "text", label = "Other notes", about = ["other_conventions"], heading = "Other conventions" }
+"supplementary"            = { kind = "text", label = "Supplementary pages", heading = "Supplementary notes", desc = "Material the card has no room for (relay schemes, defences, sequences), printed on the PDF's notes page after the card. A line starting with # is a heading" }

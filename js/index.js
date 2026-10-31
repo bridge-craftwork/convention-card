@@ -27,10 +27,11 @@ export {
   buildAcblPdf,
   buildAcblClassicPdf,
   renderAcblPdfBytes,
-  SCORESHEETS,
+  SECOND_PAGES,
   extractCardDataFromPdf,
   downloadAcblPdf,
   downloadAcblClassicPdf,
   downloadAcblFieldDebugPdf,
 } from './acblClassicFillPdf.js'
 export { buildAcblCardPdf, downloadAcblCardPdf } from './acblCardPdf.js'
+export { notesPageContent } from './notesPage.js'
