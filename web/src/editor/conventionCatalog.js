@@ -211,36 +211,67 @@ export const STRUCTURED_FIELDS = {
         { label: 'Artificial forcing', cardPath: 'minor_openings.one_club.art_forcing' }
       ] },
     { label: 'Bypass 5+ ♦ to bid 1♥/1♠', cardPath: 'minor_openings.bypass_5_plus', kind: 'boolean' },
-    { label: '1♣ 1NT range (Bergen)', kind: 'range',
+    { label: '1♣ 1NT range', kind: 'range',
       from: 'minor_openings.one_club.one_nt_range_min', to: 'minor_openings.one_club.one_nt_range_max' },
-    { label: '1♣ 2NT range (Bergen)', kind: 'range',
+    { label: '1♣ 2NT range', kind: 'range',
       from: 'minor_openings.one_club.two_nt_range_min', to: 'minor_openings.one_club.two_nt_range_max' },
-    // ─── 1♣ raises + 1♦ (right column) ───
-    { label: '1♣ single raise', kind: 'inline_checks', column: 2,
+    { label: '1♣ single raise', kind: 'inline_checks',
       paths: [
         { label: 'Non-forcing',  cardPath: 'minor_openings.one_club.single_raise.nf' },
         { label: 'Inv+',         cardPath: 'minor_openings.one_club.single_raise.inv' },
         { label: 'Game forcing', cardPath: 'minor_openings.one_club.single_raise.gf' }
       ] },
-    { label: '1♣ jump raise', kind: 'inline_checks', column: 2,
+    { label: '1♣ jump raise', kind: 'inline_checks',
       paths: [
         { label: 'Weak',         cardPath: 'minor_openings.one_club.jump_raise.weak' },
         { label: 'Mixed',        cardPath: 'minor_openings.one_club.jump_raise.mixed' },
         { label: 'Invitational', cardPath: 'minor_openings.one_club.jump_raise.inv' }
       ] },
-    { label: '1♣ jump raise (after overcall)', kind: 'inline_checks', column: 2,
+    { label: '1♣ jump raise (after overcall)', kind: 'inline_checks',
       paths: [
         { label: 'Weak',         cardPath: 'minor_openings.one_club.jump_raise_after_overcall.weak' },
         { label: 'Mixed',        cardPath: 'minor_openings.one_club.jump_raise_after_overcall.mixed' },
         { label: 'Invitational', cardPath: 'minor_openings.one_club.jump_raise_after_overcall.inv' }
       ] },
+    // ─── 1♦ (right column) ───
+    // "Same as over 1♣" heads the column; while it is ticked the 1♦ response
+    // rows hide (hiddenWhen), unless one already holds a value. The opening's
+    // own agreements (min length, flags) stay, since "same" is about responses.
+    { label: 'Same as over 1♣', cardPath: 'minor_openings.one_diamond.same_as_1c', kind: 'boolean', column: 2 },
     { label: '1♦ min length', cardPath: 'minor_openings.one_diamond.min_length', column: 2,
       kind: 'select', options: ['3', '4', '5'] },
     { label: '1♦ flags', kind: 'inline_checks', column: 2,
       paths: [
-        { label: 'Unbalanced',      cardPath: 'minor_openings.one_diamond.unbalanced' },
-        { label: 'NF2 (4432 only)', cardPath: 'minor_openings.one_diamond.nf2_4432_only' },
-        { label: 'Same as over 1♣', cardPath: 'minor_openings.one_diamond.same_as_1c' }
+        { label: 'Unbalanced',         cardPath: 'minor_openings.one_diamond.unbalanced' },
+        { label: 'NF2 (4432 only)',    cardPath: 'minor_openings.one_diamond.nf2_4432_only' },
+        { label: 'Artificial forcing', cardPath: 'minor_openings.one_diamond.art_forcing' }
+      ] },
+    { label: '1♦ 1NT range', kind: 'range', column: 2,
+      hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
+      from: 'minor_openings.one_diamond.one_nt_range_min', to: 'minor_openings.one_diamond.one_nt_range_max' },
+    { label: '1♦ 2NT range', kind: 'range', column: 2,
+      hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
+      from: 'minor_openings.one_diamond.two_nt_range_min', to: 'minor_openings.one_diamond.two_nt_range_max' },
+    { label: '1♦ single raise', kind: 'inline_checks', column: 2,
+      hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
+      paths: [
+        { label: 'Non-forcing',  cardPath: 'minor_openings.one_diamond.single_raise.nf' },
+        { label: 'Inv+',         cardPath: 'minor_openings.one_diamond.single_raise.inv' },
+        { label: 'Game forcing', cardPath: 'minor_openings.one_diamond.single_raise.gf' }
+      ] },
+    { label: '1♦ jump raise', kind: 'inline_checks', column: 2,
+      hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
+      paths: [
+        { label: 'Weak',         cardPath: 'minor_openings.one_diamond.jump_raise.weak' },
+        { label: 'Mixed',        cardPath: 'minor_openings.one_diamond.jump_raise.mixed' },
+        { label: 'Invitational', cardPath: 'minor_openings.one_diamond.jump_raise.inv' }
+      ] },
+    { label: '1♦ jump raise (after overcall)', kind: 'inline_checks', column: 2,
+      hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
+      paths: [
+        { label: 'Weak',         cardPath: 'minor_openings.one_diamond.jump_raise_after_overcall.weak' },
+        { label: 'Mixed',        cardPath: 'minor_openings.one_diamond.jump_raise_after_overcall.mixed' },
+        { label: 'Invitational', cardPath: 'minor_openings.one_diamond.jump_raise_after_overcall.inv' }
       ] }
   ],
   two_level: [
