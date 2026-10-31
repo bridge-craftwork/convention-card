@@ -308,8 +308,11 @@ const structuredFields = computed(() => STRUCTURED_FIELDS[props.sectionId] || []
 // Same rule as conventions: show a level-gated field if its level is
 // in the active SHOW filter OR the field has a non-default value.
 // Fields without a `level` property are always visible.
+// A field with `hiddenWhen: <path>` hides while that path is set (e.g. the
+// 1♦ response rows under "Same as over 1♣"), unless it holds a value itself.
 const visibleStructuredFields = computed(() => {
   return structuredFields.value.filter(f => {
+    if (f.hiddenWhen && readField(f.hiddenWhen) && !fieldHasValue(f)) return false
     const band = getLevelForStructuredField(f)
     if (!band) return true
     if (props.visibleLevels.has(band)) return true
