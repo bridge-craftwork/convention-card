@@ -66,8 +66,9 @@
       <section class="share-section">
         <h3>Link to the card's PDF</h3>
         <p class="share-muted">
-          For RealBridge and other sites that ask for your card. Anyone with the link can view the card.
-          It always shows the card as it is now, and it can't be turned off.
+          For RealBridge and other sites that ask for your card. Anyone with the link can view it,
+          and it shows the card as it is now. The link works while the card is saved in Bridge
+          Classroom. It isn't a backup: keep your own copy with Export PDF.
         </p>
         <div class="share-row">
           <select v-model="template" :disabled="busy" aria-label="Card layout">
