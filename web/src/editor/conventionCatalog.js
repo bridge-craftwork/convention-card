@@ -211,9 +211,9 @@ export const STRUCTURED_FIELDS = {
         { label: 'Artificial forcing', cardPath: 'minor_openings.one_club.art_forcing' }
       ] },
     { label: 'Bypass 5+ ♦ to bid 1♥/1♠', cardPath: 'minor_openings.bypass_5_plus', kind: 'boolean' },
-    { label: '1♣ 1NT range (Bergen)', kind: 'range',
+    { label: '1♣ 1NT range', kind: 'range',
       from: 'minor_openings.one_club.one_nt_range_min', to: 'minor_openings.one_club.one_nt_range_max' },
-    { label: '1♣ 2NT range (Bergen)', kind: 'range',
+    { label: '1♣ 2NT range', kind: 'range',
       from: 'minor_openings.one_club.two_nt_range_min', to: 'minor_openings.one_club.two_nt_range_max' },
     { label: '1♣ single raise', kind: 'inline_checks',
       paths: [
@@ -246,10 +246,10 @@ export const STRUCTURED_FIELDS = {
         { label: 'NF2 (4432 only)',    cardPath: 'minor_openings.one_diamond.nf2_4432_only' },
         { label: 'Artificial forcing', cardPath: 'minor_openings.one_diamond.art_forcing' }
       ] },
-    { label: '1♦ 1NT range (Bergen)', kind: 'range', column: 2,
+    { label: '1♦ 1NT range', kind: 'range', column: 2,
       hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
       from: 'minor_openings.one_diamond.one_nt_range_min', to: 'minor_openings.one_diamond.one_nt_range_max' },
-    { label: '1♦ 2NT range (Bergen)', kind: 'range', column: 2,
+    { label: '1♦ 2NT range', kind: 'range', column: 2,
       hiddenWhen: 'minor_openings.one_diamond.same_as_1c',
       from: 'minor_openings.one_diamond.two_nt_range_min', to: 'minor_openings.one_diamond.two_nt_range_max' },
     { label: '1♦ single raise', kind: 'inline_checks', column: 2,
