@@ -14,12 +14,10 @@
 // Filled boxes are numbered in the field map's order, which follows the card's
 // sections; unfilled boxes come after them, in reading order.
 //
-// With pdftoppm on the PATH (poppler), also writes a PNG of page 1 beside it.
 // Re-run after changing a field map (js/acblClassicFillPdf.js) or a template.
 
 import fs from 'fs'
 import path from 'path'
-import { execFileSync } from 'child_process'
 import { fileURLToPath } from 'url'
 import { PDFDocument, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
@@ -199,12 +197,7 @@ async function sheet(template) {
   fs.mkdirSync(OUT, { recursive: true })
   const out = path.join(OUT, `acbl-${template}-fields.pdf`)
   fs.writeFileSync(out, await doc.save())
-  let png = ''
-  try {
-    execFileSync('pdftoppm', ['-f', '1', '-l', '1', '-r', '200', '-png', '-singlefile', out, out.replace(/\.pdf$/, '')], { stdio: 'ignore' })
-    png = ` and ${path.relative(ROOT, out.replace(/\.pdf$/, '.png'))}`
-  } catch { png = ' (no pdftoppm, so no PNG)' }
-  console.log(`${template}: ${boxes.size} boxes, ${filledCount} filled, ${holdings.length} lead holdings -> ${path.relative(ROOT, out)}${png}`)
+  console.log(`${template}: ${boxes.size} boxes, ${filledCount} filled, ${holdings.length} lead holdings -> ${path.relative(ROOT, out)}`)
 }
 
 for (const t of Object.keys(ACBL_FIELD_MAPS)) await sheet(t)
