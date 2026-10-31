@@ -192,6 +192,13 @@
             ? 'Debug mode — every field will be filled with its own name (overrides card data). Useful for identifying which field is which when authoring or debugging a template.'
             : 'Pick which fillable PDF format to generate.' }}
         </p>
+        <!-- After the card: no scoresheet by default (a team scoresheet may join the ACBL's) -->
+        <label v-if="!exportDebug" class="scoresheet-choice">
+          Second page
+          <select v-model="exportScoresheet">
+            <option v-for="s in SCORESHEET_CHOICES" :key="s.id" :value="s.id">{{ s.name }}</option>
+          </select>
+        </label>
         <div class="format-list">
           <button
             v-for="fmt in availableFormats"
@@ -493,6 +500,12 @@ const EXPORT_FORMATS = [
 
 const exportDialogOpen = ref(false)
 const exportDebug = ref(false)
+// The library's SCORESHEETS, named for people
+const SCORESHEET_CHOICES = [
+  { id: 'none', name: 'None: the card only' },
+  { id: 'acbl', name: 'ACBL scoresheet (ACBL Classic)' },
+]
+const exportScoresheet = ref('none')
 
 const availableFormats = computed(() => EXPORT_FORMATS)
 
@@ -510,7 +523,7 @@ async function doExport(formatId) {
     if (debug) {
       await mod.downloadAcblFieldDebugPdf(formatId)
     } else {
-      await mod.downloadAcblPdf(currentCard.value, formatId)
+      await mod.downloadAcblPdf(currentCard.value, formatId, { scoresheet: exportScoresheet.value })
     }
   } catch (err) {
     console.error('PDF export failed:', err)
@@ -1073,6 +1086,15 @@ watch(() => currentUser.value?.id, async (uid) => {
   padding: 20px;
 }
 
+.scoresheet-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary, #6b7280);
+  margin: 0 0 12px;
+}
+.scoresheet-choice select { font: inherit; font-size: 13px; padding: 4px 6px; }
 .modal-content.export-dialog {
   background: white;
   border-radius: var(--radius-card, 10px);

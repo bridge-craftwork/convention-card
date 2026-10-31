@@ -17,7 +17,7 @@
  * user clicks Export (no impact on initial page load).
  */
 
-import { PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFRef, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFArray, PDFRef, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
 import { cardValues } from './checkCard.js'
@@ -1665,10 +1665,23 @@ function addMissingFields(pdf, form) {
   }
 }
 
-export async function buildAcblPdf(card, templateName = 'classic') {
+/**
+ * The scoresheet a PDF ends with, after the card page. The default is
+ * 'none'; 'acbl' is the Classic template's own second page (`true` means
+ * 'acbl').
+ * The New card has no scoresheet of its own. More may come (a team
+ * scoresheet).
+ */
+export const SCORESHEETS = ['none', 'acbl']
+const scoresheetOf = s => (s === true ? 'acbl' : s === false || s == null ? 'none' : s)
+
+export async function buildAcblPdf(card, templateName = 'classic', { scoresheet = 'none' } = {}) {
   card = upgradeCard(card)
+  scoresheet = scoresheetOf(scoresheet)
+  if (!SCORESHEETS.includes(scoresheet)) throw new Error(`No scoresheet "${scoresheet}" (${SCORESHEETS.join(', ')})`)
   const bytes = await loadTemplateBytes(templateName)
   const pdf = await PDFDocument.load(bytes)
+  if (scoresheet !== 'acbl') dropScoresheet(pdf)
   const form = pdf.getForm()
   const fieldMap = templateName === 'new' ? FIELD_MAP_NEW : FIELD_MAP_CLASSIC
 
@@ -1722,6 +1735,46 @@ export async function buildAcblPdf(card, templateName = 'classic') {
   }
   embedCardDataInPdf(pdf, card, writtenFields(form, templateName, MOVED_BY_DOC.get(pdf)))
   return pdf
+}
+
+// The Classic's second page is the ACBL's scoresheet, with fields of its
+// own (the New card has one page). A card shared or printed to play from
+// rarely needs it, and without it a PDF is smaller and quicker to make, so
+// it is left out unless asked for: the page, and the form fields on it.
+function dropScoresheet(pdf) {
+  const pages = pdf.getPages()
+  if (pages.length < 2) return
+  const later = new Set(pages.slice(1).map(p => p.ref))
+  const acroForm = pdf.getForm().acroForm
+  for (const field of acroForm.getAllFields().map(([f]) => f)) {
+    const widgets = field.getWidgets()
+    if (widgets.length && widgets.every(w => later.has(w.P()))) acroForm.removeField(field)
+  }
+  for (let i = pages.length - 1; i >= 1; i--) pdf.removePage(i)
+}
+
+// pdf-lib saves every object it loaded, including those nothing refers to
+// any more (a dropped scoresheet's, what flatten() removed). Keep only what
+// the document reaches from its trailer.
+function dropUnreachable(pdf) {
+  const ctx = pdf.context
+  const seen = new Set()
+  const walk = obj => {
+    if (obj instanceof PDFRef) {
+      if (seen.has(obj)) return
+      seen.add(obj)
+      walk(ctx.lookup(obj))
+    } else if (obj instanceof PDFArray) {
+      for (const v of obj.asArray()) walk(v)
+    } else if (obj instanceof PDFDict) {
+      for (const [, v] of obj.entries()) walk(v)
+    } else if (obj?.dict instanceof PDFDict) {
+      walk(obj.dict) // a stream
+    }
+  }
+  const { Root, Info, Encrypt, ID } = ctx.trailerInfo
+  for (const obj of [Root, Info, Encrypt, ID]) if (obj) walk(obj)
+  for (const [ref] of ctx.enumerateIndirectObjects()) if (!seen.has(ref)) ctx.delete(ref)
 }
 
 // Per document: box name → the box whose text it carries, for each line
@@ -2034,18 +2087,22 @@ function isCheckOn(entry, value) {
  * without a browser download — the export is otherwise only reachable
  * through a click.
  */
-export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false } = {}) {
+export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false, scoresheet = 'none' } = {}) {
   card = upgradeCard(card)
-  const pdf = await buildAcblPdf(card, templateName)
+  const pdf = await buildAcblPdf(card, templateName, { scoresheet })
   finalizeForm(pdf, templateName, { flatten })
   // Red ellipses around the card led from each holding: both templates
   // have a "circle card led" grid, with no form field for it.
   drawLeadCircles(pdf, card, templateName)
+  // Fonts are embedded on flush; after it, everything the PDF uses is in
+  // the document, and the rest can go
+  await pdf.flush()
+  dropUnreachable(pdf)
   return pdf.save()
 }
 
-export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false } = {}) {
-  const bytes = await renderAcblPdfBytes(card, templateName, { flatten })
+export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false, scoresheet = 'none' } = {}) {
+  const bytes = await renderAcblPdfBytes(card, templateName, { flatten, scoresheet })
   triggerDownload(bytes, pdfFilename(card, templateName))
 }
 

@@ -27,6 +27,7 @@ export {
   buildAcblPdf,
   buildAcblClassicPdf,
   renderAcblPdfBytes,
+  SCORESHEETS,
   extractCardDataFromPdf,
   downloadAcblPdf,
   downloadAcblClassicPdf,
