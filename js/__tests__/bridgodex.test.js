@@ -47,8 +47,53 @@ describe('importBridgeodexJson — key-name regression guards', () => {
     const { card_data } = importBridgeodexJson(bdex({
       vs_to_double: { '2nt_over_minors_nat': 'on', '2nt_over_majors_nat': 'on' }
     }))
-    expect(card_data.vs_to_double.two_nt_raise_minors.play).toBe(true)
-    expect(card_data.vs_to_double.two_nt_raise_majors.play).toBe(true)
+    // Natural is its own box on the ACBL card, not the raise.
+    expect(card_data.vs_to_double.two_nt_natural_minors).toBe(true)
+    expect(card_data.vs_to_double.two_nt_natural_majors).toBe(true)
+    expect(card_data.vs_to_double.two_nt_raise_minors).toBeUndefined()
+  })
+
+  it('reads the group-C boxes into their own fields, not the notes', () => {
+    const { card_data: c } = importBridgeodexJson(bdex({
+      minors: { '1c_1d': '4+ diamonds', '1c_min_len_nf_2_4432': 'on', '1d_min_len_nf_1': 'on' },
+      '1_no_trump': { '2c_other': 'Puppet-ish', '2d_nat': 'on' },
+      '2_no_trump': { conv: 'on', conv_desc: 'Minors' },
+      two_level: { '2c_steps_desc': 'Controls' },
+      slams: { gerber_other: 'Only over 1NT/2NT' },
+      vs_to_double: { new_suit_forcing_transfer_desc: '1NT is a transfer to clubs' },
+      vs_preempts: { '2nt_lebensohl_resp_desc': 'Ingberman' },
+      signals: { exceptions: 'Count at trick one', other1: 'Revolving', other2: 'vs NT only' },
+      leads_vs_suits: { honor_leads_akx_varies: 'on', honor_leads_akx_varies_desc: 'A at trick one, K later' },
+    }))
+    expect(c.minor_openings.one_club.one_diamond_response).toBe('4+ diamonds')
+    expect(c.minor_openings.one_club.nf2_4432_only).toBe(true)
+    expect(c.minor_openings.one_diamond.nf1).toBe(true)
+    expect(c.notrump.responses['2c_other']).toBe('Puppet-ish')
+    expect(c.notrump.two_d_natural).toBe(true)
+    expect(c.notrump.two_nt.conventional).toBe(true)
+    expect(c.notrump.two_nt.conventional_desc).toBe('Minors')
+    expect(c.two_level.two_clubs.steps_desc).toBe('Controls')
+    expect(c.slam.gerber.notes).toBe('Only over 1NT/2NT')
+    expect(c.vs_to_double.new_suit_notes).toBe('1NT is a transfer to clubs')
+    expect(c.vs_preempts.two_nt_response).toBe('Ingberman')
+    expect(c.carding.signals_exceptions).toBe('Count at trick one')
+    expect(c.carding.first_discard.notes).toBe('Revolving\nvs NT only')
+    expect(c.leads.vs_suits.honors.varies).toBe(true)
+    expect(c.leads.vs_suits.honors.varies_desc).toBe('A at trick one, K later')
+    // None of it is folded into a section's notes any more.
+    expect(JSON.stringify(c.notes || {})).not.toMatch(/Ingberman|Controls|Puppet-ish|Count at trick one/)
+  })
+
+  it('writes the group-C fields back to their Bridgodex boxes', () => {
+    const { card_data } = importBridgeodexJson(bdex({
+      two_level: { '2c_steps_desc': 'Controls' },
+      vs_preempts: { '2nt_lebensohl_resp_desc': 'Ingberman' },
+      '1_no_trump': { '2d_nat': 'on' },
+    }))
+    const out = exportBridgodexJson(card_data)
+    expect(out.settings.two_level['2c_steps_desc']).toBe('Controls')
+    expect(out.settings.vs_preempts['2nt_lebensohl_resp_desc']).toBe('Ingberman')
+    expect(out.settings['1_no_trump']['2d_nat']).toBe('on')
   })
 
   it('maps Jacoby transfers from per-suit flags', () => {

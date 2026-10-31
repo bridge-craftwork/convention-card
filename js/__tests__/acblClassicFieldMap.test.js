@@ -122,5 +122,51 @@ describe('ACBL Classic field map', () => {
     expect(lines[1]).not.toBe('') // it reached the second line
     expect(lines.join(' ').replace(/\s+/g, ' ').trim()).toBe(LONG)
   })
+
+  // Group C: agreements the spec gained for the boxes nothing filled.
+  const set = path => { const o = {}; let at = o; const k = path.split('.'); k.slice(0, -1).forEach(p => { at = at[p] = {} }); at[k.at(-1)] = true; return o }
+  it.each([
+    ['classic', 'major_openings.jump_raise.force', 'Double Raise Force'],
+    ['classic', 'major_openings.jump_raise_after_overcall.force', 'After Overcall Force'],
+    ['classic', 'minor_openings.one_club.jump_raise.force', 'Double Raise Force_2'],
+    ['classic', 'minor_openings.one_club.jump_raise_after_overcall.force', 'After Overcall Force_2'],
+    ['new', 'minor_openings.one_club.nf2_4432_only', '1C.c.5'],
+    ['new', 'minor_openings.one_diamond.nf1', '1D.c.6'],
+    ['new', 'minor_openings.one_diamond.nf0', '1D.c.7'],
+    ['new', 'notrump.two_d_natural', '1NT.c.9'],
+    ['new', 'notrump.two_h_natural', '1NT.c.12'],
+    ['new', 'notrump.two_s_natural', '1NT.c.15'],
+    ['new', 'notrump.two_nt.conventional', '2NT.c.6'],
+    ['new', 'vs_to_double.two_nt_natural_minors', 'VTD.c.11'],
+    ['new', 'vs_to_double.two_nt_natural_majors', 'VTD.c.15'],
+    ['new', 'leads.vs_suits.honors.varies', 'LS.c.7'],
+    ['new', 'leads.vs_nt.honors.varies', 'LN.c.7'],
+  ])('%s: %s ticks %s only', async (template, path, box) => {
+    expect(await ticked(set(path), template)).toEqual([box])
+  })
+
+  it('ticks the 1NT 2C Other box when its text is filled', async () => {
+    expect(await ticked({ notrump: { responses: { '2c_other': 'Keri' } } }, 'new')).toEqual(['1NT.c.8'])
+  })
+
+  const text = (path, v) => { const o = {}; let at = o; const k = path.split('.'); k.slice(0, -1).forEach(p => { at = at[p] = {} }); at[k.at(-1)] = v; return o }
+  it.each([
+    ['classic', 'notrump.dbl.negative_desc', 'denies Conventional NT Openings', 'Thru 3S'],
+    ['classic', 'notrump.conventional_nt_openings', '1_3', 'Kamikaze'],
+    ['classic', 'vs_preempts.two_nt_response', 'Lebensohl 2NT Response', 'Ingberman'],
+    ['new', 'minor_openings.one_club.one_diamond_response', '1C.t.12', '4+ D'],
+    ['new', 'vs_to_double.new_suit_notes', 'VTD.t.3', 'Neg free bid'],
+    ['new', 'vs_preempts.two_nt_response', 'VP.t.4', 'Ingberman'],
+    ['new', 'slam.gerber.notes', 'SL.t.4', 'Only over NT'],
+    ['new', 'carding.primary_signals', 'SI.t.1', 'Attitude'],
+    ['new', 'notrump.two_nt.conventional_desc', '2NT.t.7', 'Minors'],
+    ['new', 'carding.signals_exceptions', 'SI.t.8', 'Trick one'],
+    ['new', 'two_level.two_clubs.steps_desc', '2C.t.6', 'Controls'],
+    ['new', 'leads.vs_suits.honors.varies_desc', 'LS.t.8', 'A then K'],
+    ['new', 'leads.vs_nt.honors.varies_desc', 'LN.t.8', 'K then A'],
+  ])('%s: %s writes into %s', async (template, path, box, value) => {
+    const doc = await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data: text(path, value) }, template))
+    expect(doc.getForm().getTextField(box).getText()).toBe(value)
+  })
 })
 

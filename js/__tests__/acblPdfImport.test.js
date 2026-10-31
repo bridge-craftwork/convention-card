@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { PDFDocument, PDFName, PDFHexString } from 'pdf-lib'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
-import { renderAcblPdfBytes, ACBL_FIELD_MAPS, ACBL_SPLIT_GROUPS } from '../acblClassicFillPdf.js'
+import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
 import { readCardFromPdf, mergeTyped } from '../acblPdfImport.js'
 import { upgradeCardData } from '../migrate.js'
 
@@ -127,12 +127,12 @@ describe('readCardFromPdf', () => {
   })
 
   it('reports text typed into a box the editor does not fill', async () => {
-    // Mapped boxes, and the later lines of a field written across several.
-    const mapped = new Set([...ACBL_FIELD_MAPS.classic.map(e => e.pdf), ...ACBL_SPLIT_GROUPS.classic.flatMap(g => g.fields)])
-    let typed
-    const bytes = await edit(exported.classic.seed, form => {
-      const free = form.getFields().find(f => f.constructor.name === 'PDFTextField' && !mapped.has(f.getName()) && !f.getText())
-      typed = free.getName()
+    // Every box on the card is filled now, so add one of our own: a box a
+    // PDF editor added, which no map entry names.
+    const typed = 'our_own_box'
+    const bytes = await edit(exported.classic.seed, (form, pdf) => {
+      const free = form.createTextField(typed)
+      free.addToPage(pdf.getPages()[0], { x: 20, y: 20, width: 80, height: 12 })
       free.setText('Our own note')
     })
     const read = await readCardFromPdf(bytes)

@@ -47,6 +47,17 @@
     </div>
 
     <div class="vsp-row">
+      <span class="vsp-label">2NT response</span>
+      <RichSuitField
+        :model-value="r('vs_preempts.two_nt_response') || ''"
+        :editable="editable"
+        block
+        placeholder="e.g. Lebensohl, Ingberman, natural"
+        @update:modelValue="writeText('vs_preempts.two_nt_response', $event)"
+      />
+    </div>
+
+    <div class="vsp-row">
       <span class="vsp-label">Cuebid</span>
       <RichSuitField
         :model-value="r('vs_preempts.cuebid') || ''"

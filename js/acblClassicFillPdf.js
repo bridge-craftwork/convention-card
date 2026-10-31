@@ -193,6 +193,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Smolen',             card: 'notrump.smolen.play',             kind: 'check' },
   { pdf: 'Lebensohl',          card: 'notrump.lebensohl.play', kind: 'check' },
   { pdf: 'Neg Double',         card: 'notrump.dbl.negative',            kind: 'check' },
+  { pdf: 'denies Conventional NT Openings', card: 'notrump.dbl.negative_desc', kind: 'text' }, // the line after Neg. Double (misnamed in the template)
+  { pdf: '1_3',                card: 'notrump.conventional_nt_openings', kind: 'text' },
   // Text fields inside the NT opening box (responses)
   { pdf: 'to_4',                              card: 'notrump.one_nt.range_min',     kind: 'text' },
   { pdf: '1_2',                               card: 'notrump.one_nt.range_max',     kind: 'text' },
@@ -250,6 +252,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Weak_5',             card: 'major_openings.jump_raise.weak', kind: 'check' },
   { pdf: 'Inv_5',              card: 'major_openings.jump_raise_after_overcall.inv',  kind: 'check' },
   { pdf: 'Weak_6',             card: 'major_openings.jump_raise_after_overcall.weak', kind: 'check' },
+  { pdf: 'Double Raise Force',   card: 'major_openings.jump_raise.force', kind: 'check' },
+  { pdf: 'After Overcall Force', card: 'major_openings.jump_raise_after_overcall.force', kind: 'check' },
   { pdf: 'Conv Raise 2NT',    card: 'major_openings.jacoby_2nt.play', kind: 'check' },
   { pdf: '3NT_2',             card: 'major_openings.three_nt_raise.play', kind: 'check' },
   { pdf: 'Splinter',          card: 'major_openings.splinters.play',  kind: 'check' },
@@ -288,6 +292,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Weak_4',                 card: 'minor_openings.one_club.jump_raise.weak', kind: 'check' },
   { pdf: 'Inv_6',                  card: 'minor_openings.one_club.jump_raise_after_overcall.inv',  kind: 'check' },
   { pdf: 'Weak_7',                 card: 'minor_openings.one_club.jump_raise_after_overcall.weak', kind: 'check' },
+  { pdf: 'Double Raise Force_2',   card: 'minor_openings.one_club.jump_raise.force', kind: 'check' },
+  { pdf: 'After Overcall Force_2', card: 'minor_openings.one_club.jump_raise_after_overcall.force', kind: 'check' },
   { pdf: 'Forcing Raise JS in other minor', card: 'minor_openings.inverted_minors.play', kind: 'check' },
   // The Minor column's "2NT Forcing □ Inv. □": the 1m–2NT response.
   { pdf: '2NT Forcing',            card: 'minor_openings.two_nt_response', kind: 'check', value: 'game_forcing' },
@@ -488,6 +494,7 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Penalty',                  card: 'vs_preempts.takeout_double_penalty',   kind: 'check' },
   { pdf: 'thru_4',                   card: 'vs_preempts.conv_takeout',             kind: 'text' },
   { pdf: 'Lebensohl  2NT  Response', card: 'vs_preempts.lebensohl_response',       kind: 'check' },
+  { pdf: 'Lebensohl 2NT Response',   card: 'vs_preempts.two_nt_response',          kind: 'text' },
   { pdf: 'Other_4',                  card: 'vs_preempts.notes',                    kind: 'text' },
 
   // ─── DEFENSIVE CARDING ───
@@ -586,6 +593,8 @@ const FIELD_MAP_NEW = [
   { pdf: '1NT.t.5',  card: 'notrump.one_nt.sys_on_vs', kind: 'text' },
   { pdf: '1NT.c.6',  card: 'notrump.stayman.forcing',  kind: 'check' },
   { pdf: '1NT.c.7',  card: 'notrump.stayman.puppet',   kind: 'check' },
+  { pdf: '1NT.c.8',  card: 'notrump.responses.2c_other', kind: 'check', when: 'filled' },
+  { pdf: '1NT.c.9',  card: 'notrump.two_d_natural',   kind: 'check' },
   // Each "N: Nat ☐ Tfr ☐" row has the Natural box FIRST (lower x) and the
   // Transfer box SECOND. The transfer flags must target the second box
   // (.c.10/.13/.16/.19); the first box (.c.9/.12/.15/.18) is "Natural"
@@ -593,8 +602,10 @@ const FIELD_MAP_NEW = [
   // transfer-playing pair. (Mapping transfers to the first box checked
   // "Nat" instead of "Tfr" — a silent mismap, since the field exists.)
   { pdf: '1NT.c.10', card: 'notrump.jacoby_transfers.play', kind: 'check' },
+  { pdf: '1NT.c.12', card: 'notrump.two_h_natural',   kind: 'check' },
   { pdf: '1NT.t.11', card: 'notrump.responses.2d_other', kind: 'text' },
   { pdf: '1NT.c.13', card: 'notrump.jacoby_transfers.play', kind: 'check' },
+  { pdf: '1NT.c.15', card: 'notrump.two_s_natural',   kind: 'check' },
   { pdf: '1NT.t.14', card: 'notrump.responses.2h_other', kind: 'text' },
   { pdf: '1NT.c.16', card: 'notrump.minor_transfers.two_s', kind: 'check' },
   { pdf: '1NT.t.17', card: 'notrump.responses.2s_other', kind: 'text' },
@@ -628,6 +639,8 @@ const FIELD_MAP_NEW = [
   { pdf: '2NT.c.3',  card: 'notrump.stayman.puppet_2nt',    kind: 'check' },
   { pdf: '2NT.c.4',  card: 'notrump.two_nt.three_s',   kind: 'check' },
   { pdf: '2NT.t.5',  card: 'notrump.two_nt.three_s_desc', kind: 'text' },
+  { pdf: '2NT.c.6',  card: 'notrump.two_nt.conventional', kind: 'check' },
+  { pdf: '2NT.t.7',  card: 'notrump.two_nt.conventional_desc', kind: 'text' },
   { pdf: '2NT.c.8',  card: 'notrump.jacoby_transfers.over_2nt', kind: 'check' },
   { pdf: '2NT.c.9',  card: 'notrump.texas.over_2nt', kind: 'check' },
   { pdf: '2NT.c.10', card: 'notrump.two_nt.neg_dbl',   kind: 'check' },
@@ -668,12 +681,14 @@ const FIELD_MAP_NEW = [
   { pdf: '1C.c.2', card: 'minor_openings.one_club.min_length', kind: 'check', value: '4' },
   { pdf: '1C.c.3', card: 'minor_openings.one_club.min_length', kind: 'check', value: '3' },
   { pdf: '1C.c.4', card: 'minor_openings.one_club.nf2', kind: 'check' },
+  { pdf: '1C.c.5', card: 'minor_openings.one_club.nf2_4432_only', kind: 'check' },
   { pdf: '1C.c.6', card: 'minor_openings.one_club.nf1', kind: 'check' },
   { pdf: '1C.c.7', card: 'minor_openings.one_club.nf0', kind: 'check' },
   { pdf: '1C.c.8', card: 'minor_openings.one_club.art_forcing', kind: 'check' },
   { pdf: '1C.c.10', card: 'minor_openings.one_club.transfer_resp', kind: 'check' },
   { pdf: '1C.t.9',  card: 'minor_openings.one_club.responses', kind: 'text' },
   { pdf: '1C.t.11', card: 'minor_openings.notes', kind: 'text' },
+  { pdf: '1C.t.12', card: 'minor_openings.one_club.one_diamond_response', kind: 'text' },
   { pdf: '1C.c.13', card: 'minor_openings.bypass_5_plus', kind: 'check' },
   { pdf: '1C.t.14', card: 'minor_openings.one_club.one_nt_range_min', kind: 'text' },
   { pdf: '1C.t.15', card: 'minor_openings.one_club.one_nt_range_max', kind: 'text' },
@@ -695,6 +710,8 @@ const FIELD_MAP_NEW = [
   { pdf: '1D.c.3', card: 'minor_openings.one_diamond.min_length', kind: 'check', value: '3' },
   { pdf: '1D.c.4', card: 'minor_openings.one_diamond.unbalanced', kind: 'check' },
   { pdf: '1D.c.5', card: 'minor_openings.one_diamond.nf2_4432_only', kind: 'check' },
+  { pdf: '1D.c.6', card: 'minor_openings.one_diamond.nf1', kind: 'check' },
+  { pdf: '1D.c.7', card: 'minor_openings.one_diamond.nf0', kind: 'check' },
   { pdf: '1D.c.8', card: 'minor_openings.one_diamond.art_forcing',  kind: 'check' },
   { pdf: '1D.c.10', card: 'minor_openings.one_diamond.same_as_1c', kind: 'check' },
   { pdf: '1D.t.9',  card: 'minor_openings.one_diamond.responses', kind: 'text' },
@@ -721,6 +738,7 @@ const FIELD_MAP_NEW = [
   { pdf: '2C.c.3b', card: 'two_level.two_clubs.2d_response', kind: 'check', value: 'negative' },
   { pdf: '2C.c.4',  card: 'two_level.two_clubs.2d_response', kind: 'check', value: 'waiting' },
   { pdf: '2C.c.5',  card: 'two_level.two_clubs.2h_response', kind: 'check', value: 'steps' },
+  { pdf: '2C.t.6',  card: 'two_level.two_clubs.steps_desc', kind: 'text' },
   { pdf: '2C.c.7',  card: 'two_level.two_clubs.2h_response', kind: 'check', value: 'negative' },
   { pdf: '2C.c.8',  card: 'two_level.two_clubs.meaning', kind: 'check', value: 'very_strong' },
   { pdf: '2C.c.9',  card: 'two_level.two_clubs.meaning', kind: 'check', value: 'strong' },
@@ -816,6 +834,7 @@ const FIELD_MAP_NEW = [
   // ─── Vs Takeout Double (VTD) ───
   { pdf: 'VTD.c.1',  card: 'vs_to_double.new_suit_forcing_2lvl', kind: 'check' },
   { pdf: 'VTD.c.2',  card: 'vs_to_double.new_suit_forcing_tfr',  kind: 'check' },
+  { pdf: 'VTD.t.3',  card: 'vs_to_double.new_suit_notes', kind: 'text' },
   { pdf: 'VTD.c.4',  card: 'vs_to_double.jump_shift', kind: 'check', value: 'weak' },
   { pdf: 'VTD.c.5',  card: 'vs_to_double.jump_shift', kind: 'check', value: 'mixed' },
   { pdf: 'VTD.c.6',  card: 'vs_to_double.jump_shift', kind: 'check', value: 'inv' },
@@ -824,9 +843,11 @@ const FIELD_MAP_NEW = [
   { pdf: 'VTD.c.9',  card: 'vs_to_double.redouble.conv',        kind: 'check' },
   { pdf: 'VTD.t.10', card: 'vs_to_double.redouble.conv_desc',   kind: 'text' },
   { pdf: 'VTD.c.12', card: 'vs_to_double.two_nt_raise_minors.play', kind: 'check' },
+  { pdf: 'VTD.c.11', card: 'vs_to_double.two_nt_natural_minors', kind: 'check' },
   { pdf: 'VTD.t.13', card: 'vs_to_double.two_nt_raise_minors.range_min', kind: 'text' },
   { pdf: 'VTD.t.14', card: 'vs_to_double.two_nt_raise_minors.range_max', kind: 'text' },
   { pdf: 'VTD.c.16', card: 'vs_to_double.two_nt_raise_majors.play', kind: 'check' },
+  { pdf: 'VTD.c.15', card: 'vs_to_double.two_nt_natural_majors', kind: 'check' },
   { pdf: 'VTD.t.17', card: 'vs_to_double.two_nt_raise_majors.range_min', kind: 'text' },
   { pdf: 'VTD.t.18', card: 'vs_to_double.two_nt_raise_majors.range_max', kind: 'text' },
   { pdf: 'VTD.t.19', card: 'vs_to_double.notes', kind: 'text' },
@@ -836,6 +857,7 @@ const FIELD_MAP_NEW = [
   { pdf: 'VP.t.2', card: 'vs_preempts.takeout_double_thru',      kind: 'text' },
   { pdf: 'VP.c.3', card: 'vs_preempts.takeout_double_penalty',   kind: 'check' },
   { pdf: 'VP.c.4', card: 'vs_preempts.lebensohl_response',       kind: 'check' },
+  { pdf: 'VP.t.4', card: 'vs_preempts.two_nt_response',          kind: 'text' },
   { pdf: 'VP.t.5', card: 'vs_preempts.cuebid',                   kind: 'text' },
   { pdf: 'VP.t.6', card: 'vs_preempts.jump_overcalls',           kind: 'text' },
   { pdf: 'VP.t.7', card: 'vs_preempts.notes',                    kind: 'text' },
@@ -867,6 +889,7 @@ const FIELD_MAP_NEW = [
   { pdf: 'SL.c.1',  card: 'other_conventions.gerber.directly_over_nt', kind: 'check' },
   { pdf: 'SL.c.2',  card: 'other_conventions.gerber.over_nt_seq',      kind: 'check' },
   { pdf: 'SL.c.3',  card: 'other_conventions.gerber.non_nt_seq',       kind: 'check' },
+  { pdf: 'SL.t.4',  card: 'slam.gerber.notes',                        kind: 'text' },
   { pdf: 'SL.c.5',  card: 'slam.blackwood.play',      kind: 'check' },
   { pdf: 'SL.c.6',  card: 'slam.rkcb.style', kind: 'check', value: '0314', play: 'slam.rkcb.play' },
   { pdf: 'SL.c.7',  card: 'slam.rkcb.style', kind: 'check', value: '1430', play: 'slam.rkcb.play' },
@@ -885,6 +908,8 @@ const FIELD_MAP_NEW = [
   { pdf: 'C.c.7',  card: 'carding.suits.upside_down_count',       kind: 'check' },
   { pdf: 'C.c.8',  card: 'carding.nt.upside_down_count',          kind: 'check' },
   { pdf: 'C.t.9',  card: 'carding.exceptions',                    kind: 'text' },
+  { pdf: 'SI.t.1',  card: 'carding.primary_signals',               kind: 'text' },
+  { pdf: 'SI.t.8',  card: 'carding.signals_exceptions',            kind: 'text' },
   { pdf: 'C.t.10', card: 'carding.notes',                         kind: 'text' },
   { pdf: 'C.c.11', card: 'carding.smith_echo_suits',              kind: 'check' },
   { pdf: 'C.c.12', card: 'carding.smith_echo_nt',                 kind: 'check' },
@@ -913,6 +938,8 @@ const FIELD_MAP_NEW = [
   { pdf: 'LS.c.4', card: 'leads.vs_suits.length.attitude',      kind: 'check' },
   { pdf: 'LS.c.5', card: 'leads.vs_suits.length.small_from_xx', kind: 'check' },
   { pdf: 'LS.t.6', card: 'leads.vs_suits.after_first_trick',    kind: 'text' },
+  { pdf: 'LS.c.7', card: 'leads.vs_suits.honors.varies',         kind: 'check' },
+  { pdf: 'LS.t.8', card: 'leads.vs_suits.honors.varies_desc',    kind: 'text' },
   { pdf: 'LS.t.9', card: 'leads.vs_suits.exceptions',           kind: 'text' },
 
   // ─── Leads vs NT (LN) ───
@@ -922,6 +949,8 @@ const FIELD_MAP_NEW = [
   { pdf: 'LN.c.4', card: 'leads.vs_nt.length.attitude',          kind: 'check' },
   { pdf: 'LN.c.5', card: 'leads.vs_nt.length.second_from_4plus', kind: 'check' },
   { pdf: 'LN.t.6', card: 'leads.vs_nt.after_first_trick',        kind: 'text' },
+  { pdf: 'LN.c.7', card: 'leads.vs_nt.honors.varies',            kind: 'check' },
+  { pdf: 'LN.t.8', card: 'leads.vs_nt.honors.varies_desc',       kind: 'text' },
   { pdf: 'LN.t.9', card: 'leads.vs_nt.exceptions',               kind: 'text' }
 ]
 
@@ -1045,6 +1074,8 @@ const SPLIT_GROUPS = {
     // 1NT 3♠ response ('3h 2' is the 3♠ row), then the two unlabelled lines
     // under it, above "4♦, 4♥ Transfer".
     { card: 'notrump.responses.3s', fields: ['3h 2', '3s 1', '3s 2'] },
+    // Conventional NT Openings: the two lines under its heading.
+    { card: 'notrump.conventional_nt_openings', fields: ['1_3', '2_3'] },
   ],
   new: [
     { card: 'general.bids_requiring_prep', fields: ['OV.t.10', 'OV.t.11'] },
@@ -1718,6 +1749,9 @@ function addMissingFields(pdf, form) {
           x: spec.x, y: spec.y, width: spec.width, height: spec.height,
           ...CREATED_FIELD_LOOK,
         })
+        // An added box sits over printed art, like a grown one, whether or
+        // not the layout pass grows it: no fill, no border (finalizeForm).
+        for (const w of field.acroField.getWidgets()) GROWN_WIDGETS.add(w.dict)
       } catch (err) {
         console.warn(`Could not add field "${spec.name}":`, err)
       }

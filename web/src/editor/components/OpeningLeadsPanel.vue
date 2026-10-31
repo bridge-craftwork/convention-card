@@ -80,6 +80,27 @@
           </span>
         </div>
 
+        <!-- The ACBL card's "AKx (+) Varies □ ____": the box, and how it varies. -->
+        <div class="leads-row">
+          <span class="leads-row-label">{{ col.key === 'vs_nt' ? 'AKxx(+)' : 'AKx(+)' }} varies</span>
+          <span class="leads-row-options">
+            <label class="inline-box">
+              <input type="checkbox"
+                :checked="r(`leads.${col.key}.honors.varies`)"
+                :disabled="!editable"
+                @change="t(`leads.${col.key}.honors.varies`, $event.target.checked)" />
+              Varies
+            </label>
+          </span>
+          <RichSuitField
+            :model-value="r(`leads.${col.key}.honors.varies_desc`) || ''"
+            :editable="editable"
+            block
+            placeholder="e.g. A at trick one, K later"
+            @update:modelValue="writeField(`leads.${col.key}.honors.varies_desc`, $event)"
+          />
+        </div>
+
         <div class="leads-row">
           <span class="leads-row-label">After 1st trick</span>
           <RichSuitField
