@@ -2325,6 +2325,37 @@ const LEAD_COORDS_CLASSIC = {
 }
 
 /**
+ * Every place a lead can be circled on a template: one entry per card of
+ * each printed holding, with the card field it answers (`path`), the card's
+ * 1-based position in the holding (`n`), and the ellipse's centre and radii
+ * in page points. drawLeadCircles draws from this; the field sheets
+ * (scripts/acbl-field-sheets.mjs) outline every one of them.
+ */
+export function leadCirclePositions(templateName = 'new') {
+  const classic = templateName === 'classic'
+  const coords = classic ? LEAD_COORDS_CLASSIC : LEAD_COORDS_NEW
+  const out = []
+  for (const side of ['vs_suits', 'vs_nt']) {
+    for (const type of ['length', 'honors']) {
+      for (const [pattern, positions] of Object.entries(coords[side]?.[type] || {})) {
+        positions.forEach((coord, i) => out.push({
+          side, type, pattern, n: i + 1,
+          path: `leads.${side}.${type}.lead_choice_${pattern}`,
+          // New: pdfplumber gave the LEFT edge, so shift to the char center,
+          // and correct a slightly-overshot character-height estimate.
+          // Classic: centres already, and larger type.
+          x: classic ? coord.x : coord.x + CHAR_HALF_W,
+          y: classic ? coord.y : coord.y + Y_OFFSET,
+          xScale: classic ? 3.6 : 3.0,
+          yScale: classic ? 5.4 : 4.8, // tall-aspect ellipse approximates a vertical racetrack
+        }))
+      }
+    }
+  }
+  return out
+}
+
+/**
  * Walk the card's lead_choice_* paths and draw red ellipses around
  * each user-chosen lead position, on either template. Values are read as
  * the spec reads them, so a card holding the old `lead_choice_KT9x`
@@ -2339,42 +2370,27 @@ export function drawLeadCircles(pdf, card, templateName = 'new') {
   const page = pdf.getPages()[0]
   const cardData = card?.card_data
   if (!cardData) return
-  const classic = templateName === 'classic'
-  const coords = classic ? LEAD_COORDS_CLASSIC : LEAD_COORDS_NEW
   const values = cardValues(cardData)
+  const places = leadCirclePositions(templateName)
 
   const red = rgb(0.78, 0.10, 0.12)
   const drawn = []
   const missing = []
   const seen = []
-  for (const side of ['vs_suits', 'vs_nt']) {
-    for (const type of ['length', 'honors']) {
-      const patterns = coords[side]?.[type]
-      if (!patterns) continue
-      for (const [pattern, positions] of Object.entries(patterns)) {
-        const choice = values.get(`leads.${side}.${type}.lead_choice_${pattern}`)
-        seen.push({ side, type, pattern, choice })
-        // One card, or several when either is led (the A and the K of AKx)
-        for (const n of ledCards(choice)) {
-          if (n > positions.length) {
-            missing.push({ side, type, pattern, choice })
-            continue
-          }
-          const coord = positions[n - 1]
-          page.drawEllipse({
-            // New: pdfplumber gave the LEFT edge, so shift to the char center,
-            // and correct a slightly-overshot character-height estimate.
-            // Classic: centres already, and larger type.
-            x: classic ? coord.x : coord.x + CHAR_HALF_W,
-            y: classic ? coord.y : coord.y + Y_OFFSET,
-            xScale: classic ? 3.6 : 3.0,
-            yScale: classic ? 5.4 : 4.8, // tall-aspect ellipse approximates a vertical racetrack
-            borderColor: red,
-            borderWidth: 0.6
-          })
-          drawn.push({ side, type, pattern, n })
-        }
+  for (const path of [...new Set(places.map(p => p.path))]) {
+    const holding = places.filter(p => p.path === path)
+    const { side, type, pattern } = holding[0]
+    const choice = values.get(path)
+    seen.push({ side, type, pattern, choice })
+    // One card, or several when either is led (the A and the K of AKx)
+    for (const n of ledCards(choice)) {
+      const place = holding.find(p => p.n === n)
+      if (!place) {
+        missing.push({ side, type, pattern, choice })
+        continue
       }
+      page.drawEllipse({ x: place.x, y: place.y, xScale: place.xScale, yScale: place.yScale, borderColor: red, borderWidth: 0.6 })
+      drawn.push({ side, type, pattern, n })
     }
   }
   // Diagnostic: show what lead choices were found in card_data and which
