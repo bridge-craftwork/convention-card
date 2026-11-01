@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { PDFDocument, PDFName, PDFHexString } from 'pdf-lib'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
-import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
+import { renderAcblPdfBytes, ACBL_FIELD_MAPS, ACBL_SPLIT_GROUPS } from '../acblClassicFillPdf.js'
 import { readCardFromPdf, mergeTyped } from '../acblPdfImport.js'
 import { upgradeCardData } from '../migrate.js'
 
@@ -127,7 +127,8 @@ describe('readCardFromPdf', () => {
   })
 
   it('reports text typed into a box the editor does not fill', async () => {
-    const mapped = new Set(ACBL_FIELD_MAPS.classic.map(e => e.pdf))
+    // Mapped boxes, and the later lines of a field written across several.
+    const mapped = new Set([...ACBL_FIELD_MAPS.classic.map(e => e.pdf), ...ACBL_SPLIT_GROUPS.classic.flatMap(g => g.fields)])
     let typed
     const bytes = await edit(exported.classic.seed, form => {
       const free = form.getFields().find(f => f.constructor.name === 'PDFTextField' && !mapped.has(f.getName()) && !f.getText())
@@ -136,6 +137,15 @@ describe('readCardFromPdf', () => {
     })
     const read = await readCardFromPdf(bytes)
     expect(read.report.skipped).toContainEqual(expect.objectContaining({ box: typed, found: 'Our own note' }))
+  })
+
+  it('reads text typed on a second line as more of its field', async () => {
+    const bytes = await edit(exported.new.seed, form => {
+      form.getTextField('1NT.t.36').setText('Puppet over 2C')
+      form.getTextField('1NT.t.37').setText('and 3C asks for majors')
+    })
+    const read = await readCardFromPdf(bytes)
+    expect(read.card_data.notrump.notes).toBe('Puppet over 2C and 3C asks for majors')
   })
 
   it.each(TEMPLATES)('reads a %s PDF exported before the record of written boxes', async template => {
