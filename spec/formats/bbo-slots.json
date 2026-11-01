@@ -1,0 +1,1514 @@
+{
+ "schema": "bbo-slots/v1",
+ "generated_from": "spec/formats/bbo-slots.toml (do not edit)",
+ "fields": {
+  "names": {
+   "section": "NAMES",
+   "label": "NAMES"
+  },
+  "majorOther1": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Other"
+  },
+  "majorOther2": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Other"
+  },
+  "major2NTMin": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "2NT over Major Min"
+  },
+  "major2NTMax": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "to"
+  },
+  "major3NTMin": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "3NT"
+  },
+  "major3NTMax": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "to"
+  },
+  "minor2NTMin": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "2NT over minor minimum HCP"
+  },
+  "minor2NTMax": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "to"
+  },
+  "minor3NTMin": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "3NT"
+  },
+  "minor3NTMax": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "to"
+  },
+  "minorOther2": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Other"
+  },
+  "minor1NTMin": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "1NT/1♣"
+  },
+  "minor1NTMax": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "to"
+  },
+  "minorOther1": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Other"
+  },
+  "2CMin": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♣"
+  },
+  "2CMax": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "to"
+  },
+  "2COther1": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♣ description line 1"
+  },
+  "2COther2": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♣ description line 2"
+  },
+  "2COther3": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♣ description line 3"
+  },
+  "2COther4": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♣ responses line 1"
+  },
+  "2COther5": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♣ responses line 2"
+  },
+  "2COther6": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♣ responses line 3"
+  },
+  "2DMin": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♦"
+  },
+  "2DMax": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "to"
+  },
+  "2DOther1": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♦ description"
+  },
+  "2DOther2": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♦ responses"
+  },
+  "2HMin": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♥"
+  },
+  "2HMax": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "to"
+  },
+  "2HOther1": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♥ description"
+  },
+  "2HOther2": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♥ responses"
+  },
+  "2SMin": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♠"
+  },
+  "2SMax": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "to"
+  },
+  "2SOther1": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♠ description"
+  },
+  "2SOther2": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♠ responses"
+  },
+  "other1": {
+   "section": "OTHER CONV CALLS",
+   "label": "NMF description"
+  },
+  "other2": {
+   "section": "OTHER CONV CALLS",
+   "label": "WJS description"
+  },
+  "other3": {
+   "section": "OTHER CONV CALLS",
+   "label": "4th Suit Forcing description"
+  },
+  "other4": {
+   "section": "OTHER CONV CALLS",
+   "label": "Other conventions line 1"
+  },
+  "other5": {
+   "section": "OTHER CONV CALLS",
+   "label": "Other conventions line 2"
+  },
+  "approach": {
+   "section": "GENERAL APPROACH",
+   "label": "GENERAL APPROACH"
+  },
+  "fOpenOther": {
+   "section": "FORCING OPENING",
+   "label": "Describe other forcing opening"
+  },
+  "1NTMin1": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "1NT"
+  },
+  "1NTMax1": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "to"
+  },
+  "1NTMin2": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "1NT Minimum line 2"
+  },
+  "1NTMax2": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "to"
+  },
+  "1NSysOn": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "System On Over"
+  },
+  "1N2S": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "2♠"
+  },
+  "1N2N": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "2NT"
+  },
+  "2NTMin": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "2NT"
+  },
+  "2NTMax": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "to"
+  },
+  "1NOther1": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Other 1NT details line 1"
+  },
+  "1NOther2": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Other 1NT details line 2"
+  },
+  "1NOther3": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Additional 1NT details line 3"
+  },
+  "1N3C": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "3♣"
+  },
+  "1N3D": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "3♦"
+  },
+  "1N3H": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "3♥"
+  },
+  "1N3S": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "3♠"
+  },
+  "1NLebDenies": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "denies"
+  },
+  "2N3S": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "3♠"
+  },
+  "2NOther": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Additional 2NT details"
+  },
+  "3NTMin": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "3NT"
+  },
+  "3NTMax": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "to"
+  },
+  "3NOther": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Additional 3NT details"
+  },
+  "CNTOther1": {
+   "section": "NOTRUMP OPENING BIDS › Conventional NT Openings",
+   "label": "Conventional NT Openings"
+  },
+  "CNTOther2": {
+   "section": "NOTRUMP OPENING BIDS › Conventional NT Openings",
+   "label": "Conventional NT Openings line 2"
+  },
+  "1NNegOther": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "1NT Neg Dbl level"
+  },
+  "dblOther1": {
+   "section": "SPECIAL DOUBLES",
+   "label": "After Overcall"
+  },
+  "dblOther2": {
+   "section": "SPECIAL DOUBLES",
+   "label": "thru"
+  },
+  "dblOther3": {
+   "section": "SPECIAL DOUBLES",
+   "label": "thru"
+  },
+  "dblOther4": {
+   "section": "SPECIAL DOUBLES",
+   "label": "thru"
+  },
+  "dblOther5": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Other doubles"
+  },
+  "ocallMin": {
+   "section": "SIMPLE OVERCALL",
+   "label": "1-level"
+  },
+  "ocallMax": {
+   "section": "SIMPLE OVERCALL",
+   "label": "to"
+  },
+  "ocallOther": {
+   "section": "SIMPLE OVERCALL › Responses",
+   "label": "Other special overcalls"
+  },
+  "jOcallOther": {
+   "section": "JUMP OVERCALL",
+   "label": "Other jump overcalls"
+  },
+  "preOther": {
+   "section": "OPENING PREEMPTS",
+   "label": "Conv./Resp."
+  },
+  "cueOther": {
+   "section": "DIRECT CUEBID",
+   "label": "Other direct cue bids"
+  },
+  "slamOther1": {
+   "section": "SLAM CONVENTIONS",
+   "label": "Other Blackwood details"
+  },
+  "slamOther2": {
+   "section": "SLAM CONVENTIONS",
+   "label": "Other Blackwood details line 2"
+  },
+  "slamLevel": {
+   "section": "SLAM CONVENTIONS",
+   "label": "Level"
+  },
+  "1NOcallDMin": {
+   "section": "NOTRUMP OVERCALLS › Direct",
+   "label": "Direct"
+  },
+  "1NOcallDMax": {
+   "section": "NOTRUMP OVERCALLS › Direct",
+   "label": "to"
+  },
+  "1NOcallBMin": {
+   "section": "NOTRUMP OVERCALLS › Balance",
+   "label": "Balance"
+  },
+  "1NOcallBMax": {
+   "section": "NOTRUMP OVERCALLS › Balance",
+   "label": "to"
+  },
+  "1NOcallOther1": {
+   "section": "NOTRUMP OVERCALLS › Direct",
+   "label": "Conv."
+  },
+  "1NOcallOther2": {
+   "section": "NOTRUMP OVERCALLS › Balance",
+   "label": "Conv."
+  },
+  "vs1NTHead1": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "NT defense heading 1"
+  },
+  "vs1NTHead2": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "NT defense heading 2"
+  },
+  "vs1NT2C1": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♣ col 1"
+  },
+  "vs1NT2C2": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♣ col 2"
+  },
+  "vs1NT2D1": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♦ col 1"
+  },
+  "vs1NT2D2": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♦ col 2"
+  },
+  "vs1NT2H1": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♥ col 1"
+  },
+  "vs1NT2H2": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♥ col 2"
+  },
+  "vs1NT2S1": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♠ col 1"
+  },
+  "vs1NT2S2": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "2♠ col 2"
+  },
+  "vs1NTDbl1": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "Double col 1"
+  },
+  "vs1NTDbl2": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "Double col 2"
+  },
+  "vs1NTOther1": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "Other"
+  },
+  "vs1NTOther2": {
+   "section": "DEFENSE VS NOTRUMP › vs",
+   "label": "Additional 1NT defense"
+  },
+  "vsTOOther": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "Other"
+  },
+  "vsPreTOThru": {
+   "section": "VS OPENING PREEMPT DOUBLE IS",
+   "label": "thru"
+  },
+  "vsPreConv": {
+   "section": "VS OPENING PREEMPT DOUBLE IS",
+   "label": "Conv. Takeout"
+  },
+  "vsPreOther": {
+   "section": "VS OPENING PREEMPT DOUBLE IS",
+   "label": "Other"
+  },
+  "signalsOther1": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Standard carding exceptions"
+  },
+  "signalsOther2": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Standard Carding exceptions line 2"
+  },
+  "discardOther": {
+   "section": "FIRST DISCARD",
+   "label": "Other 1st discard description"
+  },
+  "leadsOther": {
+   "section": "DEFENSIVE CARDING › Length Leads",
+   "label": "Other Leads"
+  }
+ },
+ "conventions": {
+  "major12-4": {
+   "section": "MAJOR OPENING",
+   "label": "4-card Major 1st/2nd seat"
+  },
+  "major12-5": {
+   "section": "MAJOR OPENING",
+   "label": "5-card Major 1st/2nd seat"
+  },
+  "major34-4": {
+   "section": "MAJOR OPENING",
+   "label": "4-card Major 3rd/4th seat"
+  },
+  "major34-5": {
+   "section": "MAJOR OPENING",
+   "label": "5-card Major 3rd/4th seat"
+  },
+  "major2RaiseF": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Double Raise Force"
+  },
+  "major2RaiseI": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Double Raise Inv."
+  },
+  "major2RaiseW": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Double Raise Weak"
+  },
+  "majorO2RaiseF": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "After Overcall Force"
+  },
+  "majorO2RaiseI": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "After Overcall Inv."
+  },
+  "majorO2RaiseW": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "After Overcall Weak"
+  },
+  "major2NTRaise": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Conv. Raise 2NT"
+  },
+  "major3NTRaise": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Conv. Raise 3NT"
+  },
+  "major2NTF": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "2NT Forcing"
+  },
+  "major2NTI": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "2NT Inv."
+  },
+  "majorSplinter": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Conv. Raise Splinter"
+  },
+  "major1NTF": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Forcing"
+  },
+  "major1NTSF": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Semi-forcing"
+  },
+  "drury": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Drury"
+  },
+  "druryRev": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Reverse"
+  },
+  "druryFit": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "2-Way"
+  },
+  "drury2Way": {
+   "section": "MAJOR OPENING › RESPONSES",
+   "label": "Fit"
+  },
+  "minor2RaiseF": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Double Raise Force"
+  },
+  "minor2RaiseI": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Double Raise Inv."
+  },
+  "minor2RaiseW": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Double Raise Weak"
+  },
+  "minorO2RaiseF": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "After Overcall Force"
+  },
+  "minorO2RaiseI": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "After Overcall Inv."
+  },
+  "minorO2RaiseW": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "After Overcall Weak"
+  },
+  "minorSingleRaise": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Single raise"
+  },
+  "minorC4": {
+   "section": "MINOR OPENING",
+   "label": "1♣ = 4+ cards"
+  },
+  "minorC3": {
+   "section": "MINOR OPENING",
+   "label": "1♣ = 3+ cards"
+  },
+  "minorC0": {
+   "section": "MINOR OPENING",
+   "label": "1♣ = 0-2 cards non-forcing"
+  },
+  "minorCC": {
+   "section": "MINOR OPENING",
+   "label": "1♣ = Conventional"
+  },
+  "minorD4": {
+   "section": "MINOR OPENING",
+   "label": "1♦ = 4+ cards"
+  },
+  "minorD3": {
+   "section": "MINOR OPENING",
+   "label": "1♦ = 3+ cards"
+  },
+  "minorD0": {
+   "section": "MINOR OPENING",
+   "label": "1♦ = 0-2 cards non-forcing"
+  },
+  "minorDC": {
+   "section": "MINOR OPENING",
+   "label": "1♦ = Conventional"
+  },
+  "minor2NTF": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "2NT Forcing"
+  },
+  "minor2NTI": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "2NT Inv."
+  },
+  "bypassDs": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Frequently bypass 4+♦"
+  },
+  "jsOtherMinor": {
+   "section": "MINOR OPENING › RESPONSES",
+   "label": "Forcing Raise J/S in other minor"
+  },
+  "2CStrong": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Strong"
+  },
+  "2COther": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Other"
+  },
+  "2DNeg": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♦ Response Neg"
+  },
+  "2DWaiting": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2♦ Response Waiting"
+  },
+  "2DWeak": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Weak"
+  },
+  "2DInt": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Intermediate"
+  },
+  "2DStrong": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Strong"
+  },
+  "2DConv": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Conv"
+  },
+  "2HWeak": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Weak"
+  },
+  "2HInt": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Intermediate"
+  },
+  "2HStrong": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Strong"
+  },
+  "2HConv": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Conv"
+  },
+  "2SWeak": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Weak"
+  },
+  "2SInt": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Intermediate"
+  },
+  "2SStrong": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Strong"
+  },
+  "2SConv": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "Natural Conv"
+  },
+  "2D2NT": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2NT Force"
+  },
+  "2DNew": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "New Suit NF"
+  },
+  "2H2NT": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2NT Force"
+  },
+  "2HNew": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "New Suit NF"
+  },
+  "2S2NT": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "2NT Force"
+  },
+  "2SNew": {
+   "section": "DESCRIBE | RESPONSES/REBIDS",
+   "label": "New Suit NF"
+  },
+  "WJS": {
+   "section": "OTHER CONV CALLS",
+   "label": "Weak jump shifts Not In Comp."
+  },
+  "WJSComp": {
+   "section": "OTHER CONV CALLS",
+   "label": "Weak jump shifts In Comp."
+  },
+  "FSF1": {
+   "section": "OTHER CONV CALLS",
+   "label": "1 Round"
+  },
+  "FSFG": {
+   "section": "OTHER CONV CALLS",
+   "label": "To Game"
+  },
+  "NMF": {
+   "section": "OTHER CONV CALLS",
+   "label": "OTHER CONV CALLS New Minor Forcing"
+  },
+  "NMF2": {
+   "section": "OTHER CONV CALLS",
+   "label": "OTHER CONV CALLS 2-Way NMF"
+  },
+  "2over1GF": {
+   "section": "GENERAL APPROACH › Two Over One",
+   "label": "Two Over One Game Forcing"
+  },
+  "2over1GFR": {
+   "section": "GENERAL APPROACH › Two Over One",
+   "label": "Two Over One Game Forcing Except When Suit Rebid"
+  },
+  "VLOpen": {
+   "section": "VERY LIGHT",
+   "label": "VERY LIGHT Openings"
+  },
+  "VL3rd": {
+   "section": "VERY LIGHT",
+   "label": "VERY LIGHT 3rd Hand"
+  },
+  "VLOcall": {
+   "section": "VERY LIGHT",
+   "label": "VERY LIGHT Overcalls"
+  },
+  "VLPre": {
+   "section": "VERY LIGHT",
+   "label": "VERY LIGHT Preempts"
+  },
+  "F1C": {
+   "section": "FORCING OPENING",
+   "label": "FORCING OPENING 1♣"
+  },
+  "F2C": {
+   "section": "FORCING OPENING",
+   "label": "FORCING OPENING 2♣"
+  },
+  "F2B": {
+   "section": "FORCING OPENING",
+   "label": "FORCING OPENING Natural 2 Bids"
+  },
+  "F2O": {
+   "section": "FORCING OPENING",
+   "label": "FORCING OPENING Other"
+  },
+  "1N5M": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "5-Card Major Common"
+  },
+  "1NStayman": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Stayman"
+  },
+  "1NPuppet": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Puppet"
+  },
+  "1N2DTrans": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Transfer to ♥"
+  },
+  "1N2DFStay": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Forcing Stayman"
+  },
+  "1N2HTrans": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Transfer to ♠"
+  },
+  "1NTexas": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "4♦, 4♥ Transfer"
+  },
+  "1NSmolen": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Smolen"
+  },
+  "1NLeb": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Lebensohl"
+  },
+  "1NNeg": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Negative Double"
+  },
+  "2NPuppet": {
+   "section": "NOTRUMP OPENING BIDS",
+   "label": "Puppet Stayman"
+  },
+  "2NJacoby": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Jacoby"
+  },
+  "2NTexas": {
+   "section": "NOTRUMP OPENING BIDS › Transfer Responses",
+   "label": "Texas"
+  },
+  "dblPenalty": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Penalty"
+  },
+  "dblNegative": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Negative"
+  },
+  "dblResponsive": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Responsive"
+  },
+  "dblMaximal": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Maximal"
+  },
+  "dblSupport": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Support: Dbl"
+  },
+  "dblCards": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Card-showing"
+  },
+  "dblTO": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Min. Offshape T/O"
+  },
+  "rdblSupport": {
+   "section": "SPECIAL DOUBLES",
+   "label": "Rdbl"
+  },
+  "ocall4Cards": {
+   "section": "SIMPLE OVERCALL",
+   "label": "Often 4 cards"
+  },
+  "ocallLight": {
+   "section": "SIMPLE OVERCALL",
+   "label": "Very light style"
+  },
+  "ocallNSF": {
+   "section": "SIMPLE OVERCALL › Responses",
+   "label": "New Suit: Forcing"
+  },
+  "ocallNSC": {
+   "section": "SIMPLE OVERCALL › Responses",
+   "label": "NFConst"
+  },
+  "ocallNSNF": {
+   "section": "SIMPLE OVERCALL › Responses",
+   "label": "NF"
+  },
+  "ocallJRF": {
+   "section": "SIMPLE OVERCALL › Responses",
+   "label": "Jump Raise: Forcing"
+  },
+  "ocallJRI": {
+   "section": "SIMPLE OVERCALL › Responses",
+   "label": "Inv."
+  },
+  "ocallJRW": {
+   "section": "SIMPLE OVERCALL › Responses",
+   "label": "Weak"
+  },
+  "jOcallS": {
+   "section": "JUMP OVERCALL",
+   "label": "Strong"
+  },
+  "jOcallI": {
+   "section": "JUMP OVERCALL",
+   "label": "Intermediate"
+  },
+  "jOcallW": {
+   "section": "JUMP OVERCALL",
+   "label": "Weak"
+  },
+  "preS": {
+   "section": "OPENING PREEMPTS",
+   "label": "Sound"
+  },
+  "preL": {
+   "section": "OPENING PREEMPTS",
+   "label": "Light"
+  },
+  "preVL": {
+   "section": "OPENING PREEMPTS",
+   "label": "Very Light"
+  },
+  "cueMinorN": {
+   "section": "DIRECT CUEBID",
+   "label": "Minor cuebid = natural"
+  },
+  "cueMajorN": {
+   "section": "DIRECT CUEBID",
+   "label": "Major cuebid = natural"
+  },
+  "cueMinorS": {
+   "section": "DIRECT CUEBID",
+   "label": "Minor cuebid = strong T/O"
+  },
+  "cueMajorS": {
+   "section": "DIRECT CUEBID",
+   "label": "Major cuebid = strong T/O"
+  },
+  "cueMinorM": {
+   "section": "DIRECT CUEBID",
+   "label": "Minor cuebid = Michaels"
+  },
+  "cueMajorM": {
+   "section": "DIRECT CUEBID",
+   "label": "Major cuebid = Michaels"
+  },
+  "gerber": {
+   "section": "SLAM CONVENTIONS",
+   "label": "SLAM CONVENTIONS Gerber"
+  },
+  "blackwood": {
+   "section": "SLAM CONVENTIONS",
+   "label": "SLAM CONVENTIONS Blackwood"
+  },
+  "rkc": {
+   "section": "SLAM CONVENTIONS",
+   "label": "SLAM CONVENTIONS RKC"
+  },
+  "1430": {
+   "section": "SLAM CONVENTIONS",
+   "label": "SLAM CONVENTIONS 1430"
+  },
+  "dopi": {
+   "section": "SLAM CONVENTIONS",
+   "label": "vs. Interference DOPI"
+  },
+  "depo": {
+   "section": "SLAM CONVENTIONS",
+   "label": "vs. Interference DEPO"
+  },
+  "ropi": {
+   "section": "SLAM CONVENTIONS",
+   "label": "ROPI"
+  },
+  "systemOn": {
+   "section": "NOTRUMP OVERCALLS › Direct",
+   "label": "Systems on"
+  },
+  "2NTOcallMinors": {
+   "section": "NOTRUMP OVERCALLS › Balance",
+   "label": "Jump to 2NT: Minors"
+  },
+  "2NTOcallLowest": {
+   "section": "NOTRUMP OVERCALLS › Balance",
+   "label": "2 Lowest"
+  },
+  "vsTONSF1": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "New Suit Forcing 1-level"
+  },
+  "vsTONSF2": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "New Suit Forcing 2-level"
+  },
+  "vsTORdbl": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "Redouble implies no fit"
+  },
+  "vsTOMajorsLP": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "2NT = Limit+ over Majors"
+  },
+  "vsTOMajorsL": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "2NT = Limit over Majors"
+  },
+  "vsTOMajorsW": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "2NT = Weak over Majors"
+  },
+  "vsTOMinorsLP": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "2NT = Limit+ over Minors"
+  },
+  "vsTOMinorsL": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "2NT = Limit over Minors"
+  },
+  "vsTOMinorsW": {
+   "section": "OVER OPP'S T/O DOUBLE",
+   "label": "2NT = Weak over Minors"
+  },
+  "vsPreTO": {
+   "section": "VS OPENING PREEMPT DOUBLE IS",
+   "label": "Takeout"
+  },
+  "vsPrePen": {
+   "section": "VS OPENING PREEMPT DOUBLE IS",
+   "label": "Penalty"
+  },
+  "vsPreLeb": {
+   "section": "VS OPENING PREEMPT DOUBLE IS",
+   "label": "Lebensohl 2NT Response"
+  },
+  "specialCarding": {
+   "section": "OTHER CARDING",
+   "label": "SPECIAL CARDING"
+  },
+  "4thSuits": {
+   "section": "DEFENSIVE CARDING › Length Leads",
+   "label": "vs Suits"
+  },
+  "4thNT": {
+   "section": "DEFENSIVE CARDING › Length Leads",
+   "label": "vs NT"
+  },
+  "35thSuits": {
+   "section": "DEFENSIVE CARDING › Length Leads",
+   "label": "vs Suits"
+  },
+  "35thNT": {
+   "section": "DEFENSIVE CARDING › Length Leads",
+   "label": "vs NT"
+  },
+  "attitudeNT": {
+   "section": "DEFENSIVE CARDING › Length Leads",
+   "label": "Attitude vs NT"
+  },
+  "primaryA": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Attitude"
+  },
+  "primaryC": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Count"
+  },
+  "primarySP": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Suit Preference"
+  },
+  "SCASuits": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Standard carding vs Suits"
+  },
+  "SCANT": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Standard carding vs NT"
+  },
+  "SCAExcept": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Except"
+  },
+  "UDCSuits": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Upside-down count vs Suits"
+  },
+  "UDCNT": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Upside-down count vs NT"
+  },
+  "UDASuits": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Upside-down attitude vs Suits"
+  },
+  "UDANT": {
+   "section": "DEFENSIVE CARDING › Primary signal to partner's leads",
+   "label": "Upside-down attitude vs NT"
+  },
+  "lavSuits": {
+   "section": "FIRST DISCARD",
+   "label": "Lavinthal 1st discard vs Suits"
+  },
+  "lavNT": {
+   "section": "FIRST DISCARD",
+   "label": "Lavinthal 1st discard vs NT"
+  },
+  "OESuits": {
+   "section": "FIRST DISCARD",
+   "label": "Odd-Even 1st discard vs Suits"
+  },
+  "OENT": {
+   "section": "FIRST DISCARD",
+   "label": "Odd-Even 1st discard vs NT"
+  },
+  "discardSuits": {
+   "section": "FIRST DISCARD",
+   "label": "Other 1st discard vs Suits"
+  },
+  "discardNT": {
+   "section": "FIRST DISCARD",
+   "label": "Other 1st discard vs NT"
+  },
+  "smithSuits": {
+   "section": "OTHER CARDING",
+   "label": "Smith Echo vs Suits"
+  },
+  "smithNT": {
+   "section": "OTHER CARDING",
+   "label": "Smith Echo vs NT"
+  },
+  "trumpSP": {
+   "section": "OTHER CARDING",
+   "label": "Trump Suit Pref."
+  },
+  "fosterSuits": {
+   "section": "OTHER CARDING",
+   "label": "Foster Echo vs Suits"
+  },
+  "fosterNT": {
+   "section": "OTHER CARDING",
+   "label": "Foster Echo vs NT"
+  }
+ },
+ "leads": {
+  "ls-xx-x1": {
+   "section": "Leads vs Suits",
+   "label": "xx: x"
+  },
+  "ls-xx-x2": {
+   "section": "Leads vs Suits",
+   "label": "xx: x"
+  },
+  "ls-xxx-x1": {
+   "section": "Leads vs Suits",
+   "label": "xxx: x"
+  },
+  "ls-xxx-x2": {
+   "section": "Leads vs Suits",
+   "label": "xxx: x"
+  },
+  "ls-xxx-x3": {
+   "section": "Leads vs Suits",
+   "label": "xxx: x"
+  },
+  "ls-xxxx-x1": {
+   "section": "Leads vs Suits",
+   "label": "xxxx: x"
+  },
+  "ls-xxxx-x2": {
+   "section": "Leads vs Suits",
+   "label": "xxxx: x"
+  },
+  "ls-xxxx-x3": {
+   "section": "Leads vs Suits",
+   "label": "xxxx: x"
+  },
+  "ls-xxxx-x4": {
+   "section": "Leads vs Suits",
+   "label": "xxxx: x"
+  },
+  "ls-xxxxx-x1": {
+   "section": "Leads vs Suits",
+   "label": "xxxxx: x"
+  },
+  "ls-xxxxx-x2": {
+   "section": "Leads vs Suits",
+   "label": "xxxxx: x"
+  },
+  "ls-xxxxx-x3": {
+   "section": "Leads vs Suits",
+   "label": "xxxxx: x"
+  },
+  "ls-xxxxx-x4": {
+   "section": "Leads vs Suits",
+   "label": "xxxxx: x"
+  },
+  "ls-xxxxx-x5": {
+   "section": "Leads vs Suits",
+   "label": "xxxxx: x"
+  },
+  "ln-xx-x1": {
+   "section": "Leads vs NT",
+   "label": "xx: x"
+  },
+  "ln-xx-x2": {
+   "section": "Leads vs NT",
+   "label": "xx: x"
+  },
+  "ln-xxx-x1": {
+   "section": "Leads vs NT",
+   "label": "xxx: x"
+  },
+  "ln-xxx-x2": {
+   "section": "Leads vs NT",
+   "label": "xxx: x"
+  },
+  "ln-xxx-x3": {
+   "section": "Leads vs NT",
+   "label": "xxx: x"
+  },
+  "ln-xxxx-x1": {
+   "section": "Leads vs NT",
+   "label": "xxxx: x"
+  },
+  "ln-xxxx-x2": {
+   "section": "Leads vs NT",
+   "label": "xxxx: x"
+  },
+  "ln-xxxx-x3": {
+   "section": "Leads vs NT",
+   "label": "xxxx: x"
+  },
+  "ln-xxxx-x4": {
+   "section": "Leads vs NT",
+   "label": "xxxx: x"
+  },
+  "ln-xxxxx-x1": {
+   "section": "Leads vs NT",
+   "label": "xxxxx: x"
+  },
+  "ln-xxxxx-x2": {
+   "section": "Leads vs NT",
+   "label": "xxxxx: x"
+  },
+  "ln-xxxxx-x3": {
+   "section": "Leads vs NT",
+   "label": "xxxxx: x"
+  },
+  "ln-xxxxx-x4": {
+   "section": "Leads vs NT",
+   "label": "xxxxx: x"
+  },
+  "ln-xxxxx-x5": {
+   "section": "Leads vs NT",
+   "label": "xxxxx: x"
+  },
+  "ls-akx-a": {
+   "section": "Leads vs Suits",
+   "label": "AKx: A"
+  },
+  "ls-akx-k": {
+   "section": "Leads vs Suits",
+   "label": "AKx: K"
+  },
+  "ls-akx-x": {
+   "section": "Leads vs Suits",
+   "label": "AKx: x"
+  },
+  "ls-kqx-k": {
+   "section": "Leads vs Suits",
+   "label": "KQx: K"
+  },
+  "ls-kqx-q": {
+   "section": "Leads vs Suits",
+   "label": "KQx: Q"
+  },
+  "ls-kqx-x": {
+   "section": "Leads vs Suits",
+   "label": "KQx: x"
+  },
+  "ls-qjx-q": {
+   "section": "Leads vs Suits",
+   "label": "QJx: Q"
+  },
+  "ls-qjx-j": {
+   "section": "Leads vs Suits",
+   "label": "QJx: J"
+  },
+  "ls-qjx-x": {
+   "section": "Leads vs Suits",
+   "label": "QJx: x"
+  },
+  "ls-j10x-j": {
+   "section": "Leads vs Suits",
+   "label": "J10x: J"
+  },
+  "ls-j10x-10": {
+   "section": "Leads vs Suits",
+   "label": "J10x: 10"
+  },
+  "ls-j10x-x": {
+   "section": "Leads vs Suits",
+   "label": "J10x: x"
+  },
+  "ls-109x-10": {
+   "section": "Leads vs Suits",
+   "label": "109x: 10"
+  },
+  "ls-109x-9": {
+   "section": "Leads vs Suits",
+   "label": "109x: 9"
+  },
+  "ls-109x-x": {
+   "section": "Leads vs Suits",
+   "label": "109x: x"
+  },
+  "ls-kq109-k": {
+   "section": "Leads vs Suits",
+   "label": "KQ109: K"
+  },
+  "ls-kq109-q": {
+   "section": "Leads vs Suits",
+   "label": "KQ109: Q"
+  },
+  "ls-kq109-10": {
+   "section": "Leads vs Suits",
+   "label": "KQ109: 10"
+  },
+  "ls-kq109-9": {
+   "section": "Leads vs Suits",
+   "label": "KQ109: 9"
+  },
+  "ls-kj10x-k": {
+   "section": "Leads vs Suits",
+   "label": "KJ10x: K"
+  },
+  "ls-kj10x-j": {
+   "section": "Leads vs Suits",
+   "label": "KJ10x: J"
+  },
+  "ls-kj10x-10": {
+   "section": "Leads vs Suits",
+   "label": "KJ10x: 10"
+  },
+  "ls-kj10x-x": {
+   "section": "Leads vs Suits",
+   "label": "KJ10x: x"
+  },
+  "ls-k109x-k": {
+   "section": "Leads vs Suits",
+   "label": "K109x: K"
+  },
+  "ls-k109x-10": {
+   "section": "Leads vs Suits",
+   "label": "K109x: 10"
+  },
+  "ls-k109x-9": {
+   "section": "Leads vs Suits",
+   "label": "K109x: 9"
+  },
+  "ls-k109x-x": {
+   "section": "Leads vs Suits",
+   "label": "K109x: x"
+  },
+  "ls-q109x-q": {
+   "section": "Leads vs Suits",
+   "label": "Q109x: Q"
+  },
+  "ls-q109x-10": {
+   "section": "Leads vs Suits",
+   "label": "Q109x: 10"
+  },
+  "ls-q109x-9": {
+   "section": "Leads vs Suits",
+   "label": "Q109x: 9"
+  },
+  "ls-q109x-x": {
+   "section": "Leads vs Suits",
+   "label": "Q109x: x"
+  },
+  "ln-akjx-a": {
+   "section": "Leads vs NT",
+   "label": "AKJx: A"
+  },
+  "ln-akjx-k": {
+   "section": "Leads vs NT",
+   "label": "AKJx: K"
+  },
+  "ln-akjx-j": {
+   "section": "Leads vs NT",
+   "label": "AKJx: J"
+  },
+  "ln-akjx-x": {
+   "section": "Leads vs NT",
+   "label": "AKJx: x"
+  },
+  "ln-aqjx-a": {
+   "section": "Leads vs NT",
+   "label": "AQJx: A"
+  },
+  "ln-aqjx-q": {
+   "section": "Leads vs NT",
+   "label": "AQJx: Q"
+  },
+  "ln-aqjx-j": {
+   "section": "Leads vs NT",
+   "label": "AQJx: J"
+  },
+  "ln-aqjx-x": {
+   "section": "Leads vs NT",
+   "label": "AQJx: x"
+  },
+  "ln-aj109-a": {
+   "section": "Leads vs NT",
+   "label": "AJ109: A"
+  },
+  "ln-aj109-j": {
+   "section": "Leads vs NT",
+   "label": "AJ109: J"
+  },
+  "ln-aj109-10": {
+   "section": "Leads vs NT",
+   "label": "AJ109: 10"
+  },
+  "ln-aj109-9": {
+   "section": "Leads vs NT",
+   "label": "AJ109: 9"
+  },
+  "ln-a1098-a": {
+   "section": "Leads vs NT",
+   "label": "A1098: A"
+  },
+  "ln-a1098-10": {
+   "section": "Leads vs NT",
+   "label": "A1098: 10"
+  },
+  "ln-a1098-9": {
+   "section": "Leads vs NT",
+   "label": "A1098: 9"
+  },
+  "ln-a1098-8": {
+   "section": "Leads vs NT",
+   "label": "A1098: 8"
+  },
+  "ln-kqjx-k": {
+   "section": "Leads vs NT",
+   "label": "KQJx: K"
+  },
+  "ln-kqjx-q": {
+   "section": "Leads vs NT",
+   "label": "KQJx: Q"
+  },
+  "ln-kqjx-j": {
+   "section": "Leads vs NT",
+   "label": "KQJx: J"
+  },
+  "ln-kqjx-x": {
+   "section": "Leads vs NT",
+   "label": "KQJx: x"
+  },
+  "ln-qj10x-q": {
+   "section": "Leads vs NT",
+   "label": "QJ10x: Q"
+  },
+  "ln-qj10x-j": {
+   "section": "Leads vs NT",
+   "label": "QJ10x: J"
+  },
+  "ln-qj10x-10": {
+   "section": "Leads vs NT",
+   "label": "QJ10x: 10"
+  },
+  "ln-qj10x-x": {
+   "section": "Leads vs NT",
+   "label": "QJ10x: x"
+  },
+  "ln-j109x-j": {
+   "section": "Leads vs NT",
+   "label": "J109x: J"
+  },
+  "ln-j109x-10": {
+   "section": "Leads vs NT",
+   "label": "J109x: 10"
+  },
+  "ln-j109x-9": {
+   "section": "Leads vs NT",
+   "label": "J109x: 9"
+  },
+  "ln-j109x-x": {
+   "section": "Leads vs NT",
+   "label": "J109x: x"
+  },
+  "ln-1098x-10": {
+   "section": "Leads vs NT",
+   "label": "1098x: 10"
+  },
+  "ln-1098x-9": {
+   "section": "Leads vs NT",
+   "label": "1098x: 9"
+  },
+  "ln-1098x-8": {
+   "section": "Leads vs NT",
+   "label": "1098x: 8"
+  },
+  "ln-1098x-x": {
+   "section": "Leads vs NT",
+   "label": "1098x: x"
+  },
+  "ln-kq109-k": {
+   "section": "Leads vs NT",
+   "label": "KQ109: K"
+  },
+  "ln-kq109-q": {
+   "section": "Leads vs NT",
+   "label": "KQ109: Q"
+  },
+  "ln-kq109-10": {
+   "section": "Leads vs NT",
+   "label": "KQ109: 10"
+  },
+  "ln-kq109-9": {
+   "section": "Leads vs NT",
+   "label": "KQ109: 9"
+  },
+  "ln-q1098-q": {
+   "section": "Leads vs NT",
+   "label": "Q1098: Q"
+  },
+  "ln-q1098-10": {
+   "section": "Leads vs NT",
+   "label": "Q1098: 10"
+  },
+  "ln-q1098-9": {
+   "section": "Leads vs NT",
+   "label": "Q1098: 9"
+  },
+  "ln-q1098-8": {
+   "section": "Leads vs NT",
+   "label": "Q1098: 8"
+  }
+ }
+}
