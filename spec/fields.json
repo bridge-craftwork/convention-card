@@ -3491,6 +3491,14 @@
    ],
    "desc": "The card led, by its place in the holding: 1 the top card"
   },
+  "vs_suits.honors.lead_choice_kqt9": {
+   "kind": "int",
+   "many": true,
+   "label": "Lead vs suits from KQT9",
+   "min": 1,
+   "max": 4,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
   "vs_suits.honors.varies": {
    "kind": "bool",
    "label": "Lead vs suits from AKx: varies"
@@ -3662,6 +3670,46 @@
    "aliases": [
     "leads.vs_nt.honors.lead_choice_QT9x"
    ],
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_akjx": {
+   "kind": "int",
+   "many": true,
+   "label": "Lead vs NT from AKJx",
+   "min": 1,
+   "max": 4,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_ajt9": {
+   "kind": "int",
+   "many": true,
+   "label": "Lead vs NT from AJT9",
+   "min": 1,
+   "max": 4,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_at98": {
+   "kind": "int",
+   "many": true,
+   "label": "Lead vs NT from AT98",
+   "min": 1,
+   "max": 4,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_t98x": {
+   "kind": "int",
+   "many": true,
+   "label": "Lead vs NT from T98x",
+   "min": 1,
+   "max": 4,
+   "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.lead_choice_qt98": {
+   "kind": "int",
+   "many": true,
+   "label": "Lead vs NT from QT98",
+   "min": 1,
+   "max": 4,
    "desc": "The card led, by its place in the holding: 1 the top card"
   },
   "vs_nt.honors.varies": {

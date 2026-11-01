@@ -58,14 +58,20 @@ function parseRange(v) {
 //   write(get)   → { key: text | undefined } for the export, `get` reading
 //                  the card through aliases
 
+// A value in a `set` may be a list: the box stands for any of them. Ticked,
+// it imports the first; export ticks it for any. A number and its digits are
+// the same value (the map's 4 and the editor's "4" for a length).
+const same = (got, want) => got === want || (typeof want !== 'boolean' && got != null && String(got) === String(want))
+const holds = (got, want) => (Array.isArray(want) ? want.some(w => same(got, w)) : same(got, want))
+
 function convention(key, spec) {
   const set = typeof spec === 'string'
     ? [[known(spec), true]]
     : Object.entries(spec.set).map(([p, v]) => [known(p), v])
   return {
     group: 'conventions', keys: [key], paths: set.map(([p]) => p),
-    read: slots => (on(slots[key]) ? set : []),
-    write: get => ({ [key]: set.every(([p, v]) => get(p) === v) ? 'y' : undefined }),
+    read: slots => (on(slots[key]) ? set.map(([p, v]) => [p, Array.isArray(v) ? v[0] : v]) : []),
+    write: get => ({ [key]: set.every(([p, v]) => holds(get(p), v)) ? 'y' : undefined }),
   }
 }
 
@@ -168,25 +174,33 @@ const ENTRIES = [
 // ─── Lead circles ──────────────────────────────────────────────────
 // `ls-akx-a`: vs suits (ls; vs NT is ln), the holding AKx, the A led. The
 // card keeps the led card's position in the holding, under
-// leads.<side>.<length | honors>.lead_choice_<holding>. A small card is
-// x1, x2… (the first x, the second…); a bare number is a position.
+// leads.<side>.<length | honors>.lead_choice_<holding>. BBO writes the ten
+// as 10 (`ls-kj10x-10`) where the spec writes T (`lead_choice_kjtx`), and
+// positions count cards, not letters: the 10 of KJ10x is the 3rd card.
+// The led card is named: a rank, x for the one small card of an honour
+// holding (`ls-akx-x`), or x1, x2… in a holding of several (`ls-xxx-x2`).
+// A bare number that is no card of the holding is a position.
 
 const SIDES = { ls: 'vs_suits', ln: 'vs_nt' }
 // leadPath and leadKey are exported for the BBO field sheets (scripts/bbo-field-sheets.mjs)
 // and the tests; js/index.js does not re-export them.
 
+/** BBO's cards of a holding, in order: "kq109" → ["k", "q", "10", "9"]. */
+const bboCards = holding => holding.match(/10|./g) || []
+
 export function leadPath(key) {
   const m = key.match(/^(ls|ln)-([a-z0-9]+)-([a-z0-9]+)$/i)
   if (!m) return null
-  const pattern = m[2].toLowerCase()
+  const cards = bboCards(m[2].toLowerCase())
+  const pattern = cards.map(c => (c === '10' ? 't' : c)).join('')
   const led = m[3].toLowerCase()
   let pos
-  if (/^\d+$/.test(led)) pos = Number(led)
-  else if (/^x\d+$/.test(led)) {
+  if (/^x\d+$/.test(led)) {
     const nth = Number(led.slice(1))
     let seen = 0
-    pos = [...pattern].findIndex(c => c === 'x' && ++seen === nth) + 1
-  } else pos = pattern.indexOf(led) + 1
+    pos = cards.findIndex(c => c === 'x' && ++seen === nth) + 1
+  } else if (cards.includes(led)) pos = cards.indexOf(led) + 1
+  else if (/^\d+$/.test(led)) pos = Number(led)
   if (!pos || pos < 1) return null
   // The spec says which group a holding is in (Hxx is with the lengths);
   // a holding it lacks goes by its cards.
@@ -199,12 +213,14 @@ export function leadPath(key) {
 export function leadKey(path, pos) {
   const m = path.match(/^leads\.(vs_suits|vs_nt)\.(?:length|honors)\.lead_choice_(.+)$/)
   if (!m || !Number.isInteger(pos) || pos < 1) return null
-  const pattern = m[2].toLowerCase()
-  const c = pattern[pos - 1]
+  const cards = [...m[2].toLowerCase()].map(c => (c === 't' ? '10' : c))
+  const c = cards[pos - 1]
+  const smalls = cards.filter(ch => ch === 'x').length
   const led = !c ? String(pos)
     : c !== 'x' ? c
-    : `x${[...pattern.slice(0, pos)].filter(ch => ch === 'x').length}`
-  return `${m[1] === 'vs_suits' ? 'ls' : 'ln'}-${pattern}-${led}`
+    : smalls === 1 && smalls < cards.length ? 'x'
+    : `x${cards.slice(0, pos).filter(ch => ch === 'x').length}`
+  return `${m[1] === 'vs_suits' ? 'ls' : 'ln'}-${cards.join('')}-${led}`
 }
 
 /** The lead choices a card holds: lower-case path → position, or a list of them. */
