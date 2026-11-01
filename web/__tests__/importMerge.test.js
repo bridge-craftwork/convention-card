@@ -67,3 +67,55 @@ describe('what the person is told', () => {
     expect(out.matched).toBe('Replaced with the newer imported copy: With Pat.\nAlready up to date: With Lee.')
   })
 })
+
+// Tomasz, 2026-10-31: a PDF exported from his card before he renamed it
+// "Dimitry". Its record carries the card's id and the old name, so it
+// matches Dimitry; the question named "My convention card", and replacing
+// put the old name back.
+describe('an older copy of a card that has since been renamed', () => {
+  const dimitry = [{ id: 'd', name: 'Dimitry', updated_at: '2026-10-31T21:44:56Z', card_data: { v: 2, metadata: { name: 'Dimitry' } } }]
+  const file = [{ id: 'd', name: 'My convention card', updatedAt: '2026-10-30T12:54:58Z', card_data: { v: 1, metadata: { name: 'My convention card' } } }]
+
+  it('asks by the name the card has now, and says what the file called it', async () => {
+    let info
+    await mergeImported(file, memoryStorage(dimitry), i => { info = i; return 'keep' })
+    expect(info.name).toBe('Dimitry')
+    expect(info.importedName).toBe('My convention card')
+  })
+
+  it('replacing takes the file\'s settings and keeps the name', async () => {
+    const storage = memoryStorage(dimitry)
+    await mergeImported(file, storage, () => 'replace')
+    const card = storage.store.get('d')
+    expect(card.name).toBe('Dimitry')
+    expect(card.card_data).toEqual({ v: 1, metadata: { name: 'Dimitry' } })
+  })
+
+  it('"Add as a new card" leaves Dimitry alone', async () => {
+    const storage = memoryStorage(dimitry)
+    const out = await mergeImported(file, storage, () => 'add')
+    expect(storage.store.get('d').card_data.v).toBe(2)
+    expect(out.added).toHaveLength(1)
+    expect(storage.store.get(out.added[0]).name).toBe('My convention card')
+    expect(out.lastId).toBe(out.added[0])
+  })
+
+  it('a newer copy still brings its own name', async () => {
+    const storage = memoryStorage(dimitry)
+    await mergeImported([{ ...file[0], updatedAt: '2026-11-01T00:00:00Z' }], storage, () => { throw new Error('asked') })
+    expect(storage.store.get('d').name).toBe('My convention card')
+  })
+})
+
+describe('the question in the page', () => {
+  it('names the card, offers adding it, and Esc keeps it', async () => {
+    const { askInDialog } = await import('../src/editor/importDialogs.js')
+    let shown
+    await askInDialog({ show: c => { shown = c; return Promise.resolve('keep') } })({ name: 'Dimitry', importedName: 'My convention card', ours: 'Oct 31', theirs: 'Oct 30' })
+    expect(shown.title).toBe('This file holds an older copy of “Dimitry”.')
+    expect(shown.dated[1].what).toMatch(/My convention card/)
+    expect(shown.buttons.map(b => b.value)).toEqual(['keep', 'add', 'replace'])
+    expect(shown.cancel).toBe('keep')
+  })
+})
+

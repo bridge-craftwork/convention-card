@@ -35,7 +35,8 @@ import { nextTick, ref } from 'vue'
 // confirm/alert (which add "<site> says" and can't line up dates). One
 // instance per host component; `show(content)` resolves with the value of
 // the button chosen. content: { title, dated?: [{ when, what }], lines?,
-// groups?: [{ heading, items }], buttons: [{ label, value, primary? }] }.
+// groups?: [{ heading, items }], buttons: [{ label, value, primary? }],
+// cancel? }. Esc answers `cancel`, or else the last button's value.
 const open = ref(false)
 const content = ref({ title: '', buttons: [] })
 const firstButton = ref(null)
@@ -45,7 +46,7 @@ let resolve = null
 
 async function show(c) {
   content.value = c
-  cancelValue.value = c.buttons.at(-1)?.value ?? null
+  cancelValue.value = 'cancel' in c ? c.cancel : (c.buttons.at(-1)?.value ?? null)
   open.value = true
   await nextTick()
   firstButton.value?.focus()
