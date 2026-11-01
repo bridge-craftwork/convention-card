@@ -17,6 +17,7 @@ on:
       - 'spec/formats/bbsa-map.toml'
       - 'spec/formats/bbsa-layout.txt'
       - 'spec/formats/bbo-map.toml'
+      - 'spec/formats/bbo-slots.toml'
       - 'spec/formats/bridgodex-map.toml'
       - 'spec/migrations/*.toml'
       - 'scripts/build_spec.py'

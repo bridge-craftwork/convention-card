@@ -172,8 +172,10 @@ const ENTRIES = [
 // x1, x2… (the first x, the second…); a bare number is a position.
 
 const SIDES = { ls: 'vs_suits', ln: 'vs_nt' }
+// leadPath and leadKey are exported for the BBO field sheets (scripts/bbo-field-sheets.mjs)
+// and the tests; js/index.js does not re-export them.
 
-function leadPath(key) {
+export function leadPath(key) {
   const m = key.match(/^(ls|ln)-([a-z0-9]+)-([a-z0-9]+)$/i)
   if (!m) return null
   const pattern = m[2].toLowerCase()
@@ -194,7 +196,7 @@ function leadPath(key) {
   return [`leads.${side}.${group}.lead_choice_${pattern}`, pos]
 }
 
-function leadKey(path, pos) {
+export function leadKey(path, pos) {
   const m = path.match(/^leads\.(vs_suits|vs_nt)\.(?:length|honors)\.lead_choice_(.+)$/)
   if (!m || !Number.isInteger(pos) || pos < 1) return null
   const pattern = m[2].toLowerCase()
