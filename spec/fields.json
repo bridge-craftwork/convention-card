@@ -458,6 +458,18 @@
    "kind": "bool",
    "label": "1NT–2NT natural (invitational)"
   },
+  "two_d_natural": {
+   "kind": "bool",
+   "label": "1NT–2♦ natural"
+  },
+  "two_h_natural": {
+   "kind": "bool",
+   "label": "1NT–2♥ natural"
+  },
+  "two_s_natural": {
+   "kind": "bool",
+   "label": "1NT–2♠ natural"
+  },
   "three_d_response": {
    "kind": "enum",
    "label": "1NT–3♦ response",
@@ -529,6 +541,19 @@
    "label": "2NT notes",
    "note": true
   },
+  "two_nt.conventional": {
+   "kind": "bool",
+   "label": "2NT opening is conventional"
+  },
+  "two_nt.conventional_desc": {
+   "kind": "text",
+   "label": "2NT opening: conventional meaning",
+   "explains": "notrump.two_nt.conventional"
+  },
+  "conventional_nt_openings": {
+   "kind": "text",
+   "label": "Conventional NT openings"
+  },
   "three_nt.range_min": {
    "kind": "int",
    "label": "3NT range: minimum",
@@ -561,6 +586,11 @@
   "responses.2d_other": {
    "kind": "text",
    "label": "2♦ response"
+  },
+  "responses.2c_other": {
+   "kind": "text",
+   "label": "2♣ response: other",
+   "desc": "1NT–2♣ when it is neither Stayman nor Puppet (the New card ticks its 2♣ Other box when this is filled)"
   },
   "responses.2h_other": {
    "kind": "text",
@@ -796,6 +826,12 @@
    "level": 3,
    "choice": "major_openings.jump_raise"
   },
+  "jump_raise.force": {
+   "kind": "bool",
+   "label": "Jump raise: forcing",
+   "level": 4,
+   "choice": "major_openings.jump_raise"
+  },
   "jump_raise_after_overcall.weak": {
    "kind": "bool",
    "label": "Jump raise after overcall: weak",
@@ -811,6 +847,12 @@
   "jump_raise_after_overcall.inv": {
    "kind": "bool",
    "label": "Jump raise after overcall: invitational",
+   "level": 4,
+   "choice": "major_openings.jump_raise_after_overcall"
+  },
+  "jump_raise_after_overcall.force": {
+   "kind": "bool",
+   "label": "Jump raise after overcall: forcing",
    "level": 4,
    "choice": "major_openings.jump_raise_after_overcall"
   },
@@ -1003,6 +1045,24 @@
    "label": "1♣ NF0",
    "choice": "minor_openings.one_club_forcing"
   },
+  "one_club.nf2_4432_only": {
+   "kind": "bool",
+   "label": "1♣ NF2: 4-4-3-2 only"
+  },
+  "one_diamond.nf1": {
+   "kind": "bool",
+   "label": "1♦ NF1",
+   "desc": "The 1♦ NF2 box is one_diamond.nf2_4432_only (a misnomer: 1♦ has no 4-4-3-2 qualifier on the ACBL New card)"
+  },
+  "one_diamond.nf0": {
+   "kind": "bool",
+   "label": "1♦ NF0"
+  },
+  "one_club.one_diamond_response": {
+   "kind": "text",
+   "label": "1♣–1♦ response",
+   "desc": "What a 1♦ response to 1♣ shows (the New card's 1♦ line under 1♣)"
+  },
   "one_club.art_forcing": {
    "kind": "bool",
    "label": "1♣ artificial forcing"
@@ -1072,6 +1132,12 @@
    "level": 3,
    "choice": "minor_openings.jump_raise"
   },
+  "one_club.jump_raise.force": {
+   "kind": "bool",
+   "label": "1♣ jump raise: forcing",
+   "level": 4,
+   "choice": "minor_openings.jump_raise"
+  },
   "one_club.jump_raise_after_overcall.weak": {
    "kind": "bool",
    "label": "1♣ jump raise after overcall: weak",
@@ -1087,6 +1153,12 @@
   "one_club.jump_raise_after_overcall.inv": {
    "kind": "bool",
    "label": "1♣ jump raise after overcall: invitational",
+   "level": 4,
+   "choice": "minor_openings.jump_raise_after_overcall"
+  },
+  "one_club.jump_raise_after_overcall.force": {
+   "kind": "bool",
+   "label": "1♣ jump raise after overcall: forcing",
    "level": 4,
    "choice": "minor_openings.jump_raise_after_overcall"
   },
@@ -1613,6 +1685,11 @@
    "label": "2♣: responses / rebids (second line)",
    "note": true
   },
+  "two_clubs.steps_desc": {
+   "kind": "text",
+   "label": "2♣: steps",
+   "desc": "The steps shown in response (levels of HCP or control points)"
+  },
   "two_diamonds.description": {
    "kind": "text",
    "label": "2♦: describe",
@@ -1803,6 +1880,10 @@
    "aliases": [
     "other_conventions.gerber.non_nt_seq"
    ]
+  },
+  "gerber.notes": {
+   "kind": "text",
+   "label": "Gerber (4♣) notes"
   },
   "kickback.play": {
    "kind": "bool",
@@ -2744,6 +2825,14 @@
    "kind": "text",
    "label": "Carding exceptions"
   },
+  "primary_signals": {
+   "kind": "text",
+   "label": "Primary signals to partner's leads"
+  },
+  "signals_exceptions": {
+   "kind": "text",
+   "label": "Signal exceptions"
+  },
   "smith_echo_reverse": {
    "kind": "bool",
    "label": "Reverse Smith echo",
@@ -3068,6 +3157,11 @@
    "skill": "bidding_conventions/transfers_after_double",
    "level": 9
   },
+  "new_suit_notes": {
+   "kind": "text",
+   "label": "Vs takeout double: new suit notes",
+   "desc": "Where transfers start, or other new-suit agreements (\"Neg free bid\")"
+  },
   "jump_shift": {
    "kind": "enum",
    "label": "Vs takeout double: jump shift",
@@ -3131,6 +3225,10 @@
    "min": 0,
    "max": 25
   },
+  "two_nt_natural_majors": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a major is natural"
+  },
   "two_nt_raise_minors.play": {
    "kind": "bool",
    "label": "Vs takeout double: 2NT raise of a minor",
@@ -3170,6 +3268,10 @@
    "min": 0,
    "max": 25
   },
+  "two_nt_natural_minors": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a minor is natural"
+  },
   "notes": {
    "kind": "text",
    "label": "Vs takeout double notes (card write-in)",
@@ -3203,6 +3305,11 @@
   "two_nt_overcall": {
    "kind": "text",
    "label": "Vs preempts: 2NT overcall"
+  },
+  "two_nt_response": {
+   "kind": "text",
+   "label": "Vs preempts: 2NT response to partner's double",
+   "desc": "Lebensohl, Ingberman, natural, …"
   },
   "cuebid": {
    "kind": "text",
@@ -3384,6 +3491,15 @@
    ],
    "desc": "The card led, by its place in the holding: 1 the top card"
   },
+  "vs_suits.honors.varies": {
+   "kind": "bool",
+   "label": "Lead vs suits from AKx: varies"
+  },
+  "vs_suits.honors.varies_desc": {
+   "kind": "text",
+   "label": "Lead vs suits from AKx: how it varies",
+   "explains": "leads.vs_suits.honors.varies"
+  },
   "vs_nt.length.lead_choice_xx": {
    "kind": "int",
    "many": true,
@@ -3547,6 +3663,15 @@
     "leads.vs_nt.honors.lead_choice_QT9x"
    ],
    "desc": "The card led, by its place in the holding: 1 the top card"
+  },
+  "vs_nt.honors.varies": {
+   "kind": "bool",
+   "label": "Lead vs NT from AKxx: varies"
+  },
+  "vs_nt.honors.varies_desc": {
+   "kind": "text",
+   "label": "Lead vs NT from AKxx: how it varies",
+   "explains": "leads.vs_nt.honors.varies"
   },
   "vs_suits.length.third_fifth": {
    "kind": "bool",

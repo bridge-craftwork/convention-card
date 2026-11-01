@@ -153,6 +153,9 @@
 "minor_transfers.over_2nt_3s_clubs" = { kind = "bool", label = "2NT–3♠ transfer to clubs", level = 6, skill = "bidding_conventions/minor_suit_transfers" }
 "minor_transfers.over_2nt_4c_diamonds" = { kind = "bool", label = "2NT–4♣ transfer to diamonds", level = 6, skill = "bidding_conventions/minor_suit_transfers" }
 "two_nt_natural"           = { kind = "bool", label = "1NT–2NT natural (invitational)" }
+"two_d_natural"            = { kind = "bool", label = "1NT–2♦ natural" }
+"two_h_natural"            = { kind = "bool", label = "1NT–2♥ natural" }
+"two_s_natural"            = { kind = "bool", label = "1NT–2♠ natural" }
 "three_d_response"         = { kind = "enum", label = "1NT–3♦ response", options = ["natural", "majors", "minors", "splinter"] }
 "three_major_splinter"     = { kind = "bool", label = "1NT–3♥/3♠ splinter", level = 6 }
 "lebensohl.play"           = { kind = "bool", label = "Lebensohl over interference to 1NT", skill = "competitive_bidding/lebensohl", level = 5 }
@@ -165,11 +168,15 @@
 "two_nt.neg_dbl"           = { kind = "bool", label = "2NT: negative double", level = 6 }
 "two_nt.minor_slam_try"    = { kind = "bool", label = "Minor suit slam try after 2NT", level = 8 }
 "two_nt.notes"             = { kind = "text", label = "2NT notes", note = true }
+"two_nt.conventional"      = { kind = "bool", label = "2NT opening is conventional" }
+"two_nt.conventional_desc" = { kind = "text", label = "2NT opening: conventional meaning", explains = "notrump.two_nt.conventional" }
+"conventional_nt_openings" = { kind = "text", label = "Conventional NT openings" }
 "three_nt.range_min"       = { kind = "int", label = "3NT range: minimum", min = 15, max = 30, aliases = ["three_nt.range_min"] }
 "three_nt.range_max"       = { kind = "int", label = "3NT range: maximum", min = 15, max = 30, aliases = ["three_nt.range_max"] }
 "gambling_3nt.play"        = { kind = "bool", label = "Gambling 3NT", level = 6, skill = "bidding_conventions/gambling_3nt" }
 "gambling_3nt.description" = { kind = "text", label = "Gambling 3NT notes", explains = "notrump.gambling_3nt.play" }
 "responses.2d_other"       = { kind = "text", label = "2♦ response" }
+"responses.2c_other"       = { kind = "text", label = "2♣ response: other", desc = "1NT–2♣ when it is neither Stayman nor Puppet (the New card ticks its 2♣ Other box when this is filled)" }
 "responses.2h_other"       = { kind = "text", label = "2♥ response" }
 "responses.2s_other"       = { kind = "text", label = "2♠ response" }
 "responses.2nt_other"      = { kind = "text", label = "2NT response" }
@@ -209,9 +216,11 @@
 "jump_raise.weak"          = { kind = "bool", label = "Jump raise: weak", level = 4, choice = "major_openings.jump_raise" }
 "jump_raise.mixed"         = { kind = "bool", label = "Jump raise: mixed", level = 6, choice = "major_openings.jump_raise" }
 "jump_raise.inv"           = { kind = "bool", label = "Jump raise: invitational", level = 3, choice = "major_openings.jump_raise" }
+"jump_raise.force"         = { kind = "bool", label = "Jump raise: forcing", level = 4, choice = "major_openings.jump_raise" }
 "jump_raise_after_overcall.weak"  = { kind = "bool", label = "Jump raise after overcall: weak", level = 4, choice = "major_openings.jump_raise_after_overcall" }
 "jump_raise_after_overcall.mixed" = { kind = "bool", label = "Jump raise after overcall: mixed", level = 6, choice = "major_openings.jump_raise_after_overcall" }
 "jump_raise_after_overcall.inv"   = { kind = "bool", label = "Jump raise after overcall: invitational", level = 4, choice = "major_openings.jump_raise_after_overcall" }
+"jump_raise_after_overcall.force" = { kind = "bool", label = "Jump raise after overcall: forcing", level = 4, choice = "major_openings.jump_raise_after_overcall" }
 "jacoby_2nt.play"          = { kind = "bool", label = "Jacoby 2NT", skill = ["bidding_conventions/jacoby_2nt", "bidding_conventions/jacoby_2nt_splinters"], level = 4 }
 "jacoby_2nt.modified"      = { kind = "bool", label = "Modified Jacoby 2NT", skill = ["bidding_conventions/modified_jacoby_2nt", "bidding_conventions/jacoby_2nt_splinters"], level = 6 }
 "bergen_raises.play"       = { kind = "bool", label = "Bergen raises", skill = "bidding_conventions/bergen_raises", level = 5, choice = "major_openings.bergen" }
@@ -245,6 +254,10 @@
 "one_club.nf2"             = { kind = "bool", label = "1♣ NF2", choice = "minor_openings.one_club_forcing" }
 "one_club.nf1"             = { kind = "bool", label = "1♣ NF1", choice = "minor_openings.one_club_forcing" }
 "one_club.nf0"             = { kind = "bool", label = "1♣ NF0", choice = "minor_openings.one_club_forcing" }
+"one_club.nf2_4432_only"    = { kind = "bool", label = "1♣ NF2: 4-4-3-2 only" }
+"one_diamond.nf1"          = { kind = "bool", label = "1♦ NF1", desc = "The 1♦ NF2 box is one_diamond.nf2_4432_only (a misnomer: 1♦ has no 4-4-3-2 qualifier on the ACBL New card)" }
+"one_diamond.nf0"          = { kind = "bool", label = "1♦ NF0" }
+"one_club.one_diamond_response" = { kind = "text", label = "1♣–1♦ response", desc = "What a 1♦ response to 1♣ shows (the New card's 1♦ line under 1♣)" }
 "one_club.art_forcing"     = { kind = "bool", label = "1♣ artificial forcing" }
 "one_club.transfer_resp"   = { kind = "bool", label = "Transfer responses to 1♣", skill = "bidding_conventions/transfer_walsh", level = 9 }
 "one_club.one_nt_range_min" = { kind = "int", label = "1♣–1NT range: minimum", min = 0, max = 20 }
@@ -257,9 +270,11 @@
 "one_club.jump_raise.weak" = { kind = "bool", label = "1♣ jump raise: weak", level = 4, choice = "minor_openings.jump_raise" }
 "one_club.jump_raise.mixed" = { kind = "bool", label = "1♣ jump raise: mixed", level = 6, choice = "minor_openings.jump_raise" }
 "one_club.jump_raise.inv"  = { kind = "bool", label = "1♣ jump raise: invitational", level = 3, choice = "minor_openings.jump_raise" }
+"one_club.jump_raise.force" = { kind = "bool", label = "1♣ jump raise: forcing", level = 4, choice = "minor_openings.jump_raise" }
 "one_club.jump_raise_after_overcall.weak"  = { kind = "bool", label = "1♣ jump raise after overcall: weak", level = 4, choice = "minor_openings.jump_raise_after_overcall" }
 "one_club.jump_raise_after_overcall.mixed" = { kind = "bool", label = "1♣ jump raise after overcall: mixed", level = 6, choice = "minor_openings.jump_raise_after_overcall" }
 "one_club.jump_raise_after_overcall.inv"   = { kind = "bool", label = "1♣ jump raise after overcall: invitational", level = 4, choice = "minor_openings.jump_raise_after_overcall" }
+"one_club.jump_raise_after_overcall.force" = { kind = "bool", label = "1♣ jump raise after overcall: forcing", level = 4, choice = "minor_openings.jump_raise_after_overcall" }
 "one_diamond.min_length"   = { kind = "enum", label = "1♦ min length", options = ["2", "3", "4", "5"], default = "3" }
 "one_diamond.unbalanced"   = { kind = "bool", label = "1♦ unbalanced" }
 "one_diamond.nf2_4432_only" = { kind = "bool", label = "1♦ NF2 (4-4-3-2 only)" }
@@ -345,6 +360,7 @@
 "two_clubs.continuation_describe" = { kind = "text", label = "2♣: describe (second line)", note = true }
 "two_clubs.notes"          = { kind = "text", label = "2♣: responses / rebids", note = true }
 "two_clubs.continuation_response" = { kind = "text", label = "2♣: responses / rebids (second line)", note = true }
+"two_clubs.steps_desc"     = { kind = "text", label = "2♣: steps", desc = "The steps shown in response (levels of HCP or control points)" }
 "two_diamonds.description" = { kind = "text", label = "2♦: describe", note = true }
 "two_diamonds.notes"       = { kind = "text", label = "2♦: responses / rebids", note = true }
 "two_diamonds.two_nt_force" = { kind = "bool", label = "2♦: 2NT response forcing" }
@@ -382,6 +398,7 @@
 "gerber.directly_over_nt"  = { kind = "bool", label = "Gerber directly over NT", aliases = ["other_conventions.gerber.directly_over_nt"] }
 "gerber.over_nt_seq"       = { kind = "bool", label = "Gerber over NT sequence", aliases = ["other_conventions.gerber.over_nt_seq"] }
 "gerber.non_nt_seq"        = { kind = "bool", label = "Gerber in non-NT sequence", aliases = ["other_conventions.gerber.non_nt_seq"] }
+"gerber.notes"             = { kind = "text", label = "Gerber (4♣) notes" }
 "kickback.play"            = { kind = "bool", label = "Kickback", aliases = ["other_conventions.kickback.play"], skill = "bidding_conventions/kickback", level = 9 }
 "kickback.rkcb_1430"       = { kind = "bool", label = "Kickback 1430", skill = "bidding_conventions/kickback", level = 9, choice = "slam.kickback_responses" }
 "kickback.rkcb_0314"       = { kind = "bool", label = "Kickback 0314", skill = "bidding_conventions/kickback", level = 9, choice = "slam.kickback_responses" }
@@ -560,6 +577,8 @@
 "first_discard.other_nt"   = { kind = "text", label = "First discard: other, vs NT" }
 "first_discard.notes"      = { kind = "text", label = "First discard: notes", note = true }
 "exceptions"               = { kind = "text", label = "Carding exceptions" }
+"primary_signals"          = { kind = "text", label = "Primary signals to partner's leads" }
+"signals_exceptions"       = { kind = "text", label = "Signal exceptions" }
 "smith_echo_reverse"       = { kind = "bool", label = "Reverse Smith echo", skill = "defense/reverse_smith_echo", level = 8 }
 "exceptions_present"       = { kind = "bool", label = "Carding exceptions" }
 "exception_suits"          = { kind = "text", label = "Carding exceptions vs suits" }
@@ -628,6 +647,7 @@
 "new_suit_forcing_1lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 1-level", level = 4 }
 "new_suit_forcing_2lvl"    = { kind = "bool", label = "Vs takeout double: new suit forcing at the 2-level", level = 4 }
 "new_suit_forcing_tfr"     = { kind = "bool", label = "Vs takeout double: transfer responses", skill = "bidding_conventions/transfers_after_double", level = 9 }
+"new_suit_notes"           = { kind = "text", label = "Vs takeout double: new suit notes", desc = "Where transfers start, or other new-suit agreements (\"Neg free bid\")" }
 "jump_shift"               = { kind = "enum", label = "Vs takeout double: jump shift", options = ["weak", "mixed", "inv", "forcing", "fit"] }
 "redouble.ten_plus"        = { kind = "bool", label = "Vs takeout double: redouble shows 10+", level = 2 }
 "redouble.conv"            = { kind = "bool", label = "Vs takeout double: conventional redouble", level = 7 }
@@ -638,12 +658,14 @@
 "two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_majors" }
 "two_nt_raise_majors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a major, minimum", min = 0, max = 25 }
 "two_nt_raise_majors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a major, maximum", min = 0, max = 25 }
+"two_nt_natural_majors"    = { kind = "bool", label = "Vs takeout double: 2NT over a major is natural" }
 "two_nt_raise_minors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor", skill = "competitive_bidding/jordan_2nt", level = 6 }
 "two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a minor, minimum", min = 0, max = 25 }
 "two_nt_raise_minors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a minor, maximum", min = 0, max = 25 }
+"two_nt_natural_minors"    = { kind = "bool", label = "Vs takeout double: 2NT over a minor is natural" }
 "notes"                    = { kind = "text", label = "Vs takeout double notes (card write-in)", note = true }
 
 [vs_preempts]
@@ -652,6 +674,7 @@
 "takeout_double_penalty"   = { kind = "bool", label = "Vs preempts: double is penalty", level = 5, choice = "vs_preempts.double" }
 "conv_takeout"             = { kind = "text", label = "Vs preempts: conventional takeout" }
 "two_nt_overcall"          = { kind = "text", label = "Vs preempts: 2NT overcall" }
+"two_nt_response"          = { kind = "text", label = "Vs preempts: 2NT response to partner's double", desc = "Lebensohl, Ingberman, natural, …" }
 "cuebid"                   = { kind = "text", label = "Vs preempts: cuebid" }
 "jump_overcalls"           = { kind = "text", label = "Vs preempts: jump overcalls" }
 "notes"                    = { kind = "text", label = "Vs preempts notes (card write-in)", note = true }
@@ -675,6 +698,8 @@
 "vs_suits.honors.lead_choice_kjtx" = { kind = "int", many = true, label = "Lead vs suits from KJTx", min = 1, max = 4, aliases = ["leads.vs_suits.honors.lead_choice_KJTx"], desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_suits.honors.lead_choice_kt9x" = { kind = "int", many = true, label = "Lead vs suits from KT9x", min = 1, max = 4, aliases = ["leads.vs_suits.honors.lead_choice_KT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_suits.honors.lead_choice_qt9x" = { kind = "int", many = true, label = "Lead vs suits from QT9x", min = 1, max = 4, aliases = ["leads.vs_suits.honors.lead_choice_QT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_suits.honors.varies"   = { kind = "bool", label = "Lead vs suits from AKx: varies" }
+"vs_suits.honors.varies_desc" = { kind = "text", label = "Lead vs suits from AKx: how it varies", explains = "leads.vs_suits.honors.varies" }
 "vs_nt.length.lead_choice_xx" = { kind = "int", many = true, label = "Lead vs NT from xx", min = 1, max = 2, desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_nt.length.lead_choice_xxx" = { kind = "int", many = true, label = "Lead vs NT from xxx", min = 1, max = 3, desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_nt.length.lead_choice_xxxx" = { kind = "int", many = true, label = "Lead vs NT from xxxx", min = 1, max = 4, desc = "The card led, by its place in the holding: 1 the top card" }
@@ -691,6 +716,8 @@
 "vs_nt.honors.lead_choice_ajtx" = { kind = "int", many = true, label = "Lead vs NT from AJTx", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_AJTx"], desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_nt.honors.lead_choice_kt9x" = { kind = "int", many = true, label = "Lead vs NT from KT9x", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_KT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
 "vs_nt.honors.lead_choice_qt9x" = { kind = "int", many = true, label = "Lead vs NT from QT9x", min = 1, max = 4, aliases = ["leads.vs_nt.honors.lead_choice_QT9x"], desc = "The card led, by its place in the holding: 1 the top card" }
+"vs_nt.honors.varies"      = { kind = "bool", label = "Lead vs NT from AKxx: varies" }
+"vs_nt.honors.varies_desc" = { kind = "text", label = "Lead vs NT from AKxx: how it varies", explains = "leads.vs_nt.honors.varies" }
 "vs_suits.length.third_fifth" = { kind = "bool", label = "Length leads vs suits: 3rd/5th", skill = "defense/opening_leads", level = 4 }
 "vs_suits.length.third_low" = { kind = "bool", label = "Length leads vs suits: 3rd from even, low from odd", skill = "defense/opening_leads", level = 4 }
 "vs_suits.length.attitude" = { kind = "bool", label = "Length leads vs suits: attitude", skill = "defense/opening_leads", level = 4 }

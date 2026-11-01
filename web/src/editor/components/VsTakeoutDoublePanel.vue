@@ -27,6 +27,17 @@
     </div>
 
     <div class="vstd-row">
+      <span class="vstd-label">New suit notes</span>
+      <RichSuitField
+        :model-value="r('vs_to_double.new_suit_notes') || ''"
+        :editable="editable"
+        block
+        placeholder="e.g. transfers start at 1NT; neg free bid"
+        @update:modelValue="writeText('vs_to_double.new_suit_notes', $event)"
+      />
+    </div>
+
+    <div class="vstd-row">
       <span class="vstd-label">Jump shift</span>
       <span class="vstd-checks">
         <label
@@ -100,6 +111,15 @@
         <label class="vstd-check">
           <input
             type="checkbox"
+            :checked="!!r(row.natural)"
+            :disabled="!editable"
+            @change="t(row.natural, $event.target.checked)"
+          />
+          <span>Natural</span>
+        </label>
+        <label class="vstd-check">
+          <input
+            type="checkbox"
             :checked="!!r(`vs_to_double.${row.key}.play`)"
             :disabled="!editable"
             @change="t(`vs_to_double.${row.key}.play`, $event.target.checked)"
@@ -151,9 +171,10 @@ const JUMP_SHIFT_OPTIONS = [
   { value: 'fit',     label: 'Fit' }
 ]
 
+// Natural (balanced) and Raise are separate boxes on the ACBL card.
 const TWO_NT_ROWS = [
-  { key: 'two_nt_raise_minors', label: '♣/♦' },
-  { key: 'two_nt_raise_majors', label: '♥/♠' }
+  { key: 'two_nt_raise_minors', natural: 'vs_to_double.two_nt_natural_minors', label: '♣/♦' },
+  { key: 'two_nt_raise_majors', natural: 'vs_to_double.two_nt_natural_majors', label: '♥/♠' }
 ]
 
 const props = defineProps({

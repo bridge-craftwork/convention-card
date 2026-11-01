@@ -135,13 +135,28 @@ export const STRUCTURED_FIELDS = {
       ] },
     { label: '2NT 3♠ relay notes', cardPath: 'notrump.two_nt.three_s_desc',
       kind: 'text', placeholder: 'e.g. 3♥ = 4M minor, 4M = both minors' },
+    { label: '2NT opening is conventional', cardPath: 'notrump.two_nt.conventional', kind: 'boolean' },
+    { label: 'Conventional 2NT meaning', cardPath: 'notrump.two_nt.conventional_desc',
+      kind: 'text', placeholder: 'e.g. both minors, weak' },
     // ─── 3NT ───
     { label: '3NT range', kind: 'range',
       from: 'three_nt.range_min', to: 'three_nt.range_max' },
     { label: '3NT one suit (gambling)', cardPath: 'notrump.gambling_3nt.play', kind: 'boolean' },
     { label: '3NT one-suit notes', cardPath: 'notrump.gambling_3nt.description',
       kind: 'text', placeholder: 'e.g. solid minor, no outside A or K' },
+    { label: 'Conventional NT openings', cardPath: 'notrump.conventional_nt_openings',
+      kind: 'text', placeholder: 'e.g. 2NT = minors, 3NT = solid minor' },
     // ─── Responses (right column) ───
+    // Each of 2♦/2♥/2♠/2NT is Natural, Transfer or Other on the ACBL card.
+    { label: 'Natural responses', kind: 'inline_checks', column: 2,
+      paths: [
+        { label: '2♦',  cardPath: 'notrump.two_d_natural' },
+        { label: '2♥',  cardPath: 'notrump.two_h_natural' },
+        { label: '2♠',  cardPath: 'notrump.two_s_natural' },
+        { label: '2NT', cardPath: 'notrump.two_nt_natural' }
+      ] },
+    { label: '2♣ response (not Stayman)', cardPath: 'notrump.responses.2c_other', column: 2,
+      kind: 'text', placeholder: 'e.g. range ask, Keri' },
     { label: '2♦ response', cardPath: 'notrump.responses.2d_other', column: 2,
       kind: 'text', placeholder: 'e.g. transfer to ♥' },
     { label: '2♥ response', cardPath: 'notrump.responses.2h_other', column: 2,
@@ -181,12 +196,14 @@ export const STRUCTURED_FIELDS = {
     // ─── Raises (right column) ───
     { label: 'Jump raise', kind: 'inline_checks', column: 2,
       paths: [
+        { label: 'Forcing',       cardPath: 'major_openings.jump_raise.force' },
         { label: 'Weak',          cardPath: 'major_openings.jump_raise.weak' },
         { label: 'Mixed',         cardPath: 'major_openings.jump_raise.mixed' },
         { label: 'Invitational',  cardPath: 'major_openings.jump_raise.inv' }
       ] },
     { label: 'Jump raise (after overcall)', kind: 'inline_checks', column: 2,
       paths: [
+        { label: 'Forcing',       cardPath: 'major_openings.jump_raise_after_overcall.force' },
         { label: 'Weak',          cardPath: 'major_openings.jump_raise_after_overcall.weak' },
         { label: 'Mixed',         cardPath: 'major_openings.jump_raise_after_overcall.mixed' },
         { label: 'Invitational',  cardPath: 'major_openings.jump_raise_after_overcall.inv' }
@@ -206,6 +223,7 @@ export const STRUCTURED_FIELDS = {
       paths: [
         { label: 'Unbalanced',         cardPath: 'minor_openings.one_club.unbalanced' },
         { label: 'NF2',                cardPath: 'minor_openings.one_club.nf2' },
+        { label: 'NF2 (4432 only)',    cardPath: 'minor_openings.one_club.nf2_4432_only' },
         { label: 'NF1',                cardPath: 'minor_openings.one_club.nf1' },
         { label: 'NF0',                cardPath: 'minor_openings.one_club.nf0' },
         { label: 'Artificial forcing', cardPath: 'minor_openings.one_club.art_forcing' }
@@ -227,23 +245,31 @@ export const STRUCTURED_FIELDS = {
       ] },
     { label: '1♣ jump raise', kind: 'inline_checks',
       paths: [
+        { label: 'Forcing',      cardPath: 'minor_openings.one_club.jump_raise.force' },
         { label: 'Weak',         cardPath: 'minor_openings.one_club.jump_raise.weak' },
         { label: 'Mixed',        cardPath: 'minor_openings.one_club.jump_raise.mixed' },
         { label: 'Invitational', cardPath: 'minor_openings.one_club.jump_raise.inv' }
       ] },
     { label: '1♣ jump raise (after overcall)', kind: 'inline_checks',
       paths: [
+        { label: 'Forcing',      cardPath: 'minor_openings.one_club.jump_raise_after_overcall.force' },
         { label: 'Weak',         cardPath: 'minor_openings.one_club.jump_raise_after_overcall.weak' },
         { label: 'Mixed',        cardPath: 'minor_openings.one_club.jump_raise_after_overcall.mixed' },
         { label: 'Invitational', cardPath: 'minor_openings.one_club.jump_raise_after_overcall.inv' }
       ] },
+    // Last in the 1♣ column: 1♦ has no counterpart, so it would push the
+    // ranges and raises out of line with the 1♦ column's.
+    { label: '1♣–1♦ response', cardPath: 'minor_openings.one_club.one_diamond_response', kind: 'text',
+      placeholder: 'e.g. 4+ diamonds, could be 3' },
     // ─── 1♦ (right column) ───
     { label: '1♦ min length', cardPath: 'minor_openings.one_diamond.min_length', column: 2,
       kind: 'select', options: ['3', '4', '5'] },
     { label: '1♦ flags', kind: 'inline_checks', column: 2,
       paths: [
         { label: 'Unbalanced',         cardPath: 'minor_openings.one_diamond.unbalanced' },
-        { label: 'NF2 (4432 only)',    cardPath: 'minor_openings.one_diamond.nf2_4432_only' },
+        { label: 'NF2',                cardPath: 'minor_openings.one_diamond.nf2_4432_only' },
+        { label: 'NF1',                cardPath: 'minor_openings.one_diamond.nf1' },
+        { label: 'NF0',                cardPath: 'minor_openings.one_diamond.nf0' },
         { label: 'Artificial forcing', cardPath: 'minor_openings.one_diamond.art_forcing' }
       ] },
     // "Same as responses to 1♣" heads the 1♦ responses, as the ACBL card's
@@ -298,6 +324,8 @@ export const STRUCTURED_FIELDS = {
         { value: 'waiting',  label: 'Waiting' },
         { value: 'steps',    label: 'Steps' }
       ] },
+    { label: '2♣ steps', cardPath: 'two_level.two_clubs.steps_desc',
+      kind: 'text', placeholder: 'e.g. controls (A=2, K=1)' },
     { label: '2♣ → 2♥ response', cardPath: 'two_level.two_clubs.2h_response', kind: 'radio_inline',
       options: [
         { value: 'negative', label: 'Negative' },
@@ -414,6 +442,8 @@ export const STRUCTURED_FIELDS = {
         { label: 'Over NT sequence', cardPath: 'other_conventions.gerber.over_nt_seq' },
         { label: 'Non-NT sequence',  cardPath: 'other_conventions.gerber.non_nt_seq' }
       ] },
+    { label: 'Gerber notes', cardPath: 'slam.gerber.notes',
+      kind: 'text', placeholder: 'e.g. only directly over 1NT/2NT' },
     { label: '4NT notes', cardPath: 'other_conventions.blackwood.notes',
       kind: 'text', placeholder: 'e.g. 0314 if used for minor suit' },
     // Unset plays 5NT (the field's default); ticking a box says so outright

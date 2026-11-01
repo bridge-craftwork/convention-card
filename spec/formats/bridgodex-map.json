@@ -54,6 +54,13 @@
   "1c_min_len_nf_2": "minor_openings.one_club.nf2",
   "1c_min_len_nf_1": "minor_openings.one_club.nf1",
   "1c_min_len_nf_0": "minor_openings.one_club.nf0",
+  "1c_min_len_nf_2_4432": "minor_openings.one_club.nf2_4432_only",
+  "1c_1d": {
+   "text": "minor_openings.one_club.one_diamond_response"
+  },
+  "1d_min_len_nf_2": "minor_openings.one_diamond.nf2_4432_only",
+  "1d_min_len_nf_1": "minor_openings.one_diamond.nf1",
+  "1d_min_len_nf_0": "minor_openings.one_diamond.nf0",
   "1c_min_len_art_f": "minor_openings.one_club.art_forcing",
   "1c_1d_bypass_5": "minor_openings.bypass_5_plus",
   "1c_1nt_min": {
@@ -215,14 +222,20 @@
   },
   "2c_stayman": "notrump.stayman.forcing",
   "2c_puppet": "notrump.stayman.puppet",
+  "2c_other": {
+   "text": "notrump.responses.2c_other"
+  },
+  "2d_nat": "notrump.two_d_natural",
   "2d_tfr": "notrump.jacoby_transfers.play",
   "2d_other": {
    "text": "notrump.responses.2d_other"
   },
+  "2h_nat": "notrump.two_h_natural",
   "2h_tfr": "notrump.jacoby_transfers.play",
   "2h_other": {
    "text": "notrump.responses.2h_other"
   },
+  "2s_nat": "notrump.two_s_natural",
   "2s_tfr": "notrump.minor_transfers.two_s",
   "2s_other": {
    "text": "notrump.responses.2s_other"
@@ -270,6 +283,10 @@
   },
   "range_max": {
    "range": "notrump.two_nt.range_max"
+  },
+  "conv": "notrump.two_nt.conventional",
+  "conv_desc": {
+   "text": "notrump.two_nt.conventional_desc"
   },
   "puppet": "notrump.stayman.puppet_2nt",
   "3s": "notrump.two_nt.three_s",
@@ -339,6 +356,9 @@
    "set": {
     "two_level.two_clubs.2d_response": "steps"
    }
+  },
+  "2c_steps_desc": {
+   "text": "two_level.two_clubs.steps_desc"
   },
   "2c_2h_neg": {
    "set": {
@@ -453,6 +473,9 @@
   "gerber_directly_over_nt": "other_conventions.gerber.directly_over_nt",
   "gerber_over_nt_seq": "other_conventions.gerber.over_nt_seq",
   "gerber_over_non_nt_seq": "other_conventions.gerber.non_nt_seq",
+  "gerber_other": {
+   "text": "slam.gerber.notes"
+  },
   "4nt_blackwood": "slam.blackwood.play",
   "4nt_rkc_0314": {
    "set": {
@@ -667,6 +690,9 @@
  "vs_to_double": {
   "new_suit_forcing_2_lvl": "vs_to_double.new_suit_forcing_2lvl",
   "new_suit_forcing_transfer": "vs_to_double.new_suit_forcing_tfr",
+  "new_suit_forcing_transfer_desc": {
+   "text": "vs_to_double.new_suit_notes"
+  },
   "jump_shift_weak": {
    "set": {
     "vs_to_double.jump_shift": "weak"
@@ -692,12 +718,7 @@
   "redouble_conv_desc": {
    "text": "vs_to_double.redouble.conv_desc"
   },
-  "2nt_over_minors_nat": {
-   "set": {
-    "vs_to_double.two_nt_raise_minors.play": true
-   },
-   "export": false
-  },
+  "2nt_over_minors_nat": "vs_to_double.two_nt_natural_minors",
   "2nt_over_minors_raise": "vs_to_double.two_nt_raise_minors.play",
   "2nt_over_minors_min": {
    "range": "vs_to_double.two_nt_raise_minors.range_min"
@@ -705,12 +726,7 @@
   "2nt_over_minors_max": {
    "range": "vs_to_double.two_nt_raise_minors.range_max"
   },
-  "2nt_over_majors_nat": {
-   "set": {
-    "vs_to_double.two_nt_raise_majors.play": true
-   },
-   "export": false
-  },
+  "2nt_over_majors_nat": "vs_to_double.two_nt_natural_majors",
   "2nt_over_majors_raise": "vs_to_double.two_nt_raise_majors.play",
   "2nt_over_majors_min": {
    "range": "vs_to_double.two_nt_raise_majors.range_min"
@@ -731,6 +747,9 @@
   },
   "to_dbl_penalty": "vs_preempts.takeout_double_penalty",
   "2nt_lebensohl_resp": "vs_preempts.lebensohl_response",
+  "2nt_lebensohl_resp_desc": {
+   "text": "vs_preempts.two_nt_response"
+  },
   "cuebid": {
    "text": "vs_preempts.cuebid"
   },
@@ -790,7 +809,10 @@
   "first_discard_std": "carding.first_discard.standard",
   "first_discard_ud": "carding.first_discard.upside_down",
   "lavinthal": "carding.first_discard.lavinthal",
-  "odd_even": "carding.first_discard.odd_even"
+  "odd_even": "carding.first_discard.odd_even",
+  "exceptions": {
+   "text": "carding.signals_exceptions"
+  }
  },
  "leads_vs_suits": {
   "length_4th": "leads.vs_suits.length.fourth_best",
@@ -798,6 +820,10 @@
   "length_3rd_low": "leads.vs_suits.length.third_low",
   "attitude": "leads.vs_suits.length.attitude",
   "small_from_xx": "leads.vs_suits.length.small_from_xx",
+  "honor_leads_akx_varies": "leads.vs_suits.honors.varies",
+  "honor_leads_akx_varies_desc": {
+   "text": "leads.vs_suits.honors.varies_desc"
+  },
   "after_1st_trick": {
    "text": "leads.vs_suits.after_first_trick"
   },
@@ -811,6 +837,10 @@
   "length_3rd_low": "leads.vs_nt.length.third_low",
   "attitude": "leads.vs_nt.length.attitude",
   "second_from_xxxxn": "leads.vs_nt.length.second_from_4plus",
+  "honor_leads_akx_varies": "leads.vs_nt.honors.varies",
+  "honor_leads_akx_varies_desc": {
+   "text": "leads.vs_nt.honors.varies_desc"
+  },
   "after_1st_trick": {
    "text": "leads.vs_nt.after_first_trick"
   },
@@ -891,16 +921,8 @@
      "key": "1_no_trump.more"
     },
     {
-     "key": "1_no_trump.2c_other",
-     "label": "2♣: "
-    },
-    {
      "key": "1_no_trump.other",
      "label": "Other responses: "
-    },
-    {
-     "key": "2_no_trump.conv_desc",
-     "label": "2NT conventional: "
     },
     {
      "key": "2_no_trump.other",
@@ -938,10 +960,6 @@
      "label": "1♣: "
     },
     {
-     "key": "minors.1c_1d",
-     "label": "1♣–1♦: "
-    },
-    {
      "key": "minors.1d_more",
      "label": "1♦: "
     }
@@ -958,10 +976,6 @@
     {
      "key": "two_level.2c_range_desc",
      "label": "2♣ alternate: "
-    },
-    {
-     "key": "two_level.2c_steps_desc",
-     "label": "2♣ steps: "
     },
     {
      "key": "two_level.2d_desc",
@@ -1007,10 +1021,6 @@
    "lines": [
     {
      "key": "slams.other"
-    },
-    {
-     "key": "slams.gerber_other",
-     "label": "Gerber: "
     }
    ]
   },
@@ -1023,20 +1033,12 @@
      "label": "Redouble: "
     },
     {
-     "key": "vs_to_double.new_suit_forcing_transfer_desc",
-     "label": "Vs takeout double — transfers: "
-    },
-    {
      "key": "vs_to_double.other",
      "label": "Vs takeout double: "
     },
     {
      "key": "vs_preempts.2nt_overcall",
      "label": "Vs preempts — 2NT overcall: "
-    },
-    {
-     "key": "vs_preempts.2nt_lebensohl_resp_desc",
-     "label": "Vs preempts — Lebensohl: "
     },
     {
      "key": "vs_preempts.cuebid",
@@ -1115,32 +1117,18 @@
    "lines": [
     {
      "key": "carding.other"
-    },
-    {
-     "key": "signals.exceptions",
-     "label": "Signal exceptions: "
-    },
-    {
-     "key": "signals.other1",
-     "label": "First discard: "
-    },
-    {
-     "key": "signals.other2",
-     "label": "First discard: "
     }
    ]
   },
   {
-   "path": "notes.leads_notes",
-   "export_to": "other.more2",
+   "path": "carding.first_discard.notes",
+   "export_to": "signals.other1",
    "lines": [
     {
-     "key": "leads_vs_suits.honor_leads_akx_varies_desc",
-     "label": "vs suits, from AKx: "
+     "key": "signals.other1"
     },
     {
-     "key": "leads_vs_nt.honor_leads_akx_varies_desc",
-     "label": "vs NT, from AKxx: "
+     "key": "signals.other2"
     }
    ]
   },

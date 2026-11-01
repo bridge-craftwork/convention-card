@@ -45,6 +45,26 @@
         </label>
       </template>
     </div>
+    <div class="trump-row">
+      <span class="smith-label">Primary signals to</span>
+      <RichSuitField
+        :model-value="r('carding.primary_signals') || ''"
+        :editable="editable"
+        block
+        placeholder="e.g. attitude, count when attitude is clear"
+        @update:modelValue="writeFieldExternal('carding.primary_signals', $event)"
+      />
+    </div>
+    <div class="trump-row">
+      <span class="smith-label">Signal exceptions</span>
+      <RichSuitField
+        :model-value="r('carding.signals_exceptions') || ''"
+        :editable="editable"
+        block
+        placeholder="e.g. suit preference at trick one when dummy has a singleton"
+        @update:modelValue="writeFieldExternal('carding.signals_exceptions', $event)"
+      />
+    </div>
 
     <h4 class="panel-title">Smith echo + first discard</h4>
     <div class="smith-row">
@@ -64,6 +84,16 @@
         />
         {{ opt.label }}
       </label>
+    </div>
+    <div class="trump-row">
+      <span class="smith-label">First discard notes</span>
+      <RichSuitField
+        :model-value="r('carding.first_discard.notes') || ''"
+        :editable="editable"
+        block
+        placeholder="e.g. other methods; second discard is suit preference"
+        @update:modelValue="writeFieldExternal('carding.first_discard.notes', $event)"
+      />
     </div>
 
     <div class="smith-row">
