@@ -7,16 +7,31 @@
 import { planImport } from '../../../js/cardBundle.js'
 
 function defaultAsk({ name, ours, theirs }) {
-  return window.confirm(`“${name}” is already here.\n${ours} — last saved\n${theirs} — from the import file\n\nOK keeps yours; Cancel uses the imported one.`)
+  return window.confirm(`This file holds ${theirs !== 'no date' && ours !== 'no date' ? 'an older copy' : 'a copy'} of “${name}”.\n${ours} — “${name}”, last saved\n${theirs} — the file's copy\n\nOK keeps “${name}” as it is; Cancel replaces it with the file's copy.`)
 }
+
+// The answer to `ask`: 'keep', 'add' (as a new card) or 'replace'. A
+// boolean is read as before: true keeps.
+const choiceOf = a => (a === true || a === 'keep' ? 'keep' : a === 'add' ? 'add' : 'replace')
+
+// A card's settings under the name it already has.
+const named = (cardData, name) =>
+  cardData?.metadata ? { ...cardData, metadata: { ...cardData.metadata, name } } : cardData
 
 export const when = t => (t ? new Date(t).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : 'no date')
 
 /**
  * Merge `records` (from importCards) into `storage`'s cards.
- * `ask({ name, ours, theirs })` decides an older or undated import: it
- * resolves true to keep the card already here. `ours` and `theirs` are the
- * two last-saved times, formatted. Without it, the browser's confirm asks.
+ * `ask({ name, importedName, ours, theirs })` decides an older or undated
+ * import that matches a card already here (by its id, or its name). `name`
+ * is that card's name now, which is the one the person knows; `importedName`
+ * is the name the file's copy carries, which may be an old one. It resolves
+ * 'keep', 'add' (keep the card, and add the file's copy as a new card) or
+ * 'replace' (true/false: keep/replace). Replacing an older copy keeps the
+ * card's name: the person chose the file's settings, not its old name. A
+ * newer copy (replaced without asking) brings its own name. `ours` and
+ * `theirs` are the two last-saved times, formatted. Without `ask`, the
+ * browser's confirm asks.
  * Returns `{ added, replaced, same, keptOurs, lastId }` (card ids), a
  * one-line `summary`, and `matched`: what to tell the person about cards
  * that met ones already kept, or null when there is nothing to tell.
@@ -26,6 +41,7 @@ export async function mergeImported(records, storage, ask = defaultAsk) {
   const kept = await Promise.all(links.map(l => storage.load(l.card_id)))
   const plan = planImport(records, kept)
   const out = { added: [], replaced: [], same: [], keptOurs: [], lastId: null }
+  const askedAbout = new Set()
   let first = !kept.length
 
   for (const { card, action, target } of plan) {
@@ -44,12 +60,22 @@ export async function mergeImported(records, storage, ask = defaultAsk) {
       continue
     }
     if (action === 'ask') {
-      const keepOurs = await ask({ name, ours: when(target.updated_at), theirs: when(card.updatedAt) })
-      if (keepOurs) {
+      const ours = target.name || name
+      const choice = choiceOf(await ask({ name: ours, importedName: name, ours: when(target.updated_at), theirs: when(card.updatedAt) }))
+      askedAbout.add(target.id)
+      if (choice === 'keep') {
         out.keptOurs.push(target.id)
         out.lastId = target.id
         continue
       }
+      if (choice === 'add') {
+        const id = await storage.create({ ...fields, primary: false })
+        out.added.push(id)
+        out.lastId = id
+        continue
+      }
+      fields.name = ours
+      fields.cardData = named(fields.cardData, ours)
     }
     await storage.overwrite(target.id, fields)
     out.replaced.push(target.id)
@@ -60,12 +86,13 @@ export async function mergeImported(records, storage, ask = defaultAsk) {
   // without being asked (a newer copy replaced it, or it was the same).
   // New cards and cards they were asked about need no message.
   const nameOf = id => kept.find(k => k.id === id)?.name || records.find(r => r.id === id)?.name || 'a card'
+  const unasked = out.replaced.filter(id => !askedAbout.has(id))
   const lines = []
-  if (out.replaced.length) lines.push(`Replaced with the newer imported copy: ${out.replaced.map(nameOf).join(', ')}.`)
+  if (unasked.length) lines.push(`Replaced with the newer imported copy: ${unasked.map(nameOf).join(', ')}.`)
   if (out.same.length) lines.push(`Already up to date: ${out.same.map(nameOf).join(', ')}.`)
   out.matched = lines.join('\n') || null
   out.matchedGroups = [
-    out.replaced.length && { heading: 'Replaced with the newer imported copy:', items: out.replaced.map(nameOf) },
+    unasked.length && { heading: 'Replaced with the newer imported copy:', items: unasked.map(nameOf) },
     out.same.length && { heading: 'Already up to date:', items: out.same.map(nameOf) },
   ].filter(Boolean)
 
