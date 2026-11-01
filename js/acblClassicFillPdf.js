@@ -131,6 +131,10 @@ async function loadTemplateBytes(templateName = 'classic') {
 // several checkboxes is on). `play: path` reads the entry only while that
 // convention's switch is on (RKCB's style: the 1430 box is RKCB played
 // 1430), and an import that ticks the box turns the switch on.
+// `when: 'filled'` on a checkbox ticks it while its text field (`card`, or
+// any of `also`) is filled: the card's "Conv □ ____" boxes, where the box
+// says "see the line". An import can't turn a tick into text, so it
+// reports such a box rather than storing it.
 
 // Field mappings are built from the labelled debug PDF (Shift+click
 // Export from the editor). The "_N" suffixed names are auto-generated
@@ -175,6 +179,7 @@ const FIELD_MAP_CLASSIC = [
   { pdf: '2c',                 card: 'general.forcing_opening_2c', kind: 'check' },
   { pdf: 'Natural 2 Bids',     card: 'general.forcing_opening_natural_2', kind: 'check' },
   { pdf: 'undefined_4',        card: 'general.forcing_opening_other', kind: 'text' },
+  { pdf: 'Other',              card: 'general.forcing_opening_other', kind: 'check', when: 'filled' },
 
   // ─── NOTRUMP OPENING BIDS ───
   { pdf: '5card Major common', card: 'notrump.one_nt.five_card_major', kind: 'check', value: ['sometimes', 'always'] },
@@ -222,6 +227,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Jacoby',          card: 'notrump.jacoby_transfers.over_2nt', kind: 'check' },
   { pdf: 'Texas',           card: 'notrump.texas.over_2nt', kind: 'check' },
   { pdf: 'undefined_6',     card: 'notrump.two_nt.three_s_desc', kind: 'text' },
+  // The 3NT box's line: what a 3NT opening is (as the New card's 3NT.t.4).
+  { pdf: '3NT',             card: 'notrump.gambling_3nt.description', kind: 'text' },
 
   // ─── 3NT ───
   { pdf: 'to_7',         card: 'three_nt.range_min', kind: 'text' },
@@ -249,7 +256,9 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Other_5',           card: 'major_openings.art_raises_other', kind: 'text' },
   { pdf: '1NT  Forcing',      card: 'major_openings.one_nt_response.forcing',      kind: 'check' },
   { pdf: 'Semiforcing',       card: 'major_openings.one_nt_response.semi_forcing', kind: 'check' },
-  { pdf: '2NT Forcing',       card: 'major_openings.two_nt_response_forcing', kind: 'check' },
+  // The Major column's 2NT box is '2NT  Forcing' (two spaces); '2NT Forcing'
+  // (one) is the Minor column's.
+  { pdf: '2NT  Forcing',      card: 'major_openings.two_nt_response_forcing', kind: 'check' },
   { pdf: 'Inv_7',             card: 'major_openings.two_nt_response_inv', kind: 'check' },
   { pdf: 'to_8',              card: 'major_openings.two_nt_response_range_min', kind: 'text' },
   { pdf: 'undefined_10',      card: 'major_openings.two_nt_response_range_max', kind: 'text' },
@@ -280,6 +289,9 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Inv_6',                  card: 'minor_openings.one_club.jump_raise_after_overcall.inv',  kind: 'check' },
   { pdf: 'Weak_7',                 card: 'minor_openings.one_club.jump_raise_after_overcall.weak', kind: 'check' },
   { pdf: 'Forcing Raise JS in other minor', card: 'minor_openings.inverted_minors.play', kind: 'check' },
+  // The Minor column's "2NT Forcing □ Inv. □": the 1m–2NT response.
+  { pdf: '2NT Forcing',            card: 'minor_openings.two_nt_response', kind: 'check', value: 'game_forcing' },
+  { pdf: 'Inv_8',                  card: 'minor_openings.two_nt_response', kind: 'check', value: 'invitational' },
   // "Single raise" on ACBL is a single checkbox indicating you play one.
   // Our data has three booleans (nf/inv/gf); check the ACBL box if any are set.
   { pdf: 'Single raise', card: 'minor_openings.one_club.single_raise.nf',  kind: 'check' },
@@ -424,12 +436,15 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'NOTRUMP OVERCALLS', card: 'nt_overcalls.direct.range_min', kind: 'text' },
   { pdf: 'undefined',         card: 'nt_overcalls.direct.range_max', kind: 'text' },
   { pdf: 'Systems on',        card: 'nt_overcalls.direct.systems_on', kind: 'check' },
-  { pdf: 'Conv',              card: 'nt_overcalls.direct.conv_text',  kind: 'text' },
+  // 'Conv' is the checkbox; 'to' is the line beside it.
+  { pdf: 'Conv',              card: 'nt_overcalls.direct.conv_text',  kind: 'check', when: 'filled' },
+  { pdf: 'to',                card: 'nt_overcalls.direct.conv_text',  kind: 'text' },
   { pdf: 'to_2',              card: 'nt_overcalls.balance.range_min', kind: 'text' },
   { pdf: 'undefined_2',       card: 'nt_overcalls.balance.range_max', kind: 'text' },
   { pdf: 'Jump to 2NT 2 Lowest', card: 'nt_overcalls.jump_2nt_lowest_unbid', kind: 'check' },
   { pdf: 'Minors',               card: 'nt_overcalls.jump_2nt_minors',       kind: 'check' },
   { pdf: 'undefined_3',          card: 'nt_overcalls.balance.conv_text',     kind: 'text' },
+  { pdf: 'Conv_2',               card: 'nt_overcalls.balance.conv_text',     kind: 'check', when: 'filled' },
 
   // ─── DEFENSE VS NOTRUMP ───
   // Left column (vs strong) + right column (vs weak)
@@ -492,8 +507,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Lavinthal vs NT',     card: 'carding.first_discard.lavinthal_nt',    kind: 'check' },
   { pdf: 'odd/even vs Suits',   card: 'carding.first_discard.odd_even_suits',  kind: 'check' },
   { pdf: 'odd/even vs NT',      card: 'carding.first_discard.odd_even_nt',     kind: 'check' },
-  { pdf: 'other vs Suits',      card: 'carding.first_discard.other_suits',     kind: 'check' },
-  { pdf: 'other vs NT',         card: 'carding.first_discard.other_nt',        kind: 'check' },
+  { pdf: 'other vs Suits',      card: 'carding.first_discard.other_suits',     kind: 'check', when: 'filled' },
+  { pdf: 'other vs NT',         card: 'carding.first_discard.other_nt',        kind: 'check', when: 'filled' },
   { pdf: 'OddEven',             card: 'carding.first_discard.notes',           kind: 'text' },
 
   // ─── OTHER CARDING ───
@@ -595,7 +610,10 @@ const FIELD_MAP_NEW = [
   { pdf: '1NT.c.27', card: 'notrump.dbl.penalty',      kind: 'check' },
   { pdf: '1NT.t.28', card: 'notrump.one_nt_alt.range_min', kind: 'text' },
   { pdf: '1NT.t.29', card: 'notrump.one_nt_alt.range_max', kind: 'text' },
-  { pdf: '1NT.c.30', card: 'notrump.one_nt_alt.same_responses', kind: 'check' },
+  // Same Resp: Y □ N □. N is "not the same", so both boxes carry a value.
+  { pdf: '1NT.c.30', card: 'notrump.one_nt_alt.same_responses', kind: 'check', value: true },
+  { pdf: '1NT.c.31', card: 'notrump.one_nt_alt.same_responses', kind: 'check', value: false },
+  { pdf: '1NT.t.36', card: 'notrump.notes', kind: 'text' },
   { pdf: '1NT.t.32', card: 'notrump.responses.3c',     kind: 'text' },
   { pdf: '1NT.t.33', card: 'notrump.responses.3d',     kind: 'text' },
   { pdf: '1NT.t.34', card: 'notrump.responses.3h',     kind: 'text' },
@@ -675,6 +693,7 @@ const FIELD_MAP_NEW = [
   { pdf: '1D.c.1', card: 'minor_openings.one_diamond.min_length', kind: 'check', value: '5' },
   { pdf: '1D.c.2', card: 'minor_openings.one_diamond.min_length', kind: 'check', value: '4' },
   { pdf: '1D.c.3', card: 'minor_openings.one_diamond.min_length', kind: 'check', value: '3' },
+  { pdf: '1D.c.4', card: 'minor_openings.one_diamond.unbalanced', kind: 'check' },
   { pdf: '1D.c.5', card: 'minor_openings.one_diamond.nf2_4432_only', kind: 'check' },
   { pdf: '1D.c.8', card: 'minor_openings.one_diamond.art_forcing',  kind: 'check' },
   { pdf: '1D.c.10', card: 'minor_openings.one_diamond.same_as_1c', kind: 'check' },
@@ -752,12 +771,14 @@ const FIELD_MAP_NEW = [
   { pdf: 'OC.c.6',  card: 'overcalls.jump', kind: 'check', value: 'weak' },
   { pdf: 'OC.c.7',  card: 'overcalls.jump', kind: 'check', value: 'intermediate' },
   { pdf: 'OC.c.8',  card: 'overcalls.jump', kind: 'check', value: 'strong' },
+  { pdf: 'OC.c.9',  card: 'overcalls.conv_text', kind: 'check', when: 'filled' },
   { pdf: 'OC.t.10', card: 'overcalls.conv_text', kind: 'text' },
   { pdf: 'OC.c.11', card: 'overcalls.responses.new_suit', kind: 'check', value: 'forcing' },
   { pdf: 'OC.c.12', card: 'overcalls.responses.new_suit', kind: 'check', value: 'nf_constructive' },
   { pdf: 'OC.c.13', card: 'overcalls.responses.new_suit', kind: 'check', value: 'nf' },
   { pdf: 'OC.c.14', card: 'overcalls.responses.new_suit', kind: 'check', value: 'transfer' },
   { pdf: 'OC.c.15', card: 'overcalls.responses.jump_raise', kind: 'check', value: 'weak' },
+  { pdf: 'OC.c.16', card: 'overcalls.responses.jump_raise', kind: 'check', value: 'mixed' },
   { pdf: 'OC.c.17', card: 'overcalls.responses.jump_raise', kind: 'check', value: 'invitational' },
   { pdf: 'OC.t.18', card: 'overcalls.responses.cuebids_text', kind: 'text' },
   { pdf: 'OC.c.19', card: 'overcalls.responses.support_cuebid', kind: 'check' },
@@ -770,6 +791,7 @@ const FIELD_MAP_NEW = [
   { pdf: 'NTO.t.4',  card: 'nt_overcalls.balance.range_min', kind: 'text' },
   { pdf: 'NTO.t.5',  card: 'nt_overcalls.balance.range_max', kind: 'text' },
   { pdf: 'NTO.c.6',  card: 'nt_overcalls.balance.systems_on', kind: 'check' },
+  { pdf: 'NTO.c.7',  card: 'nt_overcalls.conv_text', kind: 'check', when: 'filled' },
   { pdf: 'NTO.t.8',  card: 'nt_overcalls.conv_text', kind: 'text' },
   { pdf: 'NTO.c.9',  card: 'nt_overcalls.jump_2nt_lowest_unbid', kind: 'check' },
   { pdf: 'NTO.t.10', card: 'nt_overcalls.notes', kind: 'text' },
@@ -880,6 +902,9 @@ const FIELD_MAP_NEW = [
   { pdf: 'SI.c.10', card: 'carding.first_discard.upside_down',     kind: 'check' },
   { pdf: 'SI.c.11', card: 'carding.first_discard.lavinthal',       kind: 'check' },
   { pdf: 'SI.c.12', card: 'carding.first_discard.odd_even',        kind: 'check' },
+  { pdf: 'SI.c.13', card: 'carding.first_discard.other_suits',     kind: 'check', when: 'filled', also: ['carding.first_discard.other_nt'] },
+  // The lines under the first-discard row: "Other" described, and signal notes.
+  { pdf: 'SI.t.14', card: 'carding.first_discard.notes',           kind: 'text' },
 
   // ─── Leads vs Suits (LS) ───
   { pdf: 'LS.c.1', card: 'leads.vs_suits.length.fourth_best',   kind: 'check' },
@@ -2147,6 +2172,13 @@ function sanitizeForWinAnsi(str) {
 /** The card's value for a map entry: none while its convention (`play`) is off. */
 function entryValue(entry, cardData) {
   if (entry.play && readPath(cardData, entry.play) !== true) return undefined
+  if (entry.when === 'filled') {
+    const filled = [entry.card, ...(entry.also || [])].some(p => {
+      const v = readPath(cardData, p)
+      return v != null && v !== false && String(v).trim() !== ''
+    })
+    return filled || undefined
+  }
   return readPath(cardData, entry.card)
 }
 

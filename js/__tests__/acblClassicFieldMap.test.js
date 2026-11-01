@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest'
 import fs from 'fs'
 import path from 'path'
 import { PDFDocument, PDFCheckBox } from 'pdf-lib'
+import { readCardFromPdf } from '../acblPdfImport.js'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
 
@@ -14,10 +15,10 @@ const ROOT = path.resolve(__dirname, '../..')
 const checked = doc => doc.getForm().getFields()
   .filter(f => f instanceof PDFCheckBox && f.isChecked()).map(f => f.getName())
 
-async function ticked(card_data) {
-  const blank = await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data: {} }, 'classic'))
+async function ticked(card_data, template = 'classic') {
+  const blank = await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data: {} }, template))
   const was = new Set(checked(blank))
-  const doc = await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data }, 'classic'))
+  const doc = await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data }, template))
   return checked(doc).filter(n => !was.has(n))
 }
 
@@ -60,4 +61,51 @@ describe('ACBL Classic field map', () => {
       expect(shared).toEqual([])
     }
   })
+
+  // Group A of the unfilled-box audit: boxes whose card field already existed.
+  it.each([
+    ['classic', 'major 1M-2NT forcing', '2NT  Forcing', { major_openings: { two_nt_response_forcing: true } }],
+    ['classic', 'minor 1m-2NT game forcing', '2NT Forcing', { minor_openings: { two_nt_response: 'game_forcing' } }],
+    ['classic', 'minor 1m-2NT invitational', 'Inv_8', { minor_openings: { two_nt_response: 'invitational' } }],
+    ['classic', 'direct NT overcall Conv text', 'Conv', { nt_overcalls: { direct: { conv_text: 'Sandwich' } } }],
+    ['classic', 'balancing NT overcall Conv text', 'Conv_2', { nt_overcalls: { balance: { conv_text: 'Two-suiter' } } }],
+    ['classic', 'forcing opening Other text', 'Other', { general: { forcing_opening_other: '1D' } }],
+    ['new', '1D unbalanced', '1D.c.4', { minor_openings: { one_diamond: { unbalanced: true } } }],
+    ['new', 'overcall jump raise mixed', 'OC.c.16', { overcalls: { responses: { jump_raise: 'mixed' } } }],
+    ['new', 'overcalls Conv text', 'OC.c.9', { overcalls: { conv_text: 'Michaels-ish jumps' } }],
+    ['new', 'NT overcalls Conv text', 'NTO.c.7', { nt_overcalls: { conv_text: 'Sandwich' } }],
+    ['new', 'first discard other, vs NT only', 'SI.c.13', { carding: { first_discard: { other_nt: 'Revolving' } } }],
+    ['new', 'alternate 1NT: same responses', '1NT.c.30', { notrump: { one_nt_alt: { same_responses: true } } }],
+    ['new', 'alternate 1NT: different responses', '1NT.c.31', { notrump: { one_nt_alt: { same_responses: false } } }],
+  ])('%s: %s ticks %s only', async (template, _label, box, card_data) => {
+    expect(await ticked(card_data, template)).toEqual([box])
+  })
+
+  it.each([
+    ['classic', 'to', { nt_overcalls: { direct: { conv_text: 'Sandwich' } } }, 'Sandwich'],
+    ['classic', '3NT', { notrump: { gambling_3nt: { description: 'Solid minor' } } }, 'Solid minor'],
+    ['new', '1NT.t.36', { notrump: { notes: 'Puppet over 2C' } }, 'Puppet over 2C'],
+    ['new', 'SI.t.14', { carding: { first_discard: { notes: 'Suit preference on 2nd discard' } } }, 'Suit preference on 2nd discard'],
+  ])('%s: %s carries the text', async (template, box, card_data, text) => {
+    const doc = await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data }, template))
+    expect(doc.getForm().getTextField(box).getText()).toBe(text)
+  })
+
+  it('reads Same Resp: N back as false, a boolean', async () => {
+    const bytes = await renderAcblPdfBytes({ name: 'x', card_data: { notrump: { one_nt_alt: { same_responses: true } } } }, 'new')
+    const pdf = await PDFDocument.load(bytes)
+    pdf.getForm().getCheckBox('1NT.c.30').uncheck()
+    pdf.getForm().getCheckBox('1NT.c.31').check()
+    const back = await readCardFromPdf(await pdf.save({ updateFieldAppearances: false }))
+    expect(back.card_data.notrump.one_nt_alt.same_responses).toBe(false)
+  })
+
+  it('reports a Conv box ticked with no text beside it, and stores nothing', async () => {
+    const pdf = await PDFDocument.load(await renderAcblPdfBytes({ name: 'x', card_data: {} }, 'new'))
+    pdf.getForm().getCheckBox('OC.c.9').check()
+    const back = await readCardFromPdf(await pdf.save({ updateFieldAppearances: false }))
+    expect(back.card_data.overcalls?.conv_text).toBeUndefined()
+    expect(back.report.skipped.map(s => s.box)).toContain('OC.c.9')
+  })
 })
+
