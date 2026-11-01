@@ -8,7 +8,8 @@
 #   "key" = "path"
 #       Ticked: the yes/no field is true. Export ticks it when the field is true.
 #   "key" = { set = { "path" = value, ... } }
-#       Ticked: these values. Export ticks it when they all hold.
+#       Ticked: these values. Export ticks it when they all hold. A value may
+#       be a list, [a, b]: the box stands for any of them; ticked, it imports a.
 #
 # [fields] — the text slots:
 #   "key" = "path"
@@ -34,6 +35,15 @@
 # Export starts from the BBO card kept in the card (`_bbo_raw`), so slots and
 # boxes this map does not cover go back as they came, and a slot keeps its
 # text unless its fields have changed since the import.
+#
+# Every slot BBO's card has is in spec/formats/bbo-slots.toml, and
+# docs/bbo-field-sheets/ shows where each sits on the card. Go by the words
+# printed beside a box, not its id: BBO's ids for the Drury boxes are swapped
+# (druryFit is the box printed "2-Way", drury2Way the one printed "Fit").
+#
+# [left_out] — slots left out on purpose, each with why. They go back to
+# BBO as they came. js/__tests__/bboSlots.test.js holds every slot of BBO's
+# card to be in this map or here.
 
 [conventions]
 # Slam / Blackwood
@@ -45,16 +55,25 @@
 "depo"      = "slam.depo"
 "ropi"      = "slam.ropi"
 # General / forcing openings
-"2over1GF" = "major_openings.two_over_one.play"
-"F1C"      = "general.forcing_opening_1c"
-"F2C"      = "general.forcing_opening_2c"
+"2over1GF"  = "major_openings.two_over_one.play"
+"2over1GFR" = "major_openings.two_over_one.game_forcing_except"
+"F1C"       = "general.forcing_opening_1c"
+"F2C"       = "general.forcing_opening_2c"
+"F2B"       = "general.forcing_opening_natural_2"
+# Very light
+"VLOpen"  = "general.very_light.openings"
+"VL3rd"   = "general.very_light.third_hand"
+"VLOcall" = "general.very_light.overcalls"
+"VLPre"   = "general.very_light.preempts"
 # Major openings
 "major12-4"      = { set = { "major_openings.min_length_1st_2nd" = 4 } }
 "major12-5"      = { set = { "major_openings.min_length_1st_2nd" = 5 } }
 "major34-4"      = { set = { "major_openings.min_length_3rd_4th" = 4 } }
 "major34-5"      = { set = { "major_openings.min_length_3rd_4th" = 5 } }
+"major2RaiseF"   = "major_openings.jump_raise.force"
 "major2RaiseW"   = "major_openings.jump_raise.weak"
 "major2RaiseI"   = "major_openings.jump_raise.inv"
+"majorO2RaiseF"  = "major_openings.jump_raise_after_overcall.force"
 "majorO2RaiseW"  = "major_openings.jump_raise_after_overcall.weak"
 "majorO2RaiseI"  = "major_openings.jump_raise_after_overcall.inv"
 "major2NTRaise"  = "major_openings.jacoby_2nt.play"
@@ -62,31 +81,49 @@
 "majorSplinter"  = "major_openings.splinters.play"
 "major1NTF"      = "major_openings.one_nt_response.forcing"
 "major1NTSF"     = "major_openings.one_nt_response.semi_forcing"
+"major2NTF"      = "major_openings.two_nt_response_forcing"
+"major2NTI"      = "major_openings.two_nt_response_inv"
 "drury"          = "major_openings.drury.play"
 "druryRev"       = { set = { "major_openings.drury.play" = true, "major_openings.drury.reverse" = true } }
-"drury2W"        = { set = { "major_openings.drury.play" = true, "major_openings.drury.two_way" = true } }
+# BBO's ids are swapped: druryFit is printed "2-Way", drury2Way "Fit".
+"druryFit"       = { set = { "major_openings.drury.play" = true, "major_openings.drury.two_d" = true } }
+"drury2Way"      = { set = { "major_openings.drury.play" = true, "major_openings.drury.fit" = true } }
 # Minor openings
 "minorC3"          = { set = { "minor_openings.one_club.min_length" = 3 } }
 "minorC4"          = { set = { "minor_openings.one_club.min_length" = 4 } }
-"minorC5"          = { set = { "minor_openings.one_club.min_length" = 5 } }
+"minorC0"          = "minor_openings.one_club.nf0"
+"minorCC"          = "minor_openings.one_club.art_forcing"
 "minorD3"          = { set = { "minor_openings.one_diamond.min_length" = 3 } }
 "minorD4"          = { set = { "minor_openings.one_diamond.min_length" = 4 } }
-"minorD5"          = { set = { "minor_openings.one_diamond.min_length" = 5 } }
+"minorD0"          = "minor_openings.one_diamond.nf0"
+"minorDC"          = "minor_openings.one_diamond.art_forcing"
+"minor2RaiseF"     = "minor_openings.one_club.jump_raise.force"
 "minor2RaiseW"     = "minor_openings.one_club.jump_raise.weak"
 "minor2RaiseI"     = "minor_openings.one_club.jump_raise.inv"
+"minorO2RaiseF"    = "minor_openings.one_club.jump_raise_after_overcall.force"
 "minorO2RaiseW"    = "minor_openings.one_club.jump_raise_after_overcall.weak"
 "minorO2RaiseI"    = "minor_openings.one_club.jump_raise_after_overcall.inv"
 "minorSingleRaise" = "minor_openings.one_club.single_raise.nf"
-"minorInvForcing"  = "minor_openings.inverted_minors.play"
+"minor2NTF"        = { set = { "minor_openings.two_nt_response" = "game_forcing" } }
+"minor2NTI"        = { set = { "minor_openings.two_nt_response" = "invitational" } }
 "bypassDs"         = "minor_openings.bypass_5_plus"
 # 2♣ and weak twos
 "2CStrong"     = { set = { "two_level.two_clubs.meaning" = "strong" } }
-"2CVeryStrong" = { set = { "two_level.two_clubs.meaning" = "very_strong" } }
+"2COther"      = { set = { "two_level.two_clubs.meaning" = ["natural", "conventional"] } }
 "2DWaiting"    = { set = { "two_level.two_clubs.2d_response" = "waiting" } }
 "2DNeg"        = { set = { "two_level.two_clubs.2d_response" = "negative" } }
 "2DWeak"       = { set = { "two_level.two_diamonds.meaning" = "weak" } }
+"2DInt"        = { set = { "two_level.two_diamonds.meaning" = "intermediate" } }
+"2DStrong"     = { set = { "two_level.two_diamonds.meaning" = "strong" } }
+"2DConv"       = { set = { "two_level.two_diamonds.meaning" = "conventional" } }
 "2HWeak"       = { set = { "two_level.two_hearts.meaning" = "weak" } }
+"2HInt"        = { set = { "two_level.two_hearts.meaning" = "intermediate" } }
+"2HStrong"     = { set = { "two_level.two_hearts.meaning" = "strong" } }
+"2HConv"       = { set = { "two_level.two_hearts.meaning" = "conventional" } }
 "2SWeak"       = { set = { "two_level.two_spades.meaning" = "weak" } }
+"2SInt"        = { set = { "two_level.two_spades.meaning" = "intermediate" } }
+"2SStrong"     = { set = { "two_level.two_spades.meaning" = "strong" } }
+"2SConv"       = { set = { "two_level.two_spades.meaning" = "conventional" } }
 "2D2NT"        = "two_level.two_diamonds.two_nt_force"
 "2H2NT"        = "two_level.two_hearts.two_nt_force"
 "2S2NT"        = "two_level.two_spades.two_nt_force"
@@ -120,10 +157,17 @@
 "dblMaximal"    = "doubles.maximal"
 "dblSupport"    = "doubles.support.play"
 "rdblSupport"   = "doubles.support.rdbl"
+"dblPenalty"    = "doubles.after_overcall_penalty"
+"dblCards"      = "doubles.card_showing"
+"dblTO"         = "doubles.min_offshape_to"
 # Overcalls
 "ocallNSF" = { set = { "overcalls.responses.new_suit" = "forcing" } }
 "ocallNSC" = { set = { "overcalls.responses.new_suit" = "nf_constructive" } }
+"ocallNSNF" = { set = { "overcalls.responses.new_suit" = "nf" } }
+"ocallJRI" = { set = { "overcalls.responses.jump_raise" = "invitational" } }
 "ocallJRW" = { set = { "overcalls.responses.jump_raise" = "weak" } }
+"ocall4Cards" = "overcalls.often_4_cards"
+"ocallLight"  = "overcalls.very_light"
 "jOcallW"  = { set = { "overcalls.jump" = "weak" } }
 "jOcallI"  = { set = { "overcalls.jump" = "intermediate" } }
 "jOcallS"  = { set = { "overcalls.jump" = "strong" } }
@@ -131,25 +175,40 @@
 "preS"  = { set = { "preempts.three_level_style" = "sound" } }
 "preL"  = { set = { "preempts.three_level_style" = "light" } }
 "preVL" = { set = { "preempts.three_level_style" = "very_light" } }
-# Direct cuebids (Michaels)
+# Direct cuebids: natural, strong takeout ("other" on the card), Michaels
+"cueMinorN" = "direct_cuebids.nat_minors_natural"
+"cueMajorN" = "direct_cuebids.nat_majors_natural"
+"cueMinorS" = "direct_cuebids.nat_minors_other"
+"cueMajorS" = "direct_cuebids.nat_majors_other"
 "cueMinorM" = "direct_cuebids.nat_minors_michaels"
 "cueMajorM" = "direct_cuebids.nat_majors_michaels"
 # NT overcalls
 "systemOn"       = "nt_overcalls.direct.systems_on"
-"systemOnB"      = "nt_overcalls.balance.systems_on"
 "2NTOcallLowest" = "nt_overcalls.jump_2nt_lowest_unbid"
+"2NTOcallMinors" = "nt_overcalls.jump_2nt_minors"
 # Vs takeout double
 "vsTONSF1"     = "vs_to_double.new_suit_forcing_1lvl"
 "vsTONSF2"     = "vs_to_double.new_suit_forcing_2lvl"
 "vsTORdbl"     = "vs_to_double.redouble.ten_plus"
 "vsTOMajorsLP" = "vs_to_double.two_nt_raise_majors.limit_plus"
+"vsTOMajorsL"  = "vs_to_double.two_nt_raise_majors.limit"
+"vsTOMajorsW"  = "vs_to_double.two_nt_raise_majors.weak"
 "vsTOMinorsLP" = "vs_to_double.two_nt_raise_minors.limit_plus"
+"vsTOMinorsL"  = "vs_to_double.two_nt_raise_minors.limit"
+"vsTOMinorsW"  = "vs_to_double.two_nt_raise_minors.weak"
 # Vs preempts
 "vsPreTO"  = "vs_preempts.takeout_double"
+"vsPrePen" = "vs_preempts.takeout_double_penalty"
 "vsPreLeb" = "vs_preempts.lebensohl_response"
 # Leads and carding
 "4thSuits"   = "leads.vs_suits.length.fourth_best"
 "4thNT"      = "leads.vs_nt.length.fourth_best"
+"35thSuits"  = "leads.vs_suits.length.third_fifth"
+"35thNT"     = "leads.vs_nt.length.third_fifth"
+"attitudeNT" = "leads.vs_nt.length.attitude"
+"SCASuits"   = "carding.suits.standard_attitude"
+"SCANT"      = "carding.nt.standard_attitude"
+"SCAExcept"  = "carding.exceptions_present"
 "primaryA"   = "carding.partner_lead.attitude"
 "primaryC"   = "carding.partner_lead.count"
 "primarySP"  = "carding.partner_lead.suit_preference"
@@ -160,9 +219,17 @@
 "smithSuits" = "carding.smith_echo_suits"
 "smithNT"    = "carding.smith_echo_nt"
 "trumpSP"    = "carding.trump_suit_preference"
+"lavSuits"   = "carding.first_discard.lavinthal_suits"
+"lavNT"      = "carding.first_discard.lavinthal_nt"
+"OESuits"    = "carding.first_discard.odd_even_suits"
+"OENT"       = "carding.first_discard.odd_even_nt"
+"fosterSuits" = "carding.foster_echo_suits"
+"fosterNT"   = "carding.foster_echo_nt"
+"specialCarding" = "carding.special_carding"
 
 [fields]
-"approach" = "general.system"
+"approach"   = "general.system"
+"fOpenOther" = "general.forcing_opening_other"
 # 1NT opening
 "1NTMin1"     = { range = "notrump.one_nt.range_min" }
 "1NTMax1"     = { range = "notrump.one_nt.range_max" }
@@ -181,8 +248,12 @@
 "2NTMin"  = { range = "notrump.two_nt.range_min" }
 "2NTMax"  = { range = "notrump.two_nt.range_max" }
 "2N3S"    = "notrump.two_nt.three_s_desc"
+"3NTMin"  = { range = "notrump.three_nt.range_min" }
+"3NTMax"  = { range = "notrump.three_nt.range_max" }
 "3NOther" = { text = "notrump.gambling_3nt.description", also = { "notrump.gambling_3nt.play" = true } }
 # Major openings
+"major2NTMin" = { range = "major_openings.two_nt_response_range_min" }
+"major2NTMax" = { range = "major_openings.two_nt_response_range_max" }
 "major3NTMin" = { range = "major_openings.three_nt_raise.range_min" }
 "major3NTMax" = { range = "major_openings.three_nt_raise.range_max" }
 # Minor openings (the 1♣ range columns)
@@ -211,6 +282,8 @@
 "ocallMin"  = { range = "overcalls.one_level_min" }
 "ocallMax"  = { range = "overcalls.one_level_max" }
 "ocallOther" = "overcalls.notes"
+"jOcallOther" = "overcalls.conv_text"
+"preOther"    = "preempts.three_level_response"
 # NT overcalls: Direct and Balance each have a Conv. line.
 "1NOcallDMin"   = { range = "nt_overcalls.direct.range_min" }
 "1NOcallDMax"   = { range = "nt_overcalls.direct.range_max" }
@@ -224,21 +297,23 @@
 "vs1NT2D1"   = "competitive.vs_1nt_strong.2d"
 "vs1NT2H1"   = "competitive.vs_1nt_strong.2h"
 "vs1NT2S1"   = "competitive.vs_1nt_strong.2s"
-"vs1NT2N1"   = "competitive.vs_1nt_strong.2nt"
 "vs1NTDbl1"  = "competitive.vs_1nt_strong.dbl"
 "vs1NTHead2" = "competitive.vs_1nt_weak.system"
 "vs1NT2C2"   = "competitive.vs_1nt_weak.2c"
 "vs1NT2D2"   = "competitive.vs_1nt_weak.2d"
 "vs1NT2H2"   = "competitive.vs_1nt_weak.2h"
 "vs1NT2S2"   = "competitive.vs_1nt_weak.2s"
-"vs1NT2N2"   = "competitive.vs_1nt_weak.2nt"
 "vs1NTDbl2"  = "competitive.vs_1nt_weak.dbl"
-# Special doubles: dblOther2–4 are the "thru" levels.
+# Special doubles: dblOther1 is beside "After overcall: Penalty"; dblOther2–4
+# are the "thru" levels.
+"dblOther1" = "doubles.after_overcall_penalty_notes"
 "dblOther2" = "doubles.negative.through"
 "dblOther3" = "doubles.responsive.through"
 "dblOther4" = "doubles.support.through"
 # Vs preempts, slam
 "vsPreTOThru" = "vs_preempts.takeout_double_thru"
+"vsPreConv"   = "vs_preempts.conv_takeout"
+"vsPreOther"  = "vs_preempts.notes"
 "slamLevel"   = "slam.trump_level"
 "slamOther1"  = "slam.control_bids"
 "slamOther2"  = "slam.vs_interference"
@@ -246,6 +321,7 @@
 "cueOther"     = "direct_cuebids.description"
 "vsTOOther"    = "vs_to_double.notes"
 "discardOther" = "carding.notes"
+"leadsOther"   = "notes.leads_notes"
 # OTHER CONV. CALLS, top to bottom: after New Minor Forcing, after Weak Jump
 # Shifts, after 4th Suit Forcing, then the two catch-all lines.
 "other1" = "other_conventions.nmf_notes"
@@ -256,7 +332,11 @@
 
 [[joined]]
 path = "notes.notrump_notes"
-keys = ["1NOther1", "1NOther2", "1NOther3", "2NOther", "CNTOther1"]
+keys = ["1NOther1", "1NOther2", "1NOther3", "2NOther"]
+
+[[joined]]
+path = "notrump.conventional_nt_openings"
+keys = ["CNTOther1", "CNTOther2"]
 
 [[joined]]
 path = "notes.major_notes"
@@ -271,11 +351,23 @@ path = "competitive.notes"
 keys = ["vs1NTOther1", "vs1NTOther2"]
 
 [[joined]]
+path = "carding.exceptions"
+keys = ["signalsOther1", "signalsOther2"]
+
+[[joined]]
 path = "doubles.notes"
-keys = ["dblOther5", "dblOther6"]
+keys = ["dblOther5"]
 
 # The New card has one Conv. line for NT overcalls: both lines, joined.
 [[joined]]
 path = "nt_overcalls.notes"
 keys = ["1NOcallOther1", "1NOcallOther2"]
 export = false
+
+[left_out]
+"jsOtherMinor" = "\"Forcing raise: J/S in other minor\": no card field"
+"1N2DFStay"    = "\"2♦ Forcing Stayman\": no card field"
+"ocallJRF"     = "\"Jump raise: Forcing\" after an overcall: overcalls.responses.jump_raise has no forcing option"
+"F2O"          = "\"Forcing opening: Other\": general.forcing_opening_other is the text (fOpenOther); a tick alone has none"
+"discardSuits" = "\"Other 1st discard vs suits\": carding.first_discard.other_suits is text; a tick alone has none"
+"discardNT"    = "\"Other 1st discard vs NT\": carding.first_discard.other_nt is text; a tick alone has none"

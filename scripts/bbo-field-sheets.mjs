@@ -13,7 +13,8 @@
 //   spec/formats/bbo-slots.toml   every slot: its section and label on BBO's card
 //   docs/bbo-field-sheets/bbo-acbl-fields.pdf
 //       page 1   BBO's card, every slot outlined and numbered: green when the
-//                map covers it, red when nothing does, amber for a lead
+//                map covers it, grey when the map leaves it out on purpose
+//                ([left_out], with why), red when nothing does, amber for a lead
 //                circle that imports to a field the spec lacks or exports
 //                under another name;
 //       page 2+  the numbers as a table: the slot, its label on BBO's card,
@@ -43,7 +44,8 @@ const NONE = rgb(0.85, 0.1, 0.1)
 const ODD = rgb(0.85, 0.5, 0.0)
 const INK = rgb(0.1, 0.1, 0.1)
 const GREY = rgb(0.45, 0.45, 0.45)
-const CSS_COLOR = { ok: '#0d8c40', none: '#d91a1a', odd: '#d98000' }
+const LEFT = rgb(0.5, 0.5, 0.5)
+const CSS_COLOR = { ok: '#0d8c40', none: '#d91a1a', odd: '#d98000', left: '#808080' }
 
 const PREFIX = { fields: 'E_', conventions: 'C_', leads: 'L_' }
 const KIND = { fields: 'Text', conventions: 'Tick', leads: 'Circle' }
@@ -161,7 +163,7 @@ async function readCard(page) {
 
 // ─── What the map does with each slot ──────────────────────────────
 
-const show = v => (typeof v === 'string' ? `"${v}"` : String(v))
+const show = v => (Array.isArray(v) ? `one of ${v.map(show).join(', ')}` : typeof v === 'string' ? `"${v}"` : String(v))
 
 /** The card fields a slot fills: [{ card, path }]. */
 function mapped(group, id) {
@@ -215,6 +217,8 @@ function describe(slot) {
     return { status, rows: [{ card: `${p} = ${pos}`, label }] }
   }
   const entries = mapped(slot.group, slot.id)
+  const why = BBO_MAP.left_out?.[slot.id]
+  if (!entries.length && why) return { status: 'left', rows: [{ card: 'left out', label: why }] }
   if (!entries.length) return { status: 'none', rows: [{ card: 'not mapped', label: '' }] }
   return {
     status: 'ok',
@@ -315,7 +319,7 @@ async function main() {
   doc.addPage(cardPage)
   const { height: CH } = cardPage.getSize()
   cardPage.drawText("BBO's ACBL card: every slot, numbered", { x: 15, y: CH - 14, size: 11, font, color: INK })
-  cardPage.drawText(`green: the BBO map covers it (${counts('ok')})   red: nothing does (${counts('none')})   amber: a lead circle the round trip gets wrong (${counts('odd')})   table on the next pages`, { x: 15, y: CH - 25, size: 7.5, font, color: GREY })
+  cardPage.drawText(`green: the BBO map covers it (${counts('ok')})   grey: left out on purpose (${counts('left')})   red: nothing does (${counts('none')})   amber: a lead circle the round trip gets wrong (${counts('odd')})   table on the next pages`, { x: 15, y: CH - 25, size: 7.5, font, color: GREY })
 
   // Map keys that name no slot on BBO's card: they never import, and export writes them for nothing.
   const onCard = g => new Set(byGroup(g).map(s => s.id))
@@ -355,7 +359,7 @@ async function main() {
     y -= 3; pg.drawLine({ start: { x: M, y }, end: { x: W - M, y }, thickness: 0.4, color: GREY }); y -= lh
   }
   newPage()
-  const COLOR = { ok: OK, none: NONE, odd: ODD }
+  const COLOR = { ok: OK, none: NONE, odd: ODD, left: LEFT }
   for (const s of card.slots) {
     s.rows.forEach((r, i) => {
       if (y < M) newPage()
@@ -370,7 +374,7 @@ async function main() {
   fs.mkdirSync(OUT, { recursive: true })
   const out = path.join(OUT, 'bbo-acbl-fields.pdf')
   fs.writeFileSync(out, await doc.save())
-  console.log(`${card.slots.length} slots: ${counts('ok')} mapped, ${counts('none')} not, ${counts('odd')} lead circles wrong -> ${path.relative(ROOT, out)}, ${path.relative(ROOT, SLOTS_TOML)}`)
+  console.log(`${card.slots.length} slots: ${counts('ok')} mapped, ${counts('left')} left out, ${counts('none')} not, ${counts('odd')} lead circles wrong -> ${path.relative(ROOT, out)}, ${path.relative(ROOT, SLOTS_TOML)}`)
 }
 
 await main()

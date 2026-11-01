@@ -20,8 +20,14 @@
   "depo": "slam.depo",
   "ropi": "slam.ropi",
   "2over1GF": "major_openings.two_over_one.play",
+  "2over1GFR": "major_openings.two_over_one.game_forcing_except",
   "F1C": "general.forcing_opening_1c",
   "F2C": "general.forcing_opening_2c",
+  "F2B": "general.forcing_opening_natural_2",
+  "VLOpen": "general.very_light.openings",
+  "VL3rd": "general.very_light.third_hand",
+  "VLOcall": "general.very_light.overcalls",
+  "VLPre": "general.very_light.preempts",
   "major12-4": {
    "set": {
     "major_openings.min_length_1st_2nd": 4
@@ -42,8 +48,10 @@
     "major_openings.min_length_3rd_4th": 5
    }
   },
+  "major2RaiseF": "major_openings.jump_raise.force",
   "major2RaiseW": "major_openings.jump_raise.weak",
   "major2RaiseI": "major_openings.jump_raise.inv",
+  "majorO2RaiseF": "major_openings.jump_raise_after_overcall.force",
   "majorO2RaiseW": "major_openings.jump_raise_after_overcall.weak",
   "majorO2RaiseI": "major_openings.jump_raise_after_overcall.inv",
   "major2NTRaise": "major_openings.jacoby_2nt.play",
@@ -51,6 +59,8 @@
   "majorSplinter": "major_openings.splinters.play",
   "major1NTF": "major_openings.one_nt_response.forcing",
   "major1NTSF": "major_openings.one_nt_response.semi_forcing",
+  "major2NTF": "major_openings.two_nt_response_forcing",
+  "major2NTI": "major_openings.two_nt_response_inv",
   "drury": "major_openings.drury.play",
   "druryRev": {
    "set": {
@@ -58,10 +68,16 @@
     "major_openings.drury.reverse": true
    }
   },
-  "drury2W": {
+  "druryFit": {
    "set": {
     "major_openings.drury.play": true,
-    "major_openings.drury.two_way": true
+    "major_openings.drury.two_d": true
+   }
+  },
+  "drury2Way": {
+   "set": {
+    "major_openings.drury.play": true,
+    "major_openings.drury.fit": true
    }
   },
   "minorC3": {
@@ -74,11 +90,8 @@
     "minor_openings.one_club.min_length": 4
    }
   },
-  "minorC5": {
-   "set": {
-    "minor_openings.one_club.min_length": 5
-   }
-  },
+  "minorC0": "minor_openings.one_club.nf0",
+  "minorCC": "minor_openings.one_club.art_forcing",
   "minorD3": {
    "set": {
     "minor_openings.one_diamond.min_length": 3
@@ -89,26 +102,37 @@
     "minor_openings.one_diamond.min_length": 4
    }
   },
-  "minorD5": {
-   "set": {
-    "minor_openings.one_diamond.min_length": 5
-   }
-  },
+  "minorD0": "minor_openings.one_diamond.nf0",
+  "minorDC": "minor_openings.one_diamond.art_forcing",
+  "minor2RaiseF": "minor_openings.one_club.jump_raise.force",
   "minor2RaiseW": "minor_openings.one_club.jump_raise.weak",
   "minor2RaiseI": "minor_openings.one_club.jump_raise.inv",
+  "minorO2RaiseF": "minor_openings.one_club.jump_raise_after_overcall.force",
   "minorO2RaiseW": "minor_openings.one_club.jump_raise_after_overcall.weak",
   "minorO2RaiseI": "minor_openings.one_club.jump_raise_after_overcall.inv",
   "minorSingleRaise": "minor_openings.one_club.single_raise.nf",
-  "minorInvForcing": "minor_openings.inverted_minors.play",
+  "minor2NTF": {
+   "set": {
+    "minor_openings.two_nt_response": "game_forcing"
+   }
+  },
+  "minor2NTI": {
+   "set": {
+    "minor_openings.two_nt_response": "invitational"
+   }
+  },
   "bypassDs": "minor_openings.bypass_5_plus",
   "2CStrong": {
    "set": {
     "two_level.two_clubs.meaning": "strong"
    }
   },
-  "2CVeryStrong": {
+  "2COther": {
    "set": {
-    "two_level.two_clubs.meaning": "very_strong"
+    "two_level.two_clubs.meaning": [
+     "natural",
+     "conventional"
+    ]
    }
   },
   "2DWaiting": {
@@ -126,14 +150,59 @@
     "two_level.two_diamonds.meaning": "weak"
    }
   },
+  "2DInt": {
+   "set": {
+    "two_level.two_diamonds.meaning": "intermediate"
+   }
+  },
+  "2DStrong": {
+   "set": {
+    "two_level.two_diamonds.meaning": "strong"
+   }
+  },
+  "2DConv": {
+   "set": {
+    "two_level.two_diamonds.meaning": "conventional"
+   }
+  },
   "2HWeak": {
    "set": {
     "two_level.two_hearts.meaning": "weak"
    }
   },
+  "2HInt": {
+   "set": {
+    "two_level.two_hearts.meaning": "intermediate"
+   }
+  },
+  "2HStrong": {
+   "set": {
+    "two_level.two_hearts.meaning": "strong"
+   }
+  },
+  "2HConv": {
+   "set": {
+    "two_level.two_hearts.meaning": "conventional"
+   }
+  },
   "2SWeak": {
    "set": {
     "two_level.two_spades.meaning": "weak"
+   }
+  },
+  "2SInt": {
+   "set": {
+    "two_level.two_spades.meaning": "intermediate"
+   }
+  },
+  "2SStrong": {
+   "set": {
+    "two_level.two_spades.meaning": "strong"
+   }
+  },
+  "2SConv": {
+   "set": {
+    "two_level.two_spades.meaning": "conventional"
    }
   },
   "2D2NT": "two_level.two_diamonds.two_nt_force",
@@ -169,6 +238,9 @@
   "dblMaximal": "doubles.maximal",
   "dblSupport": "doubles.support.play",
   "rdblSupport": "doubles.support.rdbl",
+  "dblPenalty": "doubles.after_overcall_penalty",
+  "dblCards": "doubles.card_showing",
+  "dblTO": "doubles.min_offshape_to",
   "ocallNSF": {
    "set": {
     "overcalls.responses.new_suit": "forcing"
@@ -179,11 +251,23 @@
     "overcalls.responses.new_suit": "nf_constructive"
    }
   },
+  "ocallNSNF": {
+   "set": {
+    "overcalls.responses.new_suit": "nf"
+   }
+  },
+  "ocallJRI": {
+   "set": {
+    "overcalls.responses.jump_raise": "invitational"
+   }
+  },
   "ocallJRW": {
    "set": {
     "overcalls.responses.jump_raise": "weak"
    }
   },
+  "ocall4Cards": "overcalls.often_4_cards",
+  "ocallLight": "overcalls.very_light",
   "jOcallW": {
    "set": {
     "overcalls.jump": "weak"
@@ -214,20 +298,35 @@
     "preempts.three_level_style": "very_light"
    }
   },
+  "cueMinorN": "direct_cuebids.nat_minors_natural",
+  "cueMajorN": "direct_cuebids.nat_majors_natural",
+  "cueMinorS": "direct_cuebids.nat_minors_other",
+  "cueMajorS": "direct_cuebids.nat_majors_other",
   "cueMinorM": "direct_cuebids.nat_minors_michaels",
   "cueMajorM": "direct_cuebids.nat_majors_michaels",
   "systemOn": "nt_overcalls.direct.systems_on",
-  "systemOnB": "nt_overcalls.balance.systems_on",
   "2NTOcallLowest": "nt_overcalls.jump_2nt_lowest_unbid",
+  "2NTOcallMinors": "nt_overcalls.jump_2nt_minors",
   "vsTONSF1": "vs_to_double.new_suit_forcing_1lvl",
   "vsTONSF2": "vs_to_double.new_suit_forcing_2lvl",
   "vsTORdbl": "vs_to_double.redouble.ten_plus",
   "vsTOMajorsLP": "vs_to_double.two_nt_raise_majors.limit_plus",
+  "vsTOMajorsL": "vs_to_double.two_nt_raise_majors.limit",
+  "vsTOMajorsW": "vs_to_double.two_nt_raise_majors.weak",
   "vsTOMinorsLP": "vs_to_double.two_nt_raise_minors.limit_plus",
+  "vsTOMinorsL": "vs_to_double.two_nt_raise_minors.limit",
+  "vsTOMinorsW": "vs_to_double.two_nt_raise_minors.weak",
   "vsPreTO": "vs_preempts.takeout_double",
+  "vsPrePen": "vs_preempts.takeout_double_penalty",
   "vsPreLeb": "vs_preempts.lebensohl_response",
   "4thSuits": "leads.vs_suits.length.fourth_best",
   "4thNT": "leads.vs_nt.length.fourth_best",
+  "35thSuits": "leads.vs_suits.length.third_fifth",
+  "35thNT": "leads.vs_nt.length.third_fifth",
+  "attitudeNT": "leads.vs_nt.length.attitude",
+  "SCASuits": "carding.suits.standard_attitude",
+  "SCANT": "carding.nt.standard_attitude",
+  "SCAExcept": "carding.exceptions_present",
   "primaryA": "carding.partner_lead.attitude",
   "primaryC": "carding.partner_lead.count",
   "primarySP": "carding.partner_lead.suit_preference",
@@ -237,10 +336,18 @@
   "UDANT": "carding.nt.upside_down_attitude",
   "smithSuits": "carding.smith_echo_suits",
   "smithNT": "carding.smith_echo_nt",
-  "trumpSP": "carding.trump_suit_preference"
+  "trumpSP": "carding.trump_suit_preference",
+  "lavSuits": "carding.first_discard.lavinthal_suits",
+  "lavNT": "carding.first_discard.lavinthal_nt",
+  "OESuits": "carding.first_discard.odd_even_suits",
+  "OENT": "carding.first_discard.odd_even_nt",
+  "fosterSuits": "carding.foster_echo_suits",
+  "fosterNT": "carding.foster_echo_nt",
+  "specialCarding": "carding.special_carding"
  },
  "fields": {
   "approach": "general.system",
+  "fOpenOther": "general.forcing_opening_other",
   "1NTMin1": {
    "range": "notrump.one_nt.range_min"
   },
@@ -269,11 +376,23 @@
    "range": "notrump.two_nt.range_max"
   },
   "2N3S": "notrump.two_nt.three_s_desc",
+  "3NTMin": {
+   "range": "notrump.three_nt.range_min"
+  },
+  "3NTMax": {
+   "range": "notrump.three_nt.range_max"
+  },
   "3NOther": {
    "text": "notrump.gambling_3nt.description",
    "also": {
     "notrump.gambling_3nt.play": true
    }
+  },
+  "major2NTMin": {
+   "range": "major_openings.two_nt_response_range_min"
+  },
+  "major2NTMax": {
+   "range": "major_openings.two_nt_response_range_max"
   },
   "major3NTMin": {
    "range": "major_openings.three_nt_raise.range_min"
@@ -336,6 +455,8 @@
    "range": "overcalls.one_level_max"
   },
   "ocallOther": "overcalls.notes",
+  "jOcallOther": "overcalls.conv_text",
+  "preOther": "preempts.three_level_response",
   "1NOcallDMin": {
    "range": "nt_overcalls.direct.range_min"
   },
@@ -355,25 +476,27 @@
   "vs1NT2D1": "competitive.vs_1nt_strong.2d",
   "vs1NT2H1": "competitive.vs_1nt_strong.2h",
   "vs1NT2S1": "competitive.vs_1nt_strong.2s",
-  "vs1NT2N1": "competitive.vs_1nt_strong.2nt",
   "vs1NTDbl1": "competitive.vs_1nt_strong.dbl",
   "vs1NTHead2": "competitive.vs_1nt_weak.system",
   "vs1NT2C2": "competitive.vs_1nt_weak.2c",
   "vs1NT2D2": "competitive.vs_1nt_weak.2d",
   "vs1NT2H2": "competitive.vs_1nt_weak.2h",
   "vs1NT2S2": "competitive.vs_1nt_weak.2s",
-  "vs1NT2N2": "competitive.vs_1nt_weak.2nt",
   "vs1NTDbl2": "competitive.vs_1nt_weak.dbl",
+  "dblOther1": "doubles.after_overcall_penalty_notes",
   "dblOther2": "doubles.negative.through",
   "dblOther3": "doubles.responsive.through",
   "dblOther4": "doubles.support.through",
   "vsPreTOThru": "vs_preempts.takeout_double_thru",
+  "vsPreConv": "vs_preempts.conv_takeout",
+  "vsPreOther": "vs_preempts.notes",
   "slamLevel": "slam.trump_level",
   "slamOther1": "slam.control_bids",
   "slamOther2": "slam.vs_interference",
   "cueOther": "direct_cuebids.description",
   "vsTOOther": "vs_to_double.notes",
   "discardOther": "carding.notes",
+  "leadsOther": "notes.leads_notes",
   "other1": "other_conventions.nmf_notes",
   "other2": "other_conventions.weak_jump_shifts_notes",
   "other3": "other_conventions.fourth_suit_forcing.notes",
@@ -387,8 +510,14 @@
     "1NOther1",
     "1NOther2",
     "1NOther3",
-    "2NOther",
-    "CNTOther1"
+    "2NOther"
+   ]
+  },
+  {
+   "path": "notrump.conventional_nt_openings",
+   "keys": [
+    "CNTOther1",
+    "CNTOther2"
    ]
   },
   {
@@ -413,10 +542,16 @@
    ]
   },
   {
+   "path": "carding.exceptions",
+   "keys": [
+    "signalsOther1",
+    "signalsOther2"
+   ]
+  },
+  {
    "path": "doubles.notes",
    "keys": [
-    "dblOther5",
-    "dblOther6"
+    "dblOther5"
    ]
   },
   {
@@ -427,5 +562,13 @@
    ],
    "export": false
   }
- ]
+ ],
+ "left_out": {
+  "jsOtherMinor": "\"Forcing raise: J/S in other minor\": no card field",
+  "1N2DFStay": "\"2♦ Forcing Stayman\": no card field",
+  "ocallJRF": "\"Jump raise: Forcing\" after an overcall: overcalls.responses.jump_raise has no forcing option",
+  "F2O": "\"Forcing opening: Other\": general.forcing_opening_other is the text (fOpenOther); a tick alone has none",
+  "discardSuits": "\"Other 1st discard vs suits\": carding.first_discard.other_suits is text; a tick alone has none",
+  "discardNT": "\"Other 1st discard vs NT\": carding.first_discard.other_nt is text; a tick alone has none"
+ }
 }

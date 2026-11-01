@@ -234,6 +234,47 @@ describe('importBboJson', () => {
     expect(c.leads.vs_nt.length.lead_choice_hxx).toBe(3)
   })
 
+  it('reads BBO\'s 10 as the spec\'s T, counting positions in cards', () => {
+    const fx = bboFixture({})
+    fx.cards[0].leads = { 'ls-kj10x-10': 'y', 'ln-a1098-8': 'y', 'ln-akjx-x': 'y' }
+    const { card_data: c } = importBboJson(fx)
+    expect(c.leads.vs_suits.honors.lead_choice_kjtx).toBe(3)
+    expect(c.leads.vs_nt.honors.lead_choice_at98).toBe(4)
+    expect(c.leads.vs_nt.honors.lead_choice_akjx).toBe(4)
+  })
+
+  it('writes the small card of an honour holding as x, and BBO\'s 10s, for a card made in the editor', () => {
+    const { card_data: c } = importBboJson(bboFixture({}))
+    c.leads = { vs_suits: { honors: { lead_choice_akx: 3, lead_choice_kjtx: 3 } }, vs_nt: { length: { lead_choice_xxx: 2 } } }
+    expect(exportBboCard(c).leads).toEqual({ 'ls-akx-x': 'y', 'ls-kj10x-10': 'y', 'ln-xxx-x2': 'y' })
+  })
+
+  it('maps the Drury boxes by the words printed on them, not their swapped ids', () => {
+    const fx = bboFixture({})
+    fx.cards[0].conventions = { druryFit: 'y' }
+    expect(importBboJson(fx).card_data.major_openings.drury).toEqual({ play: true, two_d: true })
+    fx.cards[0].conventions = { drury2Way: 'y' }
+    expect(importBboJson(fx).card_data.major_openings.drury).toEqual({ play: true, fit: true })
+  })
+
+  it('ticks a length box for the editor\'s "5" as for the import\'s 5', () => {
+    const { card_data: c } = importBboJson(bboFixture({}))
+    c.major_openings = { min_length_1st_2nd: '5' }
+    expect(exportBboCard(c).conventions['major12-5']).toBe('y')
+  })
+
+  it('reads 2♣ "Other" as natural, and ticks it for natural or conventional', () => {
+    const fx = bboFixture({})
+    fx.cards[0].conventions = { '2COther': 'y' }
+    const { card_data: c } = importBboJson(fx)
+    expect(c.two_level.two_clubs.meaning).toBe('natural')
+    c.two_level.two_clubs.meaning = 'conventional'
+    expect(exportBboCard(c).conventions['2COther']).toBe('y')
+    c.two_level.two_clubs.meaning = 'strong'
+    expect(exportBboCard(c).conventions).toMatchObject({ '2CStrong': 'y' })
+    expect(exportBboCard(c).conventions['2COther']).toBeUndefined()
+  })
+
   it('keeps a + or - on a notrump range', () => {
     const { card_data: c } = importBboJson(bboFixture({ '1NTMin1': '14+', '1NTMax1': '17-' }))
     expect(c.notrump.one_nt).toMatchObject({ range_min: 14, range_min_plus: true, range_max: 17, range_max_minus: true })
