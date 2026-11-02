@@ -7,6 +7,7 @@ import and export (`js/bbo.js`, `spec/formats/bbo-map.toml`) have it.
 with every slot outlined and numbered:
 
 - green: the map covers it;
+- grey: the map leaves it out on purpose (its `[left_out]` table says why);
 - red: nothing does;
 - amber: a lead circle that the round trip gets wrong (its holding is not in
   the spec, or the export writes it under another key).

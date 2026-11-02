@@ -155,7 +155,9 @@ const HONOR_PATTERNS_SUITS = [
   { key: 'T9x',    label: 'T9x' },
   { key: 'KJTx',   label: 'KJTx' },
   { key: 'KT9x',   label: 'KT9x' },
-  { key: 'QT9x',   label: 'QT9x' }
+  { key: 'QT9x',   label: 'QT9x' },
+  // On BBO's card only
+  { key: 'KQT9',   label: 'KQT9' }
 ]
 
 const LENGTH_PATTERNS_NT = LENGTH_PATTERNS_SUITS
@@ -169,7 +171,13 @@ const HONOR_PATTERNS_NT = [
   { key: 'AQJx',   label: 'AQJx' },
   { key: 'AJTx',   label: 'AJTx' },
   { key: 'KT9x',   label: 'KT9x' },
-  { key: 'QT9x',   label: 'QT9x' }
+  { key: 'QT9x',   label: 'QT9x' },
+  // On BBO's card only
+  { key: 'AKJx',   label: 'AKJx' },
+  { key: 'AJT9',   label: 'AJT9' },
+  { key: 'AT98',   label: 'AT98' },
+  { key: 'T98x',   label: 'T98x' },
+  { key: 'QT98',   label: 'QT98' }
 ]
 
 const props = defineProps({

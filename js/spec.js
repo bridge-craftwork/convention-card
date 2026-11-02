@@ -45,7 +45,7 @@ export function field(path) {
 /** The `.bbsa` map (spec/formats/bbsa-map.toml): key → mapping, plus `implied` and `derived`. */
 export { BBSA_MAP }
 
-/** BBO's ACBL card map (spec/formats/bbo-map.toml): `conventions`, `fields` and `joined`. */
+/** BBO's ACBL card map (spec/formats/bbo-map.toml): `conventions`, `fields`, `joined` and `left_out`. */
 export { BBO_MAP }
 
 /** Every slot on BBO's ACBL card (spec/formats/bbo-slots.toml): `fields`, `conventions` and `leads`, each id → { section, label }. */
