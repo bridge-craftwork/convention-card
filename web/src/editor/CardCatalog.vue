@@ -118,6 +118,7 @@
             <th>Level</th>
             <th>Conventions</th>
             <th v-for="d in columns" :key="d.key">{{ d.label }}</th>
+            <th>Last edit</th>
             <th class="pdf-col"><span class="sr-only">PDF</span></th>
           </tr>
         </thead>
@@ -142,7 +143,7 @@
             <td>{{ row.system || '—' }}</td>
             <td class="card-level">
               <span v-if="row.cardLevel" :class="'lvl lvl-' + row.cardLevel.band" :title="row.cardLevel.why">
-                {{ bandLabel(row.cardLevel.band) }} · {{ row.cardLevel.level }}
+                {{ bandLabel(row.cardLevel.band).charAt(0) }}-{{ row.cardLevel.level }}
               </span>
               <span v-else class="muted">—</span>
             </td>
@@ -154,7 +155,8 @@
               </div>
               <span v-else class="muted">none ticked</span>
             </td>
-            <td v-for="d in columns" :key="d.key" class="nowrap">{{ d.value(row.data) || '—' }}</td>
+            <td v-for="d in columns" :key="d.key" class="nowrap" :title="d.title?.(row.data) || undefined">{{ d.value(row.data) || '—' }}</td>
+            <td class="nowrap" :title="row.updated ? new Date(row.updated).toLocaleString() : undefined">{{ lastEdit(row.updated) || '—' }}</td>
             <td class="pdf-col" @click.stop>
               <button class="pdf-btn" :title="`Export ${row.name} as a PDF`" :aria-label="`Export ${row.name} as a PDF`"
                       :disabled="exporting === row.id" @click="pdfMenu = pdfMenu === row.id ? null : row.id">
@@ -184,7 +186,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { summarize, distinguishing } from './cardSummary.js'
+import { summarize, distinguishing, lastEdit } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'

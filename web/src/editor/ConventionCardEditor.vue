@@ -247,6 +247,16 @@
 
     <!-- Filter / overlay bar -->
     <div class="controls">
+      <div class="control-group search-group">
+        <input
+          v-model="searchQuery"
+          type="search"
+          class="card-search-input"
+          placeholder="Search this card's fields"
+          aria-label="Search this card's fields"
+        />
+      </div>
+      <div class="control-divider"></div>
       <div class="control-group">
         <span class="control-label">SHOW</span>
         <SkillPills v-model="visibleLevelsLocal" />
@@ -296,6 +306,9 @@
     <PracticeReport v-if="hasPractice && showPracticeReport" :card-data="cc.editedCardData.value"
                     :bot="props.overlays.bot || null" :practice="props.overlays.practice || []" />
 
+    <CardSearch v-else-if="searchQuery.trim()" :query="searchQuery" :card="editorCard" :editable="isEditable"
+                :write-field="cc.writeField" @open="openFromSearch" />
+
     <!-- Main grid -->
     <div v-else class="main-grid">
       <CardTree
@@ -315,6 +328,7 @@
         :get-note="cc.getNote"
         :set-note="cc.setNote"
         :write-field="cc.writeField"
+        :focus-path="focusPath"
         @toggle="onToggle"
       />
     </div>
@@ -328,7 +342,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch, ref } from 'vue'
+import { computed, nextTick, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportRecord } from '../../../js/cardBundle.js'
@@ -343,6 +357,7 @@ import SkillPills from './components/SkillPills.vue'
 import OverlayLegend from './components/OverlayLegend.vue'
 import CardTree from './components/CardTree.vue'
 import CardDetail from './components/CardDetail.vue'
+import CardSearch from './components/CardSearch.vue'
 import NoteSuggestions from './components/NoteSuggestions.vue'
 import TextMapping from './components/TextMapping.vue'
 import PracticeReport from './components/PracticeReport.vue'
@@ -431,6 +446,17 @@ function changeCard(apply) {
 const isDirty = cc.isDirty
 const viewMode = cc.viewMode
 const activeSection = cc.activeSection
+
+// Search: its results stand in for the section until it's cleared, and "Go
+// to" opens the field in its section
+const searchQuery = ref('')
+const focusPath = ref(null)
+function openFromSearch(section, path) {
+  activeSection.value = section
+  searchQuery.value = ''
+  focusPath.value = null
+  nextTick(() => { focusPath.value = path })
+}
 const visibleLevels = cc.visibleLevels
 const showCoverage = cc.showCoverage
 const showProf = cc.showProf
@@ -1022,6 +1048,16 @@ watch(() => currentUser.value?.id, async (uid) => {
   flex-wrap: wrap;
   gap: 16px;
   align-items: center;
+}
+
+.card-search-input {
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 10px;
+  width: 220px;
+  max-width: 100%;
+  border: 1px solid var(--card-border, #e0ddd7);
+  border-radius: 6px;
 }
 
 .control-group {

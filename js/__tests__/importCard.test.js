@@ -192,3 +192,26 @@ describe('conventions named in a BBO card', () => {
     expect(await withText('Cue bids below game')).not.toContain('bidding_conventions/control_bids')
   })
 })
+
+describe('Parrish relay and Schuler shift named in text', () => {
+  const read = async text => {
+    const r = await importCard({ card_data: { notes: { other_notes: text } } })
+    return { accepted: recogniseOnImport(r.card_data).map(s => s.id), data: r.card_data }
+  }
+
+  it('Parrish relay ticks the relay and the 2♥ bust it depends on', async () => {
+    const { accepted, data } = await read('Parrish Relay')
+    expect(accepted).toEqual(['bidding_conventions/parrish_relay'])
+    expect(data.two_level.parrish_bust).toEqual({ relay: true, play: true })
+  })
+
+  it('a bare Parrish is only the bust', async () => {
+    const { data } = await read('Parrish')
+    expect(data.two_level.parrish_bust).toEqual({ play: true })
+  })
+
+  it('Schuler shift sets the 2/1 rebid style', async () => {
+    const { data } = await read('Schuler shift')
+    expect(data.major_openings.two_over_one.rebid_style).toBe('schuler')
+  })
+})

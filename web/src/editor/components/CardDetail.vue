@@ -37,6 +37,7 @@
         v-for="f in visibleStructuredFields"
         :key="f.label"
         class="field-row"
+        :data-field="f.cardPath || f.from || null"
         :class="{ 'field-heading': f.kind === 'heading' }"
         :style="useTwoColumn ? fieldGridStyle(f) : null"
       >
@@ -175,6 +176,34 @@
       No conventions catalogued for this section yet.
     </div>
 
+    <!-- Every other field of this section: nothing on a card is hidden -->
+    <div v-if="moreFields.length" class="more-fields">
+      <div class="conventions-label">More fields</div>
+      <FieldRow
+        v-for="p in moreFields"
+        :key="p"
+        :path="p"
+        :card="card"
+        :editable="editable"
+        :write-field="writeField"
+      />
+    </div>
+
+    <!-- What the card plays that has no field of its own -->
+    <div v-if="sectionId === 'other_conventions' && agreements.length" class="more-fields">
+      <div class="conventions-label">Other agreements</div>
+      <div v-for="(a, i) in agreements" :key="i" class="agreement-row">
+        <input
+          v-if="editable"
+          type="text"
+          class="field-input text-input"
+          :value="a.text"
+          @change="onAgreement(i, $event.target.value)"
+        />
+        <span v-else>{{ a.text }}</span>
+      </div>
+    </div>
+
     <!-- Notes -->
     <div v-if="sectionNotes.length" class="notes-section">
       <div class="notes-section-label">
@@ -184,6 +213,7 @@
         v-for="note in sectionNotes"
         :key="note.key"
         class="notes-block"
+        :data-note="note.key"
         :class="{ open: openNotes.has(note.key) }"
       >
         <button
@@ -213,7 +243,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { SECTION_META, STRUCTURED_FIELDS, getCatalogEntries, getLevelForStructuredField } from '../conventionCatalog.js'
 import { colorizeSuits } from '../suits.js'
 import { field as specField } from '../../../../js/spec.js'
@@ -225,6 +255,9 @@ import VsPreemptsPanel from './VsPreemptsPanel.vue'
 import CardingSignalsPanel from './CardingSignalsPanel.vue'
 import OpeningLeadsPanel from './OpeningLeadsPanel.vue'
 import RichSuitField from './RichSuitField.vue'
+import FieldRow from './FieldRow.vue'
+import { unshownFields } from '../cardFields.js'
+import { bandOf } from '../levels.js'
 
 const props = defineProps({
   sectionId: { type: String, required: true },
@@ -236,10 +269,46 @@ const props = defineProps({
   editable: { type: Boolean, default: false },
   getNote: { type: Function, required: true },
   setNote: { type: Function, required: true },
-  writeField: { type: Function, required: true }
+  writeField: { type: Function, required: true },
+  // A field to bring into view (a search result's "Go to")
+  focusPath: { type: String, default: null }
 })
 
 defineEmits(['toggle'])
+
+// The level filter's rule: an empty field above the levels shown waits, one
+// holding a value always shows.
+const moreFields = computed(() => unshownFields(props.sectionId).filter(p => {
+  const band = bandOf(specField(p)?.level)
+  if (specField(p)?.level == null || props.visibleLevels.has(band)) return true
+  const v = readField(p)
+  return v != null && v !== '' && v !== false
+}))
+
+const agreements = computed(() => {
+  const list = props.card?.card_data?.other_agreements
+  return Array.isArray(list) ? list : []
+})
+
+// Emptied, an agreement goes
+function onAgreement(i, text) {
+  const next = agreements.value.map((a, n) => (n === i ? { ...a, text: text.trim() } : a)).filter(a => a.text)
+  props.writeField('other_agreements', next.length ? next : null)
+}
+
+watch(() => props.focusPath, async path => {
+  if (!path) return
+  if (path.startsWith('notes.')) {
+    const key = path.slice('notes.'.length)
+    if (sectionNotes.value.some(n => n.key === key)) openNotes.value = new Set([...openNotes.value, key])
+  }
+  await nextTick()
+  const el = document.querySelector(`[data-field="${path}"]`)
+    || document.querySelector(`[data-note="${path.slice('notes.'.length)}"]`)
+  el?.scrollIntoView({ block: 'center' })
+  el?.classList.add('field-flash')
+  setTimeout(() => el?.classList.remove('field-flash'), 1800)
+})
 
 // A row's choice. `defaultWith`: while that convention is played, an unset
 // choice is the spec's default, and the card reads as that
@@ -523,6 +592,25 @@ function renderField(field) {
 .detail-hidden {
   font-size: 12px;
   color: var(--text-tertiary, #9ca3af);
+}
+
+.more-fields {
+  margin-top: 16px;
+}
+
+.agreement-row {
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.agreement-row .text-input {
+  width: 100%;
+}
+
+:deep(.field-flash),
+.field-flash {
+  background: #fff3c4;
+  transition: background 0.3s;
 }
 
 .fields {

@@ -7,7 +7,6 @@ import { CONVENTION_CATALOG, isEntryChecked, getLevelNumberForEntry } from './co
 import { SKILL_LEVELS, bandOf } from './levels.js'
 import { readPath } from '../../../js/paths.js'
 import { field } from '../../../js/spec.js'
-import { namesTwoOverOne } from '../../../js/bridgodex.js'
 import { upgradeCardData } from '../../../js/migrate.js'
 
 const SYSTEM_NAMES = {
@@ -79,6 +78,13 @@ function end(data, path) {
 
 const on = (data, path) => readPath(data, path) === true
 
+// A range's two ends, "15–17", or ''
+function rangeOf(data, path) {
+  const lo = end(data, `${path}.range_min`)
+  const hi = end(data, `${path}.range_max`)
+  return lo || hi ? `${lo}–${hi}` : ''
+}
+
 /**
  * Settings that tell similar cards apart, in order of how much they say.
  * The table shows those whose values differ between the cards listed.
@@ -88,29 +94,32 @@ export const DISTINGUISHING = [
     key: 'nt_range',
     label: '1NT',
     value: data => {
-      const lo = end(data, 'notrump.one_nt.range_min')
-      const hi = end(data, 'notrump.one_nt.range_max')
-      return lo || hi ? `${lo}–${hi}` : ''
+      const main = rangeOf(data, 'notrump.one_nt')
+      const alt = rangeOf(data, 'notrump.one_nt_alt')
+      return alt && alt !== main ? 'Var' : main
+    },
+    // A range that depends on seat or vulnerability: what "Var" stands for
+    title: data => {
+      const alt = rangeOf(data, 'notrump.one_nt_alt')
+      if (!alt || alt === rangeOf(data, 'notrump.one_nt')) return ''
+      const line = (path, range) => [range, readPath(data, `${path}.seat_vul`)].filter(Boolean).join(' ')
+      return `${line('notrump.one_nt', rangeOf(data, 'notrump.one_nt'))}; ${line('notrump.one_nt_alt', alt)}`
     },
   },
   {
-    key: 'two_over_one',
-    label: '2/1',
-    // The field, or, for a card imported from Bridgodex before its
-    // importer read it, the system's own words.
-    value: data => (on(data, 'major_openings.two_over_one.play') || namesTwoOverOne(readPath(data, 'general.system')) ? 'GF' : ''),
-  },
-  {
-    key: 'attitude',
-    label: 'Attitude',
-    value: data => (on(data, 'carding.suits.upside_down_attitude') ? 'Upside-down'
-      : on(data, 'carding.suits.standard_attitude') ? 'Standard' : ''),
-  },
-  {
-    key: 'count',
-    label: 'Count',
-    value: data => (on(data, 'carding.suits.upside_down_count') ? 'Upside-down'
-      : on(data, 'carding.suits.standard_count') ? 'Standard' : ''),
+    key: 'carding',
+    label: 'Carding',
+    // Vs suits. Std, UD (upside-down count and attitude), SCUDA (standard
+    // count, upside-down attitude) or UCSA (upside-down count, standard
+    // attitude). A card that sets only one reads the other as standard.
+    value: data => {
+      const udAttitude = on(data, 'carding.suits.upside_down_attitude')
+      const udCount = on(data, 'carding.suits.upside_down_count')
+      if (udAttitude) return udCount ? 'UD' : 'SCUDA'
+      if (udCount) return 'UCSA'
+      return on(data, 'carding.suits.standard_attitude') || on(data, 'carding.suits.standard_count') ? 'Std' : ''
+    },
+    title: data => ({ Std: 'Standard count and attitude', UD: 'Upside-down count and attitude', SCUDA: 'Standard count, upside-down attitude', UCSA: 'Upside-down count, standard attitude' })[DISTINGUISHING.find(d => d.key === 'carding').value(data)] || '',
   },
   {
     key: 'keycard',
@@ -119,6 +128,21 @@ export const DISTINGUISHING = [
       : on(data, 'slam.blackwood.play') ? 'Blackwood' : ''),
   },
 ]
+
+/**
+ * When a card last changed, as briefly as it can be said: a time today, a day
+ * of the week within the past week, otherwise a date.
+ */
+export function lastEdit(when, now = new Date()) {
+  const t = when ? new Date(when) : null
+  if (!t || Number.isNaN(t.getTime())) return ''
+  const days = (startOfDay(now) - startOfDay(t)) / 86400000
+  if (days <= 0) return t.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+  if (days < 7) return t.toLocaleDateString(undefined, { weekday: 'short' })
+  return t.toLocaleDateString(undefined, { dateStyle: 'medium' })
+}
+
+const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
 
 /** The distinguishing settings (at most `max`) whose values are not all the same across `cards`. */
 export function distinguishing(cards, max = 3) {
@@ -146,7 +170,8 @@ export function summarize(card) {
 // The paths above must stay real fields (a renamed field would quietly show blanks).
 export const PATHS = [
   'general.system', 'general.system_category', 'notrump.one_nt.range_min', 'notrump.one_nt.range_max',
-  'major_openings.two_over_one.play', 'carding.suits.standard_attitude', 'carding.suits.upside_down_attitude',
+  'notrump.one_nt_alt.range_min', 'notrump.one_nt_alt.range_max', 'notrump.one_nt.seat_vul', 'notrump.one_nt_alt.seat_vul',
+  'carding.suits.standard_attitude', 'carding.suits.upside_down_attitude',
   'carding.suits.standard_count', 'carding.suits.upside_down_count', 'slam.rkcb.play',
   'slam.rkcb.style', 'slam.blackwood.play',
 ]

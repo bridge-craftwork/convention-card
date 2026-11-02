@@ -55,6 +55,8 @@
 #            naming that convention means that box, not just the convention
 #            ("Puppet" as the 1NT 3♣ response is Puppet Stayman over 1NT,
 #            not over 2NT). Import sets it; the editor's suggestions use it
+#   requires a field this one depends on: on, it turns that field on, and that
+#            field off turns this one off (the Parrish relay follows a 2♥ bust)
 #   about    ([notes] fields) the sections the notes are about: the PDF's
 #            notes page prints them under `heading`, with those sections'
 #            write-ins (`note`), their other_agreements, and any of their
@@ -210,7 +212,7 @@
 "one_nt_response.semi_forcing" = { kind = "bool", label = "Semi-forcing 1NT response", skill = "bidding_conventions/semi_forcing_1nt", level = 5, choice = "major_openings.one_nt_response" }
 "one_nt_response.bypass_1s" = { kind = "bool", label = "1NT may bypass 1♠ over 1♥", level = 4 }
 "two_over_one.play"        = { kind = "bool", label = "2/1 game force", skill = "bidding_conventions/two_over_one", level = 4 }
-"two_over_one.rebid_style" = { kind = "enum", label = "2/1 opener's rebid style", options = ["bergen", "lawrence", "schuler"], default = "bergen", desc = "Opener's rebid after a 2/1 game force (1♥–2♦). bergen (Bergen style): 2NT is the default bid and says nothing; rebidding the major shows six; a new suit (2♠, 3♣) shows no extras. lawrence (Lawrence style): rebidding the major is the default, 5+; a new suit shows extras; 2NT shows stoppers. schuler (Schuler Shift): rebidding the major is the default, exactly five; a new suit shows extras; 2NT shows six or more in the major (Vic Quiros, ACBL Bridge Bulletin, September 2026)", skill = "bidding_conventions/two_over_one", level = 5 }
+"two_over_one.rebid_style" = { kind = "enum", label = "2/1 opener's rebid style", options = ["bergen", "lawrence", "schuler"], default = "bergen", plays = { schuler = "bidding_conventions/schuler_shift" }, desc = "Opener's rebid after a 2/1 game force (1♥–2♦). bergen (Bergen style): 2NT is the default bid and says nothing; rebidding the major shows six; a new suit (2♠, 3♣) shows no extras. lawrence (Lawrence style): rebidding the major is the default, 5+; a new suit shows extras; 2NT shows stoppers. schuler (Schuler Shift): rebidding the major is the default, exactly five; a new suit shows extras; 2NT shows six or more in the major (Vic Quiros, ACBL Bridge Bulletin, September 2026)", skill = "bidding_conventions/two_over_one", level = 5 }
 "three_nt_raise.play"      = { kind = "bool", label = "3NT artificial raise (4-3-3-3)", level = 6 }
 "art_raises_other"         = { kind = "text", label = "Other artificial raises" }
 "jump_raise.weak"          = { kind = "bool", label = "Jump raise: weak", level = 4, choice = "major_openings.jump_raise" }
@@ -344,6 +346,7 @@
 "two_clubs.2h_response"    = { kind = "enum", label = "2♣–2♥ response", options = ["negative", "steps"] }
 "kokish.play"              = { kind = "bool", label = "Kokish relay", skill = "bidding_conventions/kokish", level = 8 }
 "parrish_bust.play"        = { kind = "bool", label = "Parrish 2♥ bust", skill = "bidding_conventions/two_heart_bust", level = 7 }
+"parrish_bust.relay"       = { kind = "bool", label = "Parrish relay", desc = "A relay that follows the 2♥ bust, so it depends on it", requires = "two_level.parrish_bust.play", skill = "bidding_conventions/parrish_relay", level = 7 }
 "two_diamonds.meaning"     = { kind = "enum", label = "2♦ meaning", options = ["weak", "intermediate", "strong", "conventional"], skill = "bidding_conventions/weak_2s", level = 3 , plays = { weak = "bidding_conventions/weak_2s" } }
 "two_diamonds.min_hcp"     = { kind = "int", label = "2♦ range: minimum", min = 0, max = 30 }
 "two_diamonds.max_hcp"     = { kind = "int", label = "2♦ range: maximum", min = 0, max = 30 }

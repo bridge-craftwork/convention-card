@@ -1,0 +1,9 @@
+id = "bidding_conventions/schuler_shift"
+name = "Schuler shift"
+source = "proposed"
+level = 6
+names = ["Schuler shift", "Schuler"]
+summary = """
+A style for opener's rebid after a 2/1 game-forcing response, one of the three
+the card's 2/1 rebid style offers.
+"""

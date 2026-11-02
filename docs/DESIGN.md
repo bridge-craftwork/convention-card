@@ -374,6 +374,23 @@ other way in: another tool opens `…/card/#import=v1.<data>`, and the card is
 added to the browser's cards and opened. That is how the Better BBO
 Convention Card extension will open a BBO card here (MIGRATION.md, Phase 5).
 
+
+#### Every field has a place
+
+The sections grew from the ACBL card, but a card holds more than that card has
+room for, so nothing depends on a section having a row for a field.
+`web/src/editor/cardFields.js` gives each field of the spec a section. A field
+that no row or panel of that section shows is listed under "More fields" by a
+generic row (`FieldRow.vue`, by the field's kind), and `other_agreements` are
+listed under Other conventions. A new spec field therefore shows up without any
+editor change. `widgetFields.json` lists what the panels read; a test renders
+them and fails when it goes stale (`UPDATE_WIDGET_FIELDS=1` rewrites it).
+
+The search box works from the same list: every word of the query in a field's
+label, its convention's names, its path, description or options, its section's
+name, or the value the card holds. It ignores the level filter, reads `2h` as
+`2♥`, and its results can be edited where they stand.
+
 ### 4. The Rust crate (`crates/bridge-card`)
 
 rusty-bidding-bot's crate, moved here with its history: the field registry,

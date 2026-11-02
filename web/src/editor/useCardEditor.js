@@ -1,3 +1,4 @@
+import { field as specField, FIELDS } from '../../../js/spec.js'
 import { ref, computed, watch } from 'vue'
 import { alertSummary, alertsFor } from '../../../js/spec.js'
 import { upgradeCard, upgradeCardData } from '../../../js/migrate.js'
@@ -13,6 +14,20 @@ import {
   alertPathOf,
   writePath
 } from './conventionCatalog.js'
+
+// Fields that depend on another (`requires`): on, this turns that field on;
+// off, those depending on this go off.
+function applyRequires(data, path, on) {
+  const canonical = specField(path)?.path ?? path
+  if (on) {
+    const required = FIELDS[canonical]?.requires
+    if (required) writePath(data, required, true)
+    return
+  }
+  for (const [p, def] of Object.entries(FIELDS)) {
+    if (def.requires === canonical) writePath(data, p, false)
+  }
+}
 
 // The editor's state: the card, its in-flight edits, the view filters and
 // the overlays. Everything outside the card goes through two adapters
@@ -291,6 +306,7 @@ function createState(storage, overlays) {
     const entry = CONVENTION_CATALOG.find(e => e.id === entryId)
     if (!entry) return
     setEntryChecked(entry, editedCardData.value, checked)
+    applyRequires(editedCardData.value, entry.cardPath, checked)
     // Trigger reactivity (in-place mutation isn't always seen by Vue
     // when deep paths change). Re-assign top-level reference.
     editedCardData.value = { ...editedCardData.value }
@@ -299,6 +315,7 @@ function createState(storage, overlays) {
   function writeField(cardPath, value) {
     if (!isEditable.value || !editedCardData.value || !cardPath) return
     writePath(editedCardData.value, cardPath, value)
+    if (specField(cardPath)?.kind === 'bool') applyRequires(editedCardData.value, cardPath, value === true)
     // Trigger reactivity for the deep-path write.
     editedCardData.value = { ...editedCardData.value }
   }

@@ -1,0 +1,9 @@
+id = "bidding_conventions/parrish_relay"
+name = "Parrish relay"
+source = "proposed"
+level = 7
+names = ["Parrish relay"]
+summary = """
+A treatment of the 2♥ bust over a 2♣ opening: a relay that follows the bust
+bid, so a partnership plays it only with that convention.
+"""

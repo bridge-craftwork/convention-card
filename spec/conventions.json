@@ -972,6 +972,16 @@
     }
    ]
   },
+  "bidding_conventions/parrish_relay": {
+   "id": "bidding_conventions/parrish_relay",
+   "name": "Parrish relay",
+   "source": "proposed",
+   "level": 7,
+   "names": [
+    "Parrish relay"
+   ],
+   "summary": "A treatment of the 2♥ bust over a 2♣ opening: a relay that follows the bust\nbid, so a partnership plays it only with that convention."
+  },
   "bidding_conventions/pick_a_slam_5nt": {
    "id": "bidding_conventions/pick_a_slam_5nt",
    "name": "Pick-a-slam 5NT",
@@ -1245,6 +1255,17 @@
     "Roudi"
    ],
    "summary": "A checkback used in Acol and similar systems after opener's 1NT rebid, with\n2♣ asking about support and strength."
+  },
+  "bidding_conventions/schuler_shift": {
+   "id": "bidding_conventions/schuler_shift",
+   "name": "Schuler shift",
+   "source": "proposed",
+   "level": 6,
+   "names": [
+    "Schuler shift",
+    "Schuler"
+   ],
+   "summary": "A style for opener's rebid after a 2/1 game-forcing response, one of the three\nthe card's 2/1 rebid style offers."
   },
   "bidding_conventions/semi_forcing_1nt": {
    "id": "bidding_conventions/semi_forcing_1nt",
