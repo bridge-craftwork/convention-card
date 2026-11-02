@@ -128,6 +128,15 @@ describe('the editor state, against a storage adapter', () => {
     expect(ed.isDirty.value).toBe(false)
   })
 
+  it('a duplicate of a BBO card is no longer that BBO card', async () => {
+    const storage = memoryStorage()
+    storage.loadDefault = async () => ({ id: 'system', name: 'BMW', owner_id: null, card_data: { _bbo_raw: { cc_key: 'k', title: 'BMW' } } })
+    const ed = useCardEditor(storage)
+    await ed.loadCardForCurrentUser()
+    await ed.duplicateCurrentCard()
+    expect(ed.currentCard.value.card_data._bbo_raw).toEqual({ title: 'BMW' })
+  })
+
   it('duplicates, edits, saves and reloads through the adapter', async () => {
     const storage = memoryStorage()
     const ed = useCardEditor(storage)

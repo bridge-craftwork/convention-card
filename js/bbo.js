@@ -10,8 +10,9 @@
 //     conventions: { "1NStayman": "y", … },                       (C_)
 //     leads:       { "ls-akx-a": "y", … } }                       (L_)
 //
-// The import also reads the extension's earlier file of such cards
-// (`{ source: "bbo-acbl", cards: [ … ] }`), taking the first.
+// The import also reads the extension's "Export all" file of such cards
+// (`{ source: "bbo-acbl", cards: [ … ] }`): `bboFileCards` picks the cards
+// worth reading, and importCards reads them all.
 //
 // Both directions read one map, spec/formats/bbo-map.toml, which says what
 // each entry does. The import keeps the BBO card in `card_data._bbo_raw`, and
@@ -229,7 +230,39 @@ export function isBboCard(input) {
   return src.includes('bbo') || Array.isArray(input.cards)
 }
 
-/** Convert one BBO card (or the extension's earlier file of them) into `{ name, description, card_data }`. */
+/** Whether `input` is the extension's file of cards, rather than one card. */
+export function isBboFile(input) {
+  return isBboCard(input) && Array.isArray(input.cards)
+}
+
+const sortedEntries = slots => Object.entries(slots || {}).sort(([a], [b]) => (a < b ? -1 : 1))
+
+/**
+ * The cards of the extension's file worth reading, and those left out, by
+ * name: `{ cards, empty, copies }`. `empty`: nothing in its fields, boxes or
+ * leads (the extension reads only ACBL cards, so it writes a blank for
+ * BBO's other styles). `copies`: the same title and contents as a card kept.
+ * BBO's stock cards go last: they aren't the person's own, and the first
+ * card added can become their primary.
+ */
+export function bboFileCards(file) {
+  const listed = file.cards.filter(c => c && typeof c === 'object')
+  const inOrder = [...listed.filter(c => !c.stock), ...listed.filter(c => c.stock)]
+  const titled = c => (c.title || 'Imported BBO card').trim()
+  const seen = new Set()
+  const out = { cards: [], empty: [], copies: [] }
+  for (const c of inOrder) {
+    const slots = [c.fields, c.conventions, c.leads].map(sortedEntries)
+    if (slots.every(s => !s.length)) { out.empty.push(titled(c)); continue }
+    const same = JSON.stringify([titled(c), slots])
+    if (seen.has(same)) { out.copies.push(titled(c)); continue }
+    seen.add(same)
+    out.cards.push(c)
+  }
+  return out
+}
+
+/** Convert one BBO card (or a file of one) into `{ name, description, card_data }`. */
 export function importBboJson(input) {
   if (!input || typeof input !== 'object') {
     throw new Error('BBO file is empty or not JSON')

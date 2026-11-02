@@ -18,6 +18,18 @@ const choiceOf = a => (a === true || a === 'keep' ? 'keep' : a === 'add' ? 'add'
 const named = (cardData, name) =>
   cardData?.metadata ? { ...cardData, metadata: { ...cardData.metadata, name } } : cardData
 
+// A BBO card's name when it's added: BBO allows several cards of one name,
+// the card list shouldn't (Rick Wilson, 2026-11-01). `taken` is every name
+// in use; other formats keep the name they came with.
+function addedName(card, name, taken) {
+  let unique = name
+  if (card.format === 'bbo') {
+    for (let n = 1; taken.has(unique); n++) unique = `${name} (BBO${n > 1 ? ` ${n}` : ''})`
+  }
+  taken.add(unique)
+  return unique
+}
+
 export const when = t => (t ? new Date(t).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : 'no date')
 
 /**
@@ -42,13 +54,18 @@ export async function mergeImported(records, storage, ask = defaultAsk) {
   const plan = planImport(records, kept)
   const out = { added: [], replaced: [], same: [], keptOurs: [], lastId: null }
   const askedAbout = new Set()
+  const taken = new Set(kept.map(k => k.name))
   let first = !kept.length
 
   for (const { card, action, target } of plan) {
     const name = card.name || 'Imported convention card'
     const fields = { name, description: card.description || null, cardData: card.card_data || {} }
+    const asNew = () => {
+      const unique = addedName(card, name, taken)
+      return { ...fields, name: unique, cardData: unique === name ? fields.cardData : named(fields.cardData, unique) }
+    }
     if (action === 'add') {
-      const id = await storage.create({ ...fields, primary: first })
+      const id = await storage.create({ ...asNew(), primary: first })
       first = false
       out.added.push(id)
       out.lastId = id
@@ -69,7 +86,7 @@ export async function mergeImported(records, storage, ask = defaultAsk) {
         continue
       }
       if (choice === 'add') {
-        const id = await storage.create({ ...fields, primary: false })
+        const id = await storage.create({ ...asNew(), primary: false })
         out.added.push(id)
         out.lastId = id
         continue
@@ -90,10 +107,18 @@ export async function mergeImported(records, storage, ask = defaultAsk) {
   const lines = []
   if (unasked.length) lines.push(`Replaced with the newer imported copy: ${unasked.map(nameOf).join(', ')}.`)
   if (out.same.length) lines.push(`Already up to date: ${out.same.map(nameOf).join(', ')}.`)
+  // A BBO file's cards that were left out (importCards)
+  const { empty = [], copies = [] } = records[0]?.skipped || {}
+  const EMPTY = "Not imported, empty in the file (the extension reads only BBO's ACBL cards):"
+  const COPIES = 'Not imported, exact copies of another card in the file:'
+  if (empty.length) lines.push(`${EMPTY} ${empty.join(', ')}.`)
+  if (copies.length) lines.push(`${COPIES} ${copies.join(', ')}.`)
   out.matched = lines.join('\n') || null
   out.matchedGroups = [
     unasked.length && { heading: 'Replaced with the newer imported copy:', items: unasked.map(nameOf) },
     out.same.length && { heading: 'Already up to date:', items: out.same.map(nameOf) },
+    empty.length && { heading: EMPTY, items: empty },
+    copies.length && { heading: COPIES, items: copies },
   ].filter(Boolean)
 
   const parts = []

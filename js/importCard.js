@@ -7,7 +7,7 @@
 // The .bbsa and PDF code is loaded only when a file needs it, so a page that
 // imports this module does not pull in pdf-lib.
 
-import { isBboCard, importBboJson } from './bbo.js'
+import { isBboCard, isBboFile, bboFileCards, importBboJson } from './bbo.js'
 import { importBridgeodexJson } from './bridgodex.js'
 import { decodeCardFromUrl } from './handoff.js'
 import { isBundle } from './cardBundle.js'
@@ -18,7 +18,7 @@ import { upgradeCard } from './migrate.js'
 /** What `importCard` reads, by the name its `from` option takes. */
 export const IMPORT_FORMATS = {
   card: "the editor's own JSON: its export ({ schema, name, description, card_data }) or bare card_data",
-  bbo: "BBO's ACBL card export (JSON)",
+  bbo: "BBO's ACBL card export (JSON): one card, or a file of them",
   bridgeodex: "Bridgodex's card export (JSON, with a settings block)",
   bbsa: "BBA's .bbsa convention file (Key = value lines)",
   pdf: 'an ACBL PDF: one this editor exported (the card travels inside it, and boxes changed since are read too), or any filled-in ACBL Classic or New card; or a card PDF Bridgodex made',
@@ -129,8 +129,11 @@ export async function importCard(input, { from = null, name = null } = {}) {
       if (obj.card_data && typeof obj.card_data === 'object') return card(obj)
       return card({ name: obj.metadata?.name, description: obj.metadata?.description, card_data: obj })
     }
-    case 'bbo':
-      return card(importBboJson(json()))
+    case 'bbo': {
+      const obj = json()
+      if (isBboFile(obj) && obj.cards.length > 1) throw new Error(`This BBO file holds ${obj.cards.length} cards: read it with importCards`)
+      return card(importBboJson(obj))
+    }
     case 'bridgeodex':
       return card(importBridgeodexJson(json()))
     case 'bbsa': {
@@ -162,9 +165,12 @@ export async function importCard(input, { from = null, name = null } = {}) {
 }
 
 /**
- * Read one card or many: an "Export all" file (cardBundle.js) gives every
- * card in it, anything importCard reads gives one. Returns an array of
- * what importCard returns.
+ * Read one card or many: an "Export all" file (cardBundle.js) or the BBO
+ * extension's file gives every card in it, anything importCard reads gives
+ * one. Returns an array of what importCard returns. A BBO file's cards that
+ * were left out (bboFileCards) are named on the first record, as `skipped:
+ * { empty, copies }`. Throws when the file has cards but none with anything
+ * in them.
  */
 export async function importCards(input, options = {}) {
   let obj = null
@@ -174,5 +180,12 @@ export async function importCards(input, options = {}) {
     obj = input
   }
   if (isBundle(obj)) return Promise.all(obj.cards.map(c => importCard(c, { from: 'card' })))
+  if (isBboFile(obj) && detectFormat(obj) === 'bbo' && obj.cards.length) {
+    const { cards, empty, copies } = bboFileCards(obj)
+    if (!cards.length) throw new Error(`Every card in this BBO file is empty: ${empty.join(', ')}. The extension reads only BBO's ACBL cards.`)
+    const records = await Promise.all(cards.map(c => importCard(c, { from: 'bbo' })))
+    if (empty.length || copies.length) records[0].skipped = { empty, copies }
+    return records
+  }
   return [await importCard(input, options)]
 }
