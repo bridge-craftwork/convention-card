@@ -167,6 +167,59 @@ export function summarize(card) {
   }
 }
 
+// ─── Sorting the table ────────────────────────────────────────────
+// The sort is a list of `{ key, dir }`, the column last clicked first, so each
+// earlier choice breaks the ties of the one after it.
+
+/** The table's columns before and after the distinguishing ones. `value`: what a row sorts by. */
+export const SORT_BEFORE = [
+  { key: 'name', label: 'Card', value: row => row.name },
+  { key: 'names', label: 'Names on the card', value: row => row.names },
+  { key: 'system', label: 'System', value: row => row.system },
+  { key: 'level', label: 'Level', value: row => row.cardLevel?.level },
+  { key: 'conventions', label: 'Conventions', value: row => row.levels.total },
+]
+export const SORT_AFTER = [
+  // To the minute: cards imported together read the same, so they tie.
+  { key: 'updated', label: 'Last edit', first: 'desc', value: row => (row.updated ? Math.floor(Date.parse(row.updated) / 60000) : null) },
+]
+
+/** The sort after clicking `column`: a second click on the first key turns it round. */
+export function nextSort(sort, column) {
+  const [head] = sort
+  if (head?.key === column.key) return [{ key: column.key, dir: head.dir === 'asc' ? 'desc' : 'asc' }, ...sort.slice(1)]
+  return [{ key: column.key, dir: column.first || 'asc' }, ...sort.filter(s => s.key !== column.key)]
+}
+
+const isBlank = v => v == null || v === '' || Number.isNaN(v)
+const compareValues = (a, b) => (typeof a === 'number' && typeof b === 'number'
+  ? a - b
+  : String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }))
+
+/**
+ * `rows` in the sort's order; rows it can't tell apart stay in the order they
+ * came. A blank goes last either way round, and a key with no column (one
+ * that isn't showing just now) is skipped.
+ */
+export function sortRows(rows, sort, columns) {
+  const keys = sort
+    .map(s => ({ dir: s.dir === 'desc' ? -1 : 1, value: columns.find(c => c.key === s.key)?.value }))
+    .filter(k => k.value)
+  return [...rows].sort((x, y) => {
+    for (const { dir, value } of keys) {
+      const a = value(x)
+      const b = value(y)
+      if (isBlank(a) || isBlank(b)) {
+        if (isBlank(a) !== isBlank(b)) return isBlank(a) ? 1 : -1
+        continue
+      }
+      const order = compareValues(a, b)
+      if (order) return order * dir
+    }
+    return 0
+  })
+}
+
 // The paths above must stay real fields (a renamed field would quietly show blanks).
 export const PATHS = [
   'general.system', 'general.system_category', 'notrump.one_nt.range_min', 'notrump.one_nt.range_max',
