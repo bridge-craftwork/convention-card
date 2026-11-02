@@ -94,3 +94,13 @@ describe('searching a card', () => {
     expect(searchAgreements('nothing', data)).toEqual([])
   })
 })
+
+// A host's tests load the editor through Node, which refuses a JSON import
+// without this attribute, though Vite allows it.
+describe('the editor loads in Node', () => {
+  it('imports its JSON with the attribute Node needs', () => {
+    const files = fs.readdirSync(path.resolve(import.meta.dirname, '../src/editor'), { recursive: true }).filter(f => /\.(js|vue)$/.test(f) && !f.includes('__tests__'))
+    const bare = files.filter(f => /from '[^']+\.json'(?! with \{ type: 'json' \})/.test(fs.readFileSync(path.resolve(import.meta.dirname, '../src/editor', f), 'utf8')))
+    expect(bare).toEqual([])
+  })
+})
