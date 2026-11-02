@@ -656,6 +656,11 @@ export const CONVENTION_CATALOG = [
     cardPath: 'two_level.kokish.play', skillPath: null
   },
   {
+    id: 'parrish_relay', section: 'two_level', name: 'Parrish relay',
+    desc: 'A relay that follows the 2♥ bust; ticking it ticks the bust too',
+    cardPath: 'two_level.parrish_bust.relay', alertsFrom: 'two_level.parrish_bust.play', skillPath: 'bidding_conventions/parrish_relay'
+  },
+  {
     id: 'parrish_2h_bust', section: 'two_level', name: 'Parrish 2♥ bust',
     desc: 'After 2♣, 2♥ shows a flat 0-3 HCP',
     cardPath: 'two_level.parrish_bust.play', skillPath: null

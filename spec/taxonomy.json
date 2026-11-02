@@ -1,7 +1,7 @@
 {
  "schema": "taxonomy/v1",
  "version": "0.27.1",
- "generated": "2026-10-30",
+ "generated": "2026-11-02",
  "categories": [
   {
    "id": "basic_bidding",
@@ -310,6 +310,12 @@
    "level": "expert"
   },
   {
+   "path": "bidding_conventions/parrish_relay",
+   "name": "Parrish relay",
+   "category": "bidding_conventions",
+   "level": "advanced"
+  },
+  {
    "path": "bidding_conventions/pick_a_slam_5nt",
    "name": "Pick-a-slam 5NT",
    "category": "bidding_conventions",
@@ -392,6 +398,12 @@
    "name": "Roudi",
    "category": "bidding_conventions",
    "level": "advanced"
+  },
+  {
+   "path": "bidding_conventions/schuler_shift",
+   "name": "Schuler shift",
+   "category": "bidding_conventions",
+   "level": "intermediate"
   },
   {
    "path": "bidding_conventions/semi_forcing_1nt",

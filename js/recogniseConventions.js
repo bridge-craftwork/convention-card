@@ -64,6 +64,15 @@ for (const [path, def] of Object.entries(FIELDS)) {
   if (!BOOL_FIELDS.has(id)) BOOL_FIELDS.set(id, [])
   BOOL_FIELDS.get(id).push(path)
 }
+// A convention played by one option of one choice field (`plays`), for one
+// with no yes/no field: Schuler shift is the 2/1 rebid style "schuler".
+const ENUM_OPTIONS = new Map()
+for (const [path, def] of Object.entries(FIELDS)) {
+  for (const [option, id] of Object.entries(def.plays || {})) {
+    ENUM_OPTIONS.set(id, ENUM_OPTIONS.has(id) ? null : { field: path, value: option })
+  }
+}
+
 function baseField(id) {
   const paths = BOOL_FIELDS.get(id) || []
   const level = CONVENTIONS[id]?.level
@@ -117,8 +126,8 @@ const excerptOf = q => `${q.before}${q.match}${q.after}`
  * convention and box: `{ suggestions, dismissed }`, each a list of
  * `{ key, id, name, set, found, confirm }`; `confirm` is true when every
  * place names it only by a generic name ("weak 2"), so a person should say. `name` is the convention's own name; `set`
- * is what adding it does, `{ field: path }` or `{ other_agreements: true }`
- * (it has no yes/no field); `found` is where the text names it,
+ * is what adding it does, `{ field: path }`, `{ field: path, value }` (a choice
+ * field's option, `plays`) or `{ other_agreements: true }` (it has neither); `found` is where the text names it,
  * `[{ path, label, written, quote: { before, match, after }, excerpt }]`, a
  * box of its own before a gathered note, the shortest first; the quote is
  * the line it is on. Where the text field says which box
@@ -143,7 +152,7 @@ export function suggestConventions(card_data) {
           key,
           id: m.id,
           name: implied ? FIELDS[implied]?.label || CONVENTIONS[m.id]?.name || m.name : CONVENTIONS[m.id]?.name || m.name,
-          set: field ? { field } : { other_agreements: true },
+          set: field ? { field } : ENUM_OPTIONS.get(m.id) || { other_agreements: true },
           implied: !!implied,
           found: [],
         })
@@ -181,7 +190,9 @@ export function suggestConventions(card_data) {
  */
 export function acceptSuggestion(card_data, suggestion) {
   if (suggestion.set.field) {
-    writePath(card_data, suggestion.set.field, true)
+    writePath(card_data, suggestion.set.field, suggestion.set.value ?? true)
+    const required = FIELDS[suggestion.set.field]?.requires
+    if (required) writePath(card_data, required, true)
   } else {
     const where = suggestion.found[0]
     const entry = { id: suggestion.id, text: where?.written || suggestion.name }
