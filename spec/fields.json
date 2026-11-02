@@ -985,11 +985,35 @@
    "min": 0,
    "max": 30
   },
+  "two_nt_response_range_min_plus": {
+   "kind": "bool",
+   "label": "1M–2NT range: minimum has a plus",
+   "choice": "major_openings.two_nt_response_range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "two_nt_response_range_min_minus": {
+   "kind": "bool",
+   "label": "1M–2NT range: minimum has a minus",
+   "choice": "major_openings.two_nt_response_range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "two_nt_response_range_max": {
    "kind": "int",
    "label": "1M–2NT range: maximum",
    "min": 0,
    "max": 30
+  },
+  "two_nt_response_range_max_plus": {
+   "kind": "bool",
+   "label": "1M–2NT range: maximum has a plus",
+   "choice": "major_openings.two_nt_response_range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "two_nt_response_range_max_minus": {
+   "kind": "bool",
+   "label": "1M–2NT range: maximum has a minus",
+   "choice": "major_openings.two_nt_response_range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   },
   "drury.fit": {
    "kind": "bool",
@@ -1007,11 +1031,35 @@
    "min": 0,
    "max": 25
   },
+  "three_nt_raise.range_min_plus": {
+   "kind": "bool",
+   "label": "3NT artificial raise: minimum has a plus",
+   "choice": "major_openings.three_nt_raise.range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "three_nt_raise.range_min_minus": {
+   "kind": "bool",
+   "label": "3NT artificial raise: minimum has a minus",
+   "choice": "major_openings.three_nt_raise.range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "three_nt_raise.range_max": {
    "kind": "int",
    "label": "3NT artificial raise: maximum",
    "min": 0,
    "max": 25
+  },
+  "three_nt_raise.range_max_plus": {
+   "kind": "bool",
+   "label": "3NT artificial raise: maximum has a plus",
+   "choice": "major_openings.three_nt_raise.range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "three_nt_raise.range_max_minus": {
+   "kind": "bool",
+   "label": "3NT artificial raise: maximum has a minus",
+   "choice": "major_openings.three_nt_raise.range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   }
  },
  "minor_openings": {
@@ -1079,11 +1127,35 @@
    "min": 0,
    "max": 20
   },
+  "one_club.one_nt_range_min_plus": {
+   "kind": "bool",
+   "label": "1♣–1NT range: minimum has a plus",
+   "choice": "minor_openings.one_club.one_nt_range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_club.one_nt_range_min_minus": {
+   "kind": "bool",
+   "label": "1♣–1NT range: minimum has a minus",
+   "choice": "minor_openings.one_club.one_nt_range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "one_club.one_nt_range_max": {
    "kind": "int",
    "label": "1♣–1NT range: maximum",
    "min": 0,
    "max": 20
+  },
+  "one_club.one_nt_range_max_plus": {
+   "kind": "bool",
+   "label": "1♣–1NT range: maximum has a plus",
+   "choice": "minor_openings.one_club.one_nt_range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_club.one_nt_range_max_minus": {
+   "kind": "bool",
+   "label": "1♣–1NT range: maximum has a minus",
+   "choice": "minor_openings.one_club.one_nt_range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   },
   "one_club.two_nt_range_min": {
    "kind": "int",
@@ -1091,11 +1163,35 @@
    "min": 0,
    "max": 20
   },
+  "one_club.two_nt_range_min_plus": {
+   "kind": "bool",
+   "label": "1♣–2NT range: minimum has a plus",
+   "choice": "minor_openings.one_club.two_nt_range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_club.two_nt_range_min_minus": {
+   "kind": "bool",
+   "label": "1♣–2NT range: minimum has a minus",
+   "choice": "minor_openings.one_club.two_nt_range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "one_club.two_nt_range_max": {
    "kind": "int",
    "label": "1♣–2NT range: maximum",
    "min": 0,
    "max": 20
+  },
+  "one_club.two_nt_range_max_plus": {
+   "kind": "bool",
+   "label": "1♣–2NT range: maximum has a plus",
+   "choice": "minor_openings.one_club.two_nt_range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_club.two_nt_range_max_minus": {
+   "kind": "bool",
+   "label": "1♣–2NT range: maximum has a minus",
+   "choice": "minor_openings.one_club.two_nt_range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   },
   "one_club.single_raise.nf": {
    "kind": "bool",
@@ -1256,11 +1352,35 @@
    "min": 0,
    "max": 30
   },
+  "one_diamond.one_nt_range_min_plus": {
+   "kind": "bool",
+   "label": "1♦–1NT range: minimum has a plus",
+   "choice": "minor_openings.one_diamond.one_nt_range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_diamond.one_nt_range_min_minus": {
+   "kind": "bool",
+   "label": "1♦–1NT range: minimum has a minus",
+   "choice": "minor_openings.one_diamond.one_nt_range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "one_diamond.one_nt_range_max": {
    "kind": "int",
    "label": "1♦–1NT range: maximum",
    "min": 0,
    "max": 30
+  },
+  "one_diamond.one_nt_range_max_plus": {
+   "kind": "bool",
+   "label": "1♦–1NT range: maximum has a plus",
+   "choice": "minor_openings.one_diamond.one_nt_range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_diamond.one_nt_range_max_minus": {
+   "kind": "bool",
+   "label": "1♦–1NT range: maximum has a minus",
+   "choice": "minor_openings.one_diamond.one_nt_range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   },
   "one_diamond.two_nt_range_min": {
    "kind": "int",
@@ -1268,11 +1388,35 @@
    "min": 0,
    "max": 30
   },
+  "one_diamond.two_nt_range_min_plus": {
+   "kind": "bool",
+   "label": "1♦–2NT range: minimum has a plus",
+   "choice": "minor_openings.one_diamond.two_nt_range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_diamond.two_nt_range_min_minus": {
+   "kind": "bool",
+   "label": "1♦–2NT range: minimum has a minus",
+   "choice": "minor_openings.one_diamond.two_nt_range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "one_diamond.two_nt_range_max": {
    "kind": "int",
    "label": "1♦–2NT range: maximum",
    "min": 0,
    "max": 30
+  },
+  "one_diamond.two_nt_range_max_plus": {
+   "kind": "bool",
+   "label": "1♦–2NT range: maximum has a plus",
+   "choice": "minor_openings.one_diamond.two_nt_range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_diamond.two_nt_range_max_minus": {
+   "kind": "bool",
+   "label": "1♦–2NT range: maximum has a minus",
+   "choice": "minor_openings.one_diamond.two_nt_range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   },
   "one_diamond.single_raise.nf": {
    "kind": "bool",
@@ -1333,11 +1477,35 @@
    "min": 0,
    "max": 25
   },
+  "one_club.three_nt_range_min_plus": {
+   "kind": "bool",
+   "label": "1♣–3NT range: minimum has a plus",
+   "choice": "minor_openings.one_club.three_nt_range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_club.three_nt_range_min_minus": {
+   "kind": "bool",
+   "label": "1♣–3NT range: minimum has a minus",
+   "choice": "minor_openings.one_club.three_nt_range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "one_club.three_nt_range_max": {
    "kind": "int",
    "label": "1♣–3NT range: maximum",
    "min": 0,
    "max": 25
+  },
+  "one_club.three_nt_range_max_plus": {
+   "kind": "bool",
+   "label": "1♣–3NT range: maximum has a plus",
+   "choice": "minor_openings.one_club.three_nt_range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "one_club.three_nt_range_max_minus": {
+   "kind": "bool",
+   "label": "1♣–3NT range: maximum has a minus",
+   "choice": "minor_openings.one_club.three_nt_range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   }
  },
  "two_level": {
@@ -1981,7 +2149,7 @@
     "first_or_second_round"
    ],
    "default": "first_or_second_round",
-   "desc": "first_round: the ace or a void only. first_or_second_round: king and singleton too, which is the more common modern treatment"
+   "desc": "first_round: the ace or a void only, the historical style. first_or_second_round: king and singleton too, as Italian champion teams showed to be more effective; the most prevalent treatment today"
   },
   "vs_interference": {
    "kind": "text",
@@ -2376,6 +2544,7 @@
     "dont",
     "meckwell",
     "suction",
+    "natural",
     "other"
    ],
    "aliases": [
@@ -2386,16 +2555,20 @@
     "Pottage": "cappelletti",
     "Disturbing Opponents NT": "dont",
     "Penalty": "other",
-    "Natural": "other",
     "Standard": "other",
     "Strong - Suction": "suction",
     "Weak - Suction": "suction",
     "Strong 14+ (Meckwell)": "meckwell",
     "Weak (Cappelletti)": "cappelletti",
     "Strong 1NT": "other",
-    "Weak 1NT": "other"
+    "Weak 1NT": "other",
+    "Strong": "other",
+    "Weak": "other",
+    "(Strong)": "other",
+    "(Weak)": "other",
+    "Strong/Weak": "other"
    },
-   "desc": "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md",
+   "desc": "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset, natural or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md",
    "skill": [
     "competitive_bidding/defense_vs_1nt",
     "competitive_bidding/cappelletti",
@@ -2453,6 +2626,7 @@
     "dont",
     "meckwell",
     "suction",
+    "natural",
     "other"
    ],
    "value_aliases": {
@@ -2460,14 +2634,18 @@
     "Pottage": "cappelletti",
     "Disturbing Opponents NT": "dont",
     "Penalty": "other",
-    "Natural": "other",
     "Standard": "other",
     "Strong - Suction": "suction",
     "Weak - Suction": "suction",
     "Strong 14+ (Meckwell)": "meckwell",
     "Weak (Cappelletti)": "cappelletti",
     "Strong 1NT": "other",
-    "Weak 1NT": "other"
+    "Weak 1NT": "other",
+    "Strong": "other",
+    "Weak": "other",
+    "(Strong)": "other",
+    "(Weak)": "other",
+    "Strong/Weak": "other"
    },
    "desc": "Not read by the rules yet: vs_1nt_strong.system is played against every range",
    "skill": [
@@ -2515,6 +2693,14 @@
   "vs_1nt_weak.other": {
    "kind": "text",
    "label": "Vs weak 1NT: other"
+  },
+  "vs_1nt_strong_includes": {
+   "kind": "int",
+   "label": "Their 1NT is strong if its range includes",
+   "min": 8,
+   "max": 20,
+   "desc": "Which defense to play: a 1NT whose range includes this point count gets vs_1nt_strong, any other vs_1nt_weak. BBO cards write 16 as Strong 16+ and Weak No 16",
+   "level": 5
   },
   "dont.play": {
    "kind": "bool",
@@ -3219,11 +3405,35 @@
    "min": 0,
    "max": 25
   },
+  "two_nt_raise_majors.range_min_plus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a major, minimum has a plus",
+   "choice": "vs_to_double.two_nt_raise_majors.range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "two_nt_raise_majors.range_min_minus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a major, minimum has a minus",
+   "choice": "vs_to_double.two_nt_raise_majors.range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "two_nt_raise_majors.range_max": {
    "kind": "int",
    "label": "Vs takeout double: 2NT over a major, maximum",
    "min": 0,
    "max": 25
+  },
+  "two_nt_raise_majors.range_max_plus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a major, maximum has a plus",
+   "choice": "vs_to_double.two_nt_raise_majors.range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "two_nt_raise_majors.range_max_minus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a major, maximum has a minus",
+   "choice": "vs_to_double.two_nt_raise_majors.range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   },
   "two_nt_natural_majors": {
    "kind": "bool",
@@ -3262,11 +3472,35 @@
    "min": 0,
    "max": 25
   },
+  "two_nt_raise_minors.range_min_plus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a minor, minimum has a plus",
+   "choice": "vs_to_double.two_nt_raise_minors.range_min_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "two_nt_raise_minors.range_min_minus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a minor, minimum has a minus",
+   "choice": "vs_to_double.two_nt_raise_minors.range_min_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
+  },
   "two_nt_raise_minors.range_max": {
    "kind": "int",
    "label": "Vs takeout double: 2NT over a minor, maximum",
    "min": 0,
    "max": 25
+  },
+  "two_nt_raise_minors.range_max_plus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a minor, maximum has a plus",
+   "choice": "vs_to_double.two_nt_raise_minors.range_max_qualifier",
+   "desc": "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)"
+  },
+  "two_nt_raise_minors.range_max_minus": {
+   "kind": "bool",
+   "label": "Vs takeout double: 2NT over a minor, maximum has a minus",
+   "choice": "vs_to_double.two_nt_raise_minors.range_max_qualifier",
+   "desc": "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)"
   },
   "two_nt_natural_minors": {
    "kind": "bool",

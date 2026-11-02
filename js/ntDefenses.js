@@ -20,6 +20,41 @@ export const NT_DEFENSE_BIDS = [
   { key: '2nt', label: '2NT' }
 ]
 
+// Which 1NTs count as strong: the point count their range includes.
+export const NT_STRONG_INCLUDES = 'competitive.vs_1nt_strong_includes'
+
+/**
+ * A heading of the card's defense to 1NT, as BBO's cards write them:
+ * `{ includes, system, label }`. `includes`: the 16 of "Strong 16+" and "Weak
+ * No 16". `system`: the words naming a defense ("Meckwell" in "Strong 14+
+ * (Meckwell)"), or null. `label`: it only says which 1NTs the column is for
+ * ("Strong 1NT", "(WEAK)", "strong/weak").
+ */
+export function readNtHeading(text) {
+  const t = String(text ?? '').trim()
+  if (/^\(?\s*(strong|weak|strong\s*\/\s*weak)(\s*1\s*nt)?\s*\)?$/i.test(t)) return { includes: null, system: null, label: true }
+  const m = /^\(?\s*(?:strong\s+|weak\s+no\s+)(\d{1,2})(?![\dA-Za-z])\s*\+?\s*\)?/i.exec(t)
+  if (!m) return { includes: null, system: t || null, label: false }
+  const rest = t.slice(m[0].length).replace(/^[\s:(-]+|[\s)]+$/g, '')
+  return { includes: Number(m[1]), system: rest || null, label: false }
+}
+
+const isNatural = system => String(system ?? '').trim().toLowerCase() === 'natural'
+
+/**
+ * What a column's heading prints: the defense as written, but with where
+ * strong starts when the card says ("Weak No 16: Natural"), and with which
+ * 1NTs a natural column is for ("Weak 1NT: Natural"), since the ACBL cards'
+ * two columns are otherwise labelled only by what's written here.
+ */
+export function ntHeadingText(side, system, includes) {
+  const Side = side === 'strong' ? 'Strong' : 'Weak'
+  const named = system == null || system === '' ? null : isNatural(system) ? 'Natural' : String(system)
+  const start = includes == null || includes === '' ? null : side === 'strong' ? `Strong ${includes}+` : `Weak No ${includes}`
+  if (start) return named ? `${start}: ${named}` : start
+  return named === 'Natural' ? `${Side} 1NT: Natural` : system
+}
+
 export const KNOWN_NT_DEFENSES = [
   {
     name: 'Cappelletti',
@@ -45,6 +80,8 @@ export const KNOWN_NT_DEFENSES = [
       '2nt': '—'
     }
   },
+  // Bids are as named: nothing to fill in, or to differ from
+  { name: 'Natural', bids: {} },
   {
     name: 'Meckwell',
     bids: {

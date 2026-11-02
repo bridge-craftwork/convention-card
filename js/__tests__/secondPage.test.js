@@ -7,6 +7,7 @@ import { renderAcblPdfBytes, lastEditDate } from '../acblClassicFillPdf.js'
 import { notesPageContent } from '../notesPage.js'
 import { MARK_TEXT } from '../pdfMark.js'
 import { importCard } from '../importCard.js'
+import { readCardFromPdf } from '../acblPdfImport.js'
 
 const ROOT = path.resolve(import.meta.dirname, '../..')
 const raw = JSON.parse(fs.readFileSync(path.join(ROOT, 'web/src/cards/2-1-intermediate.json')))
@@ -107,5 +108,20 @@ describe('the page after the card', () => {
       const width = async c => (await PDFDocument.load(await renderAcblPdfBytes(c, t))).getForm().getTextField(field).acroField.getWidgets()[0].getRectangle().width
       expect(await width(saved)).toBeLessThan(await width(noted) - 30)
     }
+  })
+})
+
+describe('the defense to 1NT on the PDF', () => {
+  const card = { name: 'T', card_data: { competitive: { vs_1nt_strong_includes: 16, vs_1nt_weak: { system: 'natural' } } } }
+
+  it.each(['classic', 'new'])('%s: prints where strong starts, and reads back unchanged', async template => {
+    const bytes = await renderAcblPdfBytes(card, template, {})
+    const form = (await PDFDocument.load(bytes)).getForm()
+    const box = n => form.getTextField(n).getText()
+    expect(template === 'classic' ? box('DEFENSE VS NOTRUMP') : box('V1NT.t.1')).toBe('Strong 16+')
+    expect(template === 'classic' ? box('1') : box('V1NT.t.2')).toBe('Weak No 16: Natural')
+    const back = await readCardFromPdf(bytes)
+    expect(back.report.edits).toEqual([])
+    expect(back.card_data.competitive.vs_1nt_strong_includes).toBe(16)
   })
 })

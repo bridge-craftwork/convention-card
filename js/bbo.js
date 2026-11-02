@@ -10,8 +10,9 @@
 //     conventions: { "1NStayman": "y", … },                       (C_)
 //     leads:       { "ls-akx-a": "y", … } }                       (L_)
 //
-// The import also reads the extension's earlier file of such cards
-// (`{ source: "bbo-acbl", cards: [ … ] }`), taking the first.
+// The import also reads the extension's "Export all" file of such cards
+// (`{ source: "bbo-acbl", cards: [ … ] }`): `bboFileCards` picks the cards
+// worth reading, and importCards reads them all.
 //
 // Both directions read one map, spec/formats/bbo-map.toml, which says what
 // each entry does. The import keeps the BBO card in `card_data._bbo_raw`, and
@@ -24,6 +25,7 @@ import { readPath, writePath } from './paths.js'
 import { normalizeSuitShorthand } from './suits.js'
 import { ledCards, ledValue, sameLead } from './leads.js'
 import { upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
+import { readNtHeading, NT_STRONG_INCLUDES } from './ntDefenses.js'
 
 const known = path => {
   if (!field(path)) throw new Error(`BBO map: unknown field ${path}`)
@@ -115,6 +117,52 @@ function textField(key, spec) {
   }
 }
 
+// A bid's cell that says only "that suit": "Clubs", "!Cs", "natural".
+const OWN_SUIT = { 2: /^(♣s?|c|clubs?)$/i, 3: /^(♦s?|d|diamonds?)$/i, 4: /^(♥s?|h|hearts?)$/i, 5: /^(♠s?|s|spades?)$/i }
+const NATURAL_CELLS = [['2C', 2], ['2D', 3], ['2H', 4], ['2S', 5]]
+
+// A column that spells out Meckwell, in full: double a minor or the majors,
+// 2♣/2♦ that minor and a major, 2♥/2♠ natural. Only all of it counts: a bot
+// bids by this, so a near match stays unnamed.
+const MECKWELL = {
+  Dbl: /^(1m|m|minor|♣ or ♦)\b.*\bor\b.*(♥\s*\+\s*♠|majors)/i,
+  '2C': /^(♣|c|clubs?)\.?\s*(\+|and|&)\s*(a\s+)?(major|m)$/i,
+  '2D': /^(♦|d|diamonds?)\.?\s*(\+|and|&)\s*(a\s+)?(major|m)$/i,
+  '2H': OWN_SUIT[4],
+  '2S': OWN_SUIT[5],
+}
+
+// A column's heading of the defense to 1NT: see the map's `nt_heading`. A
+// heading that is only a label is kept as written, for the card to print.
+function ntHeading(key, column) {
+  const path = known(`${column}.system`)
+  const includes = known(NT_STRONG_INCLUDES)
+  const side = key.at(-1)
+  const strong = column.endsWith('strong')
+  return {
+    group: 'fields', keys: [key], paths: [path, includes],
+    read: slots => {
+      const head = suitText(slots[key])
+      // A spelling the spec reads as one defense ("Strong 14+ (Meckwell)") stays whole
+      const parsed = readNtHeading(head)
+      const { includes: n, system, label } = !parsed.label && Object.hasOwn(field(path).value_aliases || {}, head)
+        ? { includes: null, system: head, label: false } : parsed
+      const cells = NATURAL_CELLS.map(([bid, suit]) => [suitText(slots[`vs1NT${bid}${side}`]), suit]).filter(([t]) => t)
+      const natural = cells.length && cells.every(([t, suit]) => /^natural$/i.test(t) || OWN_SUIT[suit].test(t))
+      const meckwell = Object.entries(MECKWELL).every(([bid, re]) => re.test(suitText(slots[`vs1NT${bid}${side}`]) || ''))
+      const value = system || (meckwell ? 'Meckwell' : natural ? 'Natural' : label ? head : null)
+      return [...(n == null ? [] : [[includes, n]]), ...(value ? [[path, value]] : [])]
+    },
+    write: get => {
+      const n = get(includes)
+      const system = bboText(get(path))
+      if (n == null || n === '') return { [key]: system }
+      const start = strong ? `Strong ${n}+` : `Weak No ${n}`
+      return { [key]: system ? `${start} (${system})` : start }
+    },
+  }
+}
+
 function joined({ path, keys, export: exported = true }) {
   known(path)
   return {
@@ -166,7 +214,7 @@ const TWO_CLUBS = {
 
 const ENTRIES = [
   ...Object.entries(BBO_MAP.conventions).map(([k, s]) => convention(k, s)),
-  ...Object.entries(BBO_MAP.fields).map(([k, s]) => textField(k, s)),
+  ...Object.entries(BBO_MAP.fields).map(([k, s]) => (s.nt_heading ? ntHeading(k, s.nt_heading) : textField(k, s))),
   ...(BBO_MAP.joined || []).map(joined),
   TWO_CLUBS,
 ]
@@ -245,7 +293,39 @@ export function isBboCard(input) {
   return src.includes('bbo') || Array.isArray(input.cards)
 }
 
-/** Convert one BBO card (or the extension's earlier file of them) into `{ name, description, card_data }`. */
+/** Whether `input` is the extension's file of cards, rather than one card. */
+export function isBboFile(input) {
+  return isBboCard(input) && Array.isArray(input.cards)
+}
+
+const sortedEntries = slots => Object.entries(slots || {}).sort(([a], [b]) => (a < b ? -1 : 1))
+
+/**
+ * The cards of the extension's file worth reading, and those left out, by
+ * name: `{ cards, empty, copies }`. `empty`: nothing in its fields, boxes or
+ * leads (the extension reads only ACBL cards, so it writes a blank for
+ * BBO's other styles). `copies`: the same title and contents as a card kept.
+ * BBO's stock cards go last: they aren't the person's own, and the first
+ * card added can become their primary.
+ */
+export function bboFileCards(file) {
+  const listed = file.cards.filter(c => c && typeof c === 'object')
+  const inOrder = [...listed.filter(c => !c.stock), ...listed.filter(c => c.stock)]
+  const titled = c => (c.title || 'Imported BBO card').trim()
+  const seen = new Set()
+  const out = { cards: [], empty: [], copies: [] }
+  for (const c of inOrder) {
+    const slots = [c.fields, c.conventions, c.leads].map(sortedEntries)
+    if (slots.every(s => !s.length)) { out.empty.push(titled(c)); continue }
+    const same = JSON.stringify([titled(c), slots])
+    if (seen.has(same)) { out.copies.push(titled(c)); continue }
+    seen.add(same)
+    out.cards.push(c)
+  }
+  return out
+}
+
+/** Convert one BBO card (or a file of one) into `{ name, description, card_data }`. */
 export function importBboJson(input) {
   if (!input || typeof input !== 'object') {
     throw new Error('BBO file is empty or not JSON')

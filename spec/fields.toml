@@ -240,12 +240,20 @@
 "two_nt_response_forcing"  = { kind = "bool", label = "1M–2NT forcing" }
 "two_nt_response_inv"      = { kind = "bool", label = "1M–2NT invitational" }
 "two_nt_response_range_min" = { kind = "int", label = "1M–2NT range: minimum", min = 0, max = 30 }
+"two_nt_response_range_min_plus" = { kind = "bool", label = "1M–2NT range: minimum has a plus", choice = "major_openings.two_nt_response_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_response_range_min_minus" = { kind = "bool", label = "1M–2NT range: minimum has a minus", choice = "major_openings.two_nt_response_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_response_range_max" = { kind = "int", label = "1M–2NT range: maximum", min = 0, max = 30 }
+"two_nt_response_range_max_plus" = { kind = "bool", label = "1M–2NT range: maximum has a plus", choice = "major_openings.two_nt_response_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_response_range_max_minus" = { kind = "bool", label = "1M–2NT range: maximum has a minus", choice = "major_openings.two_nt_response_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "drury.fit"                = { kind = "bool", label = "Drury: fit" }
 "two_over_one.game_forcing_except" = { kind = "bool", label = "2/1 game forcing except when suit rebid", skill = "bidding_conventions/two_over_one", level = 5 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "three_nt_raise.range_min" = { kind = "int", label = "3NT artificial raise: minimum", min = 0, max = 25 }
+"three_nt_raise.range_min_plus" = { kind = "bool", label = "3NT artificial raise: minimum has a plus", choice = "major_openings.three_nt_raise.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"three_nt_raise.range_min_minus" = { kind = "bool", label = "3NT artificial raise: minimum has a minus", choice = "major_openings.three_nt_raise.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "three_nt_raise.range_max" = { kind = "int", label = "3NT artificial raise: maximum", min = 0, max = 25 }
+"three_nt_raise.range_max_plus" = { kind = "bool", label = "3NT artificial raise: maximum has a plus", choice = "major_openings.three_nt_raise.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"three_nt_raise.range_max_minus" = { kind = "bool", label = "3NT artificial raise: maximum has a minus", choice = "major_openings.three_nt_raise.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [minor_openings]
@@ -261,9 +269,17 @@
 "one_club.art_forcing"     = { kind = "bool", label = "1♣ artificial forcing" }
 "one_club.transfer_resp"   = { kind = "bool", label = "Transfer responses to 1♣", skill = "bidding_conventions/transfer_walsh", level = 9 }
 "one_club.one_nt_range_min" = { kind = "int", label = "1♣–1NT range: minimum", min = 0, max = 20 }
+"one_club.one_nt_range_min_plus" = { kind = "bool", label = "1♣–1NT range: minimum has a plus", choice = "minor_openings.one_club.one_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.one_nt_range_min_minus" = { kind = "bool", label = "1♣–1NT range: minimum has a minus", choice = "minor_openings.one_club.one_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.one_nt_range_max" = { kind = "int", label = "1♣–1NT range: maximum", min = 0, max = 20 }
+"one_club.one_nt_range_max_plus" = { kind = "bool", label = "1♣–1NT range: maximum has a plus", choice = "minor_openings.one_club.one_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.one_nt_range_max_minus" = { kind = "bool", label = "1♣–1NT range: maximum has a minus", choice = "minor_openings.one_club.one_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.two_nt_range_min" = { kind = "int", label = "1♣–2NT range: minimum", min = 0, max = 20 }
+"one_club.two_nt_range_min_plus" = { kind = "bool", label = "1♣–2NT range: minimum has a plus", choice = "minor_openings.one_club.two_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.two_nt_range_min_minus" = { kind = "bool", label = "1♣–2NT range: minimum has a minus", choice = "minor_openings.one_club.two_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.two_nt_range_max" = { kind = "int", label = "1♣–2NT range: maximum", min = 0, max = 20 }
+"one_club.two_nt_range_max_plus" = { kind = "bool", label = "1♣–2NT range: maximum has a plus", choice = "minor_openings.one_club.two_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.two_nt_range_max_minus" = { kind = "bool", label = "1♣–2NT range: maximum has a minus", choice = "minor_openings.one_club.two_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.single_raise.nf" = { kind = "bool", label = "1♣ single raise: non-forcing", level = 2 }
 "one_club.single_raise.inv" = { kind = "bool", label = "1♣ single raise: invitational+", skill = "bidding_conventions/inverted_minors", level = 5 }
 "one_club.single_raise.gf" = { kind = "bool", label = "1♣ single raise: game forcing", skill = "bidding_conventions/inverted_minors", level = 5 }
@@ -291,9 +307,17 @@
 "one_diamond.art_forcing"  = { kind = "bool", label = "1♦ artificial forcing" }
 "one_club.single_raise.other" = { kind = "text", label = "1♣ single raise: other" }
 "one_diamond.one_nt_range_min" = { kind = "int", label = "1♦–1NT range: minimum", min = 0, max = 30 }
+"one_diamond.one_nt_range_min_plus" = { kind = "bool", label = "1♦–1NT range: minimum has a plus", choice = "minor_openings.one_diamond.one_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.one_nt_range_min_minus" = { kind = "bool", label = "1♦–1NT range: minimum has a minus", choice = "minor_openings.one_diamond.one_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.one_nt_range_max" = { kind = "int", label = "1♦–1NT range: maximum", min = 0, max = 30 }
+"one_diamond.one_nt_range_max_plus" = { kind = "bool", label = "1♦–1NT range: maximum has a plus", choice = "minor_openings.one_diamond.one_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.one_nt_range_max_minus" = { kind = "bool", label = "1♦–1NT range: maximum has a minus", choice = "minor_openings.one_diamond.one_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.two_nt_range_min" = { kind = "int", label = "1♦–2NT range: minimum", min = 0, max = 30 }
+"one_diamond.two_nt_range_min_plus" = { kind = "bool", label = "1♦–2NT range: minimum has a plus", choice = "minor_openings.one_diamond.two_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.two_nt_range_min_minus" = { kind = "bool", label = "1♦–2NT range: minimum has a minus", choice = "minor_openings.one_diamond.two_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.two_nt_range_max" = { kind = "int", label = "1♦–2NT range: maximum", min = 0, max = 30 }
+"one_diamond.two_nt_range_max_plus" = { kind = "bool", label = "1♦–2NT range: maximum has a plus", choice = "minor_openings.one_diamond.two_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.two_nt_range_max_minus" = { kind = "bool", label = "1♦–2NT range: maximum has a minus", choice = "minor_openings.one_diamond.two_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.single_raise.nf" = { kind = "bool", label = "1♦ single raise: non-forcing", level = 2 }
 "one_diamond.single_raise.inv" = { kind = "bool", label = "1♦ single raise: invitational+", skill = "bidding_conventions/inverted_minors", level = 5 }
 "one_diamond.single_raise.gf" = { kind = "bool", label = "1♦ single raise: game forcing", skill = "bidding_conventions/inverted_minors", level = 5 }
@@ -305,7 +329,11 @@
 "one_diamond.jump_raise_after_overcall.inv" = { kind = "bool", label = "1♦ jump raise after overcall: invitational", level = 4, choice = "minor_openings.one_diamond.jump_raise_after_overcall" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "one_club.three_nt_range_min" = { kind = "int", label = "1♣–3NT range: minimum", min = 0, max = 25 }
+"one_club.three_nt_range_min_plus" = { kind = "bool", label = "1♣–3NT range: minimum has a plus", choice = "minor_openings.one_club.three_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.three_nt_range_min_minus" = { kind = "bool", label = "1♣–3NT range: minimum has a minus", choice = "minor_openings.one_club.three_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.three_nt_range_max" = { kind = "int", label = "1♣–3NT range: maximum", min = 0, max = 25 }
+"one_club.three_nt_range_max_plus" = { kind = "bool", label = "1♣–3NT range: maximum has a plus", choice = "minor_openings.one_club.three_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.three_nt_range_max_minus" = { kind = "bool", label = "1♣–3NT range: maximum has a minus", choice = "minor_openings.one_club.three_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [two_level]
@@ -413,7 +441,7 @@
 "ropi"                     = { kind = "bool", label = "ROPI", skill = "bidding_conventions/dopi_ropi", level = 7 }
 "control_bids"             = { kind = "text", label = "Control bids (notes)" }
 "cue_bids.play"            = { kind = "bool", label = "Control (cue) bids", desc = "BBA's 'Cue bid'. With a trump suit agreed and slam in the air, bid a control below game instead of asking straight away", skill = "bidding_conventions/control_bids", level = 5 }
-"cue_bids.style"           = { kind = "enum", label = "Control bids show", options = ["first_round", "first_or_second_round"], default = "first_or_second_round", desc = "first_round: the ace or a void only. first_or_second_round: king and singleton too, which is the more common modern treatment" }
+"cue_bids.style"           = { kind = "enum", label = "Control bids show", options = ["first_round", "first_or_second_round"], default = "first_or_second_round", desc = "first_round: the ace or a void only, the historical style. first_or_second_round: king and singleton too, as Italian champion teams showed to be more effective; the most prevalent treatment today" }
 "vs_interference"          = { kind = "text", label = "Vs interference" }
 "trump_level"              = { kind = "text", label = "Trump-level cutover" }
 "notes"                    = { kind = "text", label = "Slam notes", note = true }
@@ -491,7 +519,7 @@
 "unusual_3nt.play"         = { kind = "bool", label = "Unusual 3NT", skill = "competitive_bidding/michaels_unusual", level = 6 }
 "unusual_4nt.play"         = { kind = "bool", label = "Unusual 4NT", skill = "competitive_bidding/michaels_unusual", level = 5 }
 "unusual_vs_unusual.play"  = { kind = "bool", label = "Unusual vs Unusual", skill = "competitive_bidding/unusual_vs_unusual", level = 8 }
-"vs_1nt_strong.system"     = { kind = "enum", label = "Defense vs strong 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "other"], aliases = ["competitive.defense_vs_strong_nt.convention"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other" }, desc = "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
+"vs_1nt_strong.system"     = { kind = "enum", label = "Defense vs strong 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "natural", "other"], aliases = ["competitive.defense_vs_strong_nt.convention"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other", "Strong" = "other", "Weak" = "other", "(Strong)" = "other", "(Weak)" = "other", "Strong/Weak" = "other" }, desc = "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset, natural or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
 "vs_1nt_strong.dbl"        = { kind = "text", label = "Vs strong 1NT: double", explains = "competitive.vs_1nt_strong.system" }
 "vs_1nt_strong.2c"         = { kind = "text", label = "Vs strong 1NT: 2♣", explains = "competitive.vs_1nt_strong.system" }
 "vs_1nt_strong.2d"         = { kind = "text", label = "Vs strong 1NT: 2♦", explains = "competitive.vs_1nt_strong.system" }
@@ -499,7 +527,7 @@
 "vs_1nt_strong.2s"         = { kind = "text", label = "Vs strong 1NT: 2♠", explains = "competitive.vs_1nt_strong.system" }
 "vs_1nt_strong.2nt"        = { kind = "text", label = "Vs strong 1NT: 2NT", explains = "competitive.vs_1nt_strong.system" }
 "vs_1nt_strong.other"      = { kind = "text", label = "Vs strong 1NT: other" }
-"vs_1nt_weak.system"       = { kind = "enum", label = "Defense vs weak 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "other"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Natural" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other" }, desc = "Not read by the rules yet: vs_1nt_strong.system is played against every range", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
+"vs_1nt_weak.system"       = { kind = "enum", label = "Defense vs weak 1NT", options = ["cappelletti", "modified_cappelletti", "landy", "multi_landy", "dont", "meckwell", "suction", "natural", "other"], value_aliases = { "Hamilton" = "cappelletti", "Pottage" = "cappelletti", "Disturbing Opponents NT" = "dont", "Penalty" = "other", "Standard" = "other", "Strong - Suction" = "suction", "Weak - Suction" = "suction", "Strong 14+ (Meckwell)" = "meckwell", "Weak (Cappelletti)" = "cappelletti", "Strong 1NT" = "other", "Weak 1NT" = "other", "Strong" = "other", "Weak" = "other", "(Strong)" = "other", "(Weak)" = "other", "Strong/Weak" = "other" }, desc = "Not read by the rules yet: vs_1nt_strong.system is played against every range", skill = ["competitive_bidding/defense_vs_1nt", "competitive_bidding/cappelletti", "competitive_bidding/modified_cappelletti", "competitive_bidding/dont", "competitive_bidding/meckwell", "competitive_bidding/landy", "competitive_bidding/multi_landy", "competitive_bidding/suction"], level = 5 }
 "vs_1nt_weak.dbl"          = { kind = "text", label = "Vs weak 1NT: double", explains = "competitive.vs_1nt_weak.system" }
 "vs_1nt_weak.2c"           = { kind = "text", label = "Vs weak 1NT: 2♣", explains = "competitive.vs_1nt_weak.system" }
 "vs_1nt_weak.2d"           = { kind = "text", label = "Vs weak 1NT: 2♦", explains = "competitive.vs_1nt_weak.system" }
@@ -507,6 +535,7 @@
 "vs_1nt_weak.2s"           = { kind = "text", label = "Vs weak 1NT: 2♠", explains = "competitive.vs_1nt_weak.system" }
 "vs_1nt_weak.2nt"          = { kind = "text", label = "Vs weak 1NT: 2NT", explains = "competitive.vs_1nt_weak.system" }
 "vs_1nt_weak.other"        = { kind = "text", label = "Vs weak 1NT: other" }
+"vs_1nt_strong_includes"   = { kind = "int", label = "Their 1NT is strong if its range includes", min = 8, max = 20, desc = "Which defense to play: a 1NT whose range includes this point count gets vs_1nt_strong, any other vs_1nt_weak. BBO cards write 16 as Strong 16+ and Weak No 16", level = 5 }
 "dont.play"                = { kind = "bool", label = "DONT", desc = "Bridge-Classroom's DONT switch: plays DONT when vs_1nt_strong.system is unset or other", skill = "competitive_bidding/dont", level = 5 }
 "cue_bid_raise.play"       = { kind = "bool", label = "Cue-bid raise", skill = "competitive_bidding/support_cuebids", level = 4 }
 "lead_directing_double.play" = { kind = "bool", label = "Lead-directing doubles", skill = "competitive_bidding/lead_directing_doubles", level = 5 }
@@ -657,14 +686,22 @@
 "two_nt_raise_majors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, limit", skill = "competitive_bidding/jordan_2nt", level = 5, choice = "vs_to_double.two_nt_raise_majors" }
 "two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_majors" }
 "two_nt_raise_majors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a major, minimum", min = 0, max = 25 }
+"two_nt_raise_majors.range_min_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, minimum has a plus", choice = "vs_to_double.two_nt_raise_majors.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_majors.range_min_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, minimum has a minus", choice = "vs_to_double.two_nt_raise_majors.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_raise_majors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a major, maximum", min = 0, max = 25 }
+"two_nt_raise_majors.range_max_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, maximum has a plus", choice = "vs_to_double.two_nt_raise_majors.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_majors.range_max_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, maximum has a minus", choice = "vs_to_double.two_nt_raise_majors.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_natural_majors"    = { kind = "bool", label = "Vs takeout double: 2NT over a major is natural" }
 "two_nt_raise_minors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor", skill = "competitive_bidding/jordan_2nt", level = 6 }
 "two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a minor, minimum", min = 0, max = 25 }
+"two_nt_raise_minors.range_min_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, minimum has a plus", choice = "vs_to_double.two_nt_raise_minors.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_minors.range_min_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, minimum has a minus", choice = "vs_to_double.two_nt_raise_minors.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_raise_minors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a minor, maximum", min = 0, max = 25 }
+"two_nt_raise_minors.range_max_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, maximum has a plus", choice = "vs_to_double.two_nt_raise_minors.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_minors.range_max_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, maximum has a minus", choice = "vs_to_double.two_nt_raise_minors.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_natural_minors"    = { kind = "bool", label = "Vs takeout double: 2NT over a minor is natural" }
 "notes"                    = { kind = "text", label = "Vs takeout double notes (card write-in)", note = true }
 

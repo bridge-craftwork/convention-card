@@ -21,6 +21,12 @@
 #       Text kept as typed, without suit symbols.
 #   "key" = { text = "path", also = { "path" = value } }
 #       Text; when the slot is filled, these values too.
+#   "key" = { nt_heading = "path" }
+#       A column heading of the defense to 1NT: names a defense ("Meckwell"),
+#       says which 1NTs the column is for ("Strong 1NT"), or says where strong
+#       starts ("Strong 16+", "Weak No 16": competitive.vs_1nt_strong_includes).
+#       A heading naming no defense, over 2♣-2♠ that are their own suits: natural;
+#       over cells that spell out all of Meckwell: Meckwell.
 #
 # [[joined]] — several slots, one line each, in one field. Export fills the
 # slots in order, and a last slot takes the remaining lines joined by "; ".
@@ -292,13 +298,13 @@
 "1NOcallOther1" = "nt_overcalls.direct.conv_text"
 "1NOcallOther2" = "nt_overcalls.balance.conv_text"
 # Defense vs 1NT: column 1 vs strong, column 2 vs weak.
-"vs1NTHead1" = "competitive.vs_1nt_strong.system"
+"vs1NTHead1" = { nt_heading = "competitive.vs_1nt_strong" }
 "vs1NT2C1"   = "competitive.vs_1nt_strong.2c"
 "vs1NT2D1"   = "competitive.vs_1nt_strong.2d"
 "vs1NT2H1"   = "competitive.vs_1nt_strong.2h"
 "vs1NT2S1"   = "competitive.vs_1nt_strong.2s"
 "vs1NTDbl1"  = "competitive.vs_1nt_strong.dbl"
-"vs1NTHead2" = "competitive.vs_1nt_weak.system"
+"vs1NTHead2" = { nt_heading = "competitive.vs_1nt_weak" }
 "vs1NT2C2"   = "competitive.vs_1nt_weak.2c"
 "vs1NT2D2"   = "competitive.vs_1nt_weak.2d"
 "vs1NT2H2"   = "competitive.vs_1nt_weak.2h"

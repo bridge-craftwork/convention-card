@@ -180,7 +180,10 @@ function mapped(group, id) {
       out.push({ card: `${spec.range} (the number)`, path: spec.range })
       for (const s of ['plus', 'minus']) if (field(`${spec.range}_${s}`)) out.push({ card: `${spec.range}_${s} (a ${s === 'plus' ? '+' : '-'} after it)`, path: `${spec.range}_${s}` })
     } else if (spec?.plain) out.push({ card: `${spec.plain} (as typed)`, path: spec.plain })
-    else if (spec?.text) {
+    else if (spec?.nt_heading) {
+      out.push({ card: `${spec.nt_heading}.system`, path: `${spec.nt_heading}.system` })
+      out.push({ card: 'competitive.vs_1nt_strong_includes (the 16 of "Strong 16+")', path: 'competitive.vs_1nt_strong_includes' })
+    } else if (spec?.text) {
       out.push({ card: spec.text, path: spec.text })
       for (const [p, v] of Object.entries(spec.also || {})) out.push({ card: `${p} = ${show(v)} (when filled)`, path: p })
     }

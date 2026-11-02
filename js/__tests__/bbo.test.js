@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { checkCard } from '../checkCard.js'
 import fs from 'fs'
 import { isBboCard, importBboJson, exportBboCard } from '../bbo.js'
 import { field } from '../spec.js'
@@ -411,5 +412,56 @@ describe('exportBboCard', () => {
     const roomy = Object.keys(after).filter(p => !['notes.notrump_notes', 'notes.major_notes'].includes(p))
     expect(roomy.filter(p => after[p] !== before[p])).toEqual([])
     expect(after['notes.major_notes'].split('\n')).toHaveLength(2)
+  })
+})
+
+describe('the headings of the defense to 1NT', () => {
+  const read = fields => importBboJson({ source: 'bbo-acbl', cards: [{ title: 'T', fields, conventions: {}, leads: {} }] }).card_data
+  const NATURAL_WEAK = { vs1NT2C2: 'Clubs', vs1NT2D2: 'Diamonds', vs1NT2H2: 'Hearts', vs1NT2S2: 'Spades', vs1NTDbl2: 'Pen and OFF' }
+
+  it('reads where strong starts, not as a defense', () => {
+    const c = read({ vs1NTHead1: 'Strong 16+', vs1NTHead2: 'Weak No 16', vs1NT2C1: 'C + Major', ...NATURAL_WEAK })
+    expect(c.competitive.vs_1nt_strong_includes).toBe(16)
+    expect(c.competitive.vs_1nt_strong.system).toBeUndefined()
+    expect(c.competitive.vs_1nt_weak.system).toBe('Natural')
+    expect(checkCard({ card_data: c }).diagnostics.filter(d => d.severity === 'error')).toEqual([])
+  })
+
+  it('keeps a defense named beside it', () => {
+    const c = read({ vs1NTHead1: 'Strong 16+ (Meckwell)' })
+    expect(c.competitive.vs_1nt_strong_includes).toBe(16)
+    expect(c.competitive.vs_1nt_strong.system).toBe('Meckwell')
+    const whole = read({ vs1NTHead1: 'Strong 14+ (Meckwell)' })
+    expect(whole.competitive.vs_1nt_strong.system).toBe('Strong 14+ (Meckwell)')
+  })
+
+  it.each(['strong', 'weak', '(STRONG)', '(WEAK)', 'strong/weak', 'Strong 1NT'])('%s is a label: kept, with no check error', head => {
+    const c = read({ vs1NTHead1: head })
+    expect(c.competitive.vs_1nt_strong.system).toBe(head)
+    expect(c.competitive.vs_1nt_strong_includes).toBeUndefined()
+    expect(checkCard({ card_data: c }).diagnostics.filter(d => d.severity === 'error')).toEqual([])
+  })
+
+  it('calls a column natural only when its bids are their own suits', () => {
+    expect(read({ vs1NTHead2: 'weak', vs1NT2C2: 'natural' }).competitive.vs_1nt_weak.system).toBe('Natural')
+    expect(read({ vs1NT2C1: '!Cs', vs1NT2H1: '!Hs' }).competitive.vs_1nt_strong.system).toBe('Natural')
+    expect(read({ vs1NTHead2: 'Weak 1NT', vs1NT2C2: 'Same' }).competitive.vs_1nt_weak.system).toBe('Weak 1NT')
+    expect(read({ vs1NTHead1: 'Meckwell', vs1NT2H1: 'Hearts' }).competitive.vs_1nt_strong.system).toBe('Meckwell')
+    expect(read({ vs1NT2D1: 'Majors' }).competitive?.vs_1nt_strong?.system).toBeUndefined()
+  })
+
+  it('names Meckwell only when the column spells out all of it', () => {
+    const meckwell = n => ({ [`vs1NTDbl${n}`]: '1m or H + S', [`vs1NT2C${n}`]: 'C + Major', [`vs1NT2D${n}`]: 'D + Major', [`vs1NT2H${n}`]: 'Hearts', [`vs1NT2S${n}`]: 'Spades' })
+    expect(read({ vs1NTHead1: 'Strong 16+', ...meckwell(1) }).competitive.vs_1nt_strong.system).toBe('Meckwell')
+    expect(read({ vs1NTHead1: 'Strong 1NT', ...meckwell(1), vs1NTDbl1: 'Minor or H+S', vs1NT2C1: 'C.+ major' }).competitive.vs_1nt_strong.system).toBe('Meckwell')
+    expect(read({ vs1NTHead1: 'Strong 1NT', ...meckwell(1), vs1NTDbl1: 'Multiple' }).competitive.vs_1nt_strong.system).toBe('Strong 1NT')
+    expect(read({ vs1NTHead1: 'Suction', ...meckwell(1) }).competitive.vs_1nt_strong.system).toBe('Suction')
+  })
+
+  it('goes back to BBO in its own words, and in new words when changed', () => {
+    const c = read({ vs1NTHead1: 'Strong 16+', vs1NTHead2: 'Weak No 16', ...NATURAL_WEAK })
+    expect(exportBboCard(c).fields).toMatchObject({ vs1NTHead1: 'Strong 16+', vs1NTHead2: 'Weak No 16' })
+    c.competitive.vs_1nt_strong_includes = 15
+    expect(exportBboCard(c).fields).toMatchObject({ vs1NTHead1: 'Strong 15+', vs1NTHead2: 'Weak No 15 (Natural)' })
   })
 })
