@@ -7,7 +7,7 @@
 import { FIELDS, CONVENTIONS, field } from '../../../js/spec.js'
 import { readPath } from '../../../js/paths.js'
 import { SECTION_META, STRUCTURED_FIELDS, CONVENTION_CATALOG } from './conventionCatalog.js'
-import WIDGET_FIELDS from './widgetFields.json'
+import WIDGET_FIELDS from './widgetFields.json' with { type: 'json' }
 
 const canonical = path => field(path)?.path ?? null
 
