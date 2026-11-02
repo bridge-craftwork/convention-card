@@ -88,6 +88,7 @@
     <section class="cards">
       <div class="cards-head">
         <h2>Your cards</h2>
+        <button v-if="sort.length" class="sort-reset" type="button" title="Primary card first, then your own cards by name" @click="setSort([])">Reset sort</button>
         <div class="cards-actions">
           <button v-if="canCreate" class="btn btn-primary" :disabled="busy" @click="onNew">New card</button>
           <button v-if="canCreate" class="btn" :disabled="busy" @click="fileInput?.click()" title="One card, or an Export all file">Import</button>
@@ -112,13 +113,11 @@
         <thead>
           <tr>
             <th v-if="compare" class="pick-col"><span class="sr-only">Compare</span></th>
-            <th>Card</th>
-            <th>Names on the card</th>
-            <th>System</th>
-            <th>Level</th>
-            <th>Conventions</th>
-            <th v-for="d in columns" :key="d.key">{{ d.label }}</th>
-            <th>Last edit</th>
+            <th v-for="c in sortColumns" :key="c.key" :aria-sort="ariaSort(c)">
+              <button class="sort-btn" type="button" :title="`Sort by ${c.label}`" @click="setSort(nextSort(sort, c))">
+                {{ c.label }}<span v-if="sortMark(c)" class="sort-mark" :class="{ then: sort[0].key !== c.key }" aria-hidden="true">{{ sortMark(c) }}</span>
+              </button>
+            </th>
             <th class="pdf-col"><span class="sr-only">PDF</span></th>
           </tr>
         </thead>
@@ -186,7 +185,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { summarize, distinguishing, lastEdit } from './cardSummary.js'
+import { summarize, distinguishing, lastEdit, SORT_BEFORE, SORT_AFTER, nextSort, sortRows } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
@@ -292,7 +291,7 @@ async function load() {
 const commonKind = c => (c.owner_id == null ? 'built-in' : c.visibility === 'public' ? 'public' : null)
 const group = c => (commonKind(c) && c.role !== 'owner' ? 2 : c.role === 'editor' || c.role === 'viewer' ? 1 : 0)
 
-const rows = computed(() => cards.value.map(c => ({
+const unsorted = computed(() => cards.value.map(c => ({
   ...summarize(c),
   primary: !!c.primary,
   role: c.role,
@@ -302,6 +301,44 @@ const rows = computed(() => cards.value.map(c => ({
   common: commonKind(c),
   data: c.card_data || {},
 })))
+
+// The sort: clicking a column makes it the first key and keeps the earlier
+// ones behind it. A per-browser convenience, kept because opening a card
+// leaves this page.
+const SORT_KEY = 'convention-card.list-sort'
+function savedSort() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SORT_KEY))
+    return Array.isArray(saved) ? saved.filter(s => s && typeof s.key === 'string') : []
+  } catch { return [] }
+}
+const sort = ref(savedSort())
+function setSort(next) {
+  sort.value = next
+  try { localStorage.setItem(SORT_KEY, JSON.stringify(next)) } catch { /* private mode */ }
+}
+const sortColumns = computed(() => [
+  ...SORT_BEFORE,
+  ...columns.value.map(d => ({ key: d.key, label: d.label, value: row => d.value(row.data) })),
+  ...SORT_AFTER,
+])
+// The sample stays after the person's own cards, however they're sorted.
+const rows = computed(() => [
+  ...sortRows(unsorted.value.filter(r => !r.readOnly), sort.value, sortColumns.value),
+  ...unsorted.value.filter(r => r.readOnly),
+])
+const showingSort = computed(() => sort.value.filter(s => sortColumns.value.some(c => c.key === s.key)))
+const arrow = s => (s.dir === 'desc' ? '▼' : '▲')
+// An arrow on the first two keys, the second one faint
+function sortMark(column) {
+  const at = showingSort.value.findIndex(s => s.key === column.key)
+  return at === 0 || at === 1 ? arrow(showingSort.value[at]) : ''
+}
+function ariaSort(column) {
+  const first = showingSort.value[0]
+  if (first?.key !== column.key) return undefined
+  return first.dir === 'desc' ? 'descending' : 'ascending'
+}
 
 // PDF export from the table: the card layouts the library fills. Needs the
 // host to have told the library where its templates are (setAssetLoader).
@@ -453,6 +490,12 @@ code { font-size: 13px; }
 
 .card-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .card-table th { text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 10px; border-bottom: 1px solid var(--card-border); }
+.sort-btn { all: unset; cursor: pointer; white-space: nowrap; }
+.sort-btn:hover { color: var(--green-dark); }
+.sort-btn:focus-visible { outline: 2px solid var(--green-mid); outline-offset: 2px; }
+.sort-mark { margin-left: 4px; font-size: 10px; color: var(--green-dark); }
+.sort-mark.then { opacity: 0.45; }
+.sort-reset { font: inherit; font-size: 13px; margin-right: auto; padding: 0; border: none; background: none; color: var(--green-dark); text-decoration: underline; cursor: pointer; }
 .card-table td { padding: 10px; border-bottom: 1px solid #efede8; vertical-align: top; }
 .card-row { cursor: pointer; }
 .card-row:hover, .card-row:focus { background: #f6faf7; outline: none; }

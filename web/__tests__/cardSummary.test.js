@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import path from 'path'
-import { DISTINGUISHING, distinguishing, lastEdit, levelsOf, summarize, systemOf, unknownPaths } from '../src/editor/cardSummary.js'
+import { DISTINGUISHING, distinguishing, lastEdit, levelsOf, nextSort, SORT_AFTER, SORT_BEFORE, sortRows, summarize, systemOf, unknownPaths } from '../src/editor/cardSummary.js'
 
 const ROOT = path.resolve(__dirname, '../..')
 const SEED = JSON.parse(fs.readFileSync(path.join(ROOT, 'crates/bridge-card/tests/fixtures/21_intermediate_card.json'), 'utf8'))
@@ -86,5 +86,75 @@ describe('the table of cards', () => {
     expect(lastEdit(new Date(2026, 9, 27), now)).toBe(new Date(2026, 9, 27).toLocaleDateString(undefined, { weekday: 'short' }))
     expect(lastEdit(new Date(2026, 9, 26), now)).toMatch(/2026/)
     expect(lastEdit(null, now)).toBe('')
+  })
+})
+
+describe('sorting the table of cards', () => {
+  const COLUMNS = [...SORT_BEFORE, ...SORT_AFTER]
+  const column = key => COLUMNS.find(c => c.key === key)
+  const row = (name, system, total = 0, updated = null, level = null) => ({
+    name, names: '', system, updated, levels: { total }, cardLevel: level ? { level } : null,
+  })
+  const names = (rows, sort) => sortRows(rows, sort, COLUMNS).map(r => r.name)
+
+  it('makes the column clicked the first key, keeping the earlier ones behind it', () => {
+    let sort = nextSort([], column('name'))
+    sort = nextSort(sort, column('system'))
+    sort = nextSort(sort, column('level'))
+    expect(sort.map(s => s.key)).toEqual(['level', 'system', 'name'])
+  })
+
+  it('turns the first key round on a second click, leaving the rest', () => {
+    const sort = nextSort(nextSort([], column('name')), column('system'))
+    expect(nextSort(sort, column('system'))).toEqual([{ key: 'system', dir: 'desc' }, { key: 'name', dir: 'asc' }])
+  })
+
+  it('moves an earlier key to the front rather than listing it twice', () => {
+    const sort = nextSort(nextSort([], column('name')), column('system'))
+    expect(nextSort(sort, column('name'))).toEqual([{ key: 'name', dir: 'asc' }, { key: 'system', dir: 'asc' }])
+  })
+
+  it('starts Last edit with the newest', () => {
+    expect(nextSort([], column('updated'))).toEqual([{ key: 'updated', dir: 'desc' }])
+  })
+
+  it('uses the prior sort to break ties', () => {
+    const rows = [row('B', '2/1'), row('C', 'SAYC'), row('A', '2/1')]
+    expect(names(rows, [{ key: 'system', dir: 'asc' }, { key: 'name', dir: 'asc' }])).toEqual(['A', 'B', 'C'])
+    expect(names(rows, [{ key: 'system', dir: 'asc' }, { key: 'name', dir: 'desc' }])).toEqual(['B', 'A', 'C'])
+  })
+
+  it('keeps the order it was given when nothing separates rows', () => {
+    const rows = [row('B', 'x'), row('A', 'x')]
+    expect(names(rows, [])).toEqual(['B', 'A'])
+    expect(names(rows, [{ key: 'system', dir: 'desc' }])).toEqual(['B', 'A'])
+  })
+
+  it('compares numbers as numbers, in text as well', () => {
+    expect(names([row('A', '', 10), row('B', '', 9)], [{ key: 'conventions', dir: 'asc' }])).toEqual(['B', 'A'])
+    expect(names([row('Card 10', ''), row('Card 9', '')], [{ key: 'name', dir: 'asc' }])).toEqual(['Card 9', 'Card 10'])
+  })
+
+  it('puts blanks last in either direction', () => {
+    const rows = [row('none', ''), row('b', 'B'), row('a', 'A')]
+    expect(names(rows, [{ key: 'system', dir: 'asc' }])).toEqual(['a', 'b', 'none'])
+    expect(names(rows, [{ key: 'system', dir: 'desc' }])).toEqual(['b', 'a', 'none'])
+    const byLevel = [row('none', ''), row('low', '', 0, null, 3), row('high', '', 0, null, 7)]
+    expect(names(byLevel, [{ key: 'level', dir: 'desc' }])).toEqual(['high', 'low', 'none'])
+  })
+
+  it('sorts Last edit by the time, with no date last', () => {
+    const rows = [row('old', '', 0, '2026-01-02T00:00:00Z'), row('never', ''), row('new', '', 0, '2026-11-02T00:00:00Z')]
+    expect(names(rows, [{ key: 'updated', dir: 'desc' }])).toEqual(['new', 'old', 'never'])
+  })
+
+  it('lets the prior sort decide between edits in the same minute', () => {
+    const rows = [row('B', '', 0, '2026-11-02T10:02:05Z'), row('A', '', 0, '2026-11-02T10:02:01Z')]
+    expect(names(rows, [{ key: 'updated', dir: 'desc' }, { key: 'name', dir: 'asc' }])).toEqual(['A', 'B'])
+  })
+
+  it('skips a key whose column is not showing', () => {
+    const rows = [row('B', ''), row('A', '')]
+    expect(names(rows, [{ key: 'carding', dir: 'asc' }, { key: 'name', dir: 'asc' }])).toEqual(['A', 'B'])
   })
 })
