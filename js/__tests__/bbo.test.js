@@ -450,6 +450,33 @@ describe('exportBboCard and the extension’s saved date', () => {
     expect(out.fields.bbccSaved).toBeUndefined()
   })
 
+  // The boxes of real cards, whose fields can't say which were ticked
+  const ticked = conventions => importBboJson({ cards: [{ ...card, conventions }] }).card_data
+
+  it.each([
+    ['Reverse Drury without the Drury box', { druryRev: 'y' }],
+    ['Fit and 2-Way Drury without the Drury box', { druryFit: 'y', drury2Way: 'y' }],
+    ['two preempt styles', { preS: 'y', preL: 'y' }],
+  ])('gives back %s as they came, date and all', (_, conventions) => {
+    const out = exportBboCard(ticked(conventions))
+    expect(out.conventions).toEqual(conventions)
+    expect(out.fields.bbccSaved).toBe('1793640000')
+  })
+
+  it('still says a shared field when another box on it changes', () => {
+    const data = ticked({ druryRev: 'y' })
+    data.major_openings.drury.reverse = false
+    const out = exportBboCard(data)
+    expect(out.conventions).toEqual({ drury: 'y' })
+    expect(out.fields.bbccSaved).toBeUndefined()
+  })
+
+  it('moves a preempt style off both of its boxes', () => {
+    const data = ticked({ preS: 'y', preL: 'y' })
+    data.preempts.three_level_style = 'very_light'
+    expect(exportBboCard(data).conventions).toEqual({ preVL: 'y' })
+  })
+
   it('has no date to keep on a card without one', () => {
     const { bbccSaved, ...fields } = card.fields
     expect(exportBboCard(importBboJson({ cards: [{ ...card, fields }] }).card_data).fields.bbccSaved).toBeUndefined()

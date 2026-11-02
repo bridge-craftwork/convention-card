@@ -300,6 +300,16 @@ export function isBboFile(input) {
 
 const sortedEntries = slots => Object.entries(slots || {}).sort(([a], [b]) => (a < b ? -1 : 1))
 
+// The extension's date of a card's last save on BBO. It says when, not what:
+// two cards differing only in it are the same card.
+const SAVED_DATE = BBO_MAP.extension_fields.saved
+
+/** A BBO card's `fields` without the extension's saved date. */
+export function withoutSavedDate(fields) {
+  const { [SAVED_DATE]: _, ...rest } = fields || {}
+  return rest
+}
+
 /**
  * The cards of the extension's file worth reading, and those left out, by
  * name: `{ cards, empty, copies }`. `empty`: nothing in its fields, boxes or
@@ -315,7 +325,7 @@ export function bboFileCards(file) {
   const seen = new Set()
   const out = { cards: [], empty: [], copies: [] }
   for (const c of inOrder) {
-    const slots = [c.fields, c.conventions, c.leads].map(sortedEntries)
+    const slots = [withoutSavedDate(c.fields), c.conventions, c.leads].map(sortedEntries)
     if (slots.every(s => !s.length)) { out.empty.push(titled(c)); continue }
     const same = JSON.stringify([titled(c), slots])
     if (seen.has(same)) { out.copies.push(titled(c)); continue }
@@ -380,8 +390,6 @@ function settings(cardData) {
   return path => values.get(canonical(path))
 }
 
-const SAVED_DATE = 'bbccSaved'
-
 /**
  * Convert card_data to one BBO card, `{ …, title, style, fields,
  * conventions, leads }`, for the extension to write to BBO. `name` is the
@@ -393,6 +401,12 @@ export function exportBboCard(cardData, { name } = {}) {
   const get = settings(cardData)
   const was = settings(before)
   const unchanged = paths => paths.every(p => get(p) === was(p))
+  // Boxes share fields (Reverse Drury is also "plays Drury"), so a change to
+  // one box's fields rewrites every box on those fields.
+  const touched = new Set(ENTRIES
+    .filter(e => !e.importOnly && !unchanged(e.paths))
+    .flatMap(e => e.paths.map(canonical)))
+  const untouched = paths => paths.every(p => !touched.has(canonical(p)))
 
   const out = {
     fields: { ...(raw.fields || {}) },
@@ -407,8 +421,9 @@ export function exportBboCard(cardData, { name } = {}) {
   }
   for (const e of ENTRIES) {
     if (e.importOnly) continue
-    // A text slot keeps its words while its fields are as imported.
-    if (e.group === 'fields' && unchanged(e.paths)) continue
+    // A text slot keeps its words, and a box its tick, while their fields are
+    // as imported: an import can't always say which boxes were ticked.
+    if (e.group === 'fields' ? unchanged(e.paths) : untouched(e.paths)) continue
     put(e.group, e.write(get))
   }
 
@@ -434,13 +449,12 @@ export function exportBboCard(cardData, { name } = {}) {
 
   // The extension's date of the card's last save on BBO (its import-plan.js) is
   // no longer true of a card changed here. A card with no date is of unknown age.
-  const { [SAVED_DATE]: savedDate, ...otherFields } = raw.fields || {}
-  const { [SAVED_DATE]: _, ...fieldsNow } = out.fields
   const same = (a, b = {}) => {
     const keys = Object.keys(a)
     return keys.length === Object.keys(b).length && keys.every(k => a[k] === b[k])
   }
-  if (savedDate !== undefined && !(same(fieldsNow, otherFields) && same(out.conventions, raw.conventions) && same(out.leads, raw.leads))) {
+  const asImported = same(withoutSavedDate(out.fields), withoutSavedDate(raw.fields)) && same(out.conventions, raw.conventions) && same(out.leads, raw.leads)
+  if (raw.fields?.[SAVED_DATE] !== undefined && !asImported) {
     delete out.fields[SAVED_DATE]
   }
 
