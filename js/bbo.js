@@ -466,3 +466,20 @@ export function exportBboCard(cardData, { name } = {}) {
     ...out,
   }
 }
+
+// The file format the extension writes (its cc-json.js) and reads.
+const BBO_FILE_VERSION = '1.1'
+
+/**
+ * A card ({ name, card_data }) as a BBO file, `{ schema_version, exported_at,
+ * source, cards: [<BBO card>] }`: what the extension's export writes and its
+ * import reads.
+ */
+export function exportBboFile(card, exportedAt = new Date().toISOString()) {
+  return {
+    schema_version: BBO_FILE_VERSION,
+    exported_at: exportedAt,
+    source: 'bridge-craftwork-card',
+    cards: [exportBboCard(card.card_data || {}, { name: card.name || undefined })],
+  }
+}

@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { checkCard } from '../checkCard.js'
 import fs from 'fs'
-import { isBboCard, importBboJson, exportBboCard } from '../bbo.js'
+import { isBboCard, importBboJson, exportBboCard, exportBboFile, isBboFile } from '../bbo.js'
+import { importCards } from '../importCard.js'
 import { field } from '../spec.js'
 import { upgradeCardData } from '../migrate.js'
 
@@ -480,6 +481,38 @@ describe('exportBboCard and the extension’s saved date', () => {
   it('has no date to keep on a card without one', () => {
     const { bbccSaved, ...fields } = card.fields
     expect(exportBboCard(importBboJson({ cards: [{ ...card, fields }] }).card_data).fields.bbccSaved).toBeUndefined()
+  })
+})
+
+describe('exportBboFile', () => {
+  const card = { title: 'Ours', cc_key: 'k1', owner: 'pat', fields: { approach: '2/1', bbccSaved: '100' }, conventions: { '1NStayman': 'y' }, leads: {} }
+  const WHEN = '2026-11-02T10:00:00.000Z'
+
+  it('writes the file the extension writes: an envelope and a list of BBO cards', () => {
+    const file = exportBboFile({ name: 'Ours', card_data: importBboJson({ cards: [card] }).card_data }, WHEN)
+    expect(file).toMatchObject({ schema_version: '1.1', exported_at: WHEN })
+    expect(isBboFile(file)).toBe(true)
+    expect(file.cards).toHaveLength(1)
+    expect(file.cards[0]).toMatchObject({ title: 'Ours', cc_key: 'k1', owner: 'pat', style: 'ACBL', fields: card.fields, conventions: card.conventions })
+  })
+
+  it('names the card by its name here, so a rename goes with it', () => {
+    const file = exportBboFile({ name: 'Renamed', card_data: importBboJson({ cards: [card] }).card_data }, WHEN)
+    expect(file.cards[0].title).toBe('Renamed')
+  })
+
+  it('writes a card made here, which BBO has no key for', () => {
+    const file = exportBboFile({ name: 'New', card_data: { general: { system: '2/1' }, notrump: { stayman: { forcing: true } } } }, WHEN)
+    const [out] = file.cards
+    expect(out).toMatchObject({ title: 'New', style: 'ACBL', fields: { approach: '2/1' }, conventions: { '1NStayman': 'y' } })
+    expect(out.cc_key).toBeUndefined()
+  })
+
+  it('reads back through importCard', async () => {
+    const file = exportBboFile({ name: 'Ours', card_data: importBboJson({ cards: [card] }).card_data }, WHEN)
+    const [read] = await importCards(JSON.stringify(file))
+    expect(read).toMatchObject({ format: 'bbo', name: 'Ours' })
+    expect(read.card_data.general.system).toBe('2/1')
   })
 })
 

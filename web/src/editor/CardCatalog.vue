@@ -53,13 +53,13 @@
               <thead><tr><th></th><th>Import</th><th>Export</th></tr></thead>
               <tbody>
                 <tr><td>Filled-in ACBL PDFs</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-                <tr><td><a href="https://www.bridgebase.com/" target="_blank" rel="noopener">BBO</a></td><td class="yes">✓</td><td class="no">not yet</td></tr>
-                <tr><td><a href="https://bridgodex.com/" target="_blank" rel="noopener">Bridgodex</a></td><td class="yes">✓</td><td class="no">not yet</td></tr>
+                <tr><td><a href="https://www.bridgebase.com/" target="_blank" rel="noopener">BBO</a></td><td class="yes">✓</td><td class="yes">✓</td></tr>
+                <tr><td><a href="https://bridgodex.com/" target="_blank" rel="noopener">Bridgodex</a></td><td class="yes">✓</td><td class="yes">✓</td></tr>
                 <tr><td><a href="https://sites.google.com/view/bbaenglish" target="_blank" rel="noopener">BBA</a> (<code>.bbsa</code>)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
               </tbody>
             </table>
             <p class="flag">A PDF read in is a fillable ACBL Classic or New card; a printed one (as most
-              Bridgodex PDFs are) has no boxes to read. BBO and Bridgodex can't be written to yet.</p>
+              Bridgodex PDFs are) has no boxes to read. BBO cards go through the Better BBO extension, Bridgodex cards through its own import.</p>
           </div>
           <div class="fact">
             <h2>On BBO</h2>
@@ -471,7 +471,6 @@ h2 { font-family: var(--font-heading); font-size: 18px; margin: 0 0 6px; }
 .formats th { text-align: left; font-weight: 600; color: var(--text-secondary); padding: 2px 6px; }
 .formats td { padding: 3px 6px; border-top: 1px solid #efede8; }
 .formats .yes { color: var(--green-dark); font-weight: 600; }
-.formats .no { color: #8a4b00; font-size: 12px; }
 .places { margin: 0 0 6px; padding-left: 18px; font-size: 14px; line-height: 1.5; }
 .fact p + p { margin-top: 6px; }
 .account { display: flex; gap: 8px; align-items: center; }

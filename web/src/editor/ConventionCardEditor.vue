@@ -142,7 +142,7 @@
         <button
           class="btn"
           :disabled="!currentCard || cardLoading"
-          title="Export the card's data: this editor's JSON or a BBA .bbsa file"
+          title="Export the card's data: this editor's JSON, BBO, Bridgodex or a BBA .bbsa file"
           @click="onExportContent"
         >Export Content</button>
         <button
@@ -385,6 +385,7 @@ const loadAcblPdf = () => import('../../../js/acblClassicFillPdf.js')
 /** The .bbsa converter, loaded only when it is needed (it brings the spec's JSON). */
 const loadBbsa = () => import('../../../js/bbsa.js')
 const loadBridgodex = () => import('../../../js/bridgodex.js')
+const loadBbo = () => import('../../../js/bbo.js')
 
 const currentCard = cc.currentCard
 const editedCardData = cc.editedCardData
@@ -575,14 +576,13 @@ const CONTENT_FORMATS = [
     ext: 'bbsa',
     mime: 'text/plain'
   },
-  // BBO has no card files: the Better BBO Convention Card extension reads
-  // this editor's own JSON and writes the card into BBO. It has its own
-  // button and entry, and BBO in the file's name, so a person finds it by
-  // name (Rick Wilson, 2026-10-05).
+  // The file the Better BBO Convention Card extension writes and reads. It
+  // has its own button and entry, and BBO in the file's name, so a person
+  // finds it by name (Rick Wilson, 2026-10-05).
   {
     id: 'bbo',
     name: 'BBO',
-    desc: 'For Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO. The same JSON as Bridge Classroom JSON, named with BBO.',
+    desc: 'For Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO.',
     ready: true,
     ext: 'BBO.json',
     mime: 'application/json'
@@ -636,8 +636,11 @@ async function doContentExport(formatId) {
   if (!card) return
   try {
     let payload
-    if (formatId === 'bridge-classroom' || formatId === 'bbo') {
+    if (formatId === 'bridge-classroom') {
       payload = JSON.stringify(exportRecord(card), null, 2)
+    } else if (formatId === 'bbo') {
+      const { exportBboFile } = await loadBbo()
+      payload = JSON.stringify(exportBboFile(card), null, 2)
     } else if (formatId === 'bbsa') {
       const { exportBbsa } = await loadBbsa()
       payload = exportBbsa(card.card_data || {}).text
