@@ -415,6 +415,47 @@ describe('exportBboCard', () => {
   })
 })
 
+describe('exportBboCard and the extension’s saved date', () => {
+  const card = {
+    title: 'Dated',
+    fields: { approach: '2/1', '1NTMin1': '15', '1NTMax1': '17', bbccSaved: '1793640000' },
+    conventions: { '1NStayman': 'y' },
+    leads: {},
+  }
+  const imported = () => importBboJson({ cards: [card] }).card_data
+
+  it('keeps the date of a card that has not changed', () => {
+    expect(exportBboCard(imported()).fields.bbccSaved).toBe('1793640000')
+  })
+
+  it('drops the date when a field changes', () => {
+    const data = imported()
+    data.general.system = 'Precision'
+    const out = exportBboCard(data)
+    expect(out.fields.approach).toBe('Precision')
+    expect(out.fields.bbccSaved).toBeUndefined()
+  })
+
+  it('drops the date when a number changes', () => {
+    const data = imported()
+    data.notrump.one_nt.range_min = 14
+    expect(exportBboCard(data).fields.bbccSaved).toBeUndefined()
+  })
+
+  it('drops the date when a box changes', () => {
+    const data = imported()
+    data.notrump.stayman.forcing = false
+    const out = exportBboCard(data)
+    expect(out.conventions['1NStayman']).toBeUndefined()
+    expect(out.fields.bbccSaved).toBeUndefined()
+  })
+
+  it('has no date to keep on a card without one', () => {
+    const { bbccSaved, ...fields } = card.fields
+    expect(exportBboCard(importBboJson({ cards: [{ ...card, fields }] }).card_data).fields.bbccSaved).toBeUndefined()
+  })
+})
+
 describe('the headings of the defense to 1NT', () => {
   const read = fields => importBboJson({ source: 'bbo-acbl', cards: [{ title: 'T', fields, conventions: {}, leads: {} }] }).card_data
   const NATURAL_WEAK = { vs1NT2C2: 'Clubs', vs1NT2D2: 'Diamonds', vs1NT2H2: 'Hearts', vs1NT2S2: 'Spades', vs1NTDbl2: 'Pen and OFF' }

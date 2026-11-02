@@ -380,6 +380,8 @@ function settings(cardData) {
   return path => values.get(canonical(path))
 }
 
+const SAVED_DATE = 'bbccSaved'
+
 /**
  * Convert card_data to one BBO card, `{ …, title, style, fields,
  * conventions, leads }`, for the extension to write to BBO. `name` is the
@@ -429,6 +431,18 @@ export function exportBboCard(cardData, { name } = {}) {
 
   const partnerNames = cardData?.metadata?.partner_names
   if (partnerNames !== before.metadata?.partner_names) put('fields', { names: blank(partnerNames) ? undefined : String(partnerNames) })
+
+  // The extension's date of the card's last save on BBO (its import-plan.js) is
+  // no longer true of a card changed here. A card with no date is of unknown age.
+  const { [SAVED_DATE]: savedDate, ...otherFields } = raw.fields || {}
+  const { [SAVED_DATE]: _, ...fieldsNow } = out.fields
+  const same = (a, b = {}) => {
+    const keys = Object.keys(a)
+    return keys.length === Object.keys(b).length && keys.every(k => a[k] === b[k])
+  }
+  if (savedDate !== undefined && !(same(fieldsNow, otherFields) && same(out.conventions, raw.conventions) && same(out.leads, raw.leads))) {
+    delete out.fields[SAVED_DATE]
+  }
 
   const { fields, conventions, leads, ...meta } = raw
   return {
