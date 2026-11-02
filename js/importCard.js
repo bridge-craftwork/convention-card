@@ -103,15 +103,17 @@ export async function importCard(input, { from = null, name = null } = {}) {
   // which box that text means (textMapping.js, `implies`), then the
   // conventions its text names by a specific name (recogniseConventions.js;
   // generic names stay suggestions). The editor's own cards come back as
-  // they were saved.
+  // they were saved, as does the card inside one of our PDFs: only a PDF's
+  // own boxes are another tool's, and any change to the card inside is one
+  // the reader reports (report.edits).
   // Every card comes back in the current schema: one saved in an older one
   // (a file, a PDF's embedded card, a hand-off) is upgraded (migrate.js).
-  const card = (given, extra = {}, record = upgradeCard(given)) => ({
+  const card = (given, extra = {}, foreign = FOREIGN.has(format), record = upgradeCard(given)) => ({
     format,
     name: record.name || name || null,
     description: record.description || null,
     card_data: record.card_data,
-    ...(FOREIGN.has(format) && record.card_data && {
+    ...(foreign && record.card_data && {
       implied: applyImplied(record.card_data),
       recognised: recogniseOnImport(record.card_data).map(s => ({ id: s.id, name: s.name, field: s.set.field || null, from: s.found[0]?.path, written: s.found[0]?.written })),
     }),
@@ -154,7 +156,7 @@ export async function importCard(input, { from = null, name = null } = {}) {
       if (!read) {
         throw new Error('This PDF has no card inside it, and it is not a filled-in ACBL card or a Bridgodex card.')
       }
-      return card(read, { report: read.report })
+      return card(read, { report: read.report }, read.report.source === 'boxes')
     }
     case 'handoff': {
       const match = HANDOFF.exec(text().trim())
