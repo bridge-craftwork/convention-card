@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import fs from 'fs'
 import path from 'path'
-import { importCard, detectFormat } from '../importCard.js'
+import { importCard, importCards, detectFormat } from '../importCard.js'
+import { planImport } from '../cardBundle.js'
 import { encodeCardForUrl } from '../handoff.js'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { renderAcblPdfBytes } from '../acblClassicFillPdf.js'
@@ -109,5 +110,63 @@ describe('importCard', () => {
       const blank = fs.readFileSync(path.join(ROOT, 'assets/templates', TEMPLATE_FILES.classic))
       await expect(importCard(blank)).rejects.toThrow(/no card inside/)
     })
+  })
+})
+
+describe('a BBO file of several cards', () => {
+  const bbo = (title, cc_key, fields, extra = {}) => ({ cc_key, title, owner: 'me', stock: false, style: 'ACBL', fields, conventions: {}, leads: {}, ...extra })
+  const file = cards => ({ schema_version: '1.1', source: 'bbo-acbl', cards })
+
+  it('reads every card, not just the first', async () => {
+    const read = await importCards(file([bbo('A', 'a', { '1NTMin1': '15' }), bbo('B', 'b', { '1NTMin1': '12' })]))
+    expect(read.map(r => r.name)).toEqual(['A', 'B'])
+    expect(read[0].skipped).toBeUndefined()
+  })
+
+  it('reads the same from its text', async () => {
+    const read = await importCards(JSON.stringify(file([bbo('A', 'a', { x: '1' }), bbo('B', 'b', { x: '2' })])))
+    expect(read.map(r => r.name)).toEqual(['A', 'B'])
+  })
+
+  it('keeps cards of one name whose contents differ', async () => {
+    const read = await importCards(file([bbo('BMW', 'a', { '2DMin': '5' }), bbo('BMW', 'b', { '2DMin': '11' })]))
+    expect(read.map(r => r.card_data._bbo_raw.cc_key)).toEqual(['a', 'b'])
+  })
+
+  it('leaves out empty cards and exact copies, and names them', async () => {
+    const read = await importCards(file([
+      bbo('SAYC', 'stock', { x: '1' }, { stock: true }),
+      bbo('Mine', 'm', { y: '1' }),
+      bbo('Basic', 'v', {}, { style: 'V2BASIC' }),
+      bbo('SAYC', 'own', { x: '1' }),
+    ]))
+    expect(read.map(r => r.card_data._bbo_raw.cc_key)).toEqual(['m', 'own'])
+    expect(read[0].skipped).toEqual({ empty: ['Basic'], copies: ['SAYC'] })
+  })
+
+  it('says so when no card has anything in it', async () => {
+    await expect(importCards(file([bbo('Basic', 'v', {})]))).rejects.toThrow(/empty: Basic/)
+  })
+
+  it('importCard refuses it, rather than reading one card of many', async () => {
+    await expect(importCard(file([bbo('A', 'a', { x: '1' }), bbo('B', 'b', { x: '2' })]))).rejects.toThrow(/2 cards.*importCards/)
+    expect((await importCard(file([bbo('A', 'a', { x: '1' })]))).name).toBe('A')
+  })
+})
+
+describe('merging BBO cards of one name', () => {
+  const rec = (name, cc_key, v) => ({ name, card_data: { v, _bbo_raw: { cc_key } } })
+
+  it('does not fold them into one kept card', () => {
+    const plan = planImport(
+      [rec('BMW', 'a', 1), rec('BMW', 'b', 2), rec('BMW', 'c', 3)],
+      [{ id: 'k1', name: 'BMW', card_data: rec('BMW', 'a', 1).card_data }, { id: 'k2', name: 'BMW', card_data: rec('BMW', 'b', 2).card_data }],
+    )
+    expect(plan.map(p => [p.action, p.target?.id ?? null])).toEqual([['same', 'k1'], ['same', 'k2'], ['add', null]])
+  })
+
+  it('offers a card kept without a BBO key once, then adds', () => {
+    const plan = planImport([rec('BMW', 'a', 1), rec('BMW', 'b', 2)], [{ id: 'k', name: 'BMW', card_data: { v: 9 } }])
+    expect(plan.map(p => p.action)).toEqual(['ask', 'add'])
   })
 })

@@ -475,11 +475,14 @@ function createState(storage, overlays) {
   async function duplicateCurrentCard() {
     const card = currentCard.value
     if (!card) return null
-    const base = editedCardData.value || card.card_data || {}
+    const cardData = JSON.parse(JSON.stringify(editedCardData.value || card.card_data || {}))
+    // A copy is a new card, not the BBO card this one came from: a later
+    // import of that BBO card must meet the original (cardBundle.js).
+    if (cardData._bbo_raw) delete cardData._bbo_raw.cc_key
     return createCard({
       name: `Copy of ${card.name}`,
       description: card.description || null,
-      cardData: JSON.parse(JSON.stringify(base)),
+      cardData,
       visibility: 'private'
     })
   }

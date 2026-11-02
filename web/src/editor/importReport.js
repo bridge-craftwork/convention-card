@@ -11,14 +11,16 @@ const label = path => field(path)?.label || path
 export function importReportNotes(records) {
   const notes = []
   for (const r of records) {
+    // From a file of several cards, say which card each note is about
+    const of = records.length > 1 ? `${r.name}: ` : ''
     for (const s of r.implied || []) {
-      notes.push({ severity: 'info', message: `Ticked “${s.label}”: the card's ${label(s.from)} says “${s.written}”.` })
+      notes.push({ severity: 'info', message: `${of}Ticked “${s.label}”: the card's ${label(s.from)} says “${s.written}”.` })
     }
     const recognised = r.recognised || []
     if (recognised.length) {
       notes.push({
         severity: 'info',
-        message: `Ticked ${recognised.length} ${recognised.length === 1 ? 'convention' : 'conventions'} the card's notes name: ${recognised.map(s => s.name).join(', ')}. Your notes are kept as written.`,
+        message: `${of}Ticked ${recognised.length} ${recognised.length === 1 ? 'convention' : 'conventions'} the card's notes name: ${recognised.map(s => s.name).join(', ')}. Your notes are kept as written.`,
       })
     }
   }

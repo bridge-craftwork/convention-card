@@ -49,22 +49,48 @@ const time = t => {
 // matches its own export.
 const sameSettings = (a, b) => JSON.stringify(upgradeCardData(a || {})) === JSON.stringify(upgradeCardData(b || {}))
 
+// The same, whatever each is called: a card matched by its BBO key may have
+// been renamed here.
+const sameUnderAnyName = (a, b) => {
+  const unnamed = c => { const u = upgradeCardData(c || {}); return { ...u, metadata: { ...u.metadata, name: null } } }
+  return JSON.stringify(unnamed(a)) === JSON.stringify(unnamed(b))
+}
+
 /**
  * What to do with each imported card. `incoming`: records `{ id?, name,
  * description, card_data, updatedAt? }`; `kept`: the cards already kept,
  * `{ id, name, card_data, updated_at }`. Returns, per incoming card,
  * `{ card, action, target }` with `action` one of "add", "same",
  * "replace" (the import is newer) or "ask" (older, or undated), and
- * `target` the kept card it matched.
+ * `target` the kept card it matched. A card from BBO is also matched by its
+ * BBO key, and BBO allows several cards of one name, so a name matches a
+ * kept card only once in a file, and never one that BBO says is another card.
  */
 export function planImport(incoming, kept) {
   const byId = new Map(kept.filter(k => k.id != null).map(k => [String(k.id), k]))
   const byName = new Map()
   for (const k of kept) if (k.name && !byName.has(k.name)) byName.set(k.name, k)
+  const bboKey = c => c.card_data?._bbo_raw?.cc_key || null
+  // Which kept card is this BBO card? Older duplicates share its key: the
+  // one still the same, else the one of its name, else the first.
+  const byKey = card => {
+    const key = bboKey(card)
+    const all = key ? kept.filter(k => bboKey(k) === key) : []
+    return all.find(k => sameUnderAnyName(k.card_data, card.card_data)) || all.find(k => k.name === card.name) || all[0] || null
+  }
+  const named = new Set()
+  const byNameOnce = card => {
+    const k = byName.get(card.name)
+    if (!k || named.has(k) || (bboKey(k) && bboKey(card))) return null
+    named.add(k)
+    return k
+  }
   return incoming.map(card => {
-    const target = (card.id != null && byId.get(String(card.id))) || byName.get(card.name)
+    const sameId = card.id != null && byId.get(String(card.id))
+    const keyed = !sameId && byKey(card)
+    const target = sameId || keyed || byNameOnce(card)
     if (!target) return { card, action: 'add', target: null }
-    if (sameSettings(card.card_data, target.card_data)) return { card, action: 'same', target }
+    if ((keyed ? sameUnderAnyName : sameSettings)(card.card_data, target.card_data)) return { card, action: 'same', target }
     const theirs = time(card.updatedAt)
     const ours = time(target.updated_at || target.updatedAt)
     if (theirs != null && ours != null && theirs > ours) return { card, action: 'replace', target }
