@@ -74,3 +74,17 @@ describe('the spec as the library reads it', () => {
     })
   }
 })
+
+// Any range end may be written "12+" or "17-" (Dan Bergmann couldn't type
+// "12+" for 1♣–2NT, 2026-11-01): each has its plus and minus, one choice
+describe('range qualifiers', () => {
+  it('give every range end a plus and a minus, as alternatives', () => {
+    const ends = Object.keys(FIELDS).filter(p => /range_(min|max)$/.test(p))
+    expect(ends.length).toBe(30)
+    for (const p of ends) {
+      for (const sign of ['plus', 'minus']) {
+        expect(FIELDS[`${p}_${sign}`], `${p}_${sign}`).toMatchObject({ kind: 'bool', choice: `${p}_qualifier` })
+      }
+    }
+  })
+})

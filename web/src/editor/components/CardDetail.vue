@@ -47,24 +47,23 @@
           <template v-if="!editable">{{ renderField(f) }}</template>
 
           <!-- Range: from-to. Text inputs, not type="number": a number input
-               reports "14+" (a good 14) as empty, which wiped the value. -->
+               reports "14+" (a good 14) as empty, which wiped the value. No
+               inputmode="numeric" either: a phone's number pad has no + or -. -->
           <template v-else-if="f.kind === 'range'">
             <input
               type="text"
-              inputmode="numeric"
               class="field-input range-input"
               :value="rangeEnd(f.from)"
-              @input="onRangeInput(f.from, $event.target.value)"
+              @input="onRangeInput(f.from, $event.target.value, f)"
               @blur="$event.target.value = rangeEnd(f.from)"
               :placeholder="canQualify(f.from) ? 'from (14+)' : 'from'"
             />
             <span class="range-dash">—</span>
             <input
               type="text"
-              inputmode="numeric"
               class="field-input range-input"
               :value="rangeEnd(f.to)"
-              @input="onRangeInput(f.to, $event.target.value)"
+              @input="onRangeInput(f.to, $event.target.value, f)"
               @blur="$event.target.value = rangeEnd(f.to)"
               :placeholder="canQualify(f.to) ? 'to (17-)' : 'to'"
             />
@@ -247,9 +246,19 @@ function readField(path) {
 }
 
 // A range end is a number, qualified where the spec has `<path>_plus` and
-// `<path>_minus` fields for it (the NT ranges): "14+" is a good 14 and
-// "17-" a poor 17, so "14+-17-" writes 14, 17 and both flags.
+// `<path>_minus` fields for it (every range): "14+" is a good 14 and "17-"
+// a poor 17. A whole range typed into either box ("12+-14", "15 to 17-")
+// fills both ends.
 const canQualify = path => !!specField(`${path}_plus`)
+const WHOLE_RANGE = /^(\d+)\s*([+-])?\s*(?:-|–|—|to)\s*(\d+)\s*([+-])?$/
+
+function writeEnd(path, n, sign) {
+  props.writeField(path, n)
+  if (canQualify(path)) {
+    props.writeField(`${path}_plus`, sign === '+' ? true : null)
+    props.writeField(`${path}_minus`, sign === '-' ? true : null)
+  }
+}
 
 function rangeEnd(path) {
   const n = readField(path)
@@ -258,7 +267,7 @@ function rangeEnd(path) {
   return `${n}${readField(`${path}_plus`) ? '+' : readField(`${path}_minus`) ? '-' : ''}`
 }
 
-function onRangeInput(path, raw) {
+function onRangeInput(path, raw, range) {
   const text = String(raw).trim()
   if (text === '') {
     props.writeField(path, null)
@@ -268,15 +277,17 @@ function onRangeInput(path, raw) {
     }
     return
   }
+  const whole = WHOLE_RANGE.exec(text)
+  if (whole && range?.from && range?.to) {
+    writeEnd(range.from, Number(whole[1]), whole[2])
+    writeEnd(range.to, Number(whole[3]), whole[4])
+    return
+  }
   const m = /^(\d+)\s*([+-])?$/.exec(text)
   // Anything else is a half-typed or mistyped value: leave the card alone,
   // and the box shows the stored value again when it loses focus.
   if (!m) return
-  props.writeField(path, Number(m[1]))
-  if (canQualify(path)) {
-    props.writeField(`${path}_plus`, m[2] === '+' ? true : null)
-    props.writeField(`${path}_minus`, m[2] === '-' ? true : null)
-  }
+  writeEnd(path, Number(m[1]), m[2])
 }
 
 function onFieldInput(path, raw, coerce) {

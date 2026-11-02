@@ -240,12 +240,20 @@
 "two_nt_response_forcing"  = { kind = "bool", label = "1M–2NT forcing" }
 "two_nt_response_inv"      = { kind = "bool", label = "1M–2NT invitational" }
 "two_nt_response_range_min" = { kind = "int", label = "1M–2NT range: minimum", min = 0, max = 30 }
+"two_nt_response_range_min_plus" = { kind = "bool", label = "1M–2NT range: minimum has a plus", choice = "major_openings.two_nt_response_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_response_range_min_minus" = { kind = "bool", label = "1M–2NT range: minimum has a minus", choice = "major_openings.two_nt_response_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_response_range_max" = { kind = "int", label = "1M–2NT range: maximum", min = 0, max = 30 }
+"two_nt_response_range_max_plus" = { kind = "bool", label = "1M–2NT range: maximum has a plus", choice = "major_openings.two_nt_response_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_response_range_max_minus" = { kind = "bool", label = "1M–2NT range: maximum has a minus", choice = "major_openings.two_nt_response_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "drury.fit"                = { kind = "bool", label = "Drury: fit" }
 "two_over_one.game_forcing_except" = { kind = "bool", label = "2/1 game forcing except when suit rebid", skill = "bidding_conventions/two_over_one", level = 5 }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "three_nt_raise.range_min" = { kind = "int", label = "3NT artificial raise: minimum", min = 0, max = 25 }
+"three_nt_raise.range_min_plus" = { kind = "bool", label = "3NT artificial raise: minimum has a plus", choice = "major_openings.three_nt_raise.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"three_nt_raise.range_min_minus" = { kind = "bool", label = "3NT artificial raise: minimum has a minus", choice = "major_openings.three_nt_raise.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "three_nt_raise.range_max" = { kind = "int", label = "3NT artificial raise: maximum", min = 0, max = 25 }
+"three_nt_raise.range_max_plus" = { kind = "bool", label = "3NT artificial raise: maximum has a plus", choice = "major_openings.three_nt_raise.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"three_nt_raise.range_max_minus" = { kind = "bool", label = "3NT artificial raise: maximum has a minus", choice = "major_openings.three_nt_raise.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [minor_openings]
@@ -261,9 +269,17 @@
 "one_club.art_forcing"     = { kind = "bool", label = "1♣ artificial forcing" }
 "one_club.transfer_resp"   = { kind = "bool", label = "Transfer responses to 1♣", skill = "bidding_conventions/transfer_walsh", level = 9 }
 "one_club.one_nt_range_min" = { kind = "int", label = "1♣–1NT range: minimum", min = 0, max = 20 }
+"one_club.one_nt_range_min_plus" = { kind = "bool", label = "1♣–1NT range: minimum has a plus", choice = "minor_openings.one_club.one_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.one_nt_range_min_minus" = { kind = "bool", label = "1♣–1NT range: minimum has a minus", choice = "minor_openings.one_club.one_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.one_nt_range_max" = { kind = "int", label = "1♣–1NT range: maximum", min = 0, max = 20 }
+"one_club.one_nt_range_max_plus" = { kind = "bool", label = "1♣–1NT range: maximum has a plus", choice = "minor_openings.one_club.one_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.one_nt_range_max_minus" = { kind = "bool", label = "1♣–1NT range: maximum has a minus", choice = "minor_openings.one_club.one_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.two_nt_range_min" = { kind = "int", label = "1♣–2NT range: minimum", min = 0, max = 20 }
+"one_club.two_nt_range_min_plus" = { kind = "bool", label = "1♣–2NT range: minimum has a plus", choice = "minor_openings.one_club.two_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.two_nt_range_min_minus" = { kind = "bool", label = "1♣–2NT range: minimum has a minus", choice = "minor_openings.one_club.two_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.two_nt_range_max" = { kind = "int", label = "1♣–2NT range: maximum", min = 0, max = 20 }
+"one_club.two_nt_range_max_plus" = { kind = "bool", label = "1♣–2NT range: maximum has a plus", choice = "minor_openings.one_club.two_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.two_nt_range_max_minus" = { kind = "bool", label = "1♣–2NT range: maximum has a minus", choice = "minor_openings.one_club.two_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.single_raise.nf" = { kind = "bool", label = "1♣ single raise: non-forcing", level = 2 }
 "one_club.single_raise.inv" = { kind = "bool", label = "1♣ single raise: invitational+", skill = "bidding_conventions/inverted_minors", level = 5 }
 "one_club.single_raise.gf" = { kind = "bool", label = "1♣ single raise: game forcing", skill = "bidding_conventions/inverted_minors", level = 5 }
@@ -291,9 +307,17 @@
 "one_diamond.art_forcing"  = { kind = "bool", label = "1♦ artificial forcing" }
 "one_club.single_raise.other" = { kind = "text", label = "1♣ single raise: other" }
 "one_diamond.one_nt_range_min" = { kind = "int", label = "1♦–1NT range: minimum", min = 0, max = 30 }
+"one_diamond.one_nt_range_min_plus" = { kind = "bool", label = "1♦–1NT range: minimum has a plus", choice = "minor_openings.one_diamond.one_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.one_nt_range_min_minus" = { kind = "bool", label = "1♦–1NT range: minimum has a minus", choice = "minor_openings.one_diamond.one_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.one_nt_range_max" = { kind = "int", label = "1♦–1NT range: maximum", min = 0, max = 30 }
+"one_diamond.one_nt_range_max_plus" = { kind = "bool", label = "1♦–1NT range: maximum has a plus", choice = "minor_openings.one_diamond.one_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.one_nt_range_max_minus" = { kind = "bool", label = "1♦–1NT range: maximum has a minus", choice = "minor_openings.one_diamond.one_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.two_nt_range_min" = { kind = "int", label = "1♦–2NT range: minimum", min = 0, max = 30 }
+"one_diamond.two_nt_range_min_plus" = { kind = "bool", label = "1♦–2NT range: minimum has a plus", choice = "minor_openings.one_diamond.two_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.two_nt_range_min_minus" = { kind = "bool", label = "1♦–2NT range: minimum has a minus", choice = "minor_openings.one_diamond.two_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.two_nt_range_max" = { kind = "int", label = "1♦–2NT range: maximum", min = 0, max = 30 }
+"one_diamond.two_nt_range_max_plus" = { kind = "bool", label = "1♦–2NT range: maximum has a plus", choice = "minor_openings.one_diamond.two_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_diamond.two_nt_range_max_minus" = { kind = "bool", label = "1♦–2NT range: maximum has a minus", choice = "minor_openings.one_diamond.two_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_diamond.single_raise.nf" = { kind = "bool", label = "1♦ single raise: non-forcing", level = 2 }
 "one_diamond.single_raise.inv" = { kind = "bool", label = "1♦ single raise: invitational+", skill = "bidding_conventions/inverted_minors", level = 5 }
 "one_diamond.single_raise.gf" = { kind = "bool", label = "1♦ single raise: game forcing", skill = "bidding_conventions/inverted_minors", level = 5 }
@@ -305,7 +329,11 @@
 "one_diamond.jump_raise_after_overcall.inv" = { kind = "bool", label = "1♦ jump raise after overcall: invitational", level = 4, choice = "minor_openings.one_diamond.jump_raise_after_overcall" }
 # --- begin: Bridge-Classroom card fields (bc-export) ---
 "one_club.three_nt_range_min" = { kind = "int", label = "1♣–3NT range: minimum", min = 0, max = 25 }
+"one_club.three_nt_range_min_plus" = { kind = "bool", label = "1♣–3NT range: minimum has a plus", choice = "minor_openings.one_club.three_nt_range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.three_nt_range_min_minus" = { kind = "bool", label = "1♣–3NT range: minimum has a minus", choice = "minor_openings.one_club.three_nt_range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "one_club.three_nt_range_max" = { kind = "int", label = "1♣–3NT range: maximum", min = 0, max = 25 }
+"one_club.three_nt_range_max_plus" = { kind = "bool", label = "1♣–3NT range: maximum has a plus", choice = "minor_openings.one_club.three_nt_range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"one_club.three_nt_range_max_minus" = { kind = "bool", label = "1♣–3NT range: maximum has a minus", choice = "minor_openings.one_club.three_nt_range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 # --- end: Bridge-Classroom card fields (bc-export) ---
 
 [two_level]
@@ -657,14 +685,22 @@
 "two_nt_raise_majors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, limit", skill = "competitive_bidding/jordan_2nt", level = 5, choice = "vs_to_double.two_nt_raise_majors" }
 "two_nt_raise_majors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a major, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_majors" }
 "two_nt_raise_majors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a major, minimum", min = 0, max = 25 }
+"two_nt_raise_majors.range_min_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, minimum has a plus", choice = "vs_to_double.two_nt_raise_majors.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_majors.range_min_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, minimum has a minus", choice = "vs_to_double.two_nt_raise_majors.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_raise_majors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a major, maximum", min = 0, max = 25 }
+"two_nt_raise_majors.range_max_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, maximum has a plus", choice = "vs_to_double.two_nt_raise_majors.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_majors.range_max_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a major, maximum has a minus", choice = "vs_to_double.two_nt_raise_majors.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_natural_majors"    = { kind = "bool", label = "Vs takeout double: 2NT over a major is natural" }
 "two_nt_raise_minors.play" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor", skill = "competitive_bidding/jordan_2nt", level = 6 }
 "two_nt_raise_minors.limit_plus" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit or better", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.limit" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, limit", skill = "competitive_bidding/jordan_2nt", level = 6, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.weak" = { kind = "bool", label = "Vs takeout double: 2NT raise of a minor, weak", skill = "competitive_bidding/jordan_2nt", level = 7, choice = "vs_to_double.two_nt_raise_minors" }
 "two_nt_raise_minors.range_min" = { kind = "int", label = "Vs takeout double: 2NT over a minor, minimum", min = 0, max = 25 }
+"two_nt_raise_minors.range_min_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, minimum has a plus", choice = "vs_to_double.two_nt_raise_minors.range_min_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_minors.range_min_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, minimum has a minus", choice = "vs_to_double.two_nt_raise_minors.range_min_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_raise_minors.range_max" = { kind = "int", label = "Vs takeout double: 2NT over a minor, maximum", min = 0, max = 25 }
+"two_nt_raise_minors.range_max_plus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, maximum has a plus", choice = "vs_to_double.two_nt_raise_minors.range_max_qualifier", desc = "A good hand at that end: the range written with a plus (\"14+-17\" is a good 14 to 17)" }
+"two_nt_raise_minors.range_max_minus" = { kind = "bool", label = "Vs takeout double: 2NT over a minor, maximum has a minus", choice = "vs_to_double.two_nt_raise_minors.range_max_qualifier", desc = "A poor hand at that end: the range written with a minus (\"15-17-\" is 15 to a poor 17)" }
 "two_nt_natural_minors"    = { kind = "bool", label = "Vs takeout double: 2NT over a minor is natural" }
 "notes"                    = { kind = "text", label = "Vs takeout double notes (card write-in)", note = true }
 
