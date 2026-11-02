@@ -40,7 +40,7 @@
 #
 # Export starts from the BBO card kept in the card (`_bbo_raw`), so slots and
 # boxes this map does not cover go back as they came, and a slot keeps its
-# text unless its fields have changed since the import.
+# text, and a box its tick, unless its fields have changed since the import.
 #
 # Every slot BBO's card has is in spec/formats/bbo-slots.toml, and
 # docs/bbo-field-sheets/ shows where each sits on the card. Go by the words
@@ -369,6 +369,12 @@ keys = ["dblOther5"]
 path = "nt_overcalls.notes"
 keys = ["1NOcallOther1", "1NOcallOther2"]
 export = false
+
+# Not BBO's own: fields the Better BBO Convention Card extension adds to a card.
+# `saved` is the date of the card's last save on BBO, in seconds. Export drops
+# it from a changed card, and comparing two cards ignores it.
+[extension_fields]
+saved = "bbccSaved"
 
 [left_out]
 "jsOtherMinor" = "\"Forcing raise: J/S in other minor\": no card field"

@@ -567,6 +567,9 @@
    "export": false
   }
  ],
+ "extension_fields": {
+  "saved": "bbccSaved"
+ },
  "left_out": {
   "jsOtherMinor": "\"Forcing raise: J/S in other minor\": no card field",
   "1N2DFStay": "\"2♦ Forcing Stayman\": no card field",

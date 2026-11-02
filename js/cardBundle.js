@@ -10,6 +10,7 @@
 
 import { EXPORT_SCHEMA } from './checkCard.js'
 import { upgradeCardData } from './migrate.js'
+import { withoutSavedDate } from './bbo.js'
 
 /** The `schema` of an "Export all" file: `{ schema, exportedAt, cards: [<card export>] }`. */
 export const BUNDLE_SCHEMA = 'bridge-classroom/cards@v1'
@@ -46,13 +47,19 @@ const time = t => {
 }
 
 // Compared in the current schema, so a kept card saved before an upgrade
-// matches its own export.
-const sameSettings = (a, b) => JSON.stringify(upgradeCardData(a || {})) === JSON.stringify(upgradeCardData(b || {}))
+// matches its own export, and without the BBO card's saved date, which isn't
+// a setting.
+const comparable = c => {
+  const u = upgradeCardData(c || {})
+  const raw = u._bbo_raw
+  return raw?.fields ? { ...u, _bbo_raw: { ...raw, fields: withoutSavedDate(raw.fields) } } : u
+}
+const sameSettings = (a, b) => JSON.stringify(comparable(a)) === JSON.stringify(comparable(b))
 
 // The same, whatever each is called: a card matched by its BBO key may have
 // been renamed here.
 const sameUnderAnyName = (a, b) => {
-  const unnamed = c => { const u = upgradeCardData(c || {}); return { ...u, metadata: { ...u.metadata, name: null } } }
+  const unnamed = c => { const u = comparable(c); return { ...u, metadata: { ...u.metadata, name: null } } }
   return JSON.stringify(unnamed(a)) === JSON.stringify(unnamed(b))
 }
 
