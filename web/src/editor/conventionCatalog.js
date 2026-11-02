@@ -460,6 +460,11 @@ export const STRUCTURED_FIELDS = {
         { label: 'DEPO', cardPath: 'slam.depo' },
         { label: 'ROPI', cardPath: 'slam.ropi' }
       ] },
+    { label: 'Control bids show', cardPath: 'slam.cue_bids.style', kind: 'radio_inline', defaultWith: 'slam.cue_bids.play',
+      options: [
+        { value: 'first_round',           label: 'First round' },
+        { value: 'first_or_second_round', label: 'First or second round' }
+      ] },
     { label: 'Control bids', cardPath: 'slam.control_bids',
       kind: 'text', placeholder: 'e.g. First/second round controls' },
     { label: 'Vs interference', cardPath: 'slam.vs_interference',
@@ -713,6 +718,11 @@ export const CONVENTION_CATALOG = [
     id: 'western_cuebid', section: 'slam', name: 'Western cuebid',
     desc: '4 of an opponent\'s suit asks for a stopper for 3NT',
     cardPath: 'slam.western_cuebid.play', skillPath: null
+  },
+  {
+    id: 'control_bids', section: 'slam', name: 'Control (cue) bids',
+    desc: 'With a trump suit agreed, bid a control below game on the way to slam',
+    cardPath: 'slam.cue_bids.play', skillPath: 'bidding_conventions/control_bids'
   },
   {
     id: 'spiral_cuebids', section: 'slam', name: 'Spiral cuebids',

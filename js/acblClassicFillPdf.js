@@ -20,6 +20,7 @@
 import { PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFArray, PDFRef, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
+import { ntHeadingText, NT_STRONG_INCLUDES } from './ntDefenses.js'
 import { cardValues } from './checkCard.js'
 import { upgradeCard, upgradeCardData } from './migrate.js'
 import { ledCards } from './leads.js'
@@ -454,8 +455,8 @@ const FIELD_MAP_CLASSIC = [
 
   // ─── DEFENSE VS NOTRUMP ───
   // Left column (vs strong) + right column (vs weak)
-  { pdf: 'DEFENSE VS NOTRUMP', card: 'competitive.vs_1nt_strong.system', kind: 'text' },
-  { pdf: '1',                  card: 'competitive.vs_1nt_weak.system',   kind: 'text' },
+  { pdf: 'DEFENSE VS NOTRUMP', card: 'competitive.vs_1nt_strong.system', kind: 'text', ntHeading: 'strong' },
+  { pdf: '1',                  card: 'competitive.vs_1nt_weak.system',   kind: 'text', ntHeading: 'weak' },
   { pdf: '2c_2', card: 'competitive.vs_1nt_strong.2c', kind: 'text' },
   { pdf: '2',    card: 'competitive.vs_1nt_weak.2c',   kind: 'text' },
   { pdf: '2d',   card: 'competitive.vs_1nt_strong.2d', kind: 'text' },
@@ -815,8 +816,8 @@ const FIELD_MAP_NEW = [
   { pdf: 'NTO.t.10', card: 'nt_overcalls.notes', kind: 'text' },
 
   // ─── Defense vs 1NT (V1NT) ───
-  { pdf: 'V1NT.t.1',  card: 'competitive.vs_1nt_strong.system', kind: 'text' },
-  { pdf: 'V1NT.t.2',  card: 'competitive.vs_1nt_weak.system',   kind: 'text' },
+  { pdf: 'V1NT.t.1',  card: 'competitive.vs_1nt_strong.system', kind: 'text', ntHeading: 'strong' },
+  { pdf: 'V1NT.t.2',  card: 'competitive.vs_1nt_weak.system',   kind: 'text', ntHeading: 'weak' },
   { pdf: 'V1NT.t.3',  card: 'competitive.vs_1nt_strong.dbl',    kind: 'text' },
   { pdf: 'V1NT.t.4',  card: 'competitive.vs_1nt_weak.dbl',      kind: 'text' },
   { pdf: 'V1NT.t.5',  card: 'competitive.vs_1nt_strong.2c',     kind: 'text' },
@@ -2232,6 +2233,7 @@ function entryValue(entry, cardData) {
     })
     return filled || undefined
   }
+  if (entry.ntHeading) return ntHeadingText(entry.ntHeading, readPath(cardData, entry.card), readPath(cardData, NT_STRONG_INCLUDES))
   return readPath(cardData, entry.card)
 }
 

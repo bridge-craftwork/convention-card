@@ -1,6 +1,17 @@
 <template>
   <section class="vs-nt-defense">
     <h4 class="vs-nt-title">Defense vs 1NT openings</h4>
+    <label class="vs-nt-includes">
+      <span class="vs-nt-field-label">Strong if their range includes</span>
+      <input
+        type="text"
+        class="vs-nt-includes-input"
+        :value="strongIncludes"
+        :readonly="!editable"
+        placeholder="e.g. 16"
+        @input="onIncludesInput($event.target.value)"
+      />
+    </label>
     <div class="vs-nt-grid">
       <div
         v-for="col in COLUMNS"
@@ -63,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import {
   KNOWN_NT_DEFENSES,
   NT_DEFENSE_BIDS,
@@ -153,6 +164,14 @@ function maybeApplyDefaults(colKey, oldDef, newValue) {
   }
 }
 
+const strongIncludes = computed(() => props.card?.card_data?.competitive?.vs_1nt_strong_includes ?? '')
+
+// A whole number, or nothing
+function onIncludesInput(value) {
+  const n = parseInt(value, 10)
+  props.writeField('competitive.vs_1nt_strong_includes', Number.isInteger(n) ? n : null)
+}
+
 function onBidInput(colKey, bidKey, value) {
   props.writeField(`competitive.${colKey}.${bidKey}`, value || null)
 }
@@ -172,6 +191,22 @@ function onBidInput(colKey, bidKey, value) {
   font-size: 16px;
   color: var(--green-dark, #2d6a4f);
   margin: 0 0 12px;
+}
+
+.vs-nt-includes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.vs-nt-includes .vs-nt-field-label {
+  width: auto;
+  white-space: nowrap;
+}
+
+.vs-nt-includes-input {
+  width: 4em;
 }
 
 .vs-nt-grid {

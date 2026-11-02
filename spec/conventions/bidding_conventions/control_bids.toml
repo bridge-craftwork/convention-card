@@ -2,13 +2,15 @@ id = "bidding_conventions/control_bids"
 name = "Control (Cue) Bids"
 source = "proposed"
 level = 5
-names = ["Control bids", "Cue bids", "Cuebids", "Control-showing bids", "Italian cuebids", "Ace-and-king cuebids"]
+names = ["Control bids", "Cue bids", "Cuebids", "Control-showing bids", "Italian cuebids", "Italian cue bids", "Ace-and-king cuebids"]
 confirm_names = ["Cue bids", "Cuebids"]
 summary = """
 With a trump suit agreed and slam possible, bidding a new suit below game
 shows a control there (an ace or void, and in many styles a king or
 singleton), so the partnership can find out whether a suit is unguarded
-before asking for keycards.
+before asking for keycards. Control bids once showed first-round controls
+only; Italian champion teams found first or second round more effective, and
+that is now the most prevalent treatment.
 """
 see = [
   { title = "25 Bridge Conventions You Should Know", kind = "book", chapter = 20 },
