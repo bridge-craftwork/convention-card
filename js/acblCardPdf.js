@@ -17,6 +17,7 @@
 
 import { jsPDF } from 'jspdf'
 import { readPath } from './paths.js'
+import { ntHeadingText, NT_STRONG_INCLUDES } from './ntDefenses.js'
 import { upgradeCard } from './migrate.js'
 
 // ─── Page constants (mm) ───────────────────────────────────────
@@ -572,10 +573,10 @@ function renderVsNt(doc, card, x, y, w) {
   drawSectionTitle(doc, x, y, 'Vs 1NT')
   let cy = y + 6
   drawLabelValue(doc, x + 1.2, cy, w - 2, 'Str',
-    r(card, 'competitive.vs_1nt_strong.system') || '', 8)
+    ntHeadingText('strong', r(card, 'competitive.vs_1nt_strong.system'), r(card, NT_STRONG_INCLUDES)) || '', 8)
   cy += 3.4
   drawLabelValue(doc, x + 1.2, cy, w - 2, 'Wk',
-    r(card, 'competitive.vs_1nt_weak.system') || '', 8)
+    ntHeadingText('weak', r(card, 'competitive.vs_1nt_weak.system'), r(card, NT_STRONG_INCLUDES)) || '', 8)
   cy += 4
   // Per-bid meanings (just for the strong-NT defense to keep this compact)
   for (const bid of filled) {

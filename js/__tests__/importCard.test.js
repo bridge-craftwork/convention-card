@@ -3,6 +3,8 @@ import fs from 'fs'
 import path from 'path'
 import { importCard, importCards, detectFormat } from '../importCard.js'
 import { planImport } from '../cardBundle.js'
+import { recogniseOnImport } from '../recogniseConventions.js'
+import { FIELDS } from '../spec.js'
 import { encodeCardForUrl } from '../handoff.js'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { renderAcblPdfBytes } from '../acblClassicFillPdf.js'
@@ -168,5 +170,25 @@ describe('merging BBO cards of one name', () => {
   it('offers a card kept without a BBO key once, then adds', () => {
     const plan = planImport([rec('BMW', 'a', 1), rec('BMW', 'b', 2)], [{ id: 'k', name: 'BMW', card_data: { v: 9 } }])
     expect(plan.map(p => p.action)).toEqual(['ask', 'add'])
+  })
+})
+
+describe('conventions named in a BBO card', () => {
+  const withText = async text => {
+    const r = await importCard({ card_data: { notes: { other_notes: text } } })
+    return recogniseOnImport(r.card_data).map(s => s.id)
+  }
+
+  it('ticks Reverses, but only asks about a bare Reverse', async () => {
+    expect(await withText('Lebensohl/ Reverses // U/U L=L')).toContain('bidding_conventions/reverse_bids')
+    expect(await withText('Reverse')).not.toContain('bidding_conventions/reverse_bids')
+  })
+
+  it('reads Italian Cue bids as first-or-second-round control bids', async () => {
+    const r = await importCard({ card_data: { notes: { other_notes: 'Italian Cue bids below Game' } } })
+    expect(recogniseOnImport(r.card_data).map(s => s.id)).toContain('bidding_conventions/control_bids')
+    expect(r.card_data.slam.cue_bids.play).toBe(true)
+    expect(FIELDS['slam.cue_bids.style'].default).toBe('first_or_second_round')
+    expect(await withText('Cue bids below game')).not.toContain('bidding_conventions/control_bids')
   })
 })

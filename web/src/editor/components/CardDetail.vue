@@ -137,7 +137,7 @@
               <label v-for="opt in f.options" :key="opt.value" class="inline-check">
                 <input
                   type="checkbox"
-                  :checked="readField(f.cardPath) === opt.value"
+                  :checked="chosen(f) === opt.value"
                   :disabled="!editable"
                   @change="onRadioInline(f.cardPath, opt.value, $event.target.checked)"
                 />
@@ -241,6 +241,13 @@ const props = defineProps({
 
 defineEmits(['toggle'])
 
+// A row's choice. `defaultWith`: while that convention is played, an unset
+// choice is the spec's default, and the card reads as that
+function chosen(f) {
+  const v = readField(f.cardPath)
+  return v == null && f.defaultWith && readField(f.defaultWith) === true ? specField(f.cardPath)?.default : v
+}
+
 function readField(path) {
   return readPath(props.card?.card_data, path)
 }
@@ -340,7 +347,7 @@ function fieldHasValue(f) {
   if (f.kind === 'inline_checks') {
     return f.paths.some(p => !!readField(p.cardPath))
   }
-  const v = readField(f.cardPath)
+  const v = chosen(f)
   if (f.kind === 'boolean') return !!v
   return v !== null && v !== undefined && v !== ''
 }
@@ -476,7 +483,7 @@ function renderField(field) {
     const on = field.paths.filter(p => !!readPath(data, p.cardPath)).map(p => p.label)
     return on.length ? on.join(' · ') : '—'
   }
-  const value = readPath(data, field.cardPath)
+  const value = chosen(field)
   if (value === undefined || value === null) return '—'
   if (field.kind === 'boolean') return value ? 'Yes' : 'No'
   if (field.kind === 'radio_inline') {

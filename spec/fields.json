@@ -2149,7 +2149,7 @@
     "first_or_second_round"
    ],
    "default": "first_or_second_round",
-   "desc": "first_round: the ace or a void only. first_or_second_round: king and singleton too, which is the more common modern treatment"
+   "desc": "first_round: the ace or a void only, the historical style. first_or_second_round: king and singleton too, as Italian champion teams showed to be more effective; the most prevalent treatment today"
   },
   "vs_interference": {
    "kind": "text",
@@ -2544,6 +2544,7 @@
     "dont",
     "meckwell",
     "suction",
+    "natural",
     "other"
    ],
    "aliases": [
@@ -2554,16 +2555,20 @@
     "Pottage": "cappelletti",
     "Disturbing Opponents NT": "dont",
     "Penalty": "other",
-    "Natural": "other",
     "Standard": "other",
     "Strong - Suction": "suction",
     "Weak - Suction": "suction",
     "Strong 14+ (Meckwell)": "meckwell",
     "Weak (Cappelletti)": "cappelletti",
     "Strong 1NT": "other",
-    "Weak 1NT": "other"
+    "Weak 1NT": "other",
+    "Strong": "other",
+    "Weak": "other",
+    "(Strong)": "other",
+    "(Weak)": "other",
+    "Strong/Weak": "other"
    },
-   "desc": "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md",
+   "desc": "Bridge-Classroom's system name (its editor's list: Cappelletti, DONT, Meckwell, Multi-Landy, Penalty...). Unset, natural or other: natural overcalls. cappelletti (Hamilton): X penalty, 2♣ one suit, 2♦ majors, 2♥/2♠ that major and a minor, 2NT minors. modified_cappelletti: 2♣ a minor one-suiter or a major and a minor, 2♥/2♠ one-suited. dont: X one suit, 2♣/2♦/2♥ that suit and a higher one, 2♠ spades. meckwell: X a minor or the majors, 2♣/2♦ that minor and a major, 2♥/2♠ natural, 2NT minors. multi_landy: X a four-card major and a longer minor, 2♣ majors, 2♦ one major, 2♥/2♠ that major and a minor. landy: 2♣ majors, the rest natural. Played against every 1NT range. See conventions/competitive/vs-1nt.notes.md",
    "skill": [
     "competitive_bidding/defense_vs_1nt",
     "competitive_bidding/cappelletti",
@@ -2621,6 +2626,7 @@
     "dont",
     "meckwell",
     "suction",
+    "natural",
     "other"
    ],
    "value_aliases": {
@@ -2628,14 +2634,18 @@
     "Pottage": "cappelletti",
     "Disturbing Opponents NT": "dont",
     "Penalty": "other",
-    "Natural": "other",
     "Standard": "other",
     "Strong - Suction": "suction",
     "Weak - Suction": "suction",
     "Strong 14+ (Meckwell)": "meckwell",
     "Weak (Cappelletti)": "cappelletti",
     "Strong 1NT": "other",
-    "Weak 1NT": "other"
+    "Weak 1NT": "other",
+    "Strong": "other",
+    "Weak": "other",
+    "(Strong)": "other",
+    "(Weak)": "other",
+    "Strong/Weak": "other"
    },
    "desc": "Not read by the rules yet: vs_1nt_strong.system is played against every range",
    "skill": [
@@ -2683,6 +2693,14 @@
   "vs_1nt_weak.other": {
    "kind": "text",
    "label": "Vs weak 1NT: other"
+  },
+  "vs_1nt_strong_includes": {
+   "kind": "int",
+   "label": "Their 1NT is strong if its range includes",
+   "min": 8,
+   "max": 20,
+   "desc": "Which defense to play: a 1NT whose range includes this point count gets vs_1nt_strong, any other vs_1nt_weak. BBO cards write 16 as Strong 16+ and Weak No 16",
+   "level": 5
   },
   "dont.play": {
    "kind": "bool",
