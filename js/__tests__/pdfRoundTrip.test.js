@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect, beforeAll, vi } from 'vitest'
 import fs from 'fs'
 import path from 'path'
 import { PDFDocument } from 'pdf-lib'
@@ -128,5 +128,20 @@ describe('a filled-in PDF with no card inside', () => {
     expect(read.report.source).toBe('boxes')
     expect(read.implied.map(s => s.field)).toContain('notrump.stayman.puppet_1nt')
     expect(read.card_data.notrump.stayman.puppet_1nt).toBe(true)
+  })
+})
+
+// Preview PDF renders in a background tab, where a timer takes about a second:
+// each pause pdf-lib makes on one costs that second.
+describe('rendering a card', () => {
+  it.each(TEMPLATES)('waits on no timers (%s)', async template => {
+    const { card_data } = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/dense-convention-card.json'), 'utf8'))
+    const spy = vi.spyOn(globalThis, 'setTimeout')
+    try {
+      await renderAcblPdfBytes({ name: 'Dense', card_data }, template)
+      expect(spy).not.toHaveBeenCalled()
+    } finally {
+      spy.mockRestore()
+    }
   })
 })
