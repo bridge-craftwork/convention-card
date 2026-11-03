@@ -39,7 +39,7 @@ function sharedStorage(role = 'owner') {
     async listLinks() { return [{ card_id: 's1', card_name: 'Ours', is_primary: true, role }] },
     async save(c, cardData) {
       if (c.version !== versions.length) throw Object.assign(new Error('409'), { conflict: { version: versions.length, card_data: structuredClone(versions.at(-1)) } })
-      versions.push(structuredClone(cardData))
+      versions.push(JSON.parse(JSON.stringify(cardData)))
     },
     async loadVersion(_id, v) { return structuredClone(versions[v - 1]) },
     canEdit: () => role !== 'viewer',
@@ -180,5 +180,30 @@ describe('the editor state, against a storage adapter', () => {
   it('refuses to create a card with no one signed in', async () => {
     const ed = useCardEditor(memoryStorage({ signedIn: false }))
     await expect(ed.createCard({ name: 'X' })).rejects.toThrow(/signed in/)
+  })
+})
+
+// The editor greys out its export buttons on isDirty: an export is of the
+// saved card, so it must be on for an edit and off again once it's saved.
+describe('whether a card has edits an export would leave out', () => {
+  it('not for entering edit mode, yes for an edit, not once saved', async () => {
+    const ed = useCardEditor(sharedStorage())
+    await ed.loadCardForCurrentUser()
+    expect(ed.isDirty.value).toBe(false)
+    ed.enterEditMode()
+    expect(ed.isDirty.value).toBe(false)
+    ed.writeField('notrump.one_nt.range_min', 14)
+    expect(ed.isDirty.value).toBe(true)
+    expect(await ed.saveCard()).toBe(true)
+    expect(ed.isDirty.value).toBe(false)
+  })
+
+  it('not once the edit is reverted', async () => {
+    const ed = useCardEditor(sharedStorage())
+    await ed.loadCardForCurrentUser()
+    ed.enterEditMode()
+    ed.writeField('notrump.one_nt.range_min', 14)
+    ed.revertEdits()
+    expect(ed.isDirty.value).toBe(false)
   })
 })

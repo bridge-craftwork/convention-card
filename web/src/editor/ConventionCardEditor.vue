@@ -135,20 +135,20 @@
         >Delete</button>
         <button
           class="btn"
-          :disabled="!currentCard || cardLoading"
-          title="Download as a fillable convention-card PDF. Alt+click: debug variants (field-name overlay)."
+          :disabled="!canExport"
+          :title="isDirty ? SAVE_FIRST : 'Download as a fillable convention-card PDF. Alt+click: debug variants (field-name overlay).'"
           @click="onExportPdf"
         >Export PDF</button>
         <button
           class="btn"
-          :disabled="!currentCard || cardLoading"
-          title="Export the card's data: this editor's JSON, BBO, Bridgodex or a BBA .bbsa file"
+          :disabled="!canExport"
+          :title="isDirty ? SAVE_FIRST : 'Export the card\'s data: this editor\'s JSON, BBO, Bridgodex or a BBA .bbsa file'"
           @click="onExportContent"
         >Export Content</button>
         <button
           class="btn"
-          :disabled="!currentCard || cardLoading"
-          title="Save the card for Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO"
+          :disabled="!canExport"
+          :title="isDirty ? SAVE_FIRST : 'Save the card for Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO'"
           @click="doContentExport('bbo')"
         >Export for BBO</button>
       </div>
@@ -519,6 +519,12 @@ async function onSwitchCard(event) {
     await cc.switchCard(id)
   }
 }
+
+// An export is of the saved card, so unsaved edits would be left out of it
+// without a word (Tomasz Pawlowski, 2026-11-03). Editing with nothing changed
+// doesn't stop an export: the saved card is the card on screen.
+const SAVE_FIRST = 'Save first: an export is of the saved card'
+const canExport = computed(() => !!currentCard.value && !cardLoading.value && !isDirty.value)
 
 const EXPORT_FORMATS = [
   { id: 'classic', name: 'ACBL Classic', desc: 'The familiar SS1 Rev. 4-12 card — what most clubs use.' },
