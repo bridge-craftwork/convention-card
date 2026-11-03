@@ -133,6 +133,20 @@
           @click="onDelete"
           :disabled="saving"
         >Delete</button>
+        <span class="preview-menu">
+          <button
+            class="btn"
+            :disabled="!currentCard || cardLoading"
+            title="Open the card as a PDF in a new tab, unsaved edits included"
+            aria-haspopup="menu"
+            :aria-expanded="previewMenuOpen"
+            @click="previewMenuOpen = !previewMenuOpen"
+            @keydown.esc="previewMenuOpen = false"
+          >Preview PDF ▾</button>
+          <span v-if="previewMenuOpen" class="preview-choices" role="menu" @keydown.esc="previewMenuOpen = false">
+            <button v-for="fmt in availableFormats" :key="fmt.id" role="menuitem" @click="onPreviewPdf(fmt.id)">{{ fmt.name }}</button>
+          </span>
+        </span>
         <button
           class="btn"
           :disabled="!canExport"
@@ -342,7 +356,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, watch, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportRecord } from '../../../js/cardBundle.js'
@@ -562,6 +576,43 @@ async function doExport(formatId) {
   } catch (err) {
     console.error('PDF export failed:', err)
     saveError.value = explain(err, 'Failed to export PDF')
+  }
+}
+
+// A quick look at the card as it prints, in a new tab: the card on screen,
+// unsaved edits included (Tomasz Pawlowski, 2026-11-03). The tab is opened
+// here, in the click, since a browser blocks one opened after an await.
+const previewMenuOpen = ref(false)
+// A click anywhere outside the button closes its menu.
+function closePreviewMenu(event) {
+  if (previewMenuOpen.value && !event.target.closest?.('.preview-menu')) previewMenuOpen.value = false
+}
+onMounted(() => document.addEventListener('click', closePreviewMenu))
+onBeforeUnmount(() => document.removeEventListener('click', closePreviewMenu))
+
+async function onPreviewPdf(layout) {
+  previewMenuOpen.value = false
+  saveError.value = null
+  const tab = window.open('', '_blank')
+  if (!tab) {
+    saveError.value = 'Your browser blocked the preview\'s new tab. Allow pop-ups for this site and try again.'
+    return
+  }
+  tab.document.title = 'Preview'
+  tab.document.body.textContent = 'Making the preview…'
+  try {
+    const mod = await loadAcblPdf()
+    const card = isDirty.value ? { ...editorCard.value, updated_at: new Date().toISOString() } : editorCard.value
+    const bytes = await mod.renderAcblPdfBytes(card, layout, { secondPage: exportSecondPage.value })
+    const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
+    // Shown where the browser saves a PDF instead of displaying it
+    tab.document.body.textContent = 'Your browser saved the preview as a download. You can close this tab.'
+    tab.location.href = url
+    setTimeout(() => URL.revokeObjectURL(url), 60_000)
+  } catch (err) {
+    tab.close()
+    console.error('PDF preview failed:', err)
+    saveError.value = explain(err, 'Failed to make the preview')
   }
 }
 
@@ -885,6 +936,39 @@ watch(() => currentUser.value?.id, async (uid) => {
   font-size: 13px;
   color: var(--text-secondary, #6b7280);
   margin-top: 2px;
+}
+
+.preview-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.preview-choices {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 2px);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  min-width: 130px;
+  background: white;
+  border: 1px solid var(--card-border, #e0ddd7);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+}
+
+.preview-choices button {
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.preview-choices button:hover {
+  background: #f6faf7;
 }
 
 .card-actions {
