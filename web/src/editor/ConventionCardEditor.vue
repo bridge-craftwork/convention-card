@@ -133,16 +133,19 @@
           @click="onDelete"
           :disabled="saving"
         >Delete</button>
-        <span class="preview-group">
+        <span class="preview-menu">
           <button
             class="btn"
             :disabled="!currentCard || cardLoading"
             title="Open the card as a PDF in a new tab, unsaved edits included"
-            @click="onPreviewPdf"
-          >Preview PDF</button>
-          <select v-model="previewLayout" class="preview-layout" aria-label="Layout to preview" title="Layout to preview">
-            <option v-for="fmt in availableFormats" :key="fmt.id" :value="fmt.id">{{ fmt.name }}</option>
-          </select>
+            aria-haspopup="menu"
+            :aria-expanded="previewMenuOpen"
+            @click="previewMenuOpen = !previewMenuOpen"
+            @keydown.esc="previewMenuOpen = false"
+          >Preview PDF ▾</button>
+          <span v-if="previewMenuOpen" class="preview-choices" role="menu" @keydown.esc="previewMenuOpen = false">
+            <button v-for="fmt in availableFormats" :key="fmt.id" role="menuitem" @click="onPreviewPdf(fmt.id)">{{ fmt.name }}</button>
+          </span>
         </span>
         <button
           class="btn"
@@ -353,7 +356,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, watch, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportRecord } from '../../../js/cardBundle.js'
@@ -579,13 +582,16 @@ async function doExport(formatId) {
 // A quick look at the card as it prints, in a new tab: the card on screen,
 // unsaved edits included (Tomasz Pawlowski, 2026-11-03). The tab is opened
 // here, in the click, since a browser blocks one opened after an await.
-const PREVIEW_LAYOUT_KEY = 'convention-card.preview-layout'
-const previewLayout = ref((() => {
-  try { return localStorage.getItem(PREVIEW_LAYOUT_KEY) === 'new' ? 'new' : 'classic' } catch { return 'classic' }
-})())
-watch(previewLayout, id => { try { localStorage.setItem(PREVIEW_LAYOUT_KEY, id) } catch { /* private mode */ } })
+const previewMenuOpen = ref(false)
+// A click anywhere outside the button closes its menu.
+function closePreviewMenu(event) {
+  if (previewMenuOpen.value && !event.target.closest?.('.preview-menu')) previewMenuOpen.value = false
+}
+onMounted(() => document.addEventListener('click', closePreviewMenu))
+onBeforeUnmount(() => document.removeEventListener('click', closePreviewMenu))
 
-async function onPreviewPdf() {
+async function onPreviewPdf(layout) {
+  previewMenuOpen.value = false
   saveError.value = null
   const tab = window.open('', '_blank')
   if (!tab) {
@@ -597,7 +603,7 @@ async function onPreviewPdf() {
   try {
     const mod = await loadAcblPdf()
     const card = isDirty.value ? { ...editorCard.value, updated_at: new Date().toISOString() } : editorCard.value
-    const bytes = await mod.renderAcblPdfBytes(card, previewLayout.value, { secondPage: exportSecondPage.value })
+    const bytes = await mod.renderAcblPdfBytes(card, layout, { secondPage: exportSecondPage.value })
     const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
     // Shown where the browser saves a PDF instead of displaying it
     tab.document.body.textContent = 'Your browser saved the preview as a download. You can close this tab.'
@@ -932,20 +938,37 @@ watch(() => currentUser.value?.id, async (uid) => {
   margin-top: 2px;
 }
 
-.preview-group {
+.preview-menu {
+  position: relative;
   display: inline-flex;
-  align-items: stretch;
-  gap: 4px;
 }
 
-.preview-layout {
-  font-family: inherit;
-  font-size: 13px;
-  padding: 0 4px;
-  border-radius: 6px;
-  border: 1px solid var(--card-border, #e0ddd7);
+.preview-choices {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 2px);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  min-width: 130px;
   background: white;
-  color: var(--text-secondary, #6b7280);
+  border: 1px solid var(--card-border, #e0ddd7);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+}
+
+.preview-choices button {
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.preview-choices button:hover {
+  background: #f6faf7;
 }
 
 .card-actions {
