@@ -2271,6 +2271,7 @@ export async function renderAcblPdfBytes(card, templateName = 'classic', { flatt
   card = upgradeCard(card)
   const pdf = await buildAcblPdf(card, templateName, { secondPage })
   finalizeForm(pdf, templateName, { flatten })
+  pdf.setTitle(pdfTitle(card, templateName), { showInWindowTitleBar: true })
   // Red ellipses around the card led from each holding: both templates
   // have a "circle card led" grid, with no form field for it.
   drawLeadCircles(pdf, card, templateName)
@@ -2736,6 +2737,12 @@ function triggerDownload(bytes, filename) {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
+}
+
+// What a viewer calls the PDF: its tab, for a preview, whose address names nothing.
+function pdfTitle(card, templateName = 'classic') {
+  const who = (card?.card_data?.metadata?.partner_names || '').trim() || (card?.name || 'Convention card').trim()
+  return `${who}: ${templateName === 'new' ? 'ACBL New' : 'ACBL Classic'}`
 }
 
 function pdfFilename(card, templateName = 'classic') {
