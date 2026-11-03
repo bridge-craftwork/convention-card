@@ -145,3 +145,18 @@ describe('rendering a card', () => {
     }
   })
 })
+
+describe('a PDF\'s title', () => {
+  const titleOf = async card => (await PDFDocument.load(await renderAcblPdfBytes(card, 'classic'), { updateMetadata: false })).getTitle()
+
+  it('names the partners and the layout', async () => {
+    const card = { name: 'Ours', card_data: { metadata: { partner_names: 'Pat and Lee' } } }
+    expect(await titleOf(card)).toBe('Pat and Lee: ACBL Classic')
+    const pdf = await PDFDocument.load(await renderAcblPdfBytes(card, 'new'), { updateMetadata: false })
+    expect(pdf.getTitle()).toBe('Pat and Lee: ACBL New')
+  })
+
+  it('falls back on the card\'s name', async () => {
+    expect(await titleOf({ name: 'Ours', card_data: {} })).toBe('Ours: ACBL Classic')
+  })
+})

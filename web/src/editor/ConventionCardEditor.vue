@@ -608,7 +608,8 @@ async function onPreviewPdf(layout) {
     // Shown where the browser saves a PDF instead of displaying it
     tab.document.body.textContent = 'Your browser saved the preview as a download. You can close this tab.'
     tab.location.href = url
-    setTimeout(() => URL.revokeObjectURL(url), 60_000)
+    // Long enough to read it and save it from the tab
+    setTimeout(() => URL.revokeObjectURL(url), 10 * 60_000)
   } catch (err) {
     tab.close()
     console.error('PDF preview failed:', err)
