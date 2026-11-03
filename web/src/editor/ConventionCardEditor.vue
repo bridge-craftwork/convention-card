@@ -133,6 +133,17 @@
           @click="onDelete"
           :disabled="saving"
         >Delete</button>
+        <span class="preview-group">
+          <button
+            class="btn"
+            :disabled="!currentCard || cardLoading"
+            title="Open the card as a PDF in a new tab, unsaved edits included"
+            @click="onPreviewPdf"
+          >Preview PDF</button>
+          <select v-model="previewLayout" class="preview-layout" aria-label="Layout to preview" title="Layout to preview">
+            <option v-for="fmt in availableFormats" :key="fmt.id" :value="fmt.id">{{ fmt.name }}</option>
+          </select>
+        </span>
         <button
           class="btn"
           :disabled="!canExport"
@@ -565,6 +576,40 @@ async function doExport(formatId) {
   }
 }
 
+// A quick look at the card as it prints, in a new tab: the card on screen,
+// unsaved edits included (Tomasz Pawlowski, 2026-11-03). The tab is opened
+// here, in the click, since a browser blocks one opened after an await.
+const PREVIEW_LAYOUT_KEY = 'convention-card.preview-layout'
+const previewLayout = ref((() => {
+  try { return localStorage.getItem(PREVIEW_LAYOUT_KEY) === 'new' ? 'new' : 'classic' } catch { return 'classic' }
+})())
+watch(previewLayout, id => { try { localStorage.setItem(PREVIEW_LAYOUT_KEY, id) } catch { /* private mode */ } })
+
+async function onPreviewPdf() {
+  saveError.value = null
+  const tab = window.open('', '_blank')
+  if (!tab) {
+    saveError.value = 'Your browser blocked the preview\'s new tab. Allow pop-ups for this site and try again.'
+    return
+  }
+  tab.document.title = 'Preview'
+  tab.document.body.textContent = 'Making the preview…'
+  try {
+    const mod = await loadAcblPdf()
+    const card = isDirty.value ? { ...editorCard.value, updated_at: new Date().toISOString() } : editorCard.value
+    const bytes = await mod.renderAcblPdfBytes(card, previewLayout.value, { secondPage: exportSecondPage.value })
+    const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
+    // Shown where the browser saves a PDF instead of displaying it
+    tab.document.body.textContent = 'Your browser saved the preview as a download. You can close this tab.'
+    tab.location.href = url
+    setTimeout(() => URL.revokeObjectURL(url), 60_000)
+  } catch (err) {
+    tab.close()
+    console.error('PDF preview failed:', err)
+    saveError.value = explain(err, 'Failed to make the preview')
+  }
+}
+
 const CONTENT_FORMATS = [
   {
     id: 'bridge-classroom',
@@ -885,6 +930,22 @@ watch(() => currentUser.value?.id, async (uid) => {
   font-size: 13px;
   color: var(--text-secondary, #6b7280);
   margin-top: 2px;
+}
+
+.preview-group {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.preview-layout {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 0 4px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border, #e0ddd7);
+  background: white;
+  color: var(--text-secondary, #6b7280);
 }
 
 .card-actions {
