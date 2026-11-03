@@ -17,7 +17,7 @@
  * user clicks Export (no impact on initial page load).
  */
 
-import { PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFArray, PDFRef, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
+import { ParseSpeeds, PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFArray, PDFRef, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
 import { ntHeadingText, NT_STRONG_INCLUDES } from './ntDefenses.js'
@@ -1774,7 +1774,8 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
   card = upgradeCard(card)
   if (!SECOND_PAGES.includes(secondPage)) throw new Error(`No second page "${secondPage}" (${SECOND_PAGES.join(', ')})`)
   const bytes = await loadTemplateBytes(templateName)
-  const pdf = await PDFDocument.load(bytes)
+  // No pauses (see renderAcblPdfBytes)
+  const pdf = await PDFDocument.load(bytes, { parseSpeed: ParseSpeeds.Fastest })
   if (secondPage !== 'acbl') dropScoresheet(pdf)
   const form = pdf.getForm()
   const fieldMap = templateName === 'new' ? FIELD_MAP_NEW : FIELD_MAP_CLASSIC
@@ -2277,7 +2278,11 @@ export async function renderAcblPdfBytes(card, templateName = 'classic', { flatt
   // the document, and the rest can go
   await pdf.flush()
   dropUnreachable(pdf)
-  return pdf.save()
+  // pdf-lib pauses on a timer every 50 objects by default, to keep a page
+  // responsive. A card has no need (a quarter of a second's work), and in a
+  // background tab, where Preview PDF renders, timers run about once a second:
+  // 40 to 60 pauses took as many seconds on an iPad (Rick Wilson, 2026-11-03).
+  return pdf.save({ objectsPerTick: Infinity })
 }
 
 export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false, secondPage = 'none' } = {}) {
