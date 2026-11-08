@@ -133,6 +133,7 @@
 "jacoby_transfers.vs_double" = { kind = "bool", label = "Transfers on if RHO doubles", level = 6, skill = "bidding_conventions/jacoby_transfers" }
 "jacoby_transfers.vs_2c"   = { kind = "bool", label = "Transfers on if RHO bids clubs", level = 6, skill = "bidding_conventions/jacoby_transfers" }
 "jacoby_transfers.over_2nt" = { kind = "bool", label = "Jacoby transfers over 2NT (3♦/3♥)", level = 4, skill = "bidding_conventions/jacoby_transfers" }
+"jacoby_transfers.over_2c_3nt" = { kind = "bool", label = "Transfers over 2♣–2♦–3NT", desc = "After 2♣–2♦–3NT, responder transfers at the four level: 4♦ shows five or more hearts and 4♥ five or more spades, opener completing in the major. Off, 4♦ and 4♥ are natural", level = 6, skill = "bidding_conventions/jacoby_transfers" }
 "texas.play"               = { kind = "bool", label = "Texas transfers", skill = "bidding_conventions/jacoby_transfers", level = 4 }
 # The four-level transfer boxes (texas.bid_*) name the bid, as the ACBL New card ("Transfers:
 # 4♣ 4♦ 4♥"), Bridgodex and the editor do: Texas transfers are 4♦ (to ♥) and 4♥ (to ♠); 4♣ is South African

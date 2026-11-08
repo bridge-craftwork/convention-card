@@ -329,6 +329,13 @@
    "level": 4,
    "skill": "bidding_conventions/jacoby_transfers"
   },
+  "jacoby_transfers.over_2c_3nt": {
+   "kind": "bool",
+   "label": "Transfers over 2♣–2♦–3NT",
+   "desc": "After 2♣–2♦–3NT, responder transfers at the four level: 4♦ shows five or more hearts and 4♥ five or more spades, opener completing in the major. Off, 4♦ and 4♥ are natural",
+   "level": 6,
+   "skill": "bidding_conventions/jacoby_transfers"
+  },
   "texas.play": {
    "kind": "bool",
    "label": "Texas transfers",
