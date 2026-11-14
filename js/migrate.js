@@ -5,7 +5,9 @@
 // header (spec/migrations/1-to-2.toml); this module and the bridge-card
 // crate's migrate.rs both follow it.
 
-import MIGRATION_1_TO_2 from '../spec/migrations/1-to-2.json' with { type: 'json' }
+import PACK_DOC from '../spec/pack.json' with { type: 'json' }
+
+const MIGRATION_1_TO_2 = PACK_DOC.migrations['1-to-2']
 import { readPath, writePath } from './paths.js'
 
 /** The schema version every card this library writes records. */
