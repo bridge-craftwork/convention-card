@@ -528,6 +528,22 @@ impl Pack {
         &self.registry
     }
 
+    /// For a treatment that says where its convention is played
+    /// (`competitive_bidding/lebensohl:after_weak_two_double`): the
+    /// convention, and the addresses of all its places.
+    pub fn place_of(&self, address: &str) -> Option<(String, Vec<String>)> {
+        let (id, t) = address.split_once(':')?;
+        let p = self
+            .migration
+            .place
+            .iter()
+            .find(|p| p.convention == id && p.switches.values().any(|x| x == t))?;
+        Some((
+            id.to_string(),
+            p.switches.values().map(|x| format!("{id}:{x}")).collect(),
+        ))
+    }
+
     pub fn function(&self, name: &str) -> Option<&Function> {
         self.functions.iter().find(|f| f.name == name)
     }

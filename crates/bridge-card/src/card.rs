@@ -376,7 +376,24 @@ impl Card {
         let value = field
             .normalize(value)
             .map_err(|e| Error::new(format!("{path}: {e}")))?;
-        self.values.insert(field.path.clone(), value);
+        // A place switched on, on a card that has not said whether it plays
+        // the convention: it plays it, there. The other places it has not
+        // mentioned are off, as they were while each place was its own
+        // switch, instead of falling back on a default.
+        let place = match (&value, self.vocab.pack()) {
+            (Value::Bool(true), Some(pack)) => pack.place_of(&field.path),
+            _ => None,
+        };
+        let path = field.path.clone();
+        self.values.insert(path, value);
+        if let Some((id, places)) = place {
+            if !self.values.contains_key(&id) {
+                self.values.insert(id, Value::Bool(true));
+                for p in places {
+                    self.values.entry(p).or_insert(Value::Bool(false));
+                }
+            }
+        }
         self.refresh();
         Ok(())
     }
