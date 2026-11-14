@@ -47,6 +47,11 @@ pub struct Function {
     pub parts: Vec<String>,
     /// Each convention that implements it, with the parts it fills.
     pub implementers: Vec<(String, Vec<String>)>,
+    /// For a convention that fills the function through its treatments
+    /// (Weak jump shifts through `two_level`): each such treatment's address
+    /// and the parts the convention fills while it is on. Absent for a
+    /// convention whose definition implements the function outright.
+    pub when: BTreeMap<String, Vec<(String, Vec<String>)>>,
     /// Schema 2's option words: word to ID.
     pub option: BTreeMap<String, String>,
     /// Words of the schema 2 setting that named no convention and left the
@@ -55,6 +60,20 @@ pub struct Function {
 }
 
 impl Function {
+    /// Whether convention `id`, played, fills `part` (empty for a function
+    /// with none): always, for one that implements the function outright;
+    /// for one that fills it through treatments, while one of those is on
+    /// (`holds` says whether the treatment at an address is).
+    pub fn fills(&self, id: &str, part: &str, holds: &dyn Fn(&str) -> bool) -> bool {
+        match self.when.get(id) {
+            None => true,
+            Some(list) => list.iter().any(|(treatment, parts)| {
+                (parts.is_empty() || part.is_empty() || parts.iter().any(|p| p == part))
+                    && holds(treatment)
+            }),
+        }
+    }
+
     /// The addresses of this function's parts (`defence_to_1nt.strong`), or
     /// its own name when it has none.
     pub fn addresses(&self) -> Vec<String> {
@@ -293,6 +312,9 @@ impl Pack {
 
         let mut fields: Vec<FieldDef> = Vec::new();
         let mut implementers: BTreeMap<String, Vec<(String, Vec<String>)>> = BTreeMap::new();
+        // function → convention → [(treatment address, parts)]
+        type When = BTreeMap<String, Vec<(String, Vec<String>)>>;
+        let mut when: BTreeMap<String, When> = BTreeMap::new();
         for (id, def) in &defs {
             let name = def
                 .get("name")
@@ -368,6 +390,26 @@ impl Pack {
                     }
                 };
                 attrs.remove("taught_under");
+                // What the convention fills while this treatment is on.
+                for f in strings(attrs.remove("implements").as_ref()) {
+                    let (function, part) = match f.split_once('.') {
+                        Some((a, b)) => (a.to_string(), vec![b.to_string()]),
+                        None => (f.clone(), Vec::new()),
+                    };
+                    let list = implementers.entry(function.clone()).or_default();
+                    match list.iter_mut().find(|(i, _)| i == id) {
+                        Some((_, parts)) if !parts.is_empty() && !part.is_empty() => {
+                            parts.extend(part.clone())
+                        }
+                        Some((_, parts)) => parts.clear(),
+                        None => list.push((id.clone(), part.clone())),
+                    }
+                    when.entry(function)
+                        .or_default()
+                        .entry(id.clone())
+                        .or_default()
+                        .push((address.clone(), part));
+                }
                 let mut field: FieldDef = toml::Value::Table(attrs)
                     .try_into()
                     .map_err(|e| Error::new(format!("{address}: {e}")))?;
@@ -404,6 +446,7 @@ impl Pack {
                 parts: strings(doc.get("parts")),
                 defers: strings(doc.get("defers")),
                 implementers: implementers.remove(fname).unwrap_or_default(),
+                when: when.remove(fname).unwrap_or_default(),
                 option: doc
                     .get("option")
                     .and_then(toml::Value::as_table)
@@ -922,6 +965,7 @@ pub(crate) fn derive(
     derived: &Derived,
     on: &dyn Fn(&str) -> bool,
     limited: &dyn Fn(&str) -> Option<Vec<String>>,
+    holds: &dyn Fn(&str) -> bool,
 ) -> Option<Value> {
     let (function, part, as_option) = match derived {
         Derived::FunctionId { function, part } => (function, part, false),
@@ -936,6 +980,7 @@ pub(crate) fn derive(
     let mut playing = f.implementers.iter().filter(|(id, parts)| {
         (parts.is_empty() || part.is_empty() || parts.contains(part))
             && on(id)
+            && f.fills(id, part, holds)
             && limited(id).is_none_or(|l| l.contains(&address) || l.contains(function))
     });
     let (id, _) = playing.next()?;

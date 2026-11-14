@@ -85,7 +85,9 @@ export function schema2Fields(pack) {
     const base = switched.has(id) ? switchSkill(id) : [id]
     for (const [t, attrs] of Object.entries(d.treatments || {})) {
       const p = back.get(`${id}:${t}`)
-      const { skill, taught_under: also, ...def } = attrs
+      // `implements` says what the convention fills while the treatment is
+      // on: not an attribute a schema 2 field had.
+      const { skill, taught_under: also, implements: _fills, ...def } = attrs
       if (places.has(p)) {
         if (def.default === true) delete def.default
         delete def.context

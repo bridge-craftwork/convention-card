@@ -1706,9 +1706,6 @@
    "contexts": [
     "responses_rebids"
    ],
-   "implements": [
-    "jump_to_major_over_minor"
-   ],
    "names": [
     "Reverse Flannery"
    ],
@@ -1734,11 +1731,17 @@
     },
     "two_h": {
      "kind": "bool",
+     "implements": [
+      "jump_to_major_over_minor.2h"
+     ],
      "label": "Reverse Flannery 2♥",
      "level": 8
     },
     "two_s": {
      "kind": "bool",
+     "implements": [
+      "jump_to_major_over_minor.2s"
+     ],
      "label": "Reverse Flannery 2♠",
      "level": 8
     }
@@ -2132,15 +2135,38 @@
    "contexts": [
     "responses_rebids"
    ],
-   "implements": [
-    "jump_to_major_over_minor"
-   ],
    "names": [
     "Strong jump shifts",
     "Strong jump shift",
     "SJS"
    ],
-   "summary": "Responder's jump in a new suit over partner's opening shows a strong hand\nwith a good suit or a fit, forcing to game and looking at slam.\n"
+   "summary": "Responder's jump in a new suit over partner's opening shows a strong hand\nwith a good suit or a fit, forcing to game and looking at slam.\n",
+   "treatments": {
+    "two_level": {
+     "kind": "bool",
+     "label": "Strong jump shifts (2-level)",
+     "level": 3,
+     "choice": "general.jump_shifts_2",
+     "skill": false,
+     "implements": [
+      "jump_to_major_over_minor"
+     ]
+    },
+    "three_level": {
+     "kind": "bool",
+     "label": "Strong jump shifts (3-level)",
+     "level": 3,
+     "choice": "general.jump_shifts_3",
+     "skill": false
+    },
+    "invitational": {
+     "kind": "bool",
+     "label": "Invitational jump shifts",
+     "level": 5,
+     "choice": "general.jump_shifts_2",
+     "skill": false
+    }
+   }
   },
   "bidding_conventions/strong_twos": {
    "id": "bidding_conventions/strong_twos",
@@ -2570,9 +2596,6 @@
    "contexts": [
     "responses_rebids"
    ],
-   "implements": [
-    "jump_to_major_over_minor"
-   ],
    "names": [
     "Weak jump shifts",
     "Weak jump shift",
@@ -2596,7 +2619,40 @@
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/512"
     }
-   ]
+   ],
+   "treatments": {
+    "two_level": {
+     "kind": "bool",
+     "label": "Weak jump shifts (2-level)",
+     "level": 5,
+     "choice": "general.jump_shifts_2",
+     "implements": [
+      "jump_to_major_over_minor"
+     ]
+    },
+    "three_level": {
+     "kind": "bool",
+     "label": "Weak jump shifts (3-level)",
+     "level": 5,
+     "choice": "general.jump_shifts_3"
+    },
+    "not_in_comp": {
+     "kind": "bool",
+     "label": "Weak jump shifts (not in competition)",
+     "level": 5
+    },
+    "in_comp": {
+     "kind": "bool",
+     "label": "Weak jump shifts in competition",
+     "level": 5
+    },
+    "notes": {
+     "kind": "text",
+     "label": "Weak jump shift notes",
+     "note": true,
+     "skill": false
+    }
+   }
   },
   "bidding_conventions/western_cuebid": {
    "id": "bidding_conventions/western_cuebid",
@@ -4859,38 +4915,6 @@
     "kind": "text",
     "label": "Bids that may require preparation"
    },
-   "jump_shifts.strong_2": {
-    "kind": "bool",
-    "label": "Strong jump shifts (2-level)",
-    "level": 3,
-    "choice": "general.jump_shifts_2"
-   },
-   "jump_shifts.strong_3": {
-    "kind": "bool",
-    "label": "Strong jump shifts (3-level)",
-    "level": 3,
-    "choice": "general.jump_shifts_3"
-   },
-   "jump_shifts.weak_2": {
-    "kind": "bool",
-    "label": "Weak jump shifts (2-level)",
-    "skill": "bidding_conventions/weak_jump_shifts",
-    "level": 5,
-    "choice": "general.jump_shifts_2"
-   },
-   "jump_shifts.weak_3": {
-    "kind": "bool",
-    "label": "Weak jump shifts (3-level)",
-    "skill": "bidding_conventions/weak_jump_shifts",
-    "level": 5,
-    "choice": "general.jump_shifts_3"
-   },
-   "jump_shifts.invitational": {
-    "kind": "bool",
-    "label": "Invitational jump shifts",
-    "level": 5,
-    "choice": "general.jump_shifts_2"
-   },
    "forcing_opening": {
     "kind": "text",
     "label": "Forcing opening (as written)",
@@ -6593,23 +6617,6 @@
    "vs_strong_open": {
     "kind": "text",
     "label": "Defense vs strong openings"
-   },
-   "weak_jump_shifts_not_in_comp": {
-    "kind": "bool",
-    "label": "Weak jump shifts (not in competition)",
-    "skill": "bidding_conventions/weak_jump_shifts",
-    "level": 5
-   },
-   "weak_jump_shifts_in_comp": {
-    "kind": "bool",
-    "label": "Weak jump shifts in competition",
-    "skill": "bidding_conventions/weak_jump_shifts",
-    "level": 5
-   },
-   "weak_jump_shifts_notes": {
-    "kind": "text",
-    "label": "Weak jump shift notes",
-    "note": true
    },
    "nmf_notes": {
     "kind": "text",
@@ -9812,9 +9819,9 @@
    },
    {
     "fields": [
-     "general.jump_shifts.weak_2",
-     "general.jump_shifts.weak_3",
-     "other_conventions.weak_jump_shifts_not_in_comp"
+     "bidding_conventions/weak_jump_shifts:two_level",
+     "bidding_conventions/weak_jump_shifts:three_level",
+     "bidding_conventions/weak_jump_shifts:not_in_comp"
     ],
     "call": "Jump shift (weak)",
     "after": "1x",
@@ -9825,7 +9832,7 @@
    },
    {
     "fields": [
-     "other_conventions.weak_jump_shifts_in_comp"
+     "bidding_conventions/weak_jump_shifts:in_comp"
     ],
     "call": "Jump shift (weak)",
     "after": "1x–(X or overcall)",
@@ -9836,8 +9843,8 @@
    },
    {
     "fields": [
-     "general.jump_shifts.strong_2",
-     "general.jump_shifts.strong_3"
+     "bidding_conventions/strong_jump_shifts:two_level",
+     "bidding_conventions/strong_jump_shifts:three_level"
     ],
     "call": "Jump shift (strong)",
     "after": "1x",
@@ -10821,7 +10828,11 @@
     "two_level.parrish_bust.relay": "bidding_conventions/two_heart_bust:relay",
     "two_level.reverse_flannery.two_d": "bidding_conventions/reverse_flannery:two_d",
     "two_level.reverse_flannery.two_h": "bidding_conventions/reverse_flannery:two_h",
-    "two_level.reverse_flannery.two_s": "bidding_conventions/reverse_flannery:two_s"
+    "two_level.reverse_flannery.two_s": "bidding_conventions/reverse_flannery:two_s",
+    "general.jump_shifts.invitational": "bidding_conventions/strong_jump_shifts:invitational",
+    "other_conventions.weak_jump_shifts_not_in_comp": "bidding_conventions/weak_jump_shifts:not_in_comp",
+    "other_conventions.weak_jump_shifts_in_comp": "bidding_conventions/weak_jump_shifts:in_comp",
+    "other_conventions.weak_jump_shifts_notes": "bidding_conventions/weak_jump_shifts:notes"
    },
    "place": [
     {
@@ -10845,6 +10856,20 @@
       "competitive.unusual_1nt.play": "at_1nt",
       "competitive.unusual_3nt.play": "at_3nt",
       "competitive.unusual_4nt.play": "at_4nt"
+     }
+    },
+    {
+     "convention": "bidding_conventions/strong_jump_shifts",
+     "switches": {
+      "general.jump_shifts.strong_2": "two_level",
+      "general.jump_shifts.strong_3": "three_level"
+     }
+    },
+    {
+     "convention": "bidding_conventions/weak_jump_shifts",
+     "switches": {
+      "general.jump_shifts.weak_2": "two_level",
+      "general.jump_shifts.weak_3": "three_level"
      }
     }
    ],

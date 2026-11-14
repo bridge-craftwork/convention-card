@@ -101,13 +101,21 @@ function index(pack) {
   }
   // function → [[id, parts]], an implementer with no parts filling them all
   const implementers = new Map()
+  const claim = (id, name, whole) => {
+    const [f, part] = name.split('.')
+    if (!implementers.has(f)) implementers.set(f, new Map())
+    const byId = implementers.get(f)
+    if (!byId.has(id)) byId.set(id, part ? [part] : [])
+    else if (part && byId.get(id).length && !whole.has(`${f} ${id}`)) byId.get(id).push(part)
+    else byId.set(id, [])
+    if (!part) whole.add(`${f} ${id}`)
+  }
+  const whole = new Set()
   for (const [id, def] of sortedEntries(pack.conventions)) {
-    for (const name of [def.implements ?? []].flat()) {
-      const [f, part] = name.split('.')
-      if (!implementers.has(f)) implementers.set(f, new Map())
-      const parts = implementers.get(f).get(id) ?? []
-      if (part) parts.push(part)
-      implementers.get(f).set(id, parts)
+    for (const name of [def.implements ?? []].flat()) claim(id, name, whole)
+    // A treatment may say what its convention fills while it is on.
+    for (const [, attrs] of sortedEntries(def.treatments || {})) {
+      for (const name of [attrs.implements ?? []].flat()) claim(id, name, whole)
     }
   }
   // The spellings of a function setting's options, folded.

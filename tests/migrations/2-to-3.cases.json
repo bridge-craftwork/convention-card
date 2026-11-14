@@ -622,6 +622,83 @@
     },
     "settings": {}
    }
+  },
+  {
+   "name": "jump-shift boxes are treatments of the jump-shift conventions, every level written",
+   "before": {
+    "schema_version": "2.0",
+    "general": {
+     "jump_shifts": {
+      "strong_2": true,
+      "weak_3": true,
+      "invitational": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/strong_jump_shifts": {
+      "two_level": true,
+      "three_level": false,
+      "invitational": true
+     },
+     "bidding_conventions/weak_jump_shifts": {
+      "two_level": false,
+      "three_level": true
+     }
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "a box that says no survives: the convention is kept, not played",
+   "before": {
+    "schema_version": "2.0",
+    "general": {
+     "jump_shifts": {
+      "strong_2": false,
+      "weak_2": false,
+      "weak_3": false
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/strong_jump_shifts": {
+      "play": false,
+      "two_level": false,
+      "three_level": false
+     },
+     "bidding_conventions/weak_jump_shifts": {
+      "play": false,
+      "two_level": false,
+      "three_level": false
+     }
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "weak jump shifts shown only in competition are played, with no level implied",
+   "before": {
+    "schema_version": "2.0",
+    "other_conventions": {
+     "weak_jump_shifts_in_comp": true,
+     "weak_jump_shifts_notes": "not by a passed hand"
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/weak_jump_shifts": {
+      "in_comp": true,
+      "notes": "not by a passed hand"
+     }
+    },
+    "settings": {}
+   }
   }
  ]
 }

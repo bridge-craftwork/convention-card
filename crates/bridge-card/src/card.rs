@@ -233,6 +233,7 @@ impl Card {
             let Some(d) = &f.derived else { continue };
             let on = |id: &str| matches!(self.values.get(id), Some(Value::Bool(true)));
             let limited = |id: &str| self.limited_to(id);
+            let holds = |t: &str| matches!(self.values.get(t), Some(Value::Bool(true)));
             // A schema 2 setting stored on the card (a `.bbsa` import, a
             // change by its old path) says which convention fills the
             // part, as it did in schema 2: its option's convention;
@@ -258,7 +259,7 @@ impl Card {
                     // part it reads `none`, not a rule's default.
                     let none = Value::Text("none".into());
                     let v = if func.is_some_and(|f| f.defers.contains(&word)) {
-                        crate::pack::derive(pack, d, &on, &limited).unwrap_or(none)
+                        crate::pack::derive(pack, d, &on, &limited, &holds).unwrap_or(none)
                     } else {
                         none
                     };
@@ -266,7 +267,7 @@ impl Card {
                     continue;
                 }
             }
-            if let Some(v) = crate::pack::derive(pack, d, &on, &limited) {
+            if let Some(v) = crate::pack::derive(pack, d, &on, &limited, &holds) {
                 derived.insert(f.path.clone(), v);
             }
         }
@@ -784,6 +785,9 @@ impl Card {
                         .filter(|(id, parts)| {
                             (parts.is_empty() || part.is_empty() || parts.iter().any(|p| p == part))
                                 && matches!(self.values.get(id), Some(Value::Bool(true)))
+                                && f.fills(id, part, &|t| {
+                                    matches!(self.values.get(t), Some(Value::Bool(true)))
+                                })
                                 && self
                                     .limited_to(id)
                                     .is_none_or(|l| l.contains(&address) || l.contains(&f.name))

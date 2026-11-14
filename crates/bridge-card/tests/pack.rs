@@ -369,6 +369,62 @@ fn a_two_level_opening_is_the_convention_that_claims_it() {
     );
 }
 
+#[test]
+fn a_jump_shift_style_is_an_entry_and_fills_the_jump_over_a_minor() {
+    let Some(v) = vocab() else { return };
+    let strong = Value::Text("bidding_conventions/strong_jump_shifts".into());
+    let weak = Value::Text("bidding_conventions/weak_jump_shifts".into());
+    // The boxes are treatments of their convention, read by either name.
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0","general":{"jump_shifts":{
+            "strong_2":true,"strong_3":false,"weak_2":false,"weak_3":true,"invitational":true}}}"#,
+    )
+    .unwrap();
+    assert!(card.is_on("general.jump_shifts.strong_2"));
+    assert!(card.is_on("bidding_conventions/strong_jump_shifts:two_level"));
+    assert!(card.is_on("bidding_conventions/strong_jump_shifts:invitational"));
+    assert!(card.is_on("bidding_conventions/weak_jump_shifts:three_level"));
+    assert!(!card.is_on("general.jump_shifts.weak_2"));
+    // Weak jump shifts are played, but not at the two level: only the
+    // strong ones fill the jump to a major over a minor.
+    assert!(card.is_on("bidding_conventions/weak_jump_shifts"));
+    assert_eq!(card.effective("jump_to_major_over_minor.2h"), Some(&strong));
+    assert!(report.conflicts.is_empty());
+
+    // Both at the two level: a conflict. Reverse Flannery fills only the
+    // jump its treatment names.
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0","general":{"jump_shifts":{"strong_2":true,"weak_2":true}}}"#,
+    )
+    .unwrap();
+    assert_eq!(card.effective("jump_to_major_over_minor.2s"), None);
+    assert_eq!(report.conflicts.len(), 2);
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0","general":{"jump_shifts":{"weak_2":true}},
+            "two_level":{"reverse_flannery":{"play":true,"two_h":true}}}"#,
+    )
+    .unwrap();
+    assert_eq!(card.effective("jump_to_major_over_minor.2s"), Some(&weak));
+    assert_eq!(card.effective("jump_to_major_over_minor.2h"), None);
+    assert_eq!(report.conflicts.len(), 1);
+
+    // An explicit "no strong jump shifts" survives: not played, and the box
+    // still reads off, where a silent card would take a rule's default.
+    let card = load(
+        &v,
+        r#"{"schema_version":"2.0","general":{"jump_shifts":{"strong_2":false}}}"#,
+    );
+    assert_eq!(
+        card.effective("general.jump_shifts.strong_2"),
+        Some(&Value::Bool(false))
+    );
+    let silent = load(&v, r#"{"schema_version":"2.0"}"#);
+    assert_eq!(silent.effective("general.jump_shifts.strong_2"), None);
+}
+
 /// The cases the JavaScript library is held to as well
 /// (js/__tests__/schema3.test.js), so the two readers of the pack's
 /// migrations/2-to-3.toml agree.
