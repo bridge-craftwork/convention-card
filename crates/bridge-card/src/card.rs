@@ -245,15 +245,25 @@ impl Card {
                             _ => None,
                         });
                 if let Some(word) = word {
-                    let option = pack.function(function).and_then(|f| f.option.get(&word));
-                    if let Some(id) = option {
+                    let func = pack.function(function);
+                    if let Some(id) = func.and_then(|f| f.option.get(&word)) {
                         derived.insert(f.path.clone(), Value::Text(id.clone()));
                         named.insert(id.clone());
                         continue;
                     }
-                    if word != "other" {
-                        continue;
-                    }
+                    // The setting is filled in and names no convention. A
+                    // word that defers (`other`, `conventional`) leaves it
+                    // to the entries; any other (`natural`) says none. Either
+                    // way the card has spoken: where nothing fills the
+                    // part it reads `none`, not a rule's default.
+                    let none = Value::Text("none".into());
+                    let v = if func.is_some_and(|f| f.defers.contains(&word)) {
+                        crate::pack::derive(pack, d, &on, &limited).unwrap_or(none)
+                    } else {
+                        none
+                    };
+                    derived.insert(f.path.clone(), v);
+                    continue;
                 }
             }
             if let Some(v) = crate::pack::derive(pack, d, &on, &limited) {
@@ -321,8 +331,18 @@ impl Card {
         if let Some(old) = self.legacy_setting(&function, &part) {
             self.values.remove(&old);
         }
-        let all = f.addresses();
-        for (id, _) in &f.implementers {
+        let every = f.addresses();
+        for (id, own) in &f.implementers {
+            // What this convention can fill: every part, or the ones its
+            // definition names.
+            let all: Vec<String> = if own.is_empty() {
+                every.clone()
+            } else {
+                own.iter().map(|p| format!("{function}.{p}")).collect()
+            };
+            if Some(id) == chosen.as_ref() && !all.contains(&address) {
+                return Err(Error::new(format!("{id} does not fill {address}")));
+            }
             let on = matches!(self.values.get(id), Some(Value::Bool(true)));
             if Some(id) == chosen.as_ref() {
                 let mut parts = if on {
@@ -717,8 +737,17 @@ impl Card {
                 continue;
             }
             let field = match vocab.registry().get(&path) {
+                // A setting, or the schema 2 setting that named a function's
+                // convention: a card keeps that one when its wording named
+                // none (`natural`, `conventional`).
                 Some(f)
-                    if f.derived.is_none() && f.convention.is_none() && !f.path.contains('/') =>
+                    if (f.derived.is_none()
+                        || matches!(
+                            f.derived,
+                            Some(crate::pack::Derived::FunctionOption { .. })
+                        ))
+                        && f.convention.is_none()
+                        && !f.path.contains('/') =>
                 {
                     f
                 }

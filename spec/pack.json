@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "a11c2f884d78f21c7c1242aae91f5c6a3ce560be",
+ "source_commit": "78bd1b1e5d86ee530301d287d59965a43e578990",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -68,6 +68,10 @@
    "level": 8,
    "contexts": [
     "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2c",
+    "opening.2d"
    ],
    "names": [
     "Benjamin",
@@ -363,6 +367,9 @@
    "contexts": [
     "preemptive_openings"
    ],
+   "implements": [
+    "opening.2d"
+   ],
    "names": [
     "Flannery",
     "Flannery 2♦"
@@ -474,6 +481,9 @@
    "level": 8,
    "contexts": [
     "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d"
    ],
    "names": [
     "French 2♦"
@@ -721,6 +731,26 @@
     }
    ]
   },
+  "bidding_conventions/intermediate_twos": {
+   "id": "bidding_conventions/intermediate_twos",
+   "name": "Intermediate two-bids",
+   "source": "proposed",
+   "level": 5,
+   "contexts": [
+    "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d",
+    "opening.2h",
+    "opening.2s"
+   ],
+   "names": [
+    "Intermediate twos",
+    "Intermediate two",
+    "Intermediate two-bids"
+   ],
+   "summary": "An opening 2♦, 2♥ or 2♠ shows a six-card suit and a sound minimum opening,\nabout 10 to 13 points: stronger than a weak two, and not forcing.\n"
+  },
   "bidding_conventions/inverted_minors": {
    "id": "bidding_conventions/inverted_minors",
    "name": "Inverted Minor Raises",
@@ -886,6 +916,9 @@
    "contexts": [
     "slam"
    ],
+   "implements": [
+    "low_keycard_ask"
+   ],
    "names": [
     "Kickback",
     "Kickback keycard",
@@ -1030,6 +1063,9 @@
    "level": 7,
    "contexts": [
     "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d"
    ],
    "names": [
     "Mini-Roman",
@@ -1203,6 +1239,10 @@
    "contexts": [
     "slam"
    ],
+   "implements": [
+    "low_keycard_ask.clubs",
+    "low_keycard_ask.diamonds"
+   ],
    "names": [
     "Minorwood",
     "4m keycard",
@@ -1234,6 +1274,10 @@
    "name": "Muiderberg twos",
    "source": "proposed",
    "level": 8,
+   "implements": [
+    "opening.2h",
+    "opening.2s"
+   ],
    "names": [
     "Muiderberg",
     "Muiderberg twos",
@@ -1255,6 +1299,9 @@
    "level": 8,
    "contexts": [
     "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d"
    ],
    "names": [
     "Multi",
@@ -1473,6 +1520,10 @@
    "contexts": [
     "preemptive_openings"
    ],
+   "implements": [
+    "opening.2h",
+    "opening.2s"
+   ],
    "names": [
     "Polish two-suiters",
     "Polish 2♥/2♠"
@@ -1486,6 +1537,9 @@
    "level": 7,
    "contexts": [
     "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d"
    ],
    "names": [
     "Precision 2♦"
@@ -2038,6 +2092,9 @@
    "name": "Strong 2♣",
    "source": "taxonomy",
    "level": 3,
+   "implements": [
+    "opening.2c"
+   ],
    "names": [
     "Strong 2♣",
     "2♣ strong",
@@ -2063,6 +2120,28 @@
      "url": "https://www.advinbridge.com/this-week-in-bridge/415"
     }
    ]
+  },
+  "bidding_conventions/strong_twos": {
+   "id": "bidding_conventions/strong_twos",
+   "name": "Strong two-bids",
+   "source": "proposed",
+   "level": 4,
+   "contexts": [
+    "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d",
+    "opening.2h",
+    "opening.2s"
+   ],
+   "names": [
+    "Strong twos",
+    "Strong two",
+    "Strong two-bids",
+    "Acol twos",
+    "Acol two-bids"
+   ],
+   "summary": "An opening 2♦, 2♥ or 2♠ shows a strong hand with a long, good suit: about\neight playing tricks, forcing for one round. The weak two gives way to it.\n"
   },
   "bidding_conventions/super_accept": {
    "id": "bidding_conventions/super_accept",
@@ -2427,6 +2506,14 @@
    "name": "Weak Twos",
    "source": "taxonomy",
    "level": 3,
+   "contexts": [
+    "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d",
+    "opening.2h",
+    "opening.2s"
+   ],
    "names": [
     "Weak twos",
     "Weak two",
@@ -2515,6 +2602,9 @@
    "level": 9,
    "contexts": [
     "preemptive_openings"
+   ],
+   "implements": [
+    "opening.2d"
    ],
    "names": [
     "Wilkosz"
@@ -6732,21 +6822,6 @@
      "steps"
     ]
    },
-   "two_diamonds.meaning": {
-    "kind": "enum",
-    "label": "2♦ meaning",
-    "options": [
-     "weak",
-     "intermediate",
-     "strong",
-     "conventional"
-    ],
-    "skill": "bidding_conventions/weak_2s",
-    "level": 3,
-    "plays": {
-     "weak": "bidding_conventions/weak_2s"
-    }
-   },
    "two_diamonds.min_hcp": {
     "kind": "int",
     "label": "2♦ range: minimum",
@@ -6780,21 +6855,6 @@
      "two_level.two_diamonds.rebid_2nt"
     ]
    },
-   "two_hearts.meaning": {
-    "kind": "enum",
-    "label": "2♥ meaning",
-    "options": [
-     "weak",
-     "intermediate",
-     "strong",
-     "conventional"
-    ],
-    "skill": "bidding_conventions/weak_2s",
-    "level": 3,
-    "plays": {
-     "weak": "bidding_conventions/weak_2s"
-    }
-   },
    "two_hearts.min_hcp": {
     "kind": "int",
     "label": "2♥ range: minimum",
@@ -6827,21 +6887,6 @@
     "aliases": [
      "two_level.two_hearts.rebid_2nt"
     ]
-   },
-   "two_spades.meaning": {
-    "kind": "enum",
-    "label": "2♠ meaning",
-    "options": [
-     "weak",
-     "intermediate",
-     "strong",
-     "conventional"
-    ],
-    "skill": "bidding_conventions/weak_2s",
-    "level": 3,
-    "plays": {
-     "weak": "bidding_conventions/weak_2s"
-    }
    },
    "two_spades.min_hcp": {
     "kind": "int",
@@ -7246,6 +7291,9 @@
     "strong",
     "weak"
    ],
+   "defers": [
+    "other"
+   ],
    "was": {
     "strong": {
      "setting": "competitive.vs_1nt_strong.system",
@@ -7357,6 +7405,78 @@
   },
   "michaels_vs_preempts": {
    "name": "Two-suited overcall of their preempt"
+  },
+  "opening": {
+   "name": "Meaning of a two-level opening bid",
+   "parts": [
+    "2c",
+    "2d",
+    "2h",
+    "2s"
+   ],
+   "defers": [
+    "conventional"
+   ],
+   "option": {
+    "weak": "bidding_conventions/weak_2s",
+    "intermediate": "bidding_conventions/intermediate_twos",
+    "strong": "bidding_conventions/strong_twos"
+   },
+   "was": {
+    "2d": {
+     "setting": "two_level.two_diamonds.meaning",
+     "label": "2♦ meaning",
+     "options": [
+      "weak",
+      "intermediate",
+      "strong",
+      "conventional"
+     ],
+     "skill": "bidding_conventions/weak_2s",
+     "level": 3,
+     "plays": {
+      "weak": "bidding_conventions/weak_2s"
+     }
+    },
+    "2h": {
+     "setting": "two_level.two_hearts.meaning",
+     "label": "2♥ meaning",
+     "options": [
+      "weak",
+      "intermediate",
+      "strong",
+      "conventional"
+     ],
+     "skill": "bidding_conventions/weak_2s",
+     "level": 3,
+     "plays": {
+      "weak": "bidding_conventions/weak_2s"
+     }
+    },
+    "2s": {
+     "setting": "two_level.two_spades.meaning",
+     "label": "2♠ meaning",
+     "options": [
+      "weak",
+      "intermediate",
+      "strong",
+      "conventional"
+     ],
+     "skill": "bidding_conventions/weak_2s",
+     "level": 3,
+     "plays": {
+      "weak": "bidding_conventions/weak_2s"
+     }
+    }
+   }
+  },
+  "low_keycard_ask": {
+   "name": "The keycard ask below 4NT",
+   "parts": [
+    "clubs",
+    "diamonds",
+    "hearts"
+   ]
   }
  },
  "levels": {
@@ -8229,7 +8349,7 @@
    },
    {
     "fields": [
-     "two_level.two_diamonds.meaning"
+     "opening.2d"
     ],
     "call": "2♦",
     "after": "opening",
@@ -8240,7 +8360,7 @@
    },
    {
     "fields": [
-     "two_level.two_diamonds.meaning"
+     "opening.2d"
     ],
     "call": "New suit (non-forcing)",
     "when": "a new-suit response is not forcing",
@@ -8251,7 +8371,7 @@
    },
    {
     "fields": [
-     "two_level.two_diamonds.meaning"
+     "opening.2d"
     ],
     "call": "Raise (invitational or forcing)",
     "when": "a raise is invitational or forcing, not preemptive",
@@ -8262,7 +8382,7 @@
    },
    {
     "fields": [
-     "two_level.two_hearts.meaning"
+     "opening.2h"
     ],
     "call": "2♥",
     "after": "opening",
@@ -8273,7 +8393,7 @@
    },
    {
     "fields": [
-     "two_level.two_hearts.meaning"
+     "opening.2h"
     ],
     "call": "New suit (non-forcing)",
     "when": "a new-suit response is not forcing",
@@ -8284,7 +8404,7 @@
    },
    {
     "fields": [
-     "two_level.two_hearts.meaning"
+     "opening.2h"
     ],
     "call": "Raise (invitational or forcing)",
     "when": "a raise is invitational or forcing, not preemptive",
@@ -8295,7 +8415,7 @@
    },
    {
     "fields": [
-     "two_level.two_spades.meaning"
+     "opening.2s"
     ],
     "call": "2♠",
     "after": "opening",
@@ -8306,7 +8426,7 @@
    },
    {
     "fields": [
-     "two_level.two_spades.meaning"
+     "opening.2s"
     ],
     "call": "New suit (non-forcing)",
     "when": "a new-suit response is not forcing",
@@ -8317,7 +8437,7 @@
    },
    {
     "fields": [
-     "two_level.two_spades.meaning"
+     "opening.2s"
     ],
     "call": "Raise (invitational or forcing)",
     "when": "a raise is invitational or forcing, not preemptive",
@@ -9803,6 +9923,8 @@
    "from": "2.0",
    "to": "3.0",
    "new_ids": [
+    "bidding_conventions/strong_twos",
+    "bidding_conventions/intermediate_twos",
     "bidding_conventions/texas",
     "bidding_conventions/mini_splinters",
     "bidding_conventions/three_nt_raise",
@@ -10684,6 +10806,22 @@
      "unless_chosen": {
       "competitive.dont.play": "strong"
      }
+    },
+    {
+     "function": "opening",
+     "settings": {
+      "2d": "two_level.two_diamonds.meaning",
+      "2h": "two_level.two_hearts.meaning",
+      "2s": "two_level.two_spades.meaning"
+     },
+     "options": {
+      "weak": "bidding_conventions/weak_2s",
+      "intermediate": "bidding_conventions/intermediate_twos",
+      "strong": "bidding_conventions/strong_twos"
+     },
+     "no_entry": [
+      "conventional"
+     ]
     }
    ],
    "alias": {

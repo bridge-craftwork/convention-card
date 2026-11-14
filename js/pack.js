@@ -63,9 +63,8 @@ export function schema2Fields(pack) {
   // A setting whose value named a convention: now a function.
   for (const fn of Object.values(pack.functions)) {
     for (const was of Object.values(fn.was || {})) {
-      const def = { kind: 'enum', label: was.label, options: was.options }
-      for (const k of ['value_aliases', 'desc', 'level', 'skill']) if (k in was) def[k] = was[k]
-      out[was.setting] = def
+      const { setting, ...attrs } = was
+      out[setting] = { kind: 'enum', ...attrs }
     }
   }
   // A convention's switch.

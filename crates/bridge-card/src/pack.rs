@@ -49,6 +49,9 @@ pub struct Function {
     pub implementers: Vec<(String, Vec<String>)>,
     /// Schema 2's option words: word to ID.
     pub option: BTreeMap<String, String>,
+    /// Words of the schema 2 setting that named no convention and left the
+    /// choice to the card's entries (`other`, `conventional`).
+    pub defers: Vec<String>,
 }
 
 impl Function {
@@ -399,6 +402,7 @@ impl Pack {
                     .unwrap_or(fname)
                     .to_string(),
                 parts: strings(doc.get("parts")),
+                defers: strings(doc.get("defers")),
                 implementers: implementers.remove(fname).unwrap_or_default(),
                 option: doc
                     .get("option")
@@ -719,7 +723,10 @@ impl Pack {
                 };
                 let on = entries.get(id).and_then(|e| e.play) == Some(true);
                 let word = chosen.get(&(m.function.clone(), part.clone()));
-                let free = word.is_none_or(|w| w == "other");
+                let free = word.is_none_or(|w| {
+                    self.function(&m.function)
+                        .is_some_and(|f| f.defers.contains(w))
+                });
                 if on && free {
                     fills.entry(id.clone()).or_default().push(part.clone());
                 } else if on && !fills.contains_key(id) {
@@ -731,9 +738,17 @@ impl Pack {
             for (id, mut parts) in fills {
                 parts.sort();
                 parts.dedup();
+                // `for` narrows what the convention can fill: every part of
+                // the function, or the ones its definition names.
+                let can_fill: Vec<String> = self
+                    .function(&m.function)
+                    .and_then(|f| f.implementers.iter().find(|(i, _)| *i == id))
+                    .map(|(_, own)| own.clone())
+                    .filter(|own| !own.is_empty())
+                    .unwrap_or_else(|| all_parts.clone());
                 let e = entries.entry(id).or_default();
                 e.play = Some(true);
-                if !all_parts.is_empty() && all_parts.iter().any(|p| !parts.contains(p)) {
+                if !can_fill.is_empty() && can_fill.iter().any(|p| !parts.contains(p)) {
                     e.extra.insert(
                         "for".into(),
                         Json::Array(

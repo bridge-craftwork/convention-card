@@ -467,6 +467,161 @@
      }
     }
    }
+  },
+  {
+   "name": "weak for all three two-bids is one Weak Twos entry",
+   "before": {
+    "schema_version": "2.0",
+    "two_level": {
+     "two_diamonds": {
+      "meaning": "weak",
+      "min_hcp": 5
+     },
+     "two_hearts": {
+      "meaning": "weak"
+     },
+     "two_spades": {
+      "meaning": "weak"
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/weak_2s": {}
+    },
+    "settings": {
+     "two_level": {
+      "two_diamonds": {
+       "min_hcp": 5
+      }
+     }
+    }
+   }
+  },
+  {
+   "name": "a two-bid's meaning names the convention that claims that bid",
+   "before": {
+    "schema_version": "2.0",
+    "two_level": {
+     "two_diamonds": {
+      "meaning": "intermediate"
+     },
+     "two_hearts": {
+      "meaning": "weak"
+     },
+     "two_spades": {
+      "meaning": "strong"
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/intermediate_twos": {
+      "for": [
+       "opening.2d"
+      ]
+     },
+     "bidding_conventions/strong_twos": {
+      "for": [
+       "opening.2s"
+      ]
+     },
+     "bidding_conventions/weak_2s": {
+      "for": [
+       "opening.2h"
+      ]
+     }
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "conventional names no convention and stays the setting",
+   "before": {
+    "schema_version": "2.0",
+    "two_level": {
+     "two_diamonds": {
+      "meaning": "conventional"
+     },
+     "flannery": {
+      "play": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/flannery": {}
+    },
+    "settings": {
+     "two_level": {
+      "two_diamonds": {
+       "meaning": "conventional"
+      }
+     }
+    }
+   }
+  },
+  {
+   "name": "a meaning and a ticked convention for the same bid both stand: a conflict the card shows",
+   "before": {
+    "schema_version": "2.0",
+    "two_level": {
+     "two_diamonds": {
+      "meaning": "weak"
+     },
+     "two_hearts": {
+      "meaning": "weak"
+     },
+     "two_spades": {
+      "meaning": "weak"
+     },
+     "mini_roman": {
+      "play": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/mini_roman_2d": {},
+     "bidding_conventions/weak_2s": {}
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "Minorwood and Kickback beside keycard",
+   "before": {
+    "schema_version": "2.0",
+    "slam": {
+     "rkcb": {
+      "play": true,
+      "style": "1430",
+      "minor_0314": true
+     },
+     "minorwood": {
+      "play": true
+     },
+     "kickback": {
+      "play": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/kickback": {},
+     "bidding_conventions/minorwood": {},
+     "bidding_conventions/roman_keycard": {
+      "style": "1430",
+      "minor_0314": true
+     }
+    },
+    "settings": {}
+   }
   }
  ]
 }

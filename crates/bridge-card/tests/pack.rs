@@ -300,6 +300,75 @@ fn every_stock_card_migrates_and_reads_as_schema_2_did() {
     assert!(seen > 0);
 }
 
+#[test]
+fn a_two_level_opening_is_the_convention_that_claims_it() {
+    let Some(v) = vocab() else { return };
+    // `weak` for all three is Weak Twos; a ticked convention beside it for
+    // the same bid is a conflict, which a rule reads as its own default.
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0","two_level":{
+            "two_diamonds":{"meaning":"weak"},"two_hearts":{"meaning":"weak"},
+            "two_spades":{"meaning":"intermediate"},
+            "mini_roman":{"play":true}}}"#,
+    )
+    .unwrap();
+    let weak = Value::Text("bidding_conventions/weak_2s".into());
+    assert_eq!(card.effective("opening.2h"), Some(&weak));
+    assert_eq!(
+        card.effective("opening.2s"),
+        Some(&Value::Text("bidding_conventions/intermediate_twos".into()))
+    );
+    assert_eq!(card.effective("opening.2d"), None);
+    assert_eq!(report.conflicts.len(), 1);
+    // The old setting still reads, for the tools that print it.
+    assert_eq!(
+        card.effective("two_level.two_hearts.meaning"),
+        Some(&Value::Text("weak".into()))
+    );
+    let json = card.to_json();
+    assert_eq!(
+        json["conventions"]["bidding_conventions/weak_2s"]["for"],
+        serde_json::json!(["opening.2d", "opening.2h"])
+    );
+    // `conventional` leaves the bid to the card's entries; with none, the
+    // card has still spoken: `none`, not a rule's default of weak.
+    let card = load(
+        &v,
+        r#"{"schema_version":"2.0","two_level":{"two_diamonds":{"meaning":"conventional"}}}"#,
+    );
+    assert_eq!(
+        card.effective("opening.2d"),
+        Some(&Value::Text("none".into()))
+    );
+    let card = load(
+        &v,
+        r#"{"schema_version":"2.0","two_level":{
+            "two_diamonds":{"meaning":"conventional"},"flannery":{"play":true}}}"#,
+    );
+    assert_eq!(
+        card.effective("opening.2d"),
+        Some(&Value::Text("bidding_conventions/flannery".into()))
+    );
+    // Minorwood and Kickback both claim the ask below 4NT in the minors.
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0","slam":{"rkcb":{"play":true},
+            "minorwood":{"play":true},"kickback":{"play":true}}}"#,
+    )
+    .unwrap();
+    assert_eq!(
+        card.effective("low_keycard_ask.hearts"),
+        Some(&Value::Text("bidding_conventions/kickback".into()))
+    );
+    assert_eq!(card.effective("low_keycard_ask.clubs"), None);
+    assert!(!report.conflicts.is_empty());
+    assert_eq!(
+        card.effective("ace_ask.minor"),
+        Some(&Value::Text("bidding_conventions/roman_keycard".into()))
+    );
+}
+
 /// The cases the JavaScript library is held to as well
 /// (js/__tests__/schema3.test.js), so the two readers of the pack's
 /// migrations/2-to-3.toml agree.

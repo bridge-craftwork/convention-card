@@ -230,9 +230,13 @@ export function toSchema3(data, pack = PACK_DOC) {
     }
     for (const [id, parts] of fills) {
       const own = [...new Set(parts)].sort()
+      // `for` narrows what the convention can fill: every part of the
+      // function, or the ones its definition names.
+      const named = ix.implementers.get(m.function)?.get(id) || []
+      const canFill = named.length ? named : allParts
       const e = entry(id)
       e.play = true
-      if (allParts.length && allParts.some(p => !own.includes(p))) e.extra.for = own.map(p => `${m.function}.${p}`)
+      if (canFill.length && canFill.some(p => !own.includes(p))) e.extra.for = own.map(p => `${m.function}.${p}`)
     }
   }
 
@@ -332,7 +336,10 @@ export function fromSchema3(card, pack = PACK_DOC) {
       // The setting that named it, in the card's own wording where it kept it.
       const [f, word] = option
       const fn = pack.functions[f]
-      const parts = Array.isArray(e.for) ? e.for.filter(a => a.split('.')[0] === f).map(a => a.split('.')[1]) : fn.parts || []
+      const named = ix.implementers.get(f)?.get(id) || []
+      const parts = Array.isArray(e.for)
+        ? e.for.filter(a => a.split('.')[0] === f).map(a => a.split('.')[1])
+        : named.length ? named : fn.parts || []
       const text = typeof extra.text === 'string' && ix.words.get(`${f}.${parts[0]}`)?.get(fold(extra.text)) === word ? extra.text : null
       for (const part of parts) {
         const path = fn.was?.[part]?.setting
