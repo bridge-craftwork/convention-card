@@ -219,7 +219,8 @@ fn a_schema_2_card_migrates() {
     assert!(card.is_on("bidding_conventions/texas"));
     assert!(card.is_on("bidding_conventions/texas:two_under"));
     assert!(!card.is_on("bidding_conventions/stayman"));
-    assert!(card.is_on("bidding_conventions/stayman:puppet_1nt"));
+    assert!(card.is_on("bidding_conventions/puppet_stayman:over_1nt"));
+    assert!(card.is_on("notrump.stayman.puppet_1nt"));
     // A treatment on with the switch never set: the entry is played.
     assert!(card.is_on("bidding_conventions/bergen_raises"));
     // The setting's convention; DONT's switch did nothing beside it.

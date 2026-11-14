@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "a355f32f93def39209f93e6ac6e0d5e3dfccb1bf",
+ "source_commit": "8d80e87be37873cf464971cdadada34e1e0ddf00",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -791,6 +791,9 @@
    "taught_under": [
     "bidding_conventions/jacoby_2nt_splinters"
    ],
+   "implements": [
+    "two_nt_response_to_major"
+   ],
    "names": [
     "Jacoby 2NT",
     "Jacoby 2N",
@@ -812,18 +815,7 @@
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/407"
     }
-   ],
-   "treatments": {
-    "modified": {
-     "kind": "bool",
-     "label": "Modified Jacoby 2NT",
-     "level": 6,
-     "skill": [
-      "bidding_conventions/modified_jacoby_2nt",
-      "bidding_conventions/jacoby_2nt_splinters"
-     ]
-    }
-   }
+   ]
   },
   "bidding_conventions/jacoby_2nt_splinters": {
    "id": "bidding_conventions/jacoby_2nt_splinters",
@@ -1263,6 +1255,15 @@
    "name": "Modified Jacoby 2NT",
    "source": "proposed",
    "level": 6,
+   "contexts": [
+    "major_openings"
+   ],
+   "taught_under": [
+    "bidding_conventions/jacoby_2nt_splinters"
+   ],
+   "implements": [
+    "two_nt_response_to_major"
+   ],
    "names": [
     "Modified Jacoby 2NT",
     "Modified Jacoby"
@@ -1458,6 +1459,9 @@
    "name": "Parrish relay",
    "source": "proposed",
    "level": 7,
+   "style_of": [
+    "bidding_conventions/two_heart_bust:relay"
+   ],
    "names": [
     "Parrish relay"
    ],
@@ -1577,6 +1581,9 @@
    "name": "Puppet Stayman",
    "source": "proposed",
    "level": 7,
+   "contexts": [
+    "notrump_openings"
+   ],
    "names": [
     "Puppet Stayman",
     "Puppet",
@@ -1601,7 +1608,24 @@
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/523"
     }
-   ]
+   ],
+   "treatments": {
+    "over_1nt": {
+     "kind": "bool",
+     "label": "Puppet Stayman over 1NT (3♣)",
+     "desc": "Bridge Classroom's editor, its PDFs and the BBO and Bridgodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)",
+     "level": 7
+    },
+    "over_2nt": {
+     "kind": "bool",
+     "label": "2NT: Puppet Stayman (3♣)",
+     "desc": "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major",
+     "level": 7,
+     "implements": [
+      "major_ask_over_notrump.2nt"
+     ]
+    }
+   }
   },
   "bidding_conventions/quantitative_4nt": {
    "id": "bidding_conventions/quantitative_4nt",
@@ -1643,6 +1667,9 @@
    "name": "Reverse Bergen raises",
    "source": "proposed",
    "level": 6,
+   "style_of": [
+    "bidding_conventions/bergen_raises:reverse"
+   ],
    "names": [
     "Reverse Bergen"
    ],
@@ -1675,6 +1702,9 @@
    "name": "Reverse Drury",
    "source": "taxonomy",
    "level": 5,
+   "style_of": [
+    "bidding_conventions/drury:reverse"
+   ],
    "names": [
     "Reverse Drury",
     "Drury"
@@ -2028,6 +2058,9 @@
    "contexts": [
     "notrump_openings"
    ],
+   "implements": [
+    "major_ask_over_notrump"
+   ],
    "names": [
     "Stayman",
     "Regular Stayman",
@@ -2070,20 +2103,6 @@
      "kind": "bool",
      "label": "Garbage Stayman",
      "level": 3
-    },
-    "puppet_1nt": {
-     "kind": "bool",
-     "label": "Puppet Stayman over 1NT (3♣)",
-     "desc": "Bridge Classroom's editor, its PDFs and the BBO and Bridgodex importers write notrump.stayman.puppet for this (BBO's 1NPuppet, the Classic card's 1NT box)",
-     "level": 7,
-     "skill": "bidding_conventions/puppet_stayman"
-    },
-    "puppet_2nt": {
-     "kind": "bool",
-     "label": "2NT: Puppet Stayman (3♣)",
-     "desc": "Over 2NT (and 2♣–2♦–2NT), 3♣ asks for a four- or five-card major",
-     "level": 7,
-     "skill": "bidding_conventions/puppet_stayman"
     },
     "over_2nt_both_majors": {
      "kind": "bool",
@@ -2195,6 +2214,10 @@
    "name": "Super-Accepting a Transfer",
    "source": "proposed",
    "level": 5,
+   "style_of": [
+    "bidding_conventions/jacoby_transfers:super_accept",
+    "bidding_conventions/jacoby_transfers:super_accept_doubleton"
+   ],
    "names": [
     "super-accept",
     "super accept",
@@ -2457,6 +2480,9 @@
    "name": "Two-way Drury",
    "source": "proposed",
    "level": 6,
+   "style_of": [
+    "bidding_conventions/drury:two_d"
+   ],
    "names": [
     "Two-way Drury",
     "2-way Drury",
@@ -6339,7 +6365,7 @@
     "kind": "text",
     "label": "3♣ response",
     "implies": {
-     "bidding_conventions/puppet_stayman": "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman": "bidding_conventions/puppet_stayman:over_1nt"
     }
    },
    "responses.3d": {
@@ -7518,6 +7544,16 @@
     "2h",
     "2s"
    ]
+  },
+  "major_ask_over_notrump": {
+   "name": "Responder's ask for a major over a notrump opening",
+   "parts": [
+    "1nt",
+    "2nt"
+   ]
+  },
+  "two_nt_response_to_major": {
+   "name": "Responder's 2NT over one of a major"
   }
  },
  "levels": {
@@ -7730,7 +7766,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman:over_1nt"
     ],
     "call": "2♣",
     "after": "1NT",
@@ -7741,7 +7777,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman:over_1nt"
     ],
     "call": "3♣",
     "after": "2NT",
@@ -7752,7 +7788,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman:over_1nt"
     ],
     "call": "3♦",
     "after": "2NT–3♣",
@@ -7762,7 +7798,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman:over_1nt"
     ],
     "call": "3♥/3♠",
     "after": "2NT–3♣",
@@ -7773,7 +7809,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman:over_1nt"
     ],
     "call": "3NT",
     "after": "2NT–3♣",
@@ -7783,7 +7819,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman:over_1nt"
     ],
     "call": "3♥/3♠",
     "after": "2NT–3♣–3♦",
@@ -7794,7 +7830,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/stayman:puppet_1nt"
+     "bidding_conventions/puppet_stayman:over_1nt"
     ],
     "call": "4♦",
     "after": "2NT–3♣–3♦",
@@ -7965,7 +8001,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/jacoby_2nt:modified"
+     "bidding_conventions/modified_jacoby_2nt"
     ],
     "call": "2NT",
     "after": "1♥/1♠",
@@ -7975,7 +8011,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/jacoby_2nt:modified"
+     "bidding_conventions/modified_jacoby_2nt"
     ],
     "call": "3♣/3♦/3♥/3♠",
     "after": "1M–2NT",
@@ -7985,7 +8021,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/jacoby_2nt:modified"
+     "bidding_conventions/modified_jacoby_2nt"
     ],
     "call": "3NT",
     "after": "1M–2NT",
@@ -7996,7 +8032,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/jacoby_2nt:modified"
+     "bidding_conventions/modified_jacoby_2nt"
     ],
     "call": "4-level steps",
     "after": "1M–2NT",
@@ -8008,7 +8044,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/jacoby_2nt:modified"
+     "bidding_conventions/modified_jacoby_2nt"
     ],
     "call": "Relay asks below 3NT",
     "after": "1M–2NT–3x",
@@ -10700,6 +10736,7 @@
     "major_openings.gazzilli.play": "bidding_conventions/gazzilli",
     "major_openings.impossible_2s.play": "bidding_conventions/impossible_2s",
     "major_openings.jacoby_2nt.play": "bidding_conventions/jacoby_2nt",
+    "major_openings.jacoby_2nt.modified": "bidding_conventions/modified_jacoby_2nt",
     "major_openings.mini_splinters.play": "bidding_conventions/mini_splinters",
     "major_openings.splinters.play": "bidding_conventions/splinters",
     "major_openings.three_nt_raise.play": "bidding_conventions/three_nt_raise",
@@ -10764,7 +10801,6 @@
     "major_openings.drury.in_comp": "bidding_conventions/drury:in_comp",
     "major_openings.drury.reverse": "bidding_conventions/drury:reverse",
     "major_openings.drury.two_d": "bidding_conventions/drury:two_d",
-    "major_openings.jacoby_2nt.modified": "bidding_conventions/jacoby_2nt:modified",
     "major_openings.splinters.by_opener": "bidding_conventions/splinters:by_opener",
     "major_openings.splinters.by_responder": "bidding_conventions/splinters:by_responder",
     "major_openings.three_nt_raise.range_max": "bidding_conventions/three_nt_raise:range_max",
@@ -10797,8 +10833,6 @@
     "notrump.stayman.forcing": "bidding_conventions/stayman:forcing",
     "notrump.stayman.garbage": "bidding_conventions/stayman:garbage",
     "notrump.stayman.over_2nt_both_majors": "bidding_conventions/stayman:over_2nt_both_majors",
-    "notrump.stayman.puppet_1nt": "bidding_conventions/stayman:puppet_1nt",
-    "notrump.stayman.puppet_2nt": "bidding_conventions/stayman:puppet_2nt",
     "notrump.texas.bid_4c": "bidding_conventions/texas:bid_4c",
     "notrump.texas.bid_4d": "bidding_conventions/texas:bid_4d",
     "notrump.texas.bid_4h": "bidding_conventions/texas:bid_4h",
@@ -10871,6 +10905,26 @@
       "general.jump_shifts.weak_2": "two_level",
       "general.jump_shifts.weak_3": "three_level"
      }
+    },
+    {
+     "convention": "bidding_conventions/puppet_stayman",
+     "switches": {
+      "notrump.stayman.puppet_1nt": "over_1nt",
+      "notrump.stayman.puppet_2nt": "over_2nt"
+     },
+     "also_plays": "bidding_conventions/stayman"
+    }
+   ],
+   "yields": [
+    {
+     "function": "major_ask_over_notrump",
+     "convention": "bidding_conventions/stayman",
+     "to": "bidding_conventions/puppet_stayman"
+    },
+    {
+     "function": "two_nt_response_to_major",
+     "convention": "bidding_conventions/jacoby_2nt",
+     "to": "bidding_conventions/modified_jacoby_2nt"
     }
    ],
    "function": [
@@ -10918,7 +10972,7 @@
     "competitive.defense_vs_strong_nt.convention": "defence_to_1nt.strong",
     "competitive.negative_doubles.through": "competitive_bidding/negative_doubles:through",
     "major_openings.drury.two_way": "bidding_conventions/drury:two_d",
-    "notrump.stayman.puppet": "bidding_conventions/stayman:puppet_1nt",
+    "notrump.stayman.puppet": "bidding_conventions/puppet_stayman:over_1nt",
     "other_conventions.blackwood.notes": "bidding_conventions/blackwood:notes",
     "other_conventions.fourth_suit_forcing.game_forcing": "bidding_conventions/fourth_suit_forcing:game_force",
     "other_conventions.gerber.directly_over_nt": "bidding_conventions/gerber:directly_over_nt",

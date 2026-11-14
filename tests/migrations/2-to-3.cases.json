@@ -47,9 +47,14 @@
    "after": {
     "schema_version": "3.0",
     "conventions": {
+     "bidding_conventions/puppet_stayman": {
+      "over_2nt": true
+     },
      "bidding_conventions/stayman": {
       "forcing": true,
-      "puppet_2nt": true
+      "for": [
+       "major_ask_over_notrump.1nt"
+      ]
      }
     },
     "settings": {}
@@ -95,7 +100,7 @@
    }
   },
   {
-   "name": "a place switch is a treatment of its convention, and every place is written",
+   "name": "a place switch is a treatment of its convention; a silent place with a default is written off",
    "before": {
     "schema_version": "2.0",
     "competitive": {
@@ -624,7 +629,7 @@
    }
   },
   {
-   "name": "jump-shift boxes are treatments of the jump-shift conventions, every level written",
+   "name": "jump-shift boxes are treatments of the jump-shift conventions",
    "before": {
     "schema_version": "2.0",
     "general": {
@@ -640,11 +645,9 @@
     "conventions": {
      "bidding_conventions/strong_jump_shifts": {
       "two_level": true,
-      "three_level": false,
       "invitational": true
      },
      "bidding_conventions/weak_jump_shifts": {
-      "two_level": false,
       "three_level": true
      }
     },
@@ -668,8 +671,7 @@
     "conventions": {
      "bidding_conventions/strong_jump_shifts": {
       "play": false,
-      "two_level": false,
-      "three_level": false
+      "two_level": false
      },
      "bidding_conventions/weak_jump_shifts": {
       "play": false,
@@ -696,6 +698,96 @@
       "in_comp": true,
       "notes": "not by a passed hand"
      }
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "Puppet Stayman is its own convention; Stayman, read as played beside it, gives it the 2NT ask",
+   "before": {
+    "schema_version": "2.0",
+    "notrump": {
+     "stayman": {
+      "puppet_2nt": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/puppet_stayman": {
+      "over_2nt": true
+     },
+     "bidding_conventions/stayman": {
+      "for": [
+       "major_ask_over_notrump.1nt"
+      ]
+     }
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "Puppet over 1NT only takes nothing from Stayman",
+   "before": {
+    "schema_version": "2.0",
+    "notrump": {
+     "stayman": {
+      "play": true,
+      "puppet": true,
+      "garbage": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/puppet_stayman": {
+      "over_1nt": true
+     },
+     "bidding_conventions/stayman": {
+      "garbage": true
+     }
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "Modified Jacoby 2NT is its own convention, and Jacoby 2NT beside it gives way",
+   "before": {
+    "schema_version": "2.0",
+    "major_openings": {
+     "jacoby_2nt": {
+      "play": true,
+      "modified": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/jacoby_2nt": {
+      "for": []
+     },
+     "bidding_conventions/modified_jacoby_2nt": {}
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "Modified Jacoby 2NT alone",
+   "before": {
+    "schema_version": "2.0",
+    "major_openings": {
+     "jacoby_2nt": {
+      "modified": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/modified_jacoby_2nt": {}
     },
     "settings": {}
    }

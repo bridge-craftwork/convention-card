@@ -41,6 +41,8 @@ describe('the working form', () => {
 
   it('shows a convention the card only implies as played', () => {
     const w = upgradeCardData(card('an unset switch with a treatment on'))
+    // Puppet's box sits under Stayman in the working form; in schema 3 it
+    // is Puppet Stayman's own entry, and Stayman is read as played beside it.
     expect(w.notrump.stayman).toEqual({ play: true, forcing: true, puppet_2nt: true })
     expect(cardValues(w).get('notrump.stayman.play')).toBe(true)
   })

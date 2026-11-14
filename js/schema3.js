@@ -101,6 +101,9 @@ function index(pack) {
   }
   // function → [[id, parts]], an implementer with no parts filling them all
   const implementers = new Map()
+  // "function id" → [[treatment, parts]] for a convention that fills the
+  // function only while one of its treatments is on.
+  const when = new Map()
   const claim = (id, name, whole) => {
     const [f, part] = name.split('.')
     if (!implementers.has(f)) implementers.set(f, new Map())
@@ -114,8 +117,12 @@ function index(pack) {
   for (const [id, def] of sortedEntries(pack.conventions)) {
     for (const name of [def.implements ?? []].flat()) claim(id, name, whole)
     // A treatment may say what its convention fills while it is on.
-    for (const [, attrs] of sortedEntries(def.treatments || {})) {
-      for (const name of [attrs.implements ?? []].flat()) claim(id, name, whole)
+    for (const [t, attrs] of sortedEntries(def.treatments || {})) {
+      for (const name of [attrs.implements ?? []].flat()) {
+        claim(id, name, whole)
+        const [f, part] = name.split('.')
+        when.set(`${f} ${id}`, [...(when.get(`${f} ${id}`) || []), [t, part ? [part] : []]])
+      }
     }
   }
   // The spellings of a function setting's options, folded.
@@ -127,7 +134,7 @@ function index(pack) {
       words.set(`${f}.${part}`, m)
     }
   }
-  return { mig, targets, implementers, words, back: addressMaps(pack).path }
+  return { mig, targets, implementers, when, words, back: addressMaps(pack).path }
 }
 
 let INDEX = null
@@ -159,7 +166,7 @@ export function toSchema3(data, pack = PACK_DOC) {
   const settings = {}
   const entries = new Map()
   const entry = id => {
-    if (!entries.has(id)) entries.set(id, { play: null, treatments: {}, places: {}, extra: {}, listed: false })
+    if (!entries.has(id)) entries.set(id, { play: null, treatments: {}, places: {}, extra: {}, listed: false, implied: false })
     return entries.get(id)
   }
   const chosen = new Map() // "function.part" → word
@@ -208,6 +215,11 @@ export function toSchema3(data, pack = PACK_DOC) {
       else if (value !== word && !wording.has(key)) wording.set(key, value)
       if (!chosen.has(key)) chosen.set(key, word)
     }
+  }
+
+  // A place that is on also plays the convention its boxes sat under.
+  for (const p of mig.place || []) {
+    if (p.also_plays && Object.values(entries.get(p.convention)?.places || {}).some(Boolean)) entry(p.also_plays).implied = true
   }
 
   // A setting's value becomes its convention's entry.
@@ -270,9 +282,11 @@ export function toSchema3(data, pack = PACK_DOC) {
     const places = Object.values(e.places)
     let play
     if (!places.length) {
-      if (e.play === null && !e.listed && filled && contends(ix, id, ticked)) play = false
+      // One it gives way to is not a rival: both are played.
+      const rivals = ticked.filter(t => !(mig.yields || []).some(y => y.convention === id && y.to === t))
+      if (e.play === null && !e.listed && !e.implied && filled && contends(ix, id, rivals)) play = false
       else if (e.play !== null) play = e.play
-      else if (e.listed || filled) play = true
+      else if (e.listed || e.implied || filled) play = true
       else continue
     } else if (places.some(Boolean)) play = true
     else if (places.some(on => !on) || filled) play = false
@@ -280,13 +294,42 @@ export function toSchema3(data, pack = PACK_DOC) {
     const out = {}
     if (!play) out.play = false
     if (places.length) {
-      // Every place is written, so none falls back on a default.
+      // A place the card is silent on is written as off where the definition
+      // gives it a default, so it does not fall back on that; one with no
+      // default stays silent.
       for (const p of mig.place || []) {
-        if (p.convention === id) for (const t of Object.values(p.switches)) out[t] = e.places[t] ?? false
+        if (p.convention !== id) continue
+        for (const t of Object.values(p.switches)) {
+          if (t in e.places) out[t] = e.places[t]
+          else if (pack.conventions[id]?.treatments?.[t]?.default !== undefined) out[t] = false
+        }
       }
     }
     Object.assign(out, e.treatments, e.extra)
     conventions[id] = out
+  }
+
+  // A convention that gives way to another keeps its entry, `for` the parts
+  // the other does not fill.
+  const played = id => isObject(conventions[id]) && conventions[id].play !== false
+  for (const y of mig.yields || []) {
+    const fn = pack.functions[y.function]
+    if (!fn || !played(y.convention) || !played(y.to)) continue
+    const fills = (id, part) => {
+      const e = conventions[id]
+      const own = ix.implementers.get(y.function)?.get(id)
+      if (!own || (own.length && part && !own.includes(part))) return false
+      const when = ix.when.get(`${y.function} ${id}`)
+      if (when && !when.some(([t, parts]) => (!parts.length || !part || parts.includes(part)) && e[t] === true)) return false
+      const address = part ? `${y.function}.${part}` : y.function
+      return !Array.isArray(e.for) || e.for.includes(address) || e.for.includes(y.function)
+    }
+    const parts = (fn.parts || []).length ? fn.parts : ['']
+    const mine = parts.filter(p => fills(y.convention, p))
+    const left = mine.filter(p => !fills(y.to, p))
+    if (left.length === mine.length) continue
+    const other = (conventions[y.convention].for || []).filter(a => a !== y.function && !a.startsWith(`${y.function}.`))
+    conventions[y.convention].for = [...other, ...left.map(p => `${y.function}.${p}`)]
   }
   return { schema_version: STORED_SCHEMA_VERSION, ...top, conventions, settings }
 }
