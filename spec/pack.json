@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "8e9e32b860a8684a60bf13c56d0195f8907cbff7",
+ "source_commit": "cae8b475bc2506926607c5f2fb4a52daf5d44139",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -312,6 +312,18 @@
     "Drury"
    ],
    "summary": "By a passed hand over partner's third- or fourth-seat 1♥ or 1♠, 2♣ asks\nwhether opener has a full opening, with a fit for the major. In the original\nform opener's 2♦ shows a light opening; Reverse Drury swaps opener's\nreplies.\n",
+   "see": [
+    {
+     "title": "Drury",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/drury.php"
+    },
+    {
+     "title": "Drury convention",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Drury_convention"
+    }
+   ],
    "treatments": {
     "reverse": {
      "kind": "bool",
@@ -1094,6 +1106,12 @@
      "title": "Mini-Roman 2♦",
      "site": "ACBL Unit 390",
      "url": "https://www.acblunit390.org/Simon/mini-roman.htm"
+    },
+    {
+     "title": "Mini Roman",
+     "site": "Bridge Hands",
+     "url": "https://www.bridgehands.com/M/Mini_Roman.htm",
+     "note": "The slam continuations in our rules are Rick Wilson's additions"
     }
    ],
    "treatments": {
@@ -2100,6 +2118,16 @@
      "by": "Robert S. Todd",
      "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/409"
+    },
+    {
+     "title": "Splinter Bids",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/splinters.php"
+    },
+    {
+     "title": "Splinter bid",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Splinter_bid"
     }
    ],
    "treatments": {
@@ -3525,7 +3553,15 @@
     "Mixed raises",
     "Mixed-raise"
    ],
-   "summary": "After partner's overcall, advancer's jump cuebid of the opponents' suit\nshows a mixed raise: four-card support with values between a preemptive jump\nraise and a limit raise. The plain cuebid is then a limit raise or better.\n"
+   "summary": "After partner's overcall, advancer's jump cuebid of the opponents' suit\nshows a mixed raise: four-card support with values between a preemptive jump\nraise and a limit raise. The plain cuebid is then a limit raise or better.\n",
+   "see": [
+    {
+     "title": "Simple Overcalls",
+     "by": "Larry Cohen",
+     "site": "Larry Cohen",
+     "url": "https://www.larryco.com/bridge-articles/simple-overcalls"
+    }
+   ]
   },
   "competitive_bidding/modified_cappelletti": {
    "id": "competitive_bidding/modified_cappelletti",
@@ -3666,7 +3702,19 @@
     "Raptor",
     "Raptor 1NT"
    ],
-   "summary": "An overcall of 1NT that shows a four-card major and a longer minor, rather\nthan a strong balanced hand.\n"
+   "summary": "An overcall of 1NT that shows a four-card major and a longer minor, rather\nthan a strong balanced hand.\n",
+   "see": [
+    {
+     "title": "Raptor 1NT",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/raptor_1nt.php"
+    },
+    {
+     "title": "Raptor convention",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Raptor_(bridge)"
+    }
+   ]
   },
   "competitive_bidding/responsive_doubles": {
    "id": "competitive_bidding/responsive_doubles",
@@ -3805,6 +3853,16 @@
      "by": "Robert S. Todd",
      "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/194"
+    },
+    {
+     "title": "Sandwich No-Trump (1NT)",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/sandwich_1nt.php"
+    },
+    {
+     "title": "Unusual notrump",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Unusual_notrump"
     }
    ]
   },
