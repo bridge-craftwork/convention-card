@@ -136,32 +136,46 @@ fn a_listed_agreement_yields_to_the_cards_own_choice() {
 
 #[test]
 fn a_tick_beats_a_convention_inferred_from_its_note() {
-    // Keycard is ticked; a 4NT note is filed under Blackwood. The note is
-    // kept, and does not turn Blackwood on against keycard.
+    // Strong jump shifts are ticked; a note sits under weak jump shifts.
+    // The note is kept, and does not turn weak jump shifts on against them.
     let Some(v) = vocab() else { return };
     let (card, report) = Card::from_json(
         &v,
         r#"{"schema_version":"2.0",
-            "slam":{"rkcb":{"play":true,"style":"1430"},
-                    "blackwood":{"notes":"0314 if used for minor suit"}}}"#,
+            "general":{"jump_shifts":{"strong_2":true}},
+            "other_conventions":{"weak_jump_shifts_notes":"only by a passed hand"}}"#,
     )
     .unwrap();
-    assert!(card.is_on("bidding_conventions/roman_keycard"));
-    assert!(!card.is_on("bidding_conventions/blackwood"));
+    assert!(card.is_on("bidding_conventions/strong_jump_shifts"));
+    assert!(!card.is_on("bidding_conventions/weak_jump_shifts"));
     assert!(report.conflicts.is_empty());
     // The note is kept; a reader of what the card plays does not see it
-    // while Blackwood is off.
+    // while weak jump shifts are off.
     assert_eq!(
-        card.get("bidding_conventions/blackwood:notes"),
-        Some(&Value::Text("0314 if used for minor suit".into()))
+        card.get("bidding_conventions/weak_jump_shifts:notes"),
+        Some(&Value::Text("only by a passed hand".into()))
     );
-    assert_eq!(card.effective("bidding_conventions/blackwood:notes"), None);
+    assert_eq!(
+        card.effective("bidding_conventions/weak_jump_shifts:notes"),
+        None
+    );
     // With nothing ticked against it, the note alone still plays it.
     let card = load(
         &v,
-        r#"{"schema_version":"2.0","slam":{"blackwood":{"notes":"0314"}}}"#,
+        r#"{"schema_version":"2.0",
+            "other_conventions":{"weak_jump_shifts_notes":"only by a passed hand"}}"#,
     );
-    assert!(card.is_on("bidding_conventions/blackwood"));
+    assert!(card.is_on("bidding_conventions/weak_jump_shifts"));
+    // The card's 4NT line is a setting: it switches nothing on.
+    let card = load(
+        &v,
+        r#"{"schema_version":"2.0","slam":{"blackwood":{"notes":"0314 in the minors"}}}"#,
+    );
+    assert!(!card.is_on("bidding_conventions/blackwood"));
+    assert_eq!(
+        card.effective("other_conventions.blackwood.notes"),
+        Some(&Value::Text("0314 in the minors".into()))
+    );
 }
 
 #[test]

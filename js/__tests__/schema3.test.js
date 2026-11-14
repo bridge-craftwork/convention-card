@@ -49,8 +49,17 @@ describe('the working form', () => {
 
   it('keeps a note under a convention the card ticked another against, unplayed', () => {
     const w = upgradeCardData(card('a tick beats a note'))
+    expect(w.general.jump_shifts.strong_2).toBe(true)
+    expect(w.other_conventions.weak_jump_shifts_notes).toBe('only by a passed hand')
+    // Nothing in the working form says weak jump shifts are played.
+    expect(w.general.jump_shifts.weak_2).toBeUndefined()
+  })
+
+  it('reads the 4NT line as a setting, whatever ace ask the card plays', () => {
+    const w = upgradeCardData(card('the 4NT notes line is a setting'))
     expect(w.slam.rkcb).toEqual({ play: true, style: '1430' })
-    expect(w.slam.blackwood).toEqual({ play: false, notes: '0314 if used for minor suit' })
+    expect(w.slam.blackwood).toBeUndefined()
+    expect(w.other_conventions.blackwood.notes).toBe('0314 if used for minor suit')
   })
 
   it('keeps the wording of the defence a card names', () => {

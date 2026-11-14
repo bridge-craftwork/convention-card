@@ -347,28 +347,27 @@
    }
   },
   {
-   "name": "a tick beats a note: keycard is ticked, a 4NT note sits under Blackwood",
+   "name": "a tick beats a note: strong jump shifts are ticked, a note sits under weak jump shifts",
    "before": {
     "schema_version": "2.0",
-    "slam": {
-     "rkcb": {
-      "play": true,
-      "style": "1430"
-     },
-     "blackwood": {
-      "notes": "0314 if used for minor suit"
+    "general": {
+     "jump_shifts": {
+      "strong_2": true
      }
+    },
+    "other_conventions": {
+     "weak_jump_shifts_notes": "only by a passed hand"
     }
    },
    "after": {
     "schema_version": "3.0",
     "conventions": {
-     "bidding_conventions/blackwood": {
-      "play": false,
-      "notes": "0314 if used for minor suit"
+     "bidding_conventions/strong_jump_shifts": {
+      "two_level": true
      },
-     "bidding_conventions/roman_keycard": {
-      "style": "1430"
+     "bidding_conventions/weak_jump_shifts": {
+      "play": false,
+      "notes": "only by a passed hand"
      }
     },
     "settings": {}
@@ -378,17 +377,15 @@
    "name": "a note alone plays its convention",
    "before": {
     "schema_version": "2.0",
-    "slam": {
-     "blackwood": {
-      "notes": "0314"
-     }
+    "other_conventions": {
+     "weak_jump_shifts_notes": "only by a passed hand"
     }
    },
    "after": {
     "schema_version": "3.0",
     "conventions": {
-     "bidding_conventions/blackwood": {
-      "notes": "0314"
+     "bidding_conventions/weak_jump_shifts": {
+      "notes": "only by a passed hand"
      }
     },
     "settings": {}
@@ -790,6 +787,38 @@
      "bidding_conventions/modified_jacoby_2nt": {}
     },
     "settings": {}
+   }
+  },
+  {
+   "name": "the 4NT notes line is a setting: it switches nothing on",
+   "before": {
+    "schema_version": "2.0",
+    "slam": {
+     "rkcb": {
+      "play": true,
+      "style": "1430"
+     }
+    },
+    "other_conventions": {
+     "blackwood": {
+      "notes": "0314 if used for minor suit"
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/roman_keycard": {
+      "style": "1430"
+     }
+    },
+    "settings": {
+     "other_conventions": {
+      "blackwood": {
+       "notes": "0314 if used for minor suit"
+      }
+     }
+    }
    }
   }
  ]

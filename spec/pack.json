@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "7fecdb70f4a06dd3c6a1938471ba27382e90ba70",
+ "source_commit": "d2098b0dbf78eef204127914f0cb4a51b45eeb95",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -160,14 +160,7 @@
      "kind": "book",
      "chapter": 1
     }
-   ],
-   "treatments": {
-    "notes": {
-     "kind": "text",
-     "label": "4NT notes",
-     "skill": false
-    }
-   }
+   ]
   },
   "bidding_conventions/checkback": {
    "id": "bidding_conventions/checkback",
@@ -7068,6 +7061,13 @@
     "kind": "text",
     "label": "Slam notes",
     "note": true
+   },
+   "blackwood.notes": {
+    "kind": "text",
+    "label": "4NT notes",
+    "aliases": [
+     "other_conventions.blackwood.notes"
+    ]
    }
   },
   "two_level": {
@@ -11073,7 +11073,6 @@
     "other_conventions.fourth_suit_forcing.one_round": "bidding_conventions/fourth_suit_forcing:one_round",
     "other_conventions.new_minor_forcing.after_2nt_rebid": "bidding_conventions/new_minor_forcing:after_2nt_rebid",
     "other_conventions.new_minor_forcing.by_passed_hand": "bidding_conventions/new_minor_forcing:by_passed_hand",
-    "slam.blackwood.notes": "bidding_conventions/blackwood:notes",
     "slam.cue_bids.style": "bidding_conventions/control_bids:style",
     "slam.gerber.directly_over_nt": "bidding_conventions/gerber:directly_over_nt",
     "slam.gerber.non_nt_seq": "bidding_conventions/gerber:non_nt_seq",
@@ -11202,7 +11201,6 @@
     "competitive.negative_doubles.through": "competitive_bidding/negative_doubles:through",
     "major_openings.drury.two_way": "bidding_conventions/drury:two_d",
     "notrump.stayman.puppet": "bidding_conventions/puppet_stayman:over_1nt",
-    "other_conventions.blackwood.notes": "bidding_conventions/blackwood:notes",
     "other_conventions.fourth_suit_forcing.game_forcing": "bidding_conventions/fourth_suit_forcing:game_force",
     "other_conventions.gerber.directly_over_nt": "bidding_conventions/gerber:directly_over_nt",
     "other_conventions.gerber.non_nt_seq": "bidding_conventions/gerber:non_nt_seq",
