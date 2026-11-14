@@ -421,11 +421,20 @@ impl Pack {
                 } else {
                     format!("{fname}.{part}")
                 };
+                // What a rule may compare it with: the conventions that
+                // can fill this part, and `none`.
+                let mut can_fill: Vec<String> = f
+                    .implementers
+                    .iter()
+                    .filter(|(_, ps)| ps.is_empty() || part.is_empty() || ps.contains(part))
+                    .map(|(id, _)| id.clone())
+                    .collect();
+                can_fill.push("none".into());
                 fields.push(FieldDef {
                     path: address.clone(),
                     kind: FieldKind::Text,
                     label: f.label.clone(),
-                    options: Vec::new(),
+                    options: can_fill,
                     min: None,
                     max: None,
                     many: false,
