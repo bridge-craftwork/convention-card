@@ -25,6 +25,9 @@ struct Inner {
     registry: Registry,
     bbsa: bbsa::Map,
     id: String,
+    /// The pack this vocabulary came from, when it came from one: its
+    /// fields are then named by address and its cards are schema 3.
+    pack: Option<crate::Pack>,
 }
 
 impl Vocabulary {
@@ -50,7 +53,66 @@ impl Vocabulary {
             registry,
             bbsa,
             id: format!("{h:016x}"),
+            pack: None,
         })))
+    }
+
+    /// The vocabulary of a pack: its conventions, treatments, settings and
+    /// functions, named by address, with card schema 2's paths as aliases.
+    /// `bbsa_map` is a `.bbsa` mapping in either naming. `id` should
+    /// identify the pack's content (a hash of its files).
+    pub fn from_pack(pack: crate::Pack, bbsa_map: &str, id: &str) -> Result<Vocabulary, Error> {
+        let registry = pack.registry().clone();
+        let bbsa =
+            bbsa::parse_mapping(bbsa_map, &registry).map_err(|e| e.in_file("bbsa-map.toml"))?;
+        Ok(Vocabulary(Arc::new(Inner {
+            registry,
+            bbsa,
+            id: format!("pack:{id}"),
+            pack: Some(pack),
+        })))
+    }
+
+    /// Load the pack in `dir` as a vocabulary. Its id is a hash of the
+    /// pack's files.
+    pub fn load_pack(dir: &Path, bbsa_map: &str) -> Result<Vocabulary, Error> {
+        let pack = crate::Pack::load(dir)?;
+        let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+        let mut files: Vec<std::path::PathBuf> = Vec::new();
+        fn walk(d: &Path, out: &mut Vec<std::path::PathBuf>) {
+            if let Ok(entries) = std::fs::read_dir(d) {
+                for e in entries.flatten() {
+                    let p = e.path();
+                    if p.is_dir() {
+                        walk(&p, out);
+                    } else if p.extension().is_some_and(|x| x == "toml") {
+                        out.push(p);
+                    }
+                }
+            }
+        }
+        for sub in ["conventions", "settings", "migrations"] {
+            walk(&dir.join(sub), &mut files);
+        }
+        files.push(dir.join("functions.toml"));
+        files.push(dir.join("bridge-pack.toml"));
+        files.sort();
+        for f in files {
+            for b in std::fs::read(&f).unwrap_or_default() {
+                h ^= b as u64;
+                h = h.wrapping_mul(0x0000_0100_0000_01b3);
+            }
+        }
+        for b in bbsa_map.bytes() {
+            h ^= b as u64;
+            h = h.wrapping_mul(0x0000_0100_0000_01b3);
+        }
+        Vocabulary::from_pack(pack, bbsa_map, &format!("{h:016x}"))
+    }
+
+    /// The pack this vocabulary came from, if it came from one.
+    pub fn pack(&self) -> Option<&crate::Pack> {
+        self.0.pack.as_ref()
     }
 
     /// Load the vocabulary of the rules in `rules_dir`
