@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "78bd1b1e5d86ee530301d287d59965a43e578990",
+ "source_commit": "78cb834e838221afc8210be81841bb185a3bb08a",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -1700,16 +1700,19 @@
   "bidding_conventions/reverse_flannery": {
    "id": "bidding_conventions/reverse_flannery",
    "name": "Reverse Flannery",
-   "desc": "A two-level opening showing five or more spades and four or more hearts with less than an opening; which openings: two_d, two_h, two_s",
+   "desc": "Responder's jump to 2♥ or 2♠ over partner's 1♣ or 1♦, showing five spades and four or more hearts, below a game try; which jumps: two_h, two_s",
    "source": "proposed",
    "level": 8,
    "contexts": [
-    "preemptive_openings"
+    "responses_rebids"
+   ],
+   "implements": [
+    "jump_to_major_over_minor"
    ],
    "names": [
     "Reverse Flannery"
    ],
-   "summary": "An opening of 2♥ (or 2♦) showing five or more spades and four or more hearts\nwith less than an opening, a two-suited preempt in the majors.\n",
+   "summary": "Over partner's 1♣ or 1♦, responder's jump to 2♥ shows five spades and four\nor five hearts in a weak hand, and the jump to 2♠ the same shape with\ninvitational values. Opener can place the contract in a major at once.\n",
    "see": [
     {
      "title": "Reverse Flannery",
@@ -2120,6 +2123,24 @@
      "url": "https://www.advinbridge.com/this-week-in-bridge/415"
     }
    ]
+  },
+  "bidding_conventions/strong_jump_shifts": {
+   "id": "bidding_conventions/strong_jump_shifts",
+   "name": "Strong jump shifts",
+   "source": "proposed",
+   "level": 3,
+   "contexts": [
+    "responses_rebids"
+   ],
+   "implements": [
+    "jump_to_major_over_minor"
+   ],
+   "names": [
+    "Strong jump shifts",
+    "Strong jump shift",
+    "SJS"
+   ],
+   "summary": "Responder's jump in a new suit over partner's opening shows a strong hand\nwith a good suit or a fit, forcing to game and looking at slam.\n"
   },
   "bidding_conventions/strong_twos": {
    "id": "bidding_conventions/strong_twos",
@@ -2546,6 +2567,12 @@
    "name": "Weak jump shifts",
    "source": "proposed",
    "level": 5,
+   "contexts": [
+    "responses_rebids"
+   ],
+   "implements": [
+    "jump_to_major_over_minor"
+   ],
    "names": [
     "Weak jump shifts",
     "Weak jump shift",
@@ -7477,6 +7504,13 @@
     "diamonds",
     "hearts"
    ]
+  },
+  "jump_to_major_over_minor": {
+   "name": "Responder's jump to two of a major over one of a minor",
+   "parts": [
+    "2h",
+    "2s"
+   ]
   }
  },
  "levels": {
@@ -8588,6 +8622,36 @@
     "by": "responder",
     "rule": "alert",
     "note": "Asking bid; the ACBL 2NT exemption covers only weak preempts."
+   },
+   {
+    "fields": [
+     "bidding_conventions/reverse_flannery:two_h"
+    ],
+    "call": "2♥",
+    "after": "1♣ or 1♦",
+    "by": "responder",
+    "rule": "alert",
+    "note": "Five spades and four or five hearts in a weak hand: the jump shows a suit it does not name, so every regulator alerts it."
+   },
+   {
+    "fields": [
+     "bidding_conventions/reverse_flannery:two_s"
+    ],
+    "call": "2♠",
+    "after": "1♣ or 1♦",
+    "by": "responder",
+    "rule": "alert",
+    "note": "Five spades and four hearts with invitational values: the hearts are an agreement the opponents would not expect."
+   },
+   {
+    "fields": [
+     "bidding_conventions/reverse_flannery:two_h"
+    ],
+    "call": "2NT",
+    "after": "1♣ or 1♦, then 2♥",
+    "by": "opener",
+    "rule": "alert",
+    "note": "Asks responder for shape and strength."
    },
    {
     "fields": [
@@ -9925,6 +9989,7 @@
    "new_ids": [
     "bidding_conventions/strong_twos",
     "bidding_conventions/intermediate_twos",
+    "bidding_conventions/strong_jump_shifts",
     "bidding_conventions/texas",
     "bidding_conventions/mini_splinters",
     "bidding_conventions/three_nt_raise",

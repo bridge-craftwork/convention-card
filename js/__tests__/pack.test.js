@@ -18,6 +18,18 @@ const OLD = Object.fromEntries(
     Object.entries(fields).map(([key, def]) => [`${section}.${key}`, def])
   )
 )
+// Text the pack has corrected since (bridge-common-conventions Phase 5):
+// "<path or ID> <attribute>". Each is a deliberate difference from the files
+// this repository still carries.
+const CORRECTED = new Set([
+  // Reverse Flannery is responder's jump over one of a minor, not an opening.
+  'two_level.reverse_flannery.play desc',
+  'bidding_conventions/reverse_flannery summary',
+  'bidding_conventions/reverse_flannery desc',
+  'bidding_conventions/reverse_flannery contexts',
+])
+const without = (name, def) =>
+  Object.fromEntries(Object.entries(def).filter(([k]) => !CORRECTED.has(`${name} ${k}`)))
 const tidy = def => ({
   ...def,
   ...(def.skill !== undefined ? { skill: [def.skill].flat() } : {}),
@@ -33,13 +45,22 @@ describe('the pack, read as card schema 2', () => {
 
   it('gives each field the same attributes', () => {
     for (const [path, def] of Object.entries(OLD)) {
-      expect([path, tidy(got[path])]).toEqual([path, tidy(def)])
+      expect([path, without(path, tidy(got[path]))]).toEqual([path, without(path, tidy(def))])
     }
   })
 
   it('gives the same alert rules, levels and schema 1 migration', () => {
     const alerts = schema2Alerts(PACK)
-    expect(alerts.alert).toEqual(ALERTS_DOC.alert)
+    // Every alert rule this repository had, in order; the pack has added
+    // some since (Reverse Flannery's jumps over one of a minor).
+    const had = new Set(ALERTS_DOC.alert.map(a => JSON.stringify(a)))
+    expect(alerts.alert.filter(a => had.has(JSON.stringify(a)))).toEqual(ALERTS_DOC.alert)
+    const added = alerts.alert.filter(a => !had.has(JSON.stringify(a)))
+    expect(added.map(a => a.fields[0]).sort()).toEqual([
+      'two_level.reverse_flannery.two_h',
+      'two_level.reverse_flannery.two_h',
+      'two_level.reverse_flannery.two_s',
+    ])
     expect(alerts.regulators).toEqual(ALERTS_DOC.regulators)
     expect(PACK.levels.band).toEqual(LEVELS_DOC.band)
     const { schema: _ms, generated_from: _mg, ...migration } = MIGRATION_1_TO_2
@@ -49,7 +70,7 @@ describe('the pack, read as card schema 2', () => {
   it('gives every convention its definition', () => {
     expect(Object.keys(CONVENTIONS)).toEqual(Object.keys(CONVENTIONS_DOC.conventions))
     for (const [id, def] of Object.entries(CONVENTIONS_DOC.conventions)) {
-      expect([id, CONVENTIONS[id]]).toEqual([id, expect.objectContaining(def)])
+      expect([id, CONVENTIONS[id]]).toEqual([id, expect.objectContaining(without(id, def))])
     }
   })
 
