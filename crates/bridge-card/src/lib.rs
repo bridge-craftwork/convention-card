@@ -15,6 +15,7 @@ pub mod bbsa;
 mod card;
 mod error;
 pub mod migrate;
+pub mod pack;
 mod registry;
 pub mod schema;
 pub mod skills;
@@ -23,6 +24,7 @@ mod vocabulary;
 
 pub use card::{Card, CardMetadata, LoadReport, OtherAgreement, EXPORT_SCHEMA};
 pub use error::Error;
+pub use pack::Pack;
 pub use registry::{FieldDef, FieldKind, Registry, Value};
 pub use skills::{Skill, SkillSource, Skills};
 pub use vocabulary::Vocabulary;

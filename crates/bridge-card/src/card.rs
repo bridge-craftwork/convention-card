@@ -78,6 +78,15 @@ pub struct Card {
     /// Leaves not in the registry, kept so a load/save round trip loses
     /// nothing the editor wrote.
     extra: BTreeMap<String, Json>,
+    /// Schema 3 (a pack's vocabulary): what each convention's entry holds
+    /// besides `play` and its known treatments (`text`, `from`, `for`,
+    /// treatments this pack does not know), by ID; and whole entries for
+    /// IDs the pack does not define.
+    entries: BTreeMap<String, Map<String, Json>>,
+    unknown_entries: BTreeMap<String, Json>,
+    /// Values worked out from the rest of the card (a function's
+    /// convention), by address. Kept current by every change.
+    derived: BTreeMap<String, Value>,
 }
 
 /// What happened while loading a card.
@@ -122,6 +131,9 @@ impl Card {
             bba_passthrough: BTreeMap::new(),
             other_agreements: Vec::new(),
             extra: BTreeMap::new(),
+            entries: BTreeMap::new(),
+            unknown_entries: BTreeMap::new(),
+            derived: BTreeMap::new(),
         }
     }
 
@@ -137,6 +149,9 @@ impl Card {
     /// fields (a range, the choice of defence to 1NT) are read by their own
     /// paths.
     pub fn names_convention(&self, id: &str) -> bool {
+        if self.vocab.pack().is_some() && self.vocab.registry().get(id).is_some() {
+            return self.is_on(id);
+        }
         self.other_agreements
             .iter()
             .any(|a| a.id.as_deref() == Some(id))
@@ -150,13 +165,149 @@ impl Card {
     /// The stored value at `path` (canonical or alias), if set.
     pub fn get(&self, path: &str) -> Option<&Value> {
         let field = self.vocab.registry().get(path)?;
+        if field.derived.is_some() {
+            return self.derived.get(&field.path);
+        }
         self.values.get(&field.path)
     }
 
-    /// The stored value, or the registry default when unset.
+    /// The stored value, or the registry default when unset. A treatment's
+    /// default (a pack's vocabulary) applies only while the card plays its
+    /// convention: a silent treatment of a convention the card does not
+    /// play has no value, and a reader uses its own.
     pub fn effective(&self, path: &str) -> Option<&Value> {
         let field = self.vocab.registry().get(path)?;
-        self.values.get(&field.path).or(field.default.as_ref())
+        if field.derived.is_some() {
+            return self.derived.get(&field.path);
+        }
+        self.values
+            .get(&field.path)
+            .or_else(|| match &field.convention {
+                Some(c) if !self.is_on(c) => None,
+                _ => field.default.as_ref(),
+            })
+    }
+
+    /// The parts of a function this card plays convention `id` for, when
+    /// its entry limits them (`for`).
+    pub fn limited_to(&self, id: &str) -> Option<Vec<String>> {
+        let list = self.entries.get(id)?.get("for")?.as_array()?;
+        Some(
+            list.iter()
+                .filter_map(|v| v.as_str().map(str::to_string))
+                .collect(),
+        )
+    }
+
+    /// What a convention's entry holds besides `play` and its treatments
+    /// (`text`, `from`, `for`, and anything this pack does not know).
+    pub fn entry_extras(&self, id: &str) -> Option<&Map<String, Json>> {
+        self.entries.get(id)
+    }
+
+    /// Work out the derived values again. Every change calls this.
+    fn refresh(&mut self) {
+        let Some(pack) = self.vocab.pack() else {
+            return;
+        };
+        let mut derived = BTreeMap::new();
+        for f in self.vocab.registry().fields() {
+            if let Some(d) = &f.derived {
+                let on = |id: &str| matches!(self.values.get(id), Some(Value::Bool(true)));
+                let limited = |id: &str| self.limited_to(id);
+                if let Some(v) = crate::pack::derive(pack, d, &on, &limited) {
+                    derived.insert(f.path.clone(), v);
+                }
+            }
+        }
+        self.derived = derived;
+    }
+
+    /// Choose the convention that fills a function's part: `value` is its
+    /// ID, or a schema 2 option word. The convention's entry is switched on
+    /// for that part, and any other convention the card plays for the same
+    /// part gives it up.
+    fn set_function(&mut self, d: &crate::pack::Derived, value: &Value) -> Result<(), Error> {
+        use crate::pack::Derived;
+        let (function, part) = match d {
+            Derived::FunctionId { function, part } | Derived::FunctionOption { function, part } => {
+                (function.clone(), part.clone())
+            }
+        };
+        let pack = self
+            .vocab
+            .pack()
+            .expect("a derived field is a pack's")
+            .clone();
+        let f = pack
+            .function(&function)
+            .ok_or_else(|| Error::new(format!("unknown function {function}")))?;
+        let Value::Text(v) = value else {
+            return Err(Error::new("a function takes a convention's ID"));
+        };
+        let chosen: Option<String> = if f.implementers.iter().any(|(id, _)| id == v) {
+            Some(v.clone())
+        } else if let Some(id) = f.option.get(v) {
+            Some(id.clone())
+        } else if matches!(v.as_str(), "none" | "natural" | "other") {
+            None
+        } else {
+            return Err(Error::new(format!(
+                "{v}: not a convention that implements {function}"
+            )));
+        };
+        let address = if part.is_empty() {
+            function.clone()
+        } else {
+            format!("{function}.{part}")
+        };
+        let all = f.addresses();
+        for (id, _) in &f.implementers {
+            let on = matches!(self.values.get(id), Some(Value::Bool(true)));
+            if Some(id) == chosen.as_ref() {
+                let mut parts = if on {
+                    self.limited_to(id).unwrap_or_else(|| all.clone())
+                } else {
+                    Vec::new()
+                };
+                if !parts.contains(&address) {
+                    parts.push(address.clone());
+                }
+                self.values.insert(id.clone(), Value::Bool(true));
+                self.limit(id, &parts, &all);
+            } else if on {
+                let parts: Vec<String> = self
+                    .limited_to(id)
+                    .unwrap_or_else(|| all.clone())
+                    .into_iter()
+                    .filter(|p| *p != address)
+                    .collect();
+                if parts.is_empty() {
+                    self.values.insert(id.clone(), Value::Bool(false));
+                    if let Some(e) = self.entries.get_mut(id) {
+                        e.remove("for");
+                    }
+                } else {
+                    self.limit(id, &parts, &all);
+                }
+            }
+        }
+        self.refresh();
+        Ok(())
+    }
+
+    fn limit(&mut self, id: &str, parts: &[String], all: &[String]) {
+        let e = self.entries.entry(id.to_string()).or_default();
+        if all.iter().all(|p| parts.contains(p)) {
+            e.remove("for");
+        } else {
+            let mut parts = parts.to_vec();
+            parts.sort();
+            e.insert(
+                "for".into(),
+                Json::Array(parts.into_iter().map(Json::String).collect()),
+            );
+        }
     }
 
     /// True when `path` is a bool field whose effective value is true.
@@ -171,10 +322,16 @@ impl Card {
             .registry()
             .get(path)
             .ok_or_else(|| Error::new(format!("unknown card field {path}")))?;
+        if let Some(d) = field.derived.clone() {
+            return self
+                .set_function(&d, &value)
+                .map_err(|e| Error::new(format!("{path}: {e}")));
+        }
         let value = field
             .normalize(value)
             .map_err(|e| Error::new(format!("{path}: {e}")))?;
         self.values.insert(field.path.clone(), value);
+        self.refresh();
         Ok(())
     }
 
@@ -210,6 +367,7 @@ impl Card {
         if let Some(field) = self.vocab.registry().get(path) {
             self.values.remove(&field.path);
         }
+        self.refresh();
     }
 
     /// All set values, by canonical path.
@@ -265,9 +423,23 @@ impl Card {
         // A card saved in an older schema is read as the current one.
         let mut data = Json::Object(top);
         report.migrated = crate::migrate::upgrade(&mut data);
-        let Json::Object(top) = data else {
+        let Json::Object(mut top) = data else {
             unreachable!("still an object");
         };
+        if let Some(pack) = vocab.pack() {
+            if crate::migrate::major(top.get("schema_version")) < 3 {
+                let saved = top
+                    .get("schema_version")
+                    .and_then(Json::as_str)
+                    .unwrap_or("2.0")
+                    .to_string();
+                pack.upgrade_to_3(&mut top, &crate::pack::Unset::from_env());
+                report.migrated.get_or_insert(saved);
+            }
+            card.read_schema_3(top, &mut report)?;
+            card.refresh();
+            return Ok((card, report));
+        }
         let mut leaves = Vec::new();
         for (key, value) in top {
             if key.starts_with('_') {
@@ -353,8 +525,268 @@ impl Card {
         Ok((card, report))
     }
 
-    /// Write the card as nested `card_data` JSON.
+    /// Read schema 3 `card_data`: `conventions`, keyed by ID, and
+    /// `settings`.
+    fn read_schema_3(
+        &mut self,
+        top: Map<String, Json>,
+        report: &mut LoadReport,
+    ) -> Result<(), Error> {
+        let vocab = self.vocab.clone();
+        let mut leaves = Vec::new();
+        for (key, value) in top {
+            if key.starts_with('_') {
+                report.ignored.push(key.clone());
+                self.extra.insert(key, value);
+                continue;
+            }
+            match key.as_str() {
+                "schema_version" | "format" => {}
+                "metadata" => {
+                    self.metadata = serde_json::from_value(value)
+                        .map_err(|e| Error::new(format!("metadata: {e}")))?;
+                }
+                "bba_passthrough" => {
+                    self.bba_passthrough = serde_json::from_value(value)
+                        .map_err(|e| Error::new(format!("bba_passthrough: {e}")))?;
+                }
+                "other_agreements" => match serde_json::from_value(value.clone()) {
+                    Ok(list) => self.other_agreements = list,
+                    Err(e) => {
+                        report
+                            .invalid
+                            .push((key.clone(), format!("other_agreements: {e}")));
+                        self.extra.insert(key, value);
+                    }
+                },
+                "conventions" => {
+                    let Json::Object(entries) = value else {
+                        report
+                            .invalid
+                            .push((key.clone(), "conventions must be an object".into()));
+                        self.extra.insert(key, value);
+                        continue;
+                    };
+                    for (id, entry) in entries {
+                        let (Some(_), Json::Object(entry)) = (vocab.registry().get(&id), &entry)
+                        else {
+                            report.unknown.push(id.clone());
+                            self.unknown_entries.insert(id, entry);
+                            continue;
+                        };
+                        let mut extras = Map::new();
+                        let mut play = true;
+                        for (k, v) in entry {
+                            if k == "play" {
+                                play = v.as_bool().unwrap_or(true);
+                                continue;
+                            }
+                            let address = format!("{id}:{k}");
+                            let field = match vocab.registry().get(&address) {
+                                Some(f) if !crate::pack::RESERVED.contains(&k.as_str()) => f,
+                                _ => {
+                                    if !crate::pack::RESERVED.contains(&k.as_str())
+                                        && k != "section"
+                                    {
+                                        report.unknown.push(address);
+                                    }
+                                    extras.insert(k.clone(), v.clone());
+                                    continue;
+                                }
+                            };
+                            if v.is_null() {
+                                extras.insert(k.clone(), v.clone());
+                                continue;
+                            }
+                            match Value::from_json(v)
+                                .ok_or_else(|| format!("unsupported JSON value {v}"))
+                                .and_then(|x| field.normalize(x))
+                            {
+                                Ok(x) => {
+                                    self.values.insert(field.path.clone(), x);
+                                }
+                                Err(problem) => {
+                                    report.invalid.push((address, problem));
+                                    extras.insert(k.clone(), v.clone());
+                                }
+                            }
+                        }
+                        self.values.insert(id.clone(), Value::Bool(play));
+                        if !extras.is_empty() {
+                            self.entries.insert(id, extras);
+                        }
+                    }
+                }
+                "settings" => {
+                    if let Json::Object(sections) = value {
+                        for (k, v) in sections {
+                            flatten(&k, v, &mut leaves, &mut report.ignored);
+                        }
+                    }
+                }
+                _ => {
+                    self.extra.insert(key, value);
+                }
+            }
+        }
+        for (path, value) in leaves {
+            if report.ignored.contains(&path) {
+                self.extra.insert(path, value);
+                continue;
+            }
+            let last = path.rsplit('.').next().unwrap_or_default();
+            if EDITOR_METADATA_LEAVES.contains(&last) || value.is_null() {
+                self.extra.insert(path, value);
+                continue;
+            }
+            let field = match vocab.registry().get(&path) {
+                Some(f)
+                    if f.derived.is_none() && f.convention.is_none() && !f.path.contains('/') =>
+                {
+                    f
+                }
+                _ => {
+                    report.unknown.push(path.clone());
+                    self.extra.insert(path, value);
+                    continue;
+                }
+            };
+            let checked = Value::from_json(&value)
+                .ok_or_else(|| format!("unsupported JSON value {value}"))
+                .and_then(|v| field.normalize(v));
+            match checked {
+                Ok(v) => {
+                    if field.path != path {
+                        report.aliased.push((path, field.path.clone()));
+                    }
+                    self.values.insert(field.path.clone(), v);
+                }
+                Err(problem) => {
+                    report.invalid.push((path.clone(), problem));
+                    self.extra.insert(path, value);
+                }
+            }
+        }
+        // Two conventions the card plays for the same part of a function.
+        if let Some(pack) = vocab.pack() {
+            for f in &pack.functions {
+                for address in f.addresses() {
+                    let part = address.strip_prefix(&format!("{}.", f.name)).unwrap_or("");
+                    let on: Vec<String> = f
+                        .implementers
+                        .iter()
+                        .filter(|(id, parts)| {
+                            (parts.is_empty() || part.is_empty() || parts.iter().any(|p| p == part))
+                                && matches!(self.values.get(id), Some(Value::Bool(true)))
+                                && self
+                                    .limited_to(id)
+                                    .is_none_or(|l| l.contains(&address) || l.contains(&f.name))
+                        })
+                        .map(|(id, _)| id.clone())
+                        .collect();
+                    if on.len() > 1 {
+                        report.conflicts.push((address, on));
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    /// Write schema 3 `card_data`.
+    fn to_json_schema_3(&self) -> Json {
+        let mut top = Map::new();
+        top.insert(
+            "schema_version".into(),
+            crate::pack::CARD_SCHEMA_VERSION.into(),
+        );
+        top.insert("format".into(), FORMAT.into());
+        top.insert(
+            "metadata".into(),
+            serde_json::to_value(&self.metadata).expect("metadata serializes"),
+        );
+        let mut conventions: BTreeMap<String, Map<String, Json>> = BTreeMap::new();
+        let mut settings = Json::Object(Map::new());
+        for (path, value) in &self.values {
+            if let Some((id, t)) = path.split_once(':') {
+                conventions
+                    .entry(id.to_string())
+                    .or_default()
+                    .insert(t.to_string(), value.to_json());
+            } else if path.contains('/') {
+                let e = conventions.entry(path.clone()).or_default();
+                if *value == Value::Bool(false) {
+                    e.insert("play".into(), Json::Bool(false));
+                }
+            } else {
+                write_path(&mut settings, path, value.to_json());
+            }
+        }
+        // A treatment set on a convention the card never switched: the
+        // entry is played when a treatment is on or filled in, as a
+        // migrated card's is, and is otherwise written as not played.
+        for (id, entry) in conventions.iter_mut() {
+            if !self.values.contains_key(id) {
+                let filled = entry.values().any(|v| match v {
+                    Json::Bool(b) => *b,
+                    Json::String(s) => !s.trim().is_empty(),
+                    Json::Null => false,
+                    _ => true,
+                });
+                if !filled {
+                    entry.insert("play".into(), Json::Bool(false));
+                }
+            }
+        }
+        for (id, extras) in &self.entries {
+            let e = conventions.entry(id.clone()).or_default();
+            for (k, v) in extras {
+                e.insert(k.clone(), v.clone());
+            }
+        }
+        let mut out = Map::new();
+        for (id, mut e) in conventions {
+            // `play` first, for a person reading the file.
+            let mut ordered = Map::new();
+            if let Some(p) = e.remove("play") {
+                ordered.insert("play".into(), p);
+            }
+            ordered.extend(e);
+            out.insert(id, Json::Object(ordered));
+        }
+        for (id, entry) in &self.unknown_entries {
+            out.insert(id.clone(), entry.clone());
+        }
+        for (path, value) in &self.extra {
+            if path.starts_with('_') || EDITOR_METADATA_TOP.contains(&path.as_str()) {
+                top.insert(path.clone(), value.clone());
+            } else {
+                write_path(&mut settings, path, value.clone());
+            }
+        }
+        top.insert("conventions".into(), Json::Object(out));
+        top.insert("settings".into(), settings);
+        if !self.bba_passthrough.is_empty() {
+            top.insert(
+                "bba_passthrough".into(),
+                serde_json::to_value(&self.bba_passthrough).expect("map serializes"),
+            );
+        }
+        if !self.other_agreements.is_empty() {
+            top.insert(
+                "other_agreements".into(),
+                serde_json::to_value(&self.other_agreements).expect("list serializes"),
+            );
+        }
+        Json::Object(top)
+    }
+
+    /// Write the card as nested `card_data` JSON: schema 3 for a card in a
+    /// pack's vocabulary, schema 2 otherwise.
     pub fn to_json(&self) -> Json {
+        if self.vocab.pack().is_some() {
+            return self.to_json_schema_3();
+        }
         let mut top = Map::new();
         top.insert("schema_version".into(), SCHEMA_VERSION.into());
         top.insert("format".into(), FORMAT.into());
@@ -411,7 +843,12 @@ impl Card {
 /// Collect `(dotted path, leaf)` pairs; objects are walked, everything else
 /// (including arrays) is a leaf. A key starting with `_` is not walked: it
 /// comes out whole, and its path goes in `ignored`.
-fn flatten(prefix: &str, value: Json, out: &mut Vec<(String, Json)>, ignored: &mut Vec<String>) {
+pub(crate) fn flatten(
+    prefix: &str,
+    value: Json,
+    out: &mut Vec<(String, Json)>,
+    ignored: &mut Vec<String>,
+) {
     match value {
         Json::Object(map) => {
             for (k, v) in map {
@@ -428,7 +865,7 @@ fn flatten(prefix: &str, value: Json, out: &mut Vec<(String, Json)>, ignored: &m
     }
 }
 
-fn write_path(root: &mut Json, path: &str, value: Json) {
+pub(crate) fn write_path(root: &mut Json, path: &str, value: Json) {
     let mut cur = root;
     let mut parts = path.split('.').peekable();
     while let Some(part) = parts.next() {

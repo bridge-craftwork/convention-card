@@ -75,7 +75,7 @@ fn migrations() -> &'static [Migration] {
     })
 }
 
-fn major(version: Option<&Json>) -> u64 {
+pub(crate) fn major(version: Option<&Json>) -> u64 {
     let text = match version {
         None | Some(Json::Null) => return 1,
         Some(Json::String(s)) => s.clone(),
