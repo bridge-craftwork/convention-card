@@ -18,6 +18,7 @@
  */
 
 import { bandOf, levelOfPath } from './levels.js'
+import { readPath, writePath } from '../../../js/paths.js'
 
 /**
  * Top-level sections in display order. `icon` is a key into ICON_SVG
@@ -906,39 +907,9 @@ export function getLevelForStructuredField(f) {
   return f.filterByLevel ? bandOf(levelOfPath(structuredPath(f))) : null
 }
 
-/**
- * Read a dotted path out of an object. Returns undefined if any
- * intermediate step is missing.
- */
-export function readPath(obj, dotted) {
-  if (!obj || !dotted) return undefined
-  const parts = dotted.split('.')
-  let cur = obj
-  for (const p of parts) {
-    if (cur == null || typeof cur !== 'object') return undefined
-    cur = cur[p]
-  }
-  return cur
-}
-
-/**
- * Write a value at a dotted path, creating intermediate objects as
- * needed. Mutates the target object. Used by the editor to flip a
- * convention on/off.
- */
-export function writePath(obj, dotted, value) {
-  if (!obj || !dotted) return
-  const parts = dotted.split('.')
-  let cur = obj
-  for (let i = 0; i < parts.length - 1; i++) {
-    const key = parts[i]
-    if (cur[key] == null || typeof cur[key] !== 'object') {
-      cur[key] = {}
-    }
-    cur = cur[key]
-  }
-  cur[parts[parts.length - 1]] = value
-}
+// The library's path helpers: a read finds a field under any of its
+// spellings, and a write keeps it under one (js/paths.js).
+export { readPath, writePath }
 
 /**
  * Apply a checked/unchecked toggle for a catalog entry to `cardData`.

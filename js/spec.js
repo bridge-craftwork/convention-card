@@ -37,6 +37,15 @@ const CANONICAL = new Map(
   ])
 )
 
+/**
+ * Every path that names the same field as `path`: its canonical path first,
+ * then its aliases. Undefined when `path` names no field.
+ */
+export function spellings(path) {
+  const canonical = CANONICAL.get(path)
+  return canonical && [canonical, ...(FIELDS[canonical].aliases || [])]
+}
+
 /** The field at `path` or one of its aliases, with its canonical `path`; or undefined. */
 export function field(path) {
   const canonical = CANONICAL.get(path)
