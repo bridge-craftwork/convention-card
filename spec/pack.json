@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "8d80e87be37873cf464971cdadada34e1e0ddf00",
+ "source_commit": "607aab4a13f1ea6036e7b61927d7f56e96bc5244",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -181,7 +181,14 @@
     "Checkback",
     "Checkback Stayman"
    ],
-   "summary": "Played instead of NMF: after opener's notrump rebid, a fixed suit (usually\n2♣) asks about support and majors, whichever minor was bid.\n"
+   "summary": "Played instead of NMF: after opener's notrump rebid, a fixed suit (usually\n2♣) asks about support and majors, whichever minor was bid.\n",
+   "see": [
+    {
+     "title": "Checkback Stayman",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/checkback_stayman.php"
+    }
+   ]
   },
   "bidding_conventions/control_bids": {
    "id": "bidding_conventions/control_bids",
@@ -356,6 +363,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/584"
+    },
+    {
+     "title": "Exclusion Blackwood",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/exclusion_blackwood.php"
     }
    ]
   },
@@ -585,6 +597,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/402"
+    },
+    {
+     "title": "Gerber convention",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Gerber_convention"
     }
    ],
    "treatments": {
@@ -700,6 +717,12 @@
      "title": "Impossible 2 Spade",
      "site": "Kiva Bridge Club",
      "url": "http://kivabridgeclub.com/images/Impossible%202%20Spade.pdf"
+    },
+    {
+     "title": "The Impossible ♠ Bid",
+     "site": "Adventures in Bridge",
+     "by": "Robert S. Todd",
+     "url": "https://static1.squarespace.com/static/5127d3d2e4b0b304f0b6db24/t/5c8e551f104c7b066eb43ac8/1552831776048/3+%28269%29+The+Impossilbe+Spade+Bid+.pdf"
     }
    ]
   },
@@ -1268,7 +1291,15 @@
     "Modified Jacoby 2NT",
     "Modified Jacoby"
    ],
-   "summary": "Played instead of standard Jacoby 2NT: responder's 2NT is the same raise,\nbut opener's rebids are rearranged, usually so that 3♣ shows a minimum and\nresponder can then ask for shortness.\n"
+   "summary": "Played instead of standard Jacoby 2NT: responder's 2NT is the same raise,\nbut opener's rebids are rearranged, usually so that 3♣ shows a minimum and\nresponder can then ask for shortness.\n",
+   "see": [
+    {
+     "title": "Modified Jacoby 2NT",
+     "by": "Larry Cohen",
+     "site": "Larry Cohen",
+     "url": "https://www.larryco.com/bridge-articles/modified-jacoby-2nt"
+    }
+   ]
   },
   "bidding_conventions/muiderberg": {
    "id": "bidding_conventions/muiderberg",
@@ -1329,6 +1360,11 @@
      "title": "25 More Bridge Conventions You Should Know",
      "kind": "book",
      "chapter": 25
+    },
+    {
+     "title": "Defense to Multi 2D (B)",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/defense_to_multi_2d_b.php"
     }
    ],
    "treatments": {
@@ -1371,6 +1407,11 @@
      "title": "25 More Bridge Conventions You Should Know",
      "kind": "book",
      "chapter": 8
+    },
+    {
+     "title": "Namyats",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/namyats.php"
     }
    ]
   },
@@ -1532,7 +1573,14 @@
     "Polish two-suiters",
     "Polish 2♥/2♠"
    ],
-   "summary": "Weak openings at the two level that show two-suited hands, with the second\nsuit unknown or limited, as used in Polish Club.\n"
+   "summary": "Weak openings at the two level that show two-suited hands, with the second\nsuit unknown or limited, as used in Polish Club.\n",
+   "see": [
+    {
+     "title": "Polish Club",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Polish_Club"
+    }
+   ]
   },
   "bidding_conventions/precision_2d": {
    "id": "bidding_conventions/precision_2d",
@@ -1548,7 +1596,14 @@
    "names": [
     "Precision 2♦"
    ],
-   "summary": "In Precision, an opening 2♦ shows a limited opening short in diamonds,\nusually 4-4-1-4 or 4-4-0-5 with 11-15 points.\n"
+   "summary": "In Precision, an opening 2♦ shows a limited opening short in diamonds,\nusually 4-4-1-4 or 4-4-0-5 with 11-15 points.\n",
+   "see": [
+    {
+     "title": "Precision 2D",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/precision_2d.php"
+    }
+   ]
   },
   "bidding_conventions/preempt_keycard": {
    "id": "bidding_conventions/preempt_keycard",
@@ -1607,6 +1662,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/523"
+    },
+    {
+     "title": "Puppet Stayman",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Puppet_Stayman"
     }
    ],
    "treatments": {
@@ -1943,6 +2003,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/634"
+    },
+    {
+     "title": "Smolen",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/smolen.php"
     }
    ]
   },
@@ -2718,7 +2783,14 @@
    "names": [
     "Wilkosz"
    ],
-   "summary": "An opening 2♦ showing a weak two-suited hand with at least five cards in\neach of two suits, one of them a major.\n"
+   "summary": "An opening 2♦ showing a weak two-suited hand with at least five cards in\neach of two suits, one of them a major.\n",
+   "see": [
+    {
+     "title": "Wilkosz responses",
+     "site": "BBO Forums",
+     "url": "https://www.bridgebase.com/forums/topic/53084-wilkosz-responses"
+    }
+   ]
   },
   "bidding_conventions/wolff_signoff": {
    "id": "bidding_conventions/wolff_signoff",
@@ -2814,7 +2886,14 @@
     "BROMAD",
     "Bergen raises over a double"
    ],
-   "summary": "Bergen raises used over the opponents' takeout double of partner's major\n(Bergen Raises Over Major Doubles), with the structure adjusted for the\ndouble.\n"
+   "summary": "Bergen raises used over the opponents' takeout double of partner's major\n(Bergen Raises Over Major Doubles), with the structure adjusted for the\ndouble.\n",
+   "see": [
+    {
+     "title": "BROMAD",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/bromad.php"
+    }
+   ]
   },
   "competitive_bidding/cappelletti": {
    "id": "competitive_bidding/cappelletti",
@@ -2838,6 +2917,16 @@
      "title": "25 More Bridge Conventions You Should Know",
      "kind": "book",
      "chapter": 1
+    },
+    {
+     "title": "Cappelletti (Hamilton)",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/cappelletti.php"
+    },
+    {
+     "title": "Cappelletti convention",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Cappelletti_convention"
     }
    ]
   },
@@ -2926,6 +3015,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/541"
+    },
+    {
+     "title": "DONT",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/DONT"
     }
    ]
   },
@@ -3023,7 +3117,14 @@
    "names": [
     "Ghestem"
    ],
-   "summary": "Played instead of Michaels and the Unusual 2NT: 2NT, a cue bid and a jump\ncue bid each show a specific pair of suits.\n"
+   "summary": "Played instead of Michaels and the Unusual 2NT: 2NT, a cue bid and a jump\ncue bid each show a specific pair of suits.\n",
+   "see": [
+    {
+     "title": "Ghestem",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Ghestem"
+    }
+   ]
   },
   "competitive_bidding/good_bad_2nt": {
    "id": "competitive_bidding/good_bad_2nt",
@@ -3194,6 +3295,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/545"
+    },
+    {
+     "title": "Lebensohl over weak two bids",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/lebensohl_over_weak_two.php"
     }
    ],
    "treatments": {
@@ -3297,6 +3403,16 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/541"
+    },
+    {
+     "title": "Meckwell convention",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Meckwell_convention"
+    },
+    {
+     "title": "Meckwell defense to 1NT",
+     "site": "ACBL Unit 390",
+     "url": "https://www.acblunit390.org/Simon/meckwellnt.htm"
     }
    ]
   },
@@ -3311,6 +3427,19 @@
    ],
    "taught_under": [
     "competitive_bidding/michaels_unusual"
+   ],
+   "see": [
+    {
+     "title": "Michaels Cue Bid",
+     "by": "Larry Cohen",
+     "site": "Larry Cohen",
+     "url": "https://www.larryco.com/bridge-articles/michaels-cue-bid"
+    },
+    {
+     "title": "Michaels cuebid",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Michaels_cuebid"
+    }
    ],
    "treatments": {
     "strength": {
@@ -3412,7 +3541,14 @@
    "names": [
     "Modified Cappelletti"
    ],
-   "summary": "Played instead of Cappelletti: over their 1NT, 2♣ shows a one-suited minor\nor a major and a minor, and 2♥ and 2♠ are natural one-suiters.\n"
+   "summary": "Played instead of Cappelletti: over their 1NT, 2♣ shows a one-suited minor\nor a major and a minor, and 2♥ and 2♠ are natural one-suiters.\n",
+   "see": [
+    {
+     "title": "Modified Cappelletti",
+     "site": "ACBL Unit 390",
+     "url": "https://www.acblunit390.org/Simon/modcapp.htm"
+    }
+   ]
   },
   "competitive_bidding/multi_landy": {
    "id": "competitive_bidding/multi_landy",
@@ -3628,6 +3764,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/548"
+    },
+    {
+     "title": "Rubinsohl",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Rubinsohl"
     }
    ],
    "treatments": {
@@ -3850,6 +3991,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/355"
+    },
+    {
+     "title": "Support double",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Support_double"
     }
    ],
    "treatments": {
@@ -3949,6 +4095,18 @@
    "contexts": [
     "overcalls"
    ],
+   "see": [
+    {
+     "title": "Unusual 2NT",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/unusual_2nt.php"
+    },
+    {
+     "title": "Unusual notrump",
+     "site": "Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Unusual_notrump"
+    }
+   ],
    "treatments": {
     "at_1nt": {
      "kind": "bool",
@@ -4009,6 +4167,11 @@
      "by": "Robert S. Todd",
      "site": "Advancing in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/470"
+    },
+    {
+     "title": "Unusual vs. Unusual",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/unusual_vs_unusual.php"
     }
    ]
   },

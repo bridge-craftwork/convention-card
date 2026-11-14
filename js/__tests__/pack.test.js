@@ -70,7 +70,10 @@ describe('the pack, read as card schema 2', () => {
   it('gives every convention its definition', () => {
     expect(Object.keys(CONVENTIONS)).toEqual(Object.keys(CONVENTIONS_DOC.conventions))
     for (const [id, def] of Object.entries(CONVENTIONS_DOC.conventions)) {
-      expect([id, CONVENTIONS[id]]).toEqual([id, expect.objectContaining(without(id, def))])
+      // Sources may have been added to `see` since; none is dropped.
+      const { see = [], ...rest } = without(id, def)
+      expect([id, CONVENTIONS[id]]).toEqual([id, expect.objectContaining(rest)])
+      expect([id, CONVENTIONS[id].see ?? []]).toEqual([id, expect.arrayContaining(see)])
     }
   })
 
