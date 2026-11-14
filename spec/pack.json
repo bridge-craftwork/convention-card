@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "cae8b475bc2506926607c5f2fb4a52daf5d44139",
+ "source_commit": "7fecdb70f4a06dd3c6a1938471ba27382e90ba70",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -2758,7 +2758,10 @@
     "not_in_comp": {
      "kind": "bool",
      "label": "Weak jump shifts (not in competition)",
-     "level": 5
+     "level": 5,
+     "implements": [
+      "jump_to_major_over_minor"
+     ]
     },
     "in_comp": {
      "kind": "bool",
