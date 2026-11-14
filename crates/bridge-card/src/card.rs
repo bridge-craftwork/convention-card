@@ -387,8 +387,8 @@ impl Card {
         let path = field.path.clone();
         self.values.insert(path, value);
         if let Some((id, places)) = place {
-            if !self.values.contains_key(&id) {
-                self.values.insert(id, Value::Bool(true));
+            if let std::collections::btree_map::Entry::Vacant(slot) = self.values.entry(id) {
+                slot.insert(Value::Bool(true));
                 for p in places {
                     self.values.entry(p).or_insert(Value::Bool(false));
                 }
