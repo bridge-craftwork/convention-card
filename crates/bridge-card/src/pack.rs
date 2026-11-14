@@ -548,6 +548,12 @@ impl Pack {
         self.functions.iter().find(|f| f.name == name)
     }
 
+    fn implements_a_function(&self, id: &str) -> bool {
+        self.functions
+            .iter()
+            .any(|f| f.implementers.iter().any(|(i, _)| i == id))
+    }
+
     /// Upgrade schema 2 `card_data` to schema 3, by `migrations/2-to-3.toml`
     /// (whose header says what each table does). `unset` decides what a
     /// switch the card never set becomes when the card holds treatments of
@@ -570,6 +576,12 @@ impl Pack {
                     for a in value.as_array().cloned().unwrap_or_default() {
                         let id = a.get("id").and_then(Json::as_str).map(str::to_string);
                         match (id, a.as_object()) {
+                            // Schema 2 chose a function's convention by its
+                            // setting alone: an agreement only listed (often
+                            // recognised from a note) never did. It stays
+                            // listed, so it cannot take the function from
+                            // the convention the card chose.
+                            (Some(id), Some(_)) if self.implements_a_function(&id) => rest.push(a),
                             (Some(id), Some(obj)) => {
                                 let e = entries.entry(id).or_default();
                                 e.listed = true;

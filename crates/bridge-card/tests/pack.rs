@@ -105,6 +105,26 @@ fn a_function_reads_the_convention_that_fills_it() {
 }
 
 #[test]
+fn a_listed_agreement_does_not_take_a_function() {
+    // Schema 2 chose the defence to 1NT by its setting alone. A convention
+    // the card only lists (here, recognised from a note) stays listed.
+    let Some(v) = vocab() else { return };
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0",
+            "competitive":{"vs_1nt_strong":{"system":"Meckwell"}},
+            "other_agreements":[{"id":"competitive_bidding/suction","text":"Suction"}]}"#,
+    )
+    .unwrap();
+    assert_eq!(
+        card.effective("defence_to_1nt.strong"),
+        Some(&Value::Text("competitive_bidding/meckwell".into()))
+    );
+    assert!(report.conflicts.is_empty());
+    assert_eq!(card.other_agreements.len(), 1);
+}
+
+#[test]
 fn a_schema_2_card_migrates() {
     let Some(v) = vocab() else { return };
     let (card, report) = Card::from_json(
