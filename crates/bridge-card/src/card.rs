@@ -197,6 +197,25 @@ impl Card {
         if self.named_by_setting.contains(&field.path) {
             return Some(&ON);
         }
+        // A treatment means nothing while its convention is off: where the
+        // card says it does not play the convention, the treatment reads as
+        // unset, whatever it holds. (Silent on the convention, a treatment
+        // the card sets still reads: the card is then taken to play it.)
+        // A place (Lebensohl after a weak two, strong jump shifts at the
+        // two level) is not gated: it is the switch itself, and one that
+        // says no must read as no.
+        if let Some(c) = &field.convention {
+            let is_place = self
+                .vocab
+                .pack()
+                .is_some_and(|p| p.place_of(&field.path).is_some());
+            if !is_place
+                && self.values.get(c) == Some(&Value::Bool(false))
+                && !self.named_by_setting.contains(c)
+            {
+                return None;
+            }
+        }
         self.values
             .get(&field.path)
             .or_else(|| match &field.convention {

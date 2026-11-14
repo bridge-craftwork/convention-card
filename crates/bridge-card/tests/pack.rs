@@ -149,10 +149,13 @@ fn a_tick_beats_a_convention_inferred_from_its_note() {
     assert!(card.is_on("bidding_conventions/roman_keycard"));
     assert!(!card.is_on("bidding_conventions/blackwood"));
     assert!(report.conflicts.is_empty());
+    // The note is kept; a reader of what the card plays does not see it
+    // while Blackwood is off.
     assert_eq!(
-        card.effective("bidding_conventions/blackwood:notes"),
+        card.get("bidding_conventions/blackwood:notes"),
         Some(&Value::Text("0314 if used for minor suit".into()))
     );
+    assert_eq!(card.effective("bidding_conventions/blackwood:notes"), None);
     // With nothing ticked against it, the note alone still plays it.
     let card = load(
         &v,
