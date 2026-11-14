@@ -4,6 +4,16 @@ What's settled, and what's still open. Newest first within each list.
 
 ## Decided
 
+**2026-11-13: conventions and card settings move out** (Rick Wilson)
+
+21. **The content splits from the code.** Convention definitions, the names of
+    card settings, level bands and alert rules move to
+    `bridge-craftwork/bridge-common-conventions` and are read at run time; this
+    repo keeps the card tools and the card models. A card becomes `conventions`
+    keyed by ID plus `settings` (schema 3). Nothing here changes until the
+    cut-over. See [ADR-0003](adr/0003-content-splits-from-code.md), which amends
+    decisions 16 and 17.
+
 **2026-10-01: handing a card to Bridge Classroom** (Rick Wilson; open question 4)
 
 20. **The card travels in the URL's fragment.** The standalone editor opens
