@@ -1,6 +1,6 @@
 # ADR-0003 — Content Splits From Code
 
-**Status:** Proposed 2026-11-13. Becomes Accepted when Rick Wilson accepts
+**Status:** Accepted 2026-11-13, when Rick Wilson accepted
 `bridge-common-conventions`' `docs/CONTRACT.md`. Nothing in this repo changes
 until the cut-over (decision 6 below).
 
