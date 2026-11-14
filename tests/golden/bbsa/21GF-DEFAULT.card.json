@@ -215,7 +215,8 @@
     },
     "fourth_suit_forcing": {
       "game_force": true,
-      "one_round": false
+      "one_round": false,
+      "play": true
     },
     "new_minor_forcing": {
       "after_2nt_rebid": true,

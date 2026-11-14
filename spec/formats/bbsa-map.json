@@ -607,6 +607,38 @@
   },
   {
    "when": {
+    "other_conventions.fourth_suit_forcing.one_round": true
+   },
+   "set": {
+    "other_conventions.fourth_suit_forcing.play": true
+   }
+  },
+  {
+   "when": {
+    "other_conventions.fourth_suit_forcing.game_force": true
+   },
+   "set": {
+    "other_conventions.fourth_suit_forcing.play": true
+   }
+  },
+  {
+   "when": {
+    "slam.kickback.rkcb_1430": true
+   },
+   "set": {
+    "slam.kickback.play": true
+   }
+  },
+  {
+   "when": {
+    "slam.kickback.rkcb_0314": true
+   },
+   "set": {
+    "slam.kickback.play": true
+   }
+  },
+  {
+   "when": {
     "two_level.ogust.play": true
    },
    "set": {

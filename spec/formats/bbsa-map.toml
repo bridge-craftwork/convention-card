@@ -244,6 +244,25 @@ set  = { "two_level.reverse_flannery.play" = true }
 when = { "two_level.reverse_flannery.two_s" = true }
 set  = { "two_level.reverse_flannery.play" = true }
 
+# A convention BBA has lines for only through its treatments is played when
+# one of them is on. (A convention with a line of its own, such as Drury
+# beside Reverse Drury, is not derived: that line says.)
+[[derived]]
+when = { "other_conventions.fourth_suit_forcing.one_round" = true }
+set  = { "other_conventions.fourth_suit_forcing.play" = true }
+
+[[derived]]
+when = { "other_conventions.fourth_suit_forcing.game_force" = true }
+set  = { "other_conventions.fourth_suit_forcing.play" = true }
+
+[[derived]]
+when = { "slam.kickback.rkcb_1430" = true }
+set  = { "slam.kickback.play" = true }
+
+[[derived]]
+when = { "slam.kickback.rkcb_0314" = true }
+set  = { "slam.kickback.play" = true }
+
 # Ogust replaces the feature answer to 2NT over a weak two.
 [[derived]]
 when = { "two_level.ogust.play" = true }
