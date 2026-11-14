@@ -103,7 +103,10 @@ fn default_card_imports_expected_settings() {
         card.get("slam.rkcb.style"),
         Some(&Value::Text("1430".into()))
     );
-    assert!(!card.is_on("major_openings.drury.play"));
+    // "Drury = 0, Reverse drury = 1": BBA's two lines are alternatives, and
+    // this card plays Drury the reverse way.
+    assert!(card.is_on("major_openings.drury.play"));
+    assert!(card.is_on("major_openings.drury.reverse"));
     // Passthrough keys are exactly the unmapped ones.
     for (key, _) in &report.passthrough {
         assert!(vocab().bbsa_mapping().get(key).is_none());

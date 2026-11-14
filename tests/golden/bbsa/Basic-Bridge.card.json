@@ -89,14 +89,6 @@
     "system_category": "sayc"
   },
   "major_openings": {
-    "bergen_raises": {
-      "play": false,
-      "reverse": false
-    },
-    "drury": {
-      "play": false,
-      "reverse": false
-    },
     "five_card_majors": true,
     "gazzilli": {
       "play": false

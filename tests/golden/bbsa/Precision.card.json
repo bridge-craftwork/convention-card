@@ -86,7 +86,7 @@
   },
   "major_openings": {
     "bergen_raises": {
-      "play": false,
+      "play": true,
       "reverse": true
     },
     "drury": {

@@ -91,12 +91,16 @@
 # the same either way (rusty-bidding-bot probes, 2026-10-28).
 "Mixed raise"               = "overcalls.responses.jump_cuebid_mixed"
 "Jacoby 2NT"                = "major_openings.jacoby_2nt.play"
-"Bergen"                    = "major_openings.bergen_raises.play"
-"Reverse Bergen"            = "major_openings.bergen_raises.reverse"
+# Bergen and Reverse Bergen are alternatives in BBA: a card plays one line
+# or the other, and the stock cards that play Reverse Bergen have "Bergen =
+# 0". Either line means the card plays Bergen raises; the second says which
+# way round. (The same for Drury, below.)
+"Bergen"                    = { set = { "major_openings.bergen_raises.play" = true, "major_openings.bergen_raises.reverse" = false } }
+"Reverse Bergen"            = { set = { "major_openings.bergen_raises.play" = true, "major_openings.bergen_raises.reverse" = true } }
 "Splinter"                  = "major_openings.splinters.play"
 "Mini Splinter"             = "major_openings.mini_splinters.play"
-"Drury"                     = "major_openings.drury.play"
-"Reverse drury"             = "major_openings.drury.reverse"
+"Drury"                     = { set = { "major_openings.drury.play" = true, "major_openings.drury.reverse" = false } }
+"Reverse drury"             = { set = { "major_openings.drury.play" = true, "major_openings.drury.reverse" = true } }
 "Gazzilli"                  = "major_openings.gazzilli.play"
 # BBA's spelling. Mapped on the meaning Todd ("The Impossible ♠ Bid",
 # Adventures in Bridge TWiB 269) and GIB's "Impossible spade" give it:
