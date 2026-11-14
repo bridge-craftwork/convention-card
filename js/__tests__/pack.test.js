@@ -71,7 +71,11 @@ describe('the pack, read as card schema 2', () => {
     expect(Object.keys(CONVENTIONS)).toEqual(Object.keys(CONVENTIONS_DOC.conventions))
     for (const [id, def] of Object.entries(CONVENTIONS_DOC.conventions)) {
       // Sources may have been added to `see` since; none is dropped.
-      const { see = [], ...rest } = without(id, def)
+      // Robert S. Todd's site is named as it is today; this repository's
+      // older list has its former name.
+      const renamed = e => (e.site === 'Advancing in Bridge' ? { ...e, site: 'Adventures in Bridge' } : e)
+      const { see: older = [], ...rest } = without(id, def)
+      const see = older.map(renamed)
       expect([id, CONVENTIONS[id]]).toEqual([id, expect.objectContaining(rest)])
       expect([id, CONVENTIONS[id].see ?? []]).toEqual([id, expect.arrayContaining(see)])
     }

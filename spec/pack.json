@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "ebc58b71094e73b0cd6f2f932c05457dcf054f53",
+ "source_commit": "8e9e32b860a8684a60bf13c56d0195f8907cbff7",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -120,7 +120,7 @@
     {
      "title": "Bergen Raises",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/572"
     }
    ],
@@ -228,7 +228,7 @@
     {
      "title": "Slam Bidding: Control-Showing Bids",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/406"
     }
    ],
@@ -291,7 +291,7 @@
     {
      "title": "Slam Bidding: Dealing with Interference Over Ace-Asking Bids",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/536"
     }
    ]
@@ -361,7 +361,7 @@
     {
      "title": "Exclusion Keycard",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/584"
     },
     {
@@ -461,7 +461,7 @@
     {
      "title": "2/1: Bidding the 4th Suit",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/424"
     }
    ],
@@ -533,7 +533,7 @@
     {
      "title": "NT Auctions: Trick-Showing NT Bids - Gambling 3NT and More",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/519"
     }
    ],
@@ -562,7 +562,7 @@
     {
      "title": "Constructive Bidding: Modern Gazzilli",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/488"
     }
    ]
@@ -595,7 +595,7 @@
     {
      "title": "Slam Bidding: Gerber and 1430 Gerber",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/402"
     },
     {
@@ -686,7 +686,7 @@
     {
      "title": "Help Suit Game Tries",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/465"
     }
    ]
@@ -710,7 +710,7 @@
     {
      "title": "The Impossible Spade Bid",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/269"
     },
     {
@@ -749,7 +749,7 @@
     {
      "title": "Lebensohl over Reverses",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/417"
     }
    ]
@@ -798,7 +798,7 @@
     {
      "title": "Inverted Minors and 1D-2C Auctions with Structure",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/591"
     }
    ]
@@ -835,7 +835,7 @@
     {
      "title": "Slam Bidding: Jacoby 2NT",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/407"
     }
    ]
@@ -882,7 +882,7 @@
     {
      "title": "NT Auctions: Opponents' Doubles of Our Stayman and Transfers",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/520"
     }
    ],
@@ -944,7 +944,7 @@
     {
      "title": "Kickback Keycard Ask",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/582"
     }
    ],
@@ -985,7 +985,7 @@
     {
      "title": "Kokish Over Strong 2C",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/576"
     }
    ]
@@ -1003,7 +1003,7 @@
     {
      "title": "Kokish Game Tries",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/588"
     }
    ]
@@ -1038,7 +1038,7 @@
     {
      "title": "Slam Bidding: Last Train Slam Try",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/540"
     }
    ]
@@ -1060,13 +1060,13 @@
     {
      "title": "McCabe Responses to Preempts",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/468"
     },
     {
      "title": "Transfer McCabe Responses to Preempts",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/606"
     }
    ]
@@ -1268,7 +1268,7 @@
     {
      "title": "Slam Bidding: Minorwood",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/405"
     }
    ]
@@ -1438,7 +1438,7 @@
     {
      "title": "New Minor Forcing Fundamentals",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/227"
     }
    ],
@@ -1490,7 +1490,7 @@
     {
      "title": "Fits and More: Over-Splinters",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/530"
     }
    ]
@@ -1531,7 +1531,7 @@
     {
      "title": "Slam Bidding: 5NT Choice of Slams",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/535"
     }
    ]
@@ -1552,7 +1552,7 @@
     {
      "title": "1-Major – 3NT",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/628"
     }
    ]
@@ -1620,7 +1620,7 @@
     {
      "title": "Preempt Keycard",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/578"
     }
    ]
@@ -1660,7 +1660,7 @@
     {
      "title": "NT Auctions: Puppet Stayman and 5-Card Stayman",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/523"
     },
     {
@@ -1711,13 +1711,13 @@
     {
      "title": "NT and Balancing Auctions: Range Stayman",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/560"
     },
     {
      "title": "NT Auctions: 2S Size Ask Response",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/522"
     }
    ]
@@ -1782,7 +1782,7 @@
     {
      "title": "Fits and More: 2-Way Reverse Drury",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/525"
     }
    ]
@@ -1804,7 +1804,7 @@
     {
      "title": "Reverse Flannery",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/590"
     },
     {
@@ -1871,7 +1871,7 @@
     {
      "title": "Slam Bidding: 1430 Keycard Blackwood",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/403"
     }
    ],
@@ -1937,7 +1937,7 @@
     {
      "title": "2 over 1 Game Forcing: Responder's Rebids after 1NT Semi-Forcing Response",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/375"
     }
    ]
@@ -1961,7 +1961,7 @@
     {
      "title": "Slam Bidding: Non-Serious 3NT",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/539"
     }
    ]
@@ -2001,7 +2001,7 @@
     {
      "title": "Smolen and 5/5 Majors After a 2NT Opening",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/634"
     },
     {
@@ -2058,7 +2058,7 @@
     {
      "title": "Fits and More: 2NT Trump Suit Game Try - Spiral",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/529"
     }
    ]
@@ -2092,13 +2092,13 @@
     {
      "title": "Slam Bidding: Splinter Bids by Responder",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/408"
     },
     {
      "title": "Slam Bidding: Splinters by Opener",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/409"
     }
    ],
@@ -2154,7 +2154,7 @@
     {
      "title": "Stayman Auctions After a 2NT Opening",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/633"
     }
    ],
@@ -2206,7 +2206,7 @@
     {
      "title": "2C Opening Bids",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/415"
     }
    ]
@@ -2294,7 +2294,7 @@
     {
      "title": "NT Auctions: Superaccepting Jacoby Transfers",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/518"
     }
    ]
@@ -2440,13 +2440,13 @@
     {
      "title": "1-Major (X) Transfers",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/598"
     },
     {
      "title": "1-minor (X) Transfers",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/599"
     }
    ]
@@ -2472,7 +2472,7 @@
     {
      "title": "Todd Busts over 2C Opening Bids",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/593"
     }
    ],
@@ -2508,7 +2508,7 @@
     {
      "title": "2 over 1 Game Forcing: Modern Bridge Standard",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/641"
     },
     {
@@ -2558,7 +2558,7 @@
     {
      "title": "Fits and More: 2-Way Reverse Drury",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/525"
     }
    ]
@@ -2604,7 +2604,7 @@
     {
      "title": "2-Way New Minor Forcing and Wolff Signoff",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/586"
     }
    ]
@@ -2634,7 +2634,7 @@
     {
      "title": "Thinking and Responding: Walsh and Extended Walsh",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/511"
     }
    ]
@@ -2674,7 +2674,7 @@
     {
      "title": "Modern 2-Level Preemptive Openings",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/411"
     }
    ]
@@ -2707,7 +2707,7 @@
     {
      "title": "Thinking and Responding: Jump Shifts After 1-Level Openings - Weak and Invitational",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/512"
     }
    ],
@@ -2764,7 +2764,7 @@
     {
      "title": "Thinking and Responding: Western Cuebids",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/510"
     }
    ]
@@ -2812,13 +2812,13 @@
     {
      "title": "2-Way New Minor Forcing and Wolff Signoff",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/586"
     },
     {
      "title": "Transfer Wolff Over 2NT Rebids",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/595"
     }
    ]
@@ -2837,7 +2837,7 @@
     {
      "title": "XYZ",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/587"
     }
    ]
@@ -2862,7 +2862,7 @@
     {
      "title": "Competitive Auctions: Anti-Lead Directing Doubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/556"
     }
    ]
@@ -3013,7 +3013,7 @@
     {
      "title": "NT Bidding: DONT and Meckwell",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/541"
     },
     {
@@ -3083,7 +3083,7 @@
     {
      "title": "Fit-Showing Jumps",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/574"
     }
    ]
@@ -3101,7 +3101,7 @@
     {
      "title": "Slam Bidding: Forcing Pass Auctions",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/532"
     }
    ]
@@ -3141,7 +3141,7 @@
     {
      "title": "Competitive Auctions: Good/Bad 2NT in Competition",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/554"
     }
    ]
@@ -3222,7 +3222,7 @@
     {
      "title": "Lead-Directing Doubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/467"
     }
    ]
@@ -3258,7 +3258,7 @@
     {
      "title": "Competitive Bidding: Leaping Michaels",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/484"
     }
    ]
@@ -3293,7 +3293,7 @@
     {
      "title": "NT Bidding: Responding to 1NT in Competition - Lebensohl",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/545"
     },
     {
@@ -3342,7 +3342,7 @@
     {
      "title": "Competitive Bidding: Bidding Over Strong 2C (and 1C) Openings - Mathe",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/191"
     }
    ]
@@ -3366,7 +3366,7 @@
     {
      "title": "Non-Takeout Doubles: Card-Showing, Maximal, Penalty, Lead-Directing",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/357"
     }
    ]
@@ -3401,7 +3401,7 @@
     {
      "title": "NT Bidding: DONT and Meckwell",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/541"
     },
     {
@@ -3494,13 +3494,13 @@
     {
      "title": "Competitive Bidding: Michaels Cuebid",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/480"
     },
     {
      "title": "Competitive Bidding: Unusual 2NT",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/481"
     }
    ]
@@ -3576,7 +3576,7 @@
     {
      "title": "NT Bidding: Woolsey",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/542"
     }
    ]
@@ -3610,7 +3610,7 @@
     {
      "title": "Negative Doubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/353"
     }
    ],
@@ -3691,7 +3691,7 @@
     {
      "title": "Responsive Doubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/354"
     }
    ],
@@ -3735,7 +3735,7 @@
     {
      "title": "Rosenkrantz Redoubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/569"
     }
    ]
@@ -3762,7 +3762,7 @@
     {
      "title": "NT Bidding: Modern, Transfer, and Modern Transfer Lebensohl",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/548"
     },
     {
@@ -3803,7 +3803,7 @@
     {
      "title": "Competitive Bidding: Sandwich NT",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/194"
     }
    ]
@@ -3829,7 +3829,7 @@
     {
      "title": "Competitive Auctions: Scrambling 2NT",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/555"
     }
    ]
@@ -3861,7 +3861,7 @@
     {
      "title": "Snapdragon Doubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/568"
     }
    ]
@@ -3901,7 +3901,7 @@
     {
      "title": "Spear",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/571"
     }
    ]
@@ -3955,7 +3955,7 @@
     {
      "title": "Constructive Bidding Opposite 3rd Hand Openings: Cuebid as Limit Raise+ by a Passed Hand",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/116"
     }
    ]
@@ -3989,7 +3989,7 @@
     {
      "title": "Support Doubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/355"
     },
     {
@@ -4038,7 +4038,7 @@
     {
      "title": "Takeout Doubles",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/352"
     }
    ]
@@ -4082,7 +4082,7 @@
     {
      "title": "Transfer Advances Over Negative Double",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/597"
     }
    ]
@@ -4165,7 +4165,7 @@
     {
      "title": "Unusual vs. Unusual and Unusual vs. Michaels",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/470"
     },
     {
@@ -4236,19 +4236,19 @@
     {
      "title": "Defensive Carding: Attitude Signals",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/471"
     },
     {
      "title": "Defensive Carding: Count Signals",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/472"
     },
     {
      "title": "Defensive Carding: Suit Preference Signals",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/476"
     }
    ]
@@ -4292,13 +4292,13 @@
     {
      "title": "Fundamentals of Trick Taking – 4th Best Leads (Attitude)",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/627"
     },
     {
      "title": "Opening Leads: Card Combinations",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/394"
     }
    ]
@@ -4317,7 +4317,7 @@
     {
      "title": "Defensive Carding: Smith Echo (Reverse)",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/475"
     }
    ]
@@ -4336,7 +4336,7 @@
     {
      "title": "Rusinow Opening Leads",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/276"
     }
    ]
@@ -4362,7 +4362,7 @@
     {
      "title": "Defensive Carding: Smith Echo (Reverse)",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/475"
     }
    ]
@@ -4405,7 +4405,7 @@
     {
      "title": "Defensive Carding: Upside-Down Count and Attitude (UDCA)",
      "by": "Robert S. Todd",
-     "site": "Advancing in Bridge",
+     "site": "Adventures in Bridge",
      "url": "https://www.advinbridge.com/this-week-in-bridge/474"
     }
    ]
