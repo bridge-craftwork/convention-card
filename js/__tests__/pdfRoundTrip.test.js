@@ -6,6 +6,7 @@ import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
 import { importBboJson, exportBboCard } from '../bbo.js'
 import { importCard } from '../importCard.js'
+import { upgradeCardData } from '../migrate.js'
 
 // A card through a PDF and back: one nobody edited returns as it went in, so
 // the extension can tell that the copy on BBO is unchanged, and any change
@@ -69,7 +70,8 @@ describe.each(TEMPLATES)('a BBO card through an unedited PDF (%s)', template => 
   it.each(CASES)('reads back the same card_data: %s', async (_, make) => {
     const card = make()
     const { read } = await readBack(await makePdf(card, template))
-    expect(read.card_data).toEqual(importBboJson({ cards: [card] }).card_data)
+    // A card is read into the working form (js/migrate.js), as importCard reads the BBO card itself.
+    expect(read.card_data).toEqual(upgradeCardData(importBboJson({ cards: [card] }).card_data))
     expect(read.report).toMatchObject({ source: 'card', edits: [] })
     expect(read.implied).toBeUndefined()
     expect(read.recognised).toBeUndefined()
@@ -113,7 +115,7 @@ describe.each(TEMPLATES)('a BBO card through an edited PDF (%s)', template => {
     const { read } = await readBack(await edited(await makePdf(card(), template), form => form.getTextField(range).setText('14')))
     const expected = importBboJson({ cards: [card()] }).card_data
     expected.notrump.one_nt.range_min = 14
-    expect(read.card_data).toEqual(expected)
+    expect(read.card_data).toEqual(upgradeCardData(expected))
   })
 })
 

@@ -587,6 +587,7 @@ impl Pack {
         let mut leaves = Vec::new();
         let mut ignored = Vec::new();
         let mut listed_fn: Vec<(String, Json)> = Vec::new();
+        let mut wording: BTreeMap<(String, String), Json> = BTreeMap::new();
         let mut listed_rest: Vec<Json> = Vec::new();
         for (key, value) in old {
             match key.as_str() {
@@ -653,7 +654,23 @@ impl Pack {
                             .and_then(|w| w.get(&fold(word)))
                             .cloned()
                             .unwrap_or_else(|| word.to_string());
+                        // The card's own wording is kept for the tools
+                        // that print it: on the entry of the convention it
+                        // chose (below), or, when it chose none (`natural`,
+                        // a name no option covers), as the setting.
+                        let names_one = self
+                            .function(f)
+                            .is_some_and(|func| func.option.contains_key(&word));
+                        if !names_one {
+                            crate::card::write_path(&mut settings, &path, value.clone());
+                        } else if value.as_str() != Some(word.as_str()) {
+                            wording
+                                .entry((f.clone(), part.clone()))
+                                .or_insert_with(|| value.clone());
+                        }
                         chosen.entry((f.clone(), part.clone())).or_insert(word);
+                    } else {
+                        crate::card::write_path(&mut settings, &path, value);
                     }
                 }
                 None => crate::card::write_path(&mut settings, &path, value),
@@ -673,6 +690,18 @@ impl Pack {
                     .and_then(|w| m.options.get(w))
                 {
                     fills.entry(id.clone()).or_default().push(part.clone());
+                    // The wording goes on the entry; a second part worded
+                    // differently ("Strong - Suction", "Weak - Suction")
+                    // keeps its own as the setting.
+                    if let Some(text) = wording.get(&(m.function.clone(), part.clone())) {
+                        let e = entries.entry(id.clone()).or_default();
+                        let kept = e.extra.entry("text").or_insert_with(|| text.clone());
+                        if kept != text {
+                            if let Some(path) = m.settings.get(part) {
+                                crate::card::write_path(&mut settings, path, text.clone());
+                            }
+                        }
+                    }
                 }
             }
             for (switch, part) in &m.unless_chosen {

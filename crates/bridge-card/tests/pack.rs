@@ -162,6 +162,42 @@ fn a_tick_beats_a_convention_inferred_from_its_note() {
 }
 
 #[test]
+fn the_cards_own_wording_for_a_defence_is_kept() {
+    let Some(v) = vocab() else { return };
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0","competitive":{
+            "vs_1nt_strong":{"system":"Strong - Suction"},
+            "vs_1nt_weak":{"system":"Weak - Suction"}}}"#,
+    )
+    .unwrap();
+    assert!(report.conflicts.is_empty());
+    for part in ["defence_to_1nt.strong", "defence_to_1nt.weak"] {
+        assert_eq!(
+            card.effective(part),
+            Some(&Value::Text("competitive_bidding/suction".into())),
+            "{part}"
+        );
+    }
+    let json = card.to_json();
+    assert_eq!(
+        json["conventions"]["competitive_bidding/suction"]["text"],
+        "Strong - Suction"
+    );
+    // A name no option covers chooses no convention and stays the setting.
+    let (card, _) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0","competitive":{"vs_1nt_strong":{"system":"(Our own)"}}}"#,
+    )
+    .unwrap();
+    assert_eq!(card.effective("defence_to_1nt.strong"), None);
+    assert_eq!(
+        card.to_json()["settings"]["competitive"]["vs_1nt_strong"]["system"],
+        "(Our own)"
+    );
+}
+
+#[test]
 fn a_schema_2_card_migrates() {
     let Some(v) = vocab() else { return };
     let (card, report) = Card::from_json(
@@ -262,4 +298,29 @@ fn every_stock_card_migrates_and_reads_as_schema_2_did() {
         }
     }
     assert!(seen > 0);
+}
+
+/// The cases the JavaScript library is held to as well
+/// (js/__tests__/schema3.test.js), so the two readers of the pack's
+/// migrations/2-to-3.toml agree.
+#[test]
+fn the_shared_schema_3_cases() {
+    let Some(dir) = pack_dir() else { return };
+    let pack = bridge_card::Pack::load(&dir).expect("the pack loads");
+    let file =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/migrations/2-to-3.cases.json");
+    let doc: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(file).unwrap()).unwrap();
+    for case in doc["cases"].as_array().unwrap() {
+        let serde_json::Value::Object(mut card) = case["before"].clone() else {
+            panic!("a case's card is an object")
+        };
+        pack.upgrade_to_3(&mut card, &bridge_card::pack::Unset::Played);
+        assert_eq!(
+            serde_json::Value::Object(card),
+            case["after"],
+            "{}",
+            case["name"]
+        );
+    }
 }

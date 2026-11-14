@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { checkCard, checkValue } from '../checkCard.js'
 import { field, FIELDS } from '../spec.js'
-import { upgradeCardData } from '../migrate.js'
+import { migrateCardData, upgradeCardData } from '../migrate.js'
 
 const ROOT = path.resolve(__dirname, '../..')
 const read = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'))
@@ -36,9 +36,10 @@ describe('checkCard', () => {
     const r = checkCard({ schema: 'bridge-classroom/card_data@v1', name: 'Ours', card_data: SEED })
     expect(r.report.wrapper).toBe('bridge-classroom/card_data@v1')
     expect(r.name).toBe('Ours')
-    // A saved 1.0 card is checked, and returned, upgraded.
+    // A saved 1.0 card is checked, and returned, with its fields moved:
+    // the card as it is written, nothing inferred.
     expect(r.report.migrated).toBe('1.0')
-    expect(r.card_data).toEqual(upgradeCardData(SEED))
+    expect(r.card_data).toEqual(migrateCardData(SEED))
     expect(r.diagnostics.find(d => /schema 1\.0/.test(d.message)).severity).toBe('info')
     // A 2.0 card comes back as it was.
     const current = upgradeCardData(SEED)

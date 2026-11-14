@@ -787,7 +787,24 @@ impl Card {
                 };
                 let _ = folded.set(address, chosen);
             }
-            return folded.to_json_schema_3();
+            let mut json = folded.to_json_schema_3();
+            // Wording that named no convention (`natural`, a name no option
+            // covers) has no entry to live on: it stays the setting.
+            for (path, address) in &stored {
+                let function = address.split('.').next().unwrap_or(address);
+                let names_one = match self.values.get(path) {
+                    Some(Value::Text(w)) => self
+                        .vocab
+                        .pack()
+                        .and_then(|p| p.function(function))
+                        .is_some_and(|f| f.option.contains_key(w)),
+                    _ => true,
+                };
+                if let (false, Some(v)) = (names_one, self.values.get(path)) {
+                    write_path(&mut json["settings"], path, v.to_json());
+                }
+            }
+            return json;
         }
         let mut top = Map::new();
         top.insert(

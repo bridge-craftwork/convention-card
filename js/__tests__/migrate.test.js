@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import path from 'path'
-import { upgradeCardData, upgradeCard, needsUpgrade, CARD_SCHEMA_VERSION } from '../migrate.js'
+import { upgradeCardData, upgradeCard, migrateCardData, needsUpgrade, CARD_SCHEMA_VERSION } from '../migrate.js'
 import { field } from '../spec.js'
 import MIGRATION from '../../spec/migrations/1-to-2.json' with { type: 'json' }
 
@@ -15,7 +15,7 @@ describe('upgrading a card from schema 1.x', () => {
   for (const c of CASES) {
     it(c.name, () => {
       const before = JSON.stringify(c.before)
-      expect(upgradeCardData(c.before)).toEqual(c.after)
+      expect(migrateCardData(c.before)).toEqual(c.after)
       // The card given is not changed.
       expect(JSON.stringify(c.before)).toBe(before)
     })
