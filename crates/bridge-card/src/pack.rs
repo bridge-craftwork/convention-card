@@ -548,6 +548,27 @@ impl Pack {
         self.functions.iter().find(|f| f.name == name)
     }
 
+    /// Whether `id` and one of `others` implement the same part of a
+    /// function (an implementer with no parts fills them all).
+    fn contends(&self, id: &str, others: &[String]) -> bool {
+        self.functions.iter().any(|f| {
+            let parts_of = |x: &str| {
+                f.implementers
+                    .iter()
+                    .find(|(i, _)| i == x)
+                    .map(|(_, parts)| parts)
+            };
+            let Some(mine) = parts_of(id) else {
+                return false;
+            };
+            others.iter().filter(|o| o.as_str() != id).any(|o| {
+                parts_of(o).is_some_and(|theirs| {
+                    mine.is_empty() || theirs.is_empty() || mine.iter().any(|p| theirs.contains(p))
+                })
+            })
+        })
+    }
+
     fn implements_a_function(&self, id: &str) -> bool {
         self.functions
             .iter()
@@ -565,6 +586,8 @@ impl Pack {
         let mut chosen: BTreeMap<(String, String), String> = BTreeMap::new();
         let mut leaves = Vec::new();
         let mut ignored = Vec::new();
+        let mut listed_fn: Vec<(String, Json)> = Vec::new();
+        let mut listed_rest: Vec<Json> = Vec::new();
         for (key, value) in old {
             match key.as_str() {
                 "schema_version" => {}
@@ -576,12 +599,11 @@ impl Pack {
                     for a in value.as_array().cloned().unwrap_or_default() {
                         let id = a.get("id").and_then(Json::as_str).map(str::to_string);
                         match (id, a.as_object()) {
-                            // Schema 2 chose a function's convention by its
-                            // setting alone: an agreement only listed (often
-                            // recognised from a note) never did. It stays
-                            // listed, so it cannot take the function from
-                            // the convention the card chose.
-                            (Some(id), Some(_)) if self.implements_a_function(&id) => rest.push(a),
+                            // Decided below, once the card's own choice
+                            // for the function is known.
+                            (Some(id), Some(_)) if self.implements_a_function(&id) => {
+                                listed_fn.push((id, a))
+                            }
                             (Some(id), Some(obj)) => {
                                 let e = entries.entry(id).or_default();
                                 e.listed = true;
@@ -594,9 +616,7 @@ impl Pack {
                             _ => rest.push(a),
                         }
                     }
-                    if !rest.is_empty() {
-                        top.insert(key, Json::Array(rest));
-                    }
+                    listed_rest = rest;
                 }
                 k if k.starts_with('_') || k == "conventions_list" => {
                     top.insert(key, value);
@@ -689,9 +709,57 @@ impl Pack {
             }
         }
 
+        // An agreement the card only lists (often recognised from a note)
+        // plays its convention, unless the card chose something else for the
+        // same function: a setting it filled in, or a convention it ticked.
+        // Then it stays listed.
+        let ticked_now: Vec<String> = entries
+            .iter()
+            .filter(|(_, e)| e.play == Some(true))
+            .map(|(id, _)| id.clone())
+            .collect();
+        for (id, a) in listed_fn {
+            let setting_filled = self.functions.iter().any(|f| {
+                f.implementers.iter().any(|(i, _)| *i == id)
+                    && chosen.keys().any(|(name, _)| *name == f.name)
+            });
+            if setting_filled || self.contends(&id, &ticked_now) {
+                listed_rest.push(a);
+            } else if let Some(obj) = a.as_object() {
+                let e = entries.entry(id).or_default();
+                e.listed = true;
+                for (k, v) in obj {
+                    if k != "id" {
+                        e.extra.insert(k.clone(), v.clone());
+                    }
+                }
+            }
+        }
+        if !listed_rest.is_empty() {
+            top.insert("other_agreements".into(), Json::Array(listed_rest));
+        }
+
+        // A tick beats an inference. A convention turned on only because
+        // its treatments are filled in (a note filed under Blackwood) does
+        // not take a function from one the card switched on itself
+        // (keycard): it keeps its treatments and is not played.
+        let ticked: Vec<String> = entries
+            .iter()
+            .filter(|(_, e)| e.play == Some(true) || e.places.values().any(|on| *on))
+            .map(|(id, _)| id.clone())
+            .collect();
         let mut conventions = Map::new();
-        for (id, e) in entries {
+        for (id, mut e) in entries {
             let filled = e.treatments.values().any(is_filled);
+            if e.play.is_none()
+                && e.places.is_empty()
+                && !e.listed
+                && filled
+                && matches!(unset, Unset::Played)
+                && self.contends(&id, &ticked)
+            {
+                e.play = Some(false);
+            }
             let mut out = Map::new();
             let play = if e.places.is_empty() {
                 match (e.play, unset) {

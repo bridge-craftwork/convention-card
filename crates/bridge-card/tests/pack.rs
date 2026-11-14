@@ -105,9 +105,9 @@ fn a_function_reads_the_convention_that_fills_it() {
 }
 
 #[test]
-fn a_listed_agreement_does_not_take_a_function() {
-    // Schema 2 chose the defence to 1NT by its setting alone. A convention
-    // the card only lists (here, recognised from a note) stays listed.
+fn a_listed_agreement_yields_to_the_cards_own_choice() {
+    // The card names its defence to 1NT; Suction is only listed (recognised
+    // from a note). The named defence wins and Suction stays listed.
     let Some(v) = vocab() else { return };
     let (card, report) = Card::from_json(
         &v,
@@ -122,6 +122,43 @@ fn a_listed_agreement_does_not_take_a_function() {
     );
     assert!(report.conflicts.is_empty());
     assert_eq!(card.other_agreements.len(), 1);
+    // With no defence chosen, the note is all the card says: it plays it.
+    let card = load(
+        &v,
+        r#"{"schema_version":"2.0",
+            "other_agreements":[{"id":"competitive_bidding/suction","text":"Suction"}]}"#,
+    );
+    assert_eq!(
+        card.effective("defence_to_1nt.strong"),
+        Some(&Value::Text("competitive_bidding/suction".into()))
+    );
+}
+
+#[test]
+fn a_tick_beats_a_convention_inferred_from_its_note() {
+    // Keycard is ticked; a 4NT note is filed under Blackwood. The note is
+    // kept, and does not turn Blackwood on against keycard.
+    let Some(v) = vocab() else { return };
+    let (card, report) = Card::from_json(
+        &v,
+        r#"{"schema_version":"2.0",
+            "slam":{"rkcb":{"play":true,"style":"1430"},
+                    "blackwood":{"notes":"0314 if used for minor suit"}}}"#,
+    )
+    .unwrap();
+    assert!(card.is_on("bidding_conventions/roman_keycard"));
+    assert!(!card.is_on("bidding_conventions/blackwood"));
+    assert!(report.conflicts.is_empty());
+    assert_eq!(
+        card.effective("bidding_conventions/blackwood:notes"),
+        Some(&Value::Text("0314 if used for minor suit".into()))
+    );
+    // With nothing ticked against it, the note alone still plays it.
+    let card = load(
+        &v,
+        r#"{"schema_version":"2.0","slam":{"blackwood":{"notes":"0314"}}}"#,
+    );
+    assert!(card.is_on("bidding_conventions/blackwood"));
 }
 
 #[test]
