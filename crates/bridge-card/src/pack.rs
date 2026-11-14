@@ -156,6 +156,9 @@ pub struct Pack {
     pub functions: Vec<Function>,
     pub migration: Migration3,
     targets: HashMap<String, Target>,
+    /// Treatments marked `independent`: read whatever the convention's own
+    /// switch says (another place the convention is played).
+    independent: std::collections::HashSet<String>,
     /// Spellings of the schema 2 function settings' options, folded.
     option_words: HashMap<(String, String), HashMap<String, String>>,
 }
@@ -327,6 +330,7 @@ impl Pack {
         }
 
         let mut fields: Vec<FieldDef> = Vec::new();
+        let mut independent = std::collections::HashSet::new();
         let mut implementers: BTreeMap<String, Vec<(String, Vec<String>)>> = BTreeMap::new();
         // function → convention → [(treatment address, parts)]
         type When = BTreeMap<String, Vec<(String, Vec<String>)>>;
@@ -406,6 +410,9 @@ impl Pack {
                     }
                 };
                 attrs.remove("taught_under");
+                if attrs.remove("independent") == Some(toml::Value::Boolean(true)) {
+                    independent.insert(address.clone());
+                }
                 // What the convention fills while this treatment is on.
                 for f in strings(attrs.remove("implements").as_ref()) {
                     let (function, part) = match f.split_once('.') {
@@ -591,6 +598,7 @@ impl Pack {
             functions,
             migration,
             targets,
+            independent,
             option_words,
         })
     }
@@ -614,6 +622,13 @@ impl Pack {
             id.to_string(),
             p.switches.values().map(|x| format!("{id}:{x}")).collect(),
         ))
+    }
+
+    /// Whether the treatment at `address` reads whatever its convention's
+    /// switch says: a place the convention is played (section 7 of the
+    /// contract), or one its definition marks `independent`.
+    pub fn stands_alone(&self, address: &str) -> bool {
+        self.independent.contains(address) || self.place_of(address).is_some()
     }
 
     pub fn function(&self, name: &str) -> Option<&Function> {

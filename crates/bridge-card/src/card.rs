@@ -208,7 +208,7 @@ impl Card {
             let is_place = self
                 .vocab
                 .pack()
-                .is_some_and(|p| p.place_of(&field.path).is_some());
+                .is_some_and(|p| p.stands_alone(&field.path));
             if !is_place
                 && self.values.get(c) == Some(&Value::Bool(false))
                 && !self.named_by_setting.contains(c)

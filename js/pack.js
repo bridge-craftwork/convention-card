@@ -87,7 +87,7 @@ export function schema2Fields(pack) {
       const p = back.get(`${id}:${t}`)
       // `implements` says what the convention fills while the treatment is
       // on: not an attribute a schema 2 field had.
-      const { skill, taught_under: also, implements: _fills, ...def } = attrs
+      const { skill, taught_under: also, implements: _fills, independent: _own, brief: _brief, ...def } = attrs
       if (places.has(p)) {
         if (def.default === true) delete def.default
         delete def.context

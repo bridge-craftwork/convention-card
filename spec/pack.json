@@ -1161,6 +1161,7 @@
    "treatments": {
     "over_2nt": {
      "kind": "bool",
+     "independent": true,
      "label": "Minor Suit Stayman over 2NT",
      "level": 6
     }
@@ -1223,6 +1224,7 @@
     },
     "two_s_clubs": {
      "kind": "bool",
+     "independent": true,
      "label": "1NT–2♠ transfer to clubs",
      "level": 5
     },
@@ -1249,6 +1251,7 @@
     },
     "over_2nt": {
      "kind": "bool",
+     "independent": true,
      "label": "Minor-suit transfers over 2NT",
      "level": 6
     },
@@ -1463,6 +1466,7 @@
    "treatments": {
     "after_2nt_rebid": {
      "kind": "bool",
+     "independent": true,
      "label": "NMF after a 2NT rebid",
      "level": 6
     },
@@ -2371,6 +2375,7 @@
     },
     "over_2nt": {
      "kind": "bool",
+     "independent": true,
      "label": "Texas transfers over 2NT (4♦/4♥)",
      "level": 4
     }
