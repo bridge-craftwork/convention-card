@@ -117,7 +117,7 @@ Measured at v0.44.0:
 | ADR-0001 D6: a card never depends on a description file being reachable | Unchanged, and extended to the whole pack |
 | ADR-0001 D7: a custom convention can become standard | Unchanged |
 | ADR-0002 decision 1: a convention is a group with a `play` switch | A convention is a definition; a card's entry holds `play` |
-| ADR-0002 decisions 2 and 3: other groups, and choices | Unchanged in meaning. A choice between two conventions is recorded on their definitions |
+| ADR-0002 decisions 2 and 3: other groups, and choices | Unchanged in meaning. A choice between conventions is no longer a list: each definition says which function it implements (the defence to 1NT, ace asking, a two-level opening), and the editor finds conflicts from those |
 | ADR-0002 decision 4: paths follow conventions, not a printed card | Completed: a definition has no path at all |
 | ADR-0002 decision 5: renames migrate by schema version | Unchanged, with the additive-only promise added |
 | DECISIONS.md 16: variants and extensions | Amended by decision 5 above |
