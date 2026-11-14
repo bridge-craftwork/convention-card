@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "607aab4a13f1ea6036e7b61927d7f56e96bc5244",
+ "source_commit": "ebc58b71094e73b0cd6f2f932c05457dcf054f53",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
