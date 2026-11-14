@@ -87,6 +87,8 @@ pub struct Card {
     /// Values worked out from the rest of the card (a function's
     /// convention), by address. Kept current by every change.
     derived: BTreeMap<String, Value>,
+    /// Conventions a stored schema 2 function setting names (`refresh`).
+    named_by_setting: std::collections::BTreeSet<String>,
 }
 
 /// What happened while loading a card.
@@ -121,6 +123,9 @@ impl LoadReport {
     }
 }
 
+/// What a convention reads as when a stored schema 2 setting names it.
+static ON: Value = Value::Bool(true);
+
 impl Card {
     /// An empty card in `vocab`.
     pub fn new(vocab: &Vocabulary) -> Card {
@@ -134,6 +139,7 @@ impl Card {
             entries: BTreeMap::new(),
             unknown_entries: BTreeMap::new(),
             derived: BTreeMap::new(),
+            named_by_setting: Default::default(),
         }
     }
 
@@ -186,6 +192,11 @@ impl Card {
                 .get(&field.path)
                 .or_else(|| self.derived.get(&field.path));
         }
+        // A convention a stored schema 2 setting names is played, whatever
+        // its own switch says: the setting chose it.
+        if self.named_by_setting.contains(&field.path) {
+            return Some(&ON);
+        }
         self.values
             .get(&field.path)
             .or_else(|| match &field.convention {
@@ -217,6 +228,7 @@ impl Card {
             return;
         };
         let mut derived = BTreeMap::new();
+        let mut named = std::collections::BTreeSet::new();
         for f in self.vocab.registry().fields() {
             let Some(d) = &f.derived else { continue };
             let on = |id: &str| matches!(self.values.get(id), Some(Value::Bool(true)));
@@ -236,6 +248,7 @@ impl Card {
                     let option = pack.function(function).and_then(|f| f.option.get(&word));
                     if let Some(id) = option {
                         derived.insert(f.path.clone(), Value::Text(id.clone()));
+                        named.insert(id.clone());
                         continue;
                     }
                     if word != "other" {
@@ -248,6 +261,7 @@ impl Card {
             }
         }
         self.derived = derived;
+        self.named_by_setting = named;
     }
 
     /// The schema 2 setting that chose the convention for a function's
