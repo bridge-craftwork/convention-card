@@ -166,7 +166,10 @@ impl Card {
     pub fn get(&self, path: &str) -> Option<&Value> {
         let field = self.vocab.registry().get(path)?;
         if field.derived.is_some() {
-            return self.derived.get(&field.path);
+            return self
+                .values
+                .get(&field.path)
+                .or_else(|| self.derived.get(&field.path));
         }
         self.values.get(&field.path)
     }
@@ -178,7 +181,10 @@ impl Card {
     pub fn effective(&self, path: &str) -> Option<&Value> {
         let field = self.vocab.registry().get(path)?;
         if field.derived.is_some() {
-            return self.derived.get(&field.path);
+            return self
+                .values
+                .get(&field.path)
+                .or_else(|| self.derived.get(&field.path));
         }
         self.values
             .get(&field.path)
@@ -212,15 +218,52 @@ impl Card {
         };
         let mut derived = BTreeMap::new();
         for f in self.vocab.registry().fields() {
-            if let Some(d) = &f.derived {
-                let on = |id: &str| matches!(self.values.get(id), Some(Value::Bool(true)));
-                let limited = |id: &str| self.limited_to(id);
-                if let Some(v) = crate::pack::derive(pack, d, &on, &limited) {
-                    derived.insert(f.path.clone(), v);
+            let Some(d) = &f.derived else { continue };
+            let on = |id: &str| matches!(self.values.get(id), Some(Value::Bool(true)));
+            let limited = |id: &str| self.limited_to(id);
+            // A schema 2 setting stored on the card (a `.bbsa` import, a
+            // change by its old path) says which convention fills the
+            // part, as it did in schema 2: its option's convention;
+            // `natural`, none; `other` or unset, whichever the entries say.
+            if let crate::pack::Derived::FunctionId { function, part } = d {
+                let word =
+                    self.legacy_setting(function, part)
+                        .and_then(|p| match self.values.get(&p) {
+                            Some(Value::Text(w)) => Some(w.clone()),
+                            _ => None,
+                        });
+                if let Some(word) = word {
+                    let option = pack.function(function).and_then(|f| f.option.get(&word));
+                    if let Some(id) = option {
+                        derived.insert(f.path.clone(), Value::Text(id.clone()));
+                        continue;
+                    }
+                    if word != "other" {
+                        continue;
+                    }
                 }
+            }
+            if let Some(v) = crate::pack::derive(pack, d, &on, &limited) {
+                derived.insert(f.path.clone(), v);
             }
         }
         self.derived = derived;
+    }
+
+    /// The schema 2 setting that chose the convention for a function's
+    /// part, by its path.
+    fn legacy_setting(&self, function: &str, part: &str) -> Option<String> {
+        self.vocab
+            .registry()
+            .fields()
+            .iter()
+            .find_map(|f| match &f.derived {
+                Some(crate::pack::Derived::FunctionOption {
+                    function: g,
+                    part: q,
+                }) if g == function && q == part => Some(f.path.clone()),
+                _ => None,
+            })
     }
 
     /// Choose the convention that fills a function's part: `value` is its
@@ -261,6 +304,9 @@ impl Card {
         } else {
             format!("{function}.{part}")
         };
+        if let Some(old) = self.legacy_setting(&function, &part) {
+            self.values.remove(&old);
+        }
         let all = f.addresses();
         for (id, _) in &f.implementers {
             let on = matches!(self.values.get(id), Some(Value::Bool(true)));
@@ -322,7 +368,7 @@ impl Card {
             .registry()
             .get(path)
             .ok_or_else(|| Error::new(format!("unknown card field {path}")))?;
-        if let Some(d) = field.derived.clone() {
+        if let Some(d @ crate::pack::Derived::FunctionId { .. }) = field.derived.clone() {
             return self
                 .set_function(&d, &value)
                 .map_err(|e| Error::new(format!("{path}: {e}")));
@@ -695,6 +741,37 @@ impl Card {
 
     /// Write schema 3 `card_data`.
     fn to_json_schema_3(&self) -> Json {
+        // A schema 2 function setting still stored (a `.bbsa` import) is
+        // written as the entry of the convention it chose.
+        let stored: Vec<(String, String)> = self
+            .vocab
+            .registry()
+            .fields()
+            .iter()
+            .filter_map(|f| match &f.derived {
+                Some(crate::pack::Derived::FunctionOption { function, part })
+                    if self.values.contains_key(&f.path) =>
+                {
+                    Some(if part.is_empty() {
+                        (f.path.clone(), function.clone())
+                    } else {
+                        (f.path.clone(), format!("{function}.{part}"))
+                    })
+                }
+                _ => None,
+            })
+            .collect();
+        if !stored.is_empty() {
+            let mut folded = self.clone();
+            for (_, address) in &stored {
+                let chosen = match self.derived.get(address) {
+                    Some(v) => v.clone(),
+                    None => Value::Text("none".into()),
+                };
+                let _ = folded.set(address, chosen);
+            }
+            return folded.to_json_schema_3();
+        }
         let mut top = Map::new();
         top.insert(
             "schema_version".into(),
