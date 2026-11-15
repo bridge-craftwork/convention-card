@@ -518,3 +518,17 @@ fn the_shared_schema_3_cases() {
         );
     }
 }
+
+#[test]
+fn a_function_part_names_the_setting_it_replaced() {
+    let v = bridge_card::standard::vocabulary().unwrap();
+    let moved = v.pack().unwrap().function_settings();
+    assert!(moved.contains(&(
+        "defence_to_1nt.strong".to_string(),
+        "competitive.vs_1nt_strong.system".to_string()
+    )));
+    assert!(moved.contains(&(
+        "opening.2h".to_string(),
+        "two_level.two_hearts.meaning".to_string()
+    )));
+}
