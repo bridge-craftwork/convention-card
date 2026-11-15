@@ -6,7 +6,7 @@
 // Node all read it the same way.
 
 import PACK_DOC from '../spec/pack.json' with { type: 'json' }
-import { schema2Fields, schema2Alerts, addressMaps } from './pack.js'
+import { schema2Fields, schema2Alerts, addressMaps, conventionPaths } from './pack.js'
 import BBSA_MAP_DOC from '../spec/formats/bbsa-map.json' with { type: 'json' }
 import BBO_MAP_DOC from '../spec/formats/bbo-map.json' with { type: 'json' }
 import BBO_SLOTS_DOC from '../spec/formats/bbo-slots.json' with { type: 'json' }
@@ -48,14 +48,18 @@ export function spellings(path) {
 
 /** The pack's address for each field (`bidding_conventions/stayman`, `<id>:<treatment>`), to its path. */
 const BY_ADDRESS = addressMaps(PACK_DOC).path
+/** For a convention with no single box (several places, or chosen by a setting), the path that stands for it. */
+const BY_CONVENTION = conventionPaths(PACK_DOC)
 
 /**
  * The field at `path`, one of its aliases, or its address in the pack
  * (`bidding_conventions/stayman`, which a bidding engine reports), with its
- * canonical `path`; or undefined.
+ * canonical `path`; or undefined. A convention with no single box (Texas,
+ * played over 1NT and over 2NT; Meckwell, chosen as the defence to 1NT)
+ * reads as the box that best stands for it.
  */
 export function field(path) {
-  const canonical = CANONICAL.get(path) ?? CANONICAL.get(BY_ADDRESS.get(path))
+  const canonical = CANONICAL.get(path) ?? CANONICAL.get(BY_ADDRESS.get(path)) ?? CANONICAL.get(BY_CONVENTION.get(path))
   return canonical && { path: canonical, ...FIELDS[canonical] }
 }
 
