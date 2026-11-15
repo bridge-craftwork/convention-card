@@ -4,6 +4,9 @@
 // A fragment never reaches a server. The card is compressed (deflate) and
 // written as base64url behind a version prefix: `v1.<data>`.
 
+import { upgradeCardData } from './migrate.js'
+import { toSchema3 } from './schema3.js'
+
 const PREFIX = 'v1.'
 
 function toBase64Url(bytes) {
@@ -25,7 +28,8 @@ async function pipe(bytes, stream) {
 
 /** A card record ({ name, description, card_data }) as a URL-safe string. */
 export async function encodeCardForUrl({ name = null, description = null, card_data }) {
-  const json = JSON.stringify({ name, description, card_data })
+  // As a card is stored: card schema 3.
+  const json = JSON.stringify({ name, description, card_data: toSchema3(upgradeCardData(card_data || {})) })
   const packed = await pipe(new TextEncoder().encode(json), new CompressionStream('deflate-raw'))
   return PREFIX + toBase64Url(packed)
 }

@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { ref, nextTick } from 'vue'
 import { useCardEditor } from '../useCardEditor.js'
+import { upgradeCardData } from '../../../../js/migrate.js'
+
+// The card as storage holds it now (schema 3), read as the editor reads it.
+const kept = storage => upgradeCardData(storage.versions.at(-1))
 
 // A storage adapter in memory, with the shape useCardEditor.js describes.
 function memoryStorage({ signedIn = true } = {}) {
@@ -58,8 +62,11 @@ describe('a shared card saved while a partner saved too', () => {
     ed.writeField('notrump.one_nt.range_min', 14)
     storage.partnerSaves(d => { d.notrump.stayman.puppet_2nt = true })
     expect(await ed.saveCard()).toBe(true)
-    expect(storage.versions.at(-1).notrump).toEqual({ one_nt: { range_min: 14, range_max: 17 }, stayman: { play: true, puppet_2nt: true } })
+    expect(kept(storage).notrump).toMatchObject({ one_nt: { range_min: 14, range_max: 17 }, stayman: { play: true, puppet_2nt: true } })
     expect(ed.currentCard.value.version).toBe(3)
+    // What storage was given to keep is card schema 3.
+    expect(storage.versions.at(-1).schema_version).toBe('3.0')
+    expect(storage.versions.at(-1).conventions['bidding_conventions/stayman']).toBeDefined()
     expect(ed.pendingMerge.value).toBeNull()
   })
 
@@ -75,7 +82,7 @@ describe('a shared card saved while a partner saved too', () => {
     expect(ed.pendingMerge.value.conflicts).toEqual([{ path: 'notrump.one_nt.range_min', base: 15, mine: 14, theirs: 16 }])
     expect(storage.versions).toHaveLength(2)
     expect(await ed.finishMerge({ 'notrump.one_nt.range_min': 'theirs' })).toBe(true)
-    expect(storage.versions.at(-1).notrump).toEqual({ one_nt: { range_min: 16, range_max: 16 }, stayman: { play: true, garbage: true } })
+    expect(kept(storage).notrump).toMatchObject({ one_nt: { range_min: 16, range_max: 16 }, stayman: { play: true, garbage: true } })
   })
 
   it('keeps the edits when the person goes on editing instead', async () => {

@@ -361,6 +361,7 @@ import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportRecord } from '../../../js/cardBundle.js'
 import { mergeImported } from './importMerge.js'
+import { schema3Storage } from './storedForm.js'
 import { askInDialog, tellMatched } from './importDialogs.js'
 import ChoiceDialog from './ChoiceDialog.vue'
 import { checkCard } from '../../../js/checkCard.js'
@@ -754,7 +755,7 @@ async function onImportFile(event) {
     const pdfNotes = records[0]?.format === 'pdf'
       ? (await import('../../../js/acblPdfImport.js')).pdfReportDiagnostics(records[0].report)
       : []
-    const merged = await mergeImported(records, props.storage, askInDialog(dialog.value))
+    const merged = await mergeImported(records, schema3Storage(props.storage), askInDialog(dialog.value))
     await cc.loadUserCardLinks()
     if (merged.lastId) await cc.switchCard(merged.lastId)
     importNotes.value = [...pdfNotes, ...importReportNotes(records)]

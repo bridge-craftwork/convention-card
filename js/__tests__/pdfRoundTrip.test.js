@@ -7,6 +7,7 @@ import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
 import { importBboJson, exportBboCard } from '../bbo.js'
 import { importCard } from '../importCard.js'
 import { upgradeCardData } from '../migrate.js'
+import { toSchema3 } from '../schema3.js'
 
 // A card through a PDF and back: one nobody edited returns as it went in, so
 // the extension can tell that the copy on BBO is unchanged, and any change
@@ -71,7 +72,7 @@ describe.each(TEMPLATES)('a BBO card through an unedited PDF (%s)', template => 
     const card = make()
     const { read } = await readBack(await makePdf(card, template))
     // A card is read into the working form (js/migrate.js), as importCard reads the BBO card itself.
-    expect(read.card_data).toEqual(upgradeCardData(importBboJson({ cards: [card] }).card_data))
+    expect(toSchema3(read.card_data)).toEqual(toSchema3(upgradeCardData(importBboJson({ cards: [card] }).card_data)))
     expect(read.report).toMatchObject({ source: 'card', edits: [] })
     expect(read.implied).toBeUndefined()
     expect(read.recognised).toBeUndefined()

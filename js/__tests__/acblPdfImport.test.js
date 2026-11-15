@@ -6,6 +6,7 @@ import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../assets.js'
 import { renderAcblPdfBytes, ACBL_FIELD_MAPS } from '../acblClassicFillPdf.js'
 import { readCardFromPdf, mergeTyped } from '../acblPdfImport.js'
 import { upgradeCardData } from '../migrate.js'
+import { toSchema3 } from '../schema3.js'
 
 // Reading a card back from an ACBL PDF, with what was changed in its boxes
 // after export. The edits are made the way a PDF editor makes them: pdf-lib
@@ -46,7 +47,8 @@ describe.each(TEMPLATES)('the %s card', template => {
       expect([which, read.report.edits, read.report.skipped]).toEqual([which, [], []])
       expect(read.report.source).toBe('card')
       expect(read.report.migrated).toBe(null)
-      expect(read.card_data).toEqual(upgradeCardData(card))
+      // The embedded card is schema 3: the same card, under one spelling of each field.
+      expect(toSchema3(read.card_data)).toEqual(toSchema3(upgradeCardData(card)))
       expect(read.card_data.schema_version).toBe('2.0')
     }
   })
