@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "01ccdf5831bf131313c1d90451264699d37fb4a5",
+ "source_commit": "3c75320e4426387569c0147fe2ffd4a555c18b8c",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -3346,7 +3346,28 @@
      "site": "Bridge Bum",
      "url": "https://www.bridgebum.com/jordan_2nt.php"
     }
-   ]
+   ],
+   "treatments": {
+    "over_major": {
+     "kind": "bool",
+     "implements": [
+      "two_nt_over_takeout_double.major"
+     ],
+     "label": "Jordan (Truscott) 2NT",
+     "desc": "1M–(X)–2NT shows 4+ card support and 10+ points",
+     "default": true,
+     "level": 5
+    },
+    "over_minor": {
+     "kind": "bool",
+     "implements": [
+      "two_nt_over_takeout_double.minor"
+     ],
+     "label": "Vs takeout double: 2NT raise of a minor, limit or better",
+     "level": 6,
+     "choice": "vs_to_double.two_nt_raise_minors"
+    }
+   }
   },
   "competitive_bidding/landy": {
    "id": "competitive_bidding/landy",
@@ -7509,13 +7530,6 @@
     "skill": "competitive_bidding/jordan_2nt",
     "level": 6
    },
-   "two_nt_raise_minors.limit_plus": {
-    "kind": "bool",
-    "label": "Vs takeout double: 2NT raise of a minor, limit or better",
-    "skill": "competitive_bidding/jordan_2nt",
-    "level": 6,
-    "choice": "vs_to_double.two_nt_raise_minors"
-   },
    "two_nt_raise_minors.limit": {
     "kind": "bool",
     "label": "Vs takeout double: 2NT raise of a minor, limit",
@@ -7834,6 +7848,13 @@
   },
   "checkback_after_1nt_rebid": {
    "name": "Responder's artificial 2♣ or 2♦ after a 1NT rebid"
+  },
+  "two_nt_over_takeout_double": {
+   "name": "Responder's 2NT over their takeout double",
+   "parts": [
+    "major",
+    "minor"
+   ]
   }
  },
  "levels": {
@@ -10983,7 +11004,6 @@
     "competitive.dont.play": "competitive_bidding/dont",
     "competitive.fit_showing_jumps.play": "competitive_bidding/fit_showing_jumps",
     "competitive.ghestem.play": "competitive_bidding/ghestem",
-    "competitive.jordan_2nt.play": "competitive_bidding/jordan_2nt",
     "competitive.lead_directing_double.play": "competitive_bidding/lead_directing_doubles",
     "competitive.leaping_michaels.play": "competitive_bidding/leaping_michaels",
     "competitive.michaels.play": "competitive_bidding/michaels",
@@ -11209,6 +11229,13 @@
      }
     },
     {
+     "convention": "competitive_bidding/jordan_2nt",
+     "switches": {
+      "competitive.jordan_2nt.play": "over_major",
+      "vs_to_double.two_nt_raise_minors.limit_plus": "over_minor"
+     }
+    },
+    {
      "convention": "bidding_conventions/dopi_ropi",
      "switches": {
       "slam.dopi": "dopi",
@@ -11322,7 +11349,7 @@
     "other_conventions.gerber.play": "bidding_conventions/gerber",
     "other_conventions.kickback.play": "bidding_conventions/kickback",
     "vs_preempts.lebensohl_response": "competitive_bidding/lebensohl:after_weak_two_double",
-    "vs_to_double.two_nt_raise_majors.limit_plus": "competitive_bidding/jordan_2nt"
+    "vs_to_double.two_nt_raise_majors.limit_plus": "competitive_bidding/jordan_2nt:over_major"
    }
   }
  }
