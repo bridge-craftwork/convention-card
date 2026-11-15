@@ -777,14 +777,20 @@ impl Pack {
 
         // A box that stood for more than it said.
         for sf in &self.migration.stood_for {
-            let Some((id, t)) = sf.treatment.split_once(':') else { continue };
-            let Some(e) = entries.get_mut(id) else { continue };
+            let Some((id, t)) = sf.treatment.split_once(':') else {
+                continue;
+            };
+            let Some(e) = entries.get_mut(id) else {
+                continue;
+            };
             if e.treatments.get(t).and_then(Json::as_bool) != Some(true) {
                 continue;
             }
             for m in &sf.means {
                 if let Some((_, name)) = m.split_once(':') {
-                    e.treatments.entry(name.to_string()).or_insert(Json::Bool(true));
+                    e.treatments
+                        .entry(name.to_string())
+                        .or_insert(Json::Bool(true));
                 }
             }
         }
