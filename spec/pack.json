@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "3c75320e4426387569c0147fe2ffd4a555c18b8c",
+ "source_commit": "def3372c0d77588c4f86b39abee44c50be9717fa",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -24,31 +24,46 @@
    "id": "basic_bidding/hand_evaluation",
    "name": "Hand Evaluation",
    "source": "lessons",
-   "level": 1
+   "level": 1,
+   "contexts": [
+    "general"
+   ]
   },
   "basic_bidding/major_suit_openings": {
    "id": "basic_bidding/major_suit_openings",
    "name": "Major Suit Openings",
    "source": "taxonomy",
-   "level": 1
+   "level": 1,
+   "contexts": [
+    "major_openings"
+   ]
   },
   "basic_bidding/minor_suit_openings": {
    "id": "basic_bidding/minor_suit_openings",
    "name": "Minor Suit Openings",
    "source": "taxonomy",
-   "level": 1
+   "level": 1,
+   "contexts": [
+    "minor_openings"
+   ]
   },
   "basic_bidding/notrump_openings": {
    "id": "basic_bidding/notrump_openings",
    "name": "Notrump Openings",
    "source": "taxonomy",
-   "level": 1
+   "level": 1,
+   "contexts": [
+    "notrump_openings"
+   ]
   },
   "bidding_conventions/bart": {
    "id": "bidding_conventions/bart",
    "name": "BART",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "major_openings"
+   ],
    "names": [
     "BART"
    ],
@@ -437,6 +452,9 @@
    "name": "Forcing 1NT",
    "source": "proposed",
    "level": 4,
+   "contexts": [
+    "major_openings"
+   ],
    "names": [
     "Forcing 1NT",
     "Forcing NT",
@@ -675,6 +693,9 @@
    "name": "Grand slam force",
    "source": "proposed",
    "level": 6,
+   "contexts": [
+    "slam"
+   ],
    "names": [
     "Grand slam force",
     "GSF",
@@ -903,7 +924,10 @@
    "id": "bidding_conventions/jacoby_2nt_splinters",
    "name": "Jacoby 2NT & Splinters",
    "source": "taxonomy",
-   "level": 4
+   "level": 4,
+   "contexts": [
+    "major_openings"
+   ]
   },
   "bidding_conventions/jacoby_transfers": {
    "id": "bidding_conventions/jacoby_transfers",
@@ -1057,6 +1081,9 @@
    "name": "Kokish game tries",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "major_openings"
+   ],
    "names": [
     "Kokish game tries"
    ],
@@ -1075,6 +1102,9 @@
    "name": "Lars Multi 2♦",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "preemptive_openings"
+   ],
    "names": [
     "Lars Multi",
     "Lars Multi 2♦"
@@ -1086,6 +1116,9 @@
    "name": "Last Train",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "slam"
+   ],
    "names": [
     "Last Train",
     "Last train to Clarksville"
@@ -1391,6 +1424,9 @@
    "name": "Muiderberg twos",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "preemptive_openings"
+   ],
    "implements": [
     "opening.2h",
     "opening.2s"
@@ -1578,6 +1614,9 @@
    "name": "Over-splinters",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "major_openings"
+   ],
    "names": [
     "Over-splinter",
     "Over-splinters"
@@ -1639,6 +1678,9 @@
    "name": "1M–3NT picture raise",
    "source": "proposed",
    "level": 7,
+   "contexts": [
+    "major_openings"
+   ],
    "names": [
     "Picture 3NT",
     "1M-3NT",
@@ -1708,6 +1750,10 @@
    "name": "Keycard over preempts",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "slam",
+    "preemptive_openings"
+   ],
    "names": [
     "Preempt keycard",
     "Keycard over preempts",
@@ -1727,7 +1773,10 @@
    "id": "bidding_conventions/preemptive_bids",
    "name": "Preemptive Bids",
    "source": "taxonomy",
-   "level": 3
+   "level": 3,
+   "contexts": [
+    "preemptive_openings"
+   ]
   },
   "bidding_conventions/puppet_stayman": {
    "id": "bidding_conventions/puppet_stayman",
@@ -1800,6 +1849,9 @@
    "name": "Range Stayman",
    "source": "proposed",
    "level": 6,
+   "contexts": [
+    "notrump_openings"
+   ],
    "names": [
     "Range Stayman",
     "Size ask",
@@ -1839,6 +1891,9 @@
    "name": "Reverse Bids",
    "source": "taxonomy",
    "level": 4,
+   "contexts": [
+    "responses_rebids"
+   ],
    "names": [
     "Reverse",
     "Reverses",
@@ -2027,6 +2082,9 @@
    "name": "Schuler shift",
    "source": "proposed",
    "level": 6,
+   "contexts": [
+    "major_openings"
+   ],
    "names": [
     "Schuler shift",
     "Schuler"
@@ -2038,6 +2096,9 @@
    "name": "Semi-forcing 1NT",
    "source": "proposed",
    "level": 5,
+   "contexts": [
+    "major_openings"
+   ],
    "names": [
     "Semi-forcing 1NT",
     "Semi-forcing NT",
@@ -2083,6 +2144,9 @@
    "name": "Six-key Roman Keycard",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "slam"
+   ],
    "names": [
     "Six-key RKCB",
     "6-key RKC",
@@ -2307,6 +2371,9 @@
    "name": "Strong 2♣",
    "source": "taxonomy",
    "level": 3,
+   "contexts": [
+    "preemptive_openings"
+   ],
    "implements": [
     "opening.2c"
    ],
@@ -2540,6 +2607,10 @@
    "name": "Tislevoll slam try",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "after_interference",
+    "slam"
+   ],
    "names": [
     "Tislevoll"
    ],
@@ -3021,13 +3092,19 @@
    "id": "competitive_bidding/advancing_overcalls",
    "name": "Responding to Overcalls",
    "source": "lessons",
-   "level": 3
+   "level": 3,
+   "contexts": [
+    "overcalls"
+   ]
   },
   "competitive_bidding/anti_lead_directing_doubles": {
    "id": "competitive_bidding/anti_lead_directing_doubles",
    "name": "Anti-lead-directing doubles",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "doubles"
+   ],
    "names": [
     "Anti-lead-directing double",
     "Anti lead directing"
@@ -3047,6 +3124,9 @@
    "name": "Balancing",
    "source": "lessons",
    "level": 4,
+   "contexts": [
+    "overcalls"
+   ],
    "confirm": true
   },
   "competitive_bidding/bromad": {
@@ -3110,6 +3190,9 @@
    "name": "Collante",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "after_interference"
+   ],
    "names": [
     "Collante"
    ],
@@ -3120,6 +3203,9 @@
    "name": "CRASH",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "vs_openings"
+   ],
    "names": [
     "CRASH"
    ],
@@ -3137,6 +3223,9 @@
    "name": "Defending against 1NT",
    "source": "proposed",
    "level": 5,
+   "contexts": [
+    "vs_notrump"
+   ],
    "names": [
     "Defense to 1NT",
     "Defence to 1NT",
@@ -3148,7 +3237,10 @@
    "id": "competitive_bidding/defense_vs_preempts",
    "name": "Defending against Preempts",
    "source": "proposed",
-   "level": 4
+   "level": 4,
+   "contexts": [
+    "vs_openings"
+   ]
   },
   "competitive_bidding/dont": {
    "id": "competitive_bidding/dont",
@@ -3204,6 +3296,9 @@
    "name": "Equal level conversion",
    "source": "proposed",
    "level": 6,
+   "contexts": [
+    "doubles"
+   ],
    "names": [
     "Equal level conversion",
     "ELC"
@@ -3222,6 +3317,10 @@
    "name": "Exit transfers",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "after_interference",
+    "notrump_openings"
+   ],
    "names": [
     "Exit transfers",
     "Runout after 1NT doubled"
@@ -3269,6 +3368,9 @@
    "name": "Forcing pass",
    "source": "proposed",
    "level": 6,
+   "contexts": [
+    "after_interference"
+   ],
    "names": [
     "Forcing pass"
    ],
@@ -3307,6 +3409,9 @@
    "name": "Good/bad 2NT",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "after_interference"
+   ],
    "names": [
     "Good/bad 2NT",
     "Good-bad 2NT",
@@ -3389,7 +3494,10 @@
    "id": "competitive_bidding/law_of_total_tricks",
    "name": "The Law of Total Tricks",
    "source": "proposed",
-   "level": 4
+   "level": 4,
+   "contexts": [
+    "general"
+   ]
   },
   "competitive_bidding/lead_directing_doubles": {
    "id": "competitive_bidding/lead_directing_doubles",
@@ -3529,6 +3637,9 @@
    "name": "Mathe",
    "source": "proposed",
    "level": 7,
+   "contexts": [
+    "vs_openings"
+   ],
    "names": [
     "Mathe",
     "Mathe over 1♣"
@@ -3697,6 +3808,9 @@
    "name": "Michaels & Unusual 2NT",
    "source": "taxonomy",
    "level": 4,
+   "contexts": [
+    "overcalls"
+   ],
    "names": [
     "Michaels",
     "Michaels cue bid",
@@ -3736,6 +3850,9 @@
    "name": "Mitchell Stayman",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "after_interference"
+   ],
    "names": [
     "Mitchell Stayman"
    ],
@@ -3892,6 +4009,9 @@
    "name": "Overcalls",
    "source": "taxonomy",
    "level": 2,
+   "contexts": [
+    "overcalls"
+   ],
    "confirm": true
   },
   "competitive_bidding/raptor": {
@@ -3963,6 +4083,9 @@
    "name": "Rodrigue",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "after_interference"
+   ],
    "names": [
     "Rodrigue"
    ],
@@ -3973,6 +4096,9 @@
    "name": "Rosenkranz double",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "overcalls"
+   ],
    "names": [
     "Rosenkranz",
     "Rosenkranz double",
@@ -4159,6 +4285,9 @@
    "name": "Spear",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "vs_openings"
+   ],
    "names": [
     "Spear"
    ],
@@ -4286,6 +4415,9 @@
    "name": "Takeout Doubles",
    "source": "taxonomy",
    "level": 2,
+   "contexts": [
+    "doubles"
+   ],
    "names": [
     "Takeout double",
     "Takeout doubles",
@@ -4316,6 +4448,9 @@
    "name": "Thrump double",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "after_interference"
+   ],
    "names": [
     "Thrump double",
     "Thrump X",
@@ -4335,6 +4470,9 @@
    "name": "Transfer advances",
    "source": "proposed",
    "level": 9,
+   "contexts": [
+    "overcalls"
+   ],
    "names": [
     "Transfer advances",
     "Transfer advances of overcalls",
@@ -4493,6 +4631,9 @@
    "name": "Defensive Signals",
    "source": "taxonomy",
    "level": 2,
+   "contexts": [
+    "signals"
+   ],
    "names": [
     "Standard signals",
     "Attitude",
@@ -4584,6 +4725,9 @@
    "name": "Opening Leads",
    "source": "taxonomy",
    "level": 2,
+   "contexts": [
+    "leads"
+   ],
    "names": [
     "Opening leads",
     "Fourth best",
@@ -4632,6 +4776,9 @@
    "name": "Rusinow leads",
    "source": "proposed",
    "level": 8,
+   "contexts": [
+    "leads"
+   ],
    "names": [
     "Rusinow",
     "Rusinow leads"
@@ -4792,31 +4939,46 @@
    "id": "partnership_bidding/basic_bidding",
    "name": "Basic Bidding (Partnership)",
    "source": "taxonomy",
-   "level": 1
+   "level": 1,
+   "contexts": [
+    "general"
+   ]
   },
   "partnership_bidding/basic_major": {
    "id": "partnership_bidding/basic_major",
    "name": "Basic Major (Partnership)",
    "source": "taxonomy",
-   "level": 1
+   "level": 1,
+   "contexts": [
+    "major_openings"
+   ]
   },
   "partnership_bidding/basic_notrump": {
    "id": "partnership_bidding/basic_notrump",
    "name": "Basic Notrump (Partnership)",
    "source": "taxonomy",
-   "level": 2
+   "level": 2,
+   "contexts": [
+    "notrump_openings"
+   ]
   },
   "partnership_bidding/blackwood": {
    "id": "partnership_bidding/blackwood",
    "name": "Blackwood (Partnership)",
    "source": "taxonomy",
-   "level": 2
+   "level": 2,
+   "contexts": [
+    "slam"
+   ]
   },
   "partnership_bidding/jacoby_2nt": {
    "id": "partnership_bidding/jacoby_2nt",
    "name": "Jacoby 2NT (Partnership)",
    "source": "taxonomy",
-   "level": 4
+   "level": 4,
+   "contexts": [
+    "major_openings"
+   ]
   },
   "partnership_bidding/miscellaneous": {
    "id": "partnership_bidding/miscellaneous",
@@ -4828,13 +4990,19 @@
    "id": "partnership_bidding/negative_doubles",
    "name": "Negative Doubles (Partnership)",
    "source": "taxonomy",
-   "level": 3
+   "level": 3,
+   "contexts": [
+    "doubles"
+   ]
   },
   "partnership_bidding/overcalls": {
    "id": "partnership_bidding/overcalls",
    "name": "Overcalls (Partnership)",
    "source": "taxonomy",
-   "level": 2
+   "level": 2,
+   "contexts": [
+    "overcalls"
+   ]
   },
   "partnership_bidding/passed_hand_bidding": {
    "id": "partnership_bidding/passed_hand_bidding",
@@ -4846,43 +5014,64 @@
    "id": "partnership_bidding/rebids",
    "name": "Rebids by Opener or Responder",
    "source": "lessons",
-   "level": 3
+   "level": 3,
+   "contexts": [
+    "responses_rebids"
+   ]
   },
   "partnership_bidding/responders_rebid": {
    "id": "partnership_bidding/responders_rebid",
    "name": "Responder's Rebid",
    "source": "lessons",
-   "level": 5
+   "level": 5,
+   "contexts": [
+    "responses_rebids"
+   ]
   },
   "partnership_bidding/roman_key_card": {
    "id": "partnership_bidding/roman_key_card",
    "name": "Roman Key Card (Partnership)",
    "source": "taxonomy",
-   "level": 4
+   "level": 4,
+   "contexts": [
+    "slam"
+   ]
   },
   "partnership_bidding/slam_bidding": {
    "id": "partnership_bidding/slam_bidding",
    "name": "Slam Bidding",
    "source": "lessons",
-   "level": 5
+   "level": 5,
+   "contexts": [
+    "slam"
+   ]
   },
   "partnership_bidding/stayman_transfers": {
    "id": "partnership_bidding/stayman_transfers",
    "name": "Stayman & Transfers (Partnership)",
    "source": "taxonomy",
-   "level": 3
+   "level": 3,
+   "contexts": [
+    "notrump_openings"
+   ]
   },
   "partnership_bidding/two_club": {
    "id": "partnership_bidding/two_club",
    "name": "Two Club (Partnership)",
    "source": "taxonomy",
-   "level": 3
+   "level": 3,
+   "contexts": [
+    "preemptive_openings"
+   ]
   },
   "partnership_bidding/weak_twos": {
    "id": "partnership_bidding/weak_twos",
    "name": "Weak Twos (Partnership)",
    "source": "taxonomy",
-   "level": 3
+   "level": 3,
+   "contexts": [
+    "preemptive_openings"
+   ]
   },
   "practice_deals/100_miscellaneous": {
    "id": "practice_deals/100_miscellaneous",
