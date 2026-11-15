@@ -29,7 +29,20 @@ const CORRECTED = new Set([
   'bidding_conventions/reverse_flannery contexts',
   // Its 2♦ treatment was left from that opening: retired, name kept.
   'two_level.reverse_flannery.two_d retired',
+  // Phase 6: a second box for the same agreement is now a spelling of the
+  // convention's own switch (SAME_BOX below).
+  'preempts.namyats.play aliases',
+  'competitive.cue_bid_raise.play aliases',
+  'competitive.unusual_2nt.play aliases',
 ])
+// Boxes the pack reads as another box's agreement (Rick Wilson, 2026-11-14):
+// the 4♣/4♦ transfer is Namyats, the support cuebid is the cue-bid raise,
+// and the jump 2NT for the two lowest unbid is the Unusual 2NT.
+const SAME_BOX = {
+  'preempts.transfer_4_minor': 'preempts.namyats.play',
+  'overcalls.responses.support_cuebid': 'competitive.cue_bid_raise.play',
+  'nt_overcalls.jump_2nt_lowest_unbid': 'competitive.unusual_2nt.play',
+}
 const without = (name, def) =>
   Object.fromEntries(Object.entries(def).filter(([k]) => !CORRECTED.has(`${name} ${k}`)))
 const tidy = def => ({
@@ -42,11 +55,13 @@ describe('the pack, read as card schema 2', () => {
   const got = schema2Fields(PACK)
 
   it('gives every field spec/fields.toml had, in the same order', () => {
-    expect(Object.keys(got)).toEqual(Object.keys(OLD))
+    expect(Object.keys(got)).toEqual(Object.keys(OLD).filter(p => !(p in SAME_BOX)))
+    for (const [box, same] of Object.entries(SAME_BOX)) expect(got[same].aliases).toContain(box)
   })
 
   it('gives each field the same attributes', () => {
     for (const [path, def] of Object.entries(OLD)) {
+      if (path in SAME_BOX) continue
       expect([path, without(path, tidy(got[path]))]).toEqual([path, without(path, tidy(def))])
     }
   })
@@ -56,9 +71,12 @@ describe('the pack, read as card schema 2', () => {
     // Every alert rule this repository had, in order; the pack has added
     // some since (Reverse Flannery's jumps over one of a minor) and dropped
     // the three for the 2♦ opening Reverse Flannery never was.
-    const had = new Set(ALERTS_DOC.alert.map(a => JSON.stringify(a)))
-    const kept = ALERTS_DOC.alert.filter(a => a.fields[0] !== 'two_level.reverse_flannery.two_d')
-    expect(ALERTS_DOC.alert.length - kept.length).toBe(3)
+    // A rule that named a box and its twin (SAME_BOX) names the one left.
+    const one = a => ({ ...a, fields: [...new Set(a.fields.map(f => SAME_BOX[f] ?? f))] })
+    const was = ALERTS_DOC.alert.map(one)
+    const had = new Set(was.map(a => JSON.stringify(a)))
+    const kept = was.filter(a => a.fields[0] !== 'two_level.reverse_flannery.two_d')
+    expect(was.length - kept.length).toBe(3)
     expect(alerts.alert.filter(a => had.has(JSON.stringify(a)))).toEqual(kept)
     const added = alerts.alert.filter(a => !had.has(JSON.stringify(a)))
     expect(added.map(a => a.fields[0]).sort()).toEqual([
