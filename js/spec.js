@@ -6,7 +6,7 @@
 // Node all read it the same way.
 
 import PACK_DOC from '../spec/pack.json' with { type: 'json' }
-import { schema2Fields, schema2Alerts } from './pack.js'
+import { schema2Fields, schema2Alerts, addressMaps } from './pack.js'
 import BBSA_MAP_DOC from '../spec/formats/bbsa-map.json' with { type: 'json' }
 import BBO_MAP_DOC from '../spec/formats/bbo-map.json' with { type: 'json' }
 import BBO_SLOTS_DOC from '../spec/formats/bbo-slots.json' with { type: 'json' }
@@ -46,9 +46,16 @@ export function spellings(path) {
   return canonical && [canonical, ...(FIELDS[canonical].aliases || [])]
 }
 
-/** The field at `path` or one of its aliases, with its canonical `path`; or undefined. */
+/** The pack's address for each field (`bidding_conventions/stayman`, `<id>:<treatment>`), to its path. */
+const BY_ADDRESS = addressMaps(PACK_DOC).path
+
+/**
+ * The field at `path`, one of its aliases, or its address in the pack
+ * (`bidding_conventions/stayman`, which a bidding engine reports), with its
+ * canonical `path`; or undefined.
+ */
 export function field(path) {
-  const canonical = CANONICAL.get(path)
+  const canonical = CANONICAL.get(path) ?? CANONICAL.get(BY_ADDRESS.get(path))
   return canonical && { path: canonical, ...FIELDS[canonical] }
 }
 

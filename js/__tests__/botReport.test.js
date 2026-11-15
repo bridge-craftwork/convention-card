@@ -49,4 +49,10 @@ describe('botReport with the conventions the bot implements', () => {
   it('does not play one it has no module for', () => {
     expect(byId(r, 'bidding_conventions/bergen_raises')).toMatchObject({ status: 'gap', module: false })
   })
+
+  it('reads a setting named by its address in the pack as the same field', () => {
+    const byPath = { read: ['notrump.stayman.play'], ignored: ['competitive.michaels.play'] }
+    const byAddress = { read: ['bidding_conventions/stayman'], ignored: ['competitive_bidding/michaels'] }
+    expect(botReport({}, byAddress)).toEqual(botReport({}, byPath))
+  })
 })
