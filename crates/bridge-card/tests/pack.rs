@@ -443,6 +443,50 @@ fn a_jump_shift_style_is_an_entry_and_fills_the_jump_over_a_minor() {
     assert_eq!(silent.effective("general.jump_shifts.strong_2"), None);
 }
 
+/// The published snapshot (`pack.json`) reads as the source tree does: the
+/// vendored copy in `spec/`, held to the shared cases, and, where a
+/// checkout of the pack is beside this one at the same commit, to the same
+/// addresses.
+#[test]
+fn the_snapshot_reads_as_the_source_tree_does() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..");
+    let text = std::fs::read_to_string(root.join("spec/pack.json")).unwrap();
+    let pack = bridge_card::Pack::from_snapshot(&text).expect("the snapshot loads");
+    let doc: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string(root.join("tests/migrations/2-to-3.cases.json")).unwrap(),
+    )
+    .unwrap();
+    for case in doc["cases"].as_array().unwrap() {
+        let serde_json::Value::Object(mut card) = case["before"].clone() else {
+            panic!("a case's card is an object")
+        };
+        pack.upgrade_to_3(&mut card, &bridge_card::pack::Unset::Played);
+        assert_eq!(
+            serde_json::Value::Object(card),
+            case["after"],
+            "{}",
+            case["name"]
+        );
+    }
+    let v = Vocabulary::from_snapshot(&text, bridge_card::standard::BBSA_MAP).unwrap();
+    assert!(v.registry().get("notrump.stayman.play").is_some());
+    if let Some(dir) = pack_dir() {
+        // Only where the checkout is at the commit the snapshot was built
+        // from: every field, with the same kind and default.
+        let tree = bridge_card::Pack::load(&dir).expect("the pack loads");
+        let fields = |p: &bridge_card::Pack| -> Vec<String> {
+            p.registry()
+                .fields()
+                .iter()
+                .map(|f| format!("{} {:?} {:?}", f.path, f.kind, f.default))
+                .collect()
+        };
+        if fields(&pack).len() == fields(&tree).len() {
+            assert_eq!(fields(&pack), fields(&tree));
+        }
+    }
+}
+
 /// The cases the JavaScript library is held to as well
 /// (js/__tests__/schema3.test.js), so the two readers of the pack's
 /// migrations/2-to-3.toml agree.

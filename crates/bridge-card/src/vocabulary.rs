@@ -110,6 +110,18 @@ impl Vocabulary {
         Vocabulary::from_pack(pack, bbsa_map, &format!("{h:016x}"))
     }
 
+    /// The vocabulary of a pack's published snapshot (`pack.json`). Its id
+    /// is a hash of the snapshot's text.
+    pub fn from_snapshot(snapshot: &str, bbsa_map: &str) -> Result<Vocabulary, Error> {
+        let pack = crate::Pack::from_snapshot(snapshot)?;
+        let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+        for b in snapshot.bytes().chain(bbsa_map.bytes()) {
+            h ^= b as u64;
+            h = h.wrapping_mul(0x0000_0100_0000_01b3);
+        }
+        Vocabulary::from_pack(pack, bbsa_map, &format!("{h:016x}"))
+    }
+
     /// The pack this vocabulary came from, if it came from one.
     pub fn pack(&self) -> Option<&crate::Pack> {
         self.0.pack.as_ref()

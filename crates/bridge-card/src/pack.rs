@@ -273,6 +273,90 @@ impl Pack {
                 }
             }
         }
+        Pack::build(manifest, functions_doc, migration, defs, settings)
+    }
+
+    /// Build a pack from its published snapshot (`pack.json`, as
+    /// bridge-common-conventions' `published` branch carries it): the same
+    /// files, already parsed. What a reader without the source tree has.
+    pub fn from_snapshot(text: &str) -> Result<Pack, Error> {
+        let in_file = |e: Error| e.in_file("pack.json");
+        let doc: Json =
+            serde_json::from_str(text).map_err(|e| in_file(Error::new(e.to_string())))?;
+        fn table(v: Option<&Json>) -> toml::Table {
+            match v.map(to_toml) {
+                Some(Some(toml::Value::Table(t))) => t,
+                _ => toml::Table::new(),
+            }
+        }
+        /// JSON as the TOML it was parsed from; a null (TOML has none) is
+        /// left out.
+        fn to_toml(v: &Json) -> Option<toml::Value> {
+            Some(match v {
+                Json::Null => return None,
+                Json::Bool(b) => toml::Value::Boolean(*b),
+                Json::Number(n) => match n.as_i64() {
+                    Some(i) => toml::Value::Integer(i),
+                    None => toml::Value::Float(n.as_f64()?),
+                },
+                Json::String(s) => toml::Value::String(s.clone()),
+                Json::Array(a) => toml::Value::Array(a.iter().filter_map(to_toml).collect()),
+                Json::Object(o) => toml::Value::Table(
+                    o.iter()
+                        .filter_map(|(k, v)| Some((k.clone(), to_toml(v)?)))
+                        .collect(),
+                ),
+            })
+        }
+        if doc.get("schema").and_then(Json::as_str) != Some("pack/v1") {
+            return Err(in_file(Error::new(
+                "not a pack snapshot (`schema` is not \"pack/v1\")",
+            )));
+        }
+        let manifest = table(doc.get("pack"));
+        let functions_doc = table(doc.get("functions"));
+        let migration: Migration3 = match doc.get("migrations").and_then(|m| m.get("2-to-3")) {
+            Some(m) => toml::Value::Table(table(Some(m)))
+                .try_into()
+                .map_err(|e: toml::de::Error| in_file(Error::new(e.to_string())))?,
+            None => Migration3::default(),
+        };
+        let mut defs = Vec::new();
+        for (id, d) in doc
+            .get("conventions")
+            .and_then(Json::as_object)
+            .into_iter()
+            .flatten()
+        {
+            let t = table(Some(d));
+            if t.get("id").and_then(toml::Value::as_str) != Some(id.as_str()) {
+                return Err(in_file(Error::new(format!(
+                    "{id}: its `id` does not match"
+                ))));
+            }
+            defs.push((id.clone(), t));
+        }
+        let mut settings = Vec::new();
+        for (section, fields) in doc
+            .get("settings")
+            .and_then(Json::as_object)
+            .into_iter()
+            .flatten()
+        {
+            settings.push((section.clone(), table(Some(fields))));
+        }
+        // As a directory is read: sorted by file name.
+        settings.sort_by(|a, b| a.0.cmp(&b.0));
+        Pack::build(manifest, functions_doc, migration, defs, settings)
+    }
+
+    fn build(
+        manifest: toml::Table,
+        functions_doc: toml::Table,
+        migration: Migration3,
+        mut defs: Vec<(String, toml::Table)>,
+        settings: Vec<(String, toml::Table)>,
+    ) -> Result<Pack, Error> {
         let schema = manifest
             .get("card_schema_version")
             .and_then(toml::Value::as_integer);
