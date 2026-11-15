@@ -514,7 +514,7 @@ const ROWS = [
     id: 'jacoby_transfers', section: 'notrump', of: 'bidding_conventions/jacoby_transfers'
   },
   {
-    id: 'texas_transfers', section: 'notrump', of: 'bidding_conventions/texas',
+    id: 'texas_transfers', section: 'notrump', of: 'bidding_conventions/texas:over_1nt',
     skillPath: 'bidding_conventions/jacoby_transfers'
   },
   {
@@ -837,7 +837,8 @@ function fromPack(row) {
     id: own.id,
     section: own.section,
     name: own.name ?? (place ? from.label : def.label ?? def.name),
-    desc: from.brief,
+    // The place a convention is mainly played takes the convention's caption.
+    desc: from.brief ?? def.brief,
     ...own,
     cardPath: own.cardPath ?? PATH_OF.get(of),
     // A row may say it has no skill (`skillPath: null`).

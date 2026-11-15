@@ -32,7 +32,7 @@ fn addresses_and_schema_2_paths_name_the_same_fields() {
     let r = v.registry();
     assert_eq!(
         r.get("notrump.texas.play").unwrap().path,
-        "bidding_conventions/texas"
+        "bidding_conventions/texas:over_1nt"
     );
     assert_eq!(
         r.get("notrump.texas.two_under").unwrap().path,

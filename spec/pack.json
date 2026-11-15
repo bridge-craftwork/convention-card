@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "50c93c54bcd6ddbbd99e29680b4befb294694a19",
+ "source_commit": "01ccdf5831bf131313c1d90451264699d37fb4a5",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -171,6 +171,9 @@
    "level": 6,
    "contexts": [
     "responses_rebids"
+   ],
+   "implements": [
+    "checkback_after_1nt_rebid"
    ],
    "names": [
     "Checkback",
@@ -1208,9 +1211,14 @@
     }
    ],
    "treatments": {
+    "over_1nt": {
+     "kind": "bool",
+     "label": "Minor Suit Stayman (1NT–2♠)",
+     "default": true,
+     "level": 6
+    },
     "over_2nt": {
      "kind": "bool",
-     "independent": true,
      "label": "Minor Suit Stayman over 2NT",
      "level": 6
     }
@@ -1251,6 +1259,13 @@
     }
    ],
    "treatments": {
+    "over_1nt": {
+     "kind": "bool",
+     "label": "Minor-suit transfers",
+     "desc": "Minor-suit transfers over 1NT; style says which structure",
+     "default": true,
+     "level": 5
+    },
     "style": {
      "kind": "enum",
      "label": "Minor-suit transfers: style",
@@ -1273,7 +1288,6 @@
     },
     "two_s_clubs": {
      "kind": "bool",
-     "independent": true,
      "label": "1NT–2♠ transfer to clubs",
      "level": 5
     },
@@ -1300,7 +1314,6 @@
     },
     "over_2nt": {
      "kind": "bool",
-     "independent": true,
      "label": "Minor-suit transfers over 2NT",
      "level": 6
     },
@@ -1517,9 +1530,17 @@
     }
    ],
    "treatments": {
+    "after_1nt_rebid": {
+     "kind": "bool",
+     "implements": [
+      "checkback_after_1nt_rebid"
+     ],
+     "label": "New minor forcing",
+     "default": true,
+     "level": 5
+    },
     "after_2nt_rebid": {
      "kind": "bool",
-     "independent": true,
      "label": "NMF after a 2NT rebid",
      "level": 6
     },
@@ -1993,6 +2014,9 @@
    "contexts": [
     "responses_rebids"
    ],
+   "implements": [
+    "checkback_after_1nt_rebid"
+   ],
    "names": [
     "Roudi"
    ],
@@ -2413,39 +2437,51 @@
     "bidding_conventions/jacoby_transfers"
    ],
    "treatments": {
+    "over_1nt": {
+     "kind": "bool",
+     "skill": "bidding_conventions/jacoby_transfers",
+     "label": "Texas transfers",
+     "default": true,
+     "level": 4
+    },
     "bid_4c": {
      "kind": "bool",
+     "skill": "bidding_conventions/jacoby_transfers",
      "label": "4♣ is a transfer",
      "desc": "The bid: 4♣ over 1NT transfers (South African Texas: to ♥, with 4♦ to ♠)",
      "level": 6
     },
     "bid_4d": {
      "kind": "bool",
+     "skill": "bidding_conventions/jacoby_transfers",
      "label": "4♦ is a transfer",
      "desc": "The bid: 4♦ over 1NT transfers (Texas: to ♥)",
      "level": 4
     },
     "bid_4h": {
      "kind": "bool",
+     "skill": "bidding_conventions/jacoby_transfers",
      "label": "4♥ is a transfer",
      "desc": "The bid: 4♥ over 1NT transfers (Texas: to ♠)",
      "level": 4
     },
     "bid_4s": {
      "kind": "bool",
+     "skill": "bidding_conventions/jacoby_transfers",
      "label": "4♠ is a transfer",
      "desc": "The bid: 4♠ over 1NT transfers (to a minor); no printed card has a box for it",
      "level": 6
     },
     "two_under": {
      "kind": "bool",
+     "skill": "bidding_conventions/jacoby_transfers",
      "label": "2-under Texas",
      "desc": "Texas one step lower: 4♣ transfers to ♥ and 4♦ to ♠. Opener's bid of the suit in between (4♦ over 4♣, 4♥ over 4♦) is a super-accept; four of the major is a plain completion",
      "level": 7
     },
     "over_2nt": {
      "kind": "bool",
-     "independent": true,
+     "skill": "bidding_conventions/jacoby_transfers",
      "label": "Texas transfers over 2NT (4♦/4♥)",
      "level": 4
     }
@@ -2706,6 +2742,9 @@
    "contexts": [
     "responses_rebids"
    ],
+   "implements": [
+    "checkback_after_1nt_rebid"
+   ],
    "names": [
     "Two-way NMF",
     "Two-way new minor forcing",
@@ -2960,6 +2999,9 @@
    "level": 9,
    "contexts": [
     "responses_rebids"
+   ],
+   "implements": [
+    "checkback_after_1nt_rebid"
    ],
    "names": [
     "XYZ",
@@ -7789,6 +7831,9 @@
   },
   "two_nt_response_to_major": {
    "name": "Responder's 2NT over one of a major"
+  },
+  "checkback_after_1nt_rebid": {
+   "name": "Responder's artificial 2♣ or 2♦ after a 1NT rebid"
   }
  },
  "levels": {
@@ -7959,7 +8004,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/texas"
+     "bidding_conventions/texas:over_1nt"
     ],
     "call": "4♦/4♥",
     "after": "1NT",
@@ -7970,7 +8015,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/texas"
+     "bidding_conventions/texas:over_1nt"
     ],
     "call": "4♥/4♠",
     "after": "1NT–4♦/4♥",
@@ -9763,7 +9808,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/new_minor_forcing"
+     "bidding_conventions/new_minor_forcing:after_1nt_rebid"
     ],
     "call": "2♣/2♦ (other minor)",
     "after": "1m–1M–1NT",
@@ -9773,7 +9818,7 @@
    },
    {
     "fields": [
-     "bidding_conventions/new_minor_forcing"
+     "bidding_conventions/new_minor_forcing:after_1nt_rebid"
     ],
     "call": "Opener's replies",
     "after": "1m–1M–1NT–2m",
@@ -10966,16 +11011,12 @@
     "minor_openings.walsh.play": "bidding_conventions/walsh",
     "notrump.gambling_3nt.play": "bidding_conventions/gambling_3nt",
     "notrump.jacoby_transfers.play": "bidding_conventions/jacoby_transfers",
-    "notrump.minor_suit_stayman.play": "bidding_conventions/minor_suit_stayman",
-    "notrump.minor_transfers.play": "bidding_conventions/minor_suit_transfers",
     "notrump.smolen.play": "bidding_conventions/smolen",
     "notrump.stayman.play": "bidding_conventions/stayman",
-    "notrump.texas.play": "bidding_conventions/texas",
     "other_conventions.checkback.play": "bidding_conventions/checkback",
     "other_conventions.fourth_suit_forcing.play": "bidding_conventions/fourth_suit_forcing",
     "other_conventions.help_suit_game_tries.play": "bidding_conventions/help_suit_game_try",
     "other_conventions.ingberman_2nt.play": "bidding_conventions/ingberman",
-    "other_conventions.new_minor_forcing.play": "bidding_conventions/new_minor_forcing",
     "other_conventions.roudi.play": "bidding_conventions/roudi",
     "other_conventions.sos_redouble.play": "competitive_bidding/sos_redouble",
     "other_conventions.two_way_game_tries.play": "bidding_conventions/two_way_game_tries",
@@ -11057,8 +11098,6 @@
     "notrump.jacoby_transfers.vs_2c": "bidding_conventions/jacoby_transfers:vs_2c",
     "notrump.jacoby_transfers.vs_double": "bidding_conventions/jacoby_transfers:vs_double",
     "notrump.lebensohl.description": "competitive_bidding/lebensohl:description",
-    "notrump.minor_suit_stayman.over_2nt": "bidding_conventions/minor_suit_stayman:over_2nt",
-    "notrump.minor_transfers.over_2nt": "bidding_conventions/minor_suit_transfers:over_2nt",
     "notrump.minor_transfers.over_2nt_3s_clubs": "bidding_conventions/minor_suit_transfers:over_2nt_3s_clubs",
     "notrump.minor_transfers.over_2nt_4c_diamonds": "bidding_conventions/minor_suit_transfers:over_2nt_4c_diamonds",
     "notrump.minor_transfers.style": "bidding_conventions/minor_suit_transfers:style",
@@ -11067,7 +11106,6 @@
     "notrump.minor_transfers.two_nt_clubs": "bidding_conventions/minor_suit_transfers:two_nt_clubs",
     "notrump.minor_transfers.two_nt_diamonds": "bidding_conventions/minor_suit_transfers:two_nt_diamonds",
     "notrump.minor_transfers.two_s": "bidding_conventions/minor_suit_transfers:two_s",
-    "notrump.minor_transfers.two_s_clubs": "bidding_conventions/minor_suit_transfers:two_s_clubs",
     "notrump.stayman.forcing": "bidding_conventions/stayman:forcing",
     "notrump.stayman.garbage": "bidding_conventions/stayman:garbage",
     "notrump.stayman.over_2nt_both_majors": "bidding_conventions/stayman:over_2nt_both_majors",
@@ -11075,12 +11113,10 @@
     "notrump.texas.bid_4d": "bidding_conventions/texas:bid_4d",
     "notrump.texas.bid_4h": "bidding_conventions/texas:bid_4h",
     "notrump.texas.bid_4s": "bidding_conventions/texas:bid_4s",
-    "notrump.texas.over_2nt": "bidding_conventions/texas:over_2nt",
     "notrump.texas.two_under": "bidding_conventions/texas:two_under",
     "other_conventions.fourth_suit_forcing.game_force": "bidding_conventions/fourth_suit_forcing:game_force",
     "other_conventions.fourth_suit_forcing.notes": "bidding_conventions/fourth_suit_forcing:notes",
     "other_conventions.fourth_suit_forcing.one_round": "bidding_conventions/fourth_suit_forcing:one_round",
-    "other_conventions.new_minor_forcing.after_2nt_rebid": "bidding_conventions/new_minor_forcing:after_2nt_rebid",
     "other_conventions.new_minor_forcing.by_passed_hand": "bidding_conventions/new_minor_forcing:by_passed_hand",
     "slam.cue_bids.style": "bidding_conventions/control_bids:style",
     "slam.gerber.directly_over_nt": "bidding_conventions/gerber:directly_over_nt",
@@ -11144,6 +11180,35 @@
      }
     },
     {
+     "convention": "bidding_conventions/new_minor_forcing",
+     "switches": {
+      "other_conventions.new_minor_forcing.play": "after_1nt_rebid",
+      "other_conventions.new_minor_forcing.after_2nt_rebid": "after_2nt_rebid"
+     }
+    },
+    {
+     "convention": "bidding_conventions/texas",
+     "switches": {
+      "notrump.texas.play": "over_1nt",
+      "notrump.texas.over_2nt": "over_2nt"
+     }
+    },
+    {
+     "convention": "bidding_conventions/minor_suit_stayman",
+     "switches": {
+      "notrump.minor_suit_stayman.play": "over_1nt",
+      "notrump.minor_suit_stayman.over_2nt": "over_2nt"
+     }
+    },
+    {
+     "convention": "bidding_conventions/minor_suit_transfers",
+     "switches": {
+      "notrump.minor_transfers.play": "over_1nt",
+      "notrump.minor_transfers.two_s_clubs": "two_s_clubs",
+      "notrump.minor_transfers.over_2nt": "over_2nt"
+     }
+    },
+    {
      "convention": "bidding_conventions/dopi_ropi",
      "switches": {
       "slam.dopi": "dopi",
@@ -11184,6 +11249,16 @@
      "function": "major_ask_over_notrump",
      "convention": "bidding_conventions/stayman",
      "to": "bidding_conventions/puppet_stayman"
+    },
+    {
+     "function": "checkback_after_1nt_rebid",
+     "convention": "bidding_conventions/new_minor_forcing",
+     "to": "bidding_conventions/xyz"
+    },
+    {
+     "function": "checkback_after_1nt_rebid",
+     "convention": "bidding_conventions/new_minor_forcing",
+     "to": "bidding_conventions/two_way_nmf"
     },
     {
      "function": "two_nt_response_to_major",
