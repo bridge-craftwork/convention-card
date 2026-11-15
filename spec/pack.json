@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "5aa5e962d30837d409c3c59029f4864da9992b26",
+ "source_commit": "fff139d102e4496dc79bc43e746b2fa613fa1713",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -23,7 +23,7 @@
   "basic_bidding/hand_evaluation": {
    "id": "basic_bidding/hand_evaluation",
    "name": "Hand Evaluation",
-   "kind": "skill",
+   "kind": "judgement",
    "source": "lessons",
    "level": 1,
    "contexts": [
@@ -3504,7 +3504,7 @@
   "competitive_bidding/law_of_total_tricks": {
    "id": "competitive_bidding/law_of_total_tricks",
    "name": "The Law of Total Tricks",
-   "kind": "skill",
+   "kind": "judgement",
    "source": "proposed",
    "level": 4,
    "contexts": [
