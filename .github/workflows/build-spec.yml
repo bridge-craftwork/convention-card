@@ -1,27 +1,20 @@
 name: Build the spec's generated JSON
 
-# The spec's TOML is the source. scripts/build_spec.py writes its JSON:
-# conventions.json (every spec/conventions/ file in one), taxonomy.json
-# (lesson-studio's Contract 4), and fields.json, levels.json and formats/bbsa-map.json, for
-# readers with no TOML parser (the JS library). Regenerates whenever a source
-# changes, as Practice-Bidding-Scenarios does for its manifest.
+# The format maps' TOML is the source. scripts/build_spec.py writes their
+# JSON (spec/formats/*.json), for readers with no TOML parser (the JS
+# library). Regenerates whenever a source changes. The conventions, fields,
+# levels and alert rules are bridge-common-conventions' (spec/pack.json).
 
 on:
   push:
     branches: [main]
     paths:
-      - 'spec/conventions/**'
-      - 'spec/fields.toml'
-      - 'spec/levels.toml'
-      - 'spec/alerts.toml'
       - 'spec/formats/bbsa-map.toml'
       - 'spec/formats/bbsa-layout.txt'
       - 'spec/formats/bbo-map.toml'
       - 'spec/formats/bbo-slots.toml'
       - 'spec/formats/bridgodex-map.toml'
-      - 'spec/migrations/*.toml'
       - 'scripts/build_spec.py'
-      - 'Cargo.toml'
       - '.github/workflows/build-spec.yml'
   workflow_dispatch:
 
@@ -49,7 +42,7 @@ jobs:
 
       - name: Commit the generated files if changed
         run: |
-          GENERATED="spec/conventions.json spec/taxonomy.json spec/fields.json spec/levels.json spec/alerts.json spec/formats/bbsa-map.json spec/formats/bbo-map.json spec/formats/bridgodex-map.json spec/migrations/*.json"
+          GENERATED="spec/formats/bbsa-map.json spec/formats/bbo-map.json spec/formats/bbo-slots.json spec/formats/bridgodex-map.json"
           if [ -z "$(git status --porcelain $GENERATED)" ]; then
             echo "Generated files unchanged — nothing to commit."
             exit 0

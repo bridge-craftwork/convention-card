@@ -1,12 +1,19 @@
 //! The card-schema migration against the cases the JS library checks too
 //! (`tests/migrations/1-to-2.cases.json`, js/__tests__/migrate.test.js), so
-//! the two readers of `spec/migrations/` agree.
+//! the two readers of the pack's `migrations/1-to-2.toml` agree.
 
 use std::fs;
 use std::path::Path;
 
-use bridge_card::{migrate, standard, Card};
+use bridge_card::{migrate, standard, Card, Vocabulary};
 use serde_json::Value as Json;
+
+/// Card schema 2's field list, frozen (`tests/fixtures/schema2/`), with this
+/// repository's `.bbsa` map: the form the JS library works in.
+fn schema2() -> Vocabulary {
+    let fields = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/schema2/fields.toml");
+    Vocabulary::parse(&fs::read_to_string(fields).unwrap(), standard::BBSA_MAP).unwrap()
+}
 
 fn cases() -> Vec<Json> {
     let path =
@@ -30,7 +37,7 @@ fn every_case_upgrades_as_written() {
 
 #[test]
 fn a_loaded_card_is_upgraded_and_saved_current() {
-    let vocab = standard::vocabulary().unwrap();
+    let vocab = schema2();
     for c in cases() {
         let (card, report) = Card::from_json(&vocab, &c["before"].to_string()).unwrap();
         // Everything the migration writes is a field, read as such.

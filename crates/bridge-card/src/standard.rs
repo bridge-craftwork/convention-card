@@ -1,35 +1,35 @@
-//! The standard vocabulary: this repository's `spec/`, as its text.
+//! The standard vocabulary: this repository's copy of the convention pack
+//! (`spec/pack.json`, bridge-common-conventions' published snapshot) and its
+//! own `.bbsa` map, as their text.
 //!
 //! The crate still has no built-in vocabulary: nothing here is loaded unless
 //! a caller asks. A program that depends on this repository at a tag gets the
-//! spec of that tag, so the vocabulary it checks cards against is the one it
-//! was built with. A program with its own rule set can still load a
-//! different vocabulary ([`Vocabulary::parse`], [`Vocabulary::load_spec`]).
+//! pack of that tag, so the vocabulary it checks cards against is the one it
+//! was built with. A program handed a newer snapshot, or with its own rule
+//! set, loads that instead ([`Vocabulary::from_snapshot`],
+//! [`Vocabulary::load_pack`], [`Vocabulary::parse`]).
 
 use crate::{Error, Skills, Vocabulary};
 
-/// `spec/fields.toml`.
-pub const FIELDS: &str = include_str!("../../../spec/fields.toml");
+/// `spec/pack.json`: the convention pack's snapshot, without its rule files.
+pub const PACK: &str = include_str!("../../../spec/pack.json");
 /// `spec/formats/bbsa-map.toml`.
 pub const BBSA_MAP: &str = include_str!("../../../spec/formats/bbsa-map.toml");
-/// `spec/conventions.json`: every convention and skill, generated from
-/// `spec/conventions/` (one file per ID) by CI.
-pub const CONVENTIONS_JSON: &str = include_str!("../../../spec/conventions.json");
 
-/// The standard fields and `.bbsa` map.
+/// The pack's conventions, treatments and settings, and the `.bbsa` map.
 pub fn vocabulary() -> Result<Vocabulary, Error> {
-    Vocabulary::parse(FIELDS, BBSA_MAP)
+    Vocabulary::from_snapshot(PACK, BBSA_MAP)
 }
 
-/// The standard conventions and skills.
+/// The pack's definitions: every convention and skill.
 pub fn conventions() -> Result<Skills, Error> {
-    Skills::from_json(CONVENTIONS_JSON)
+    Skills::from_snapshot(PACK)
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
-    fn the_standard_spec_loads() {
+    fn the_standard_pack_loads() {
         let vocab = super::vocabulary().unwrap();
         assert!(vocab.registry().fields().len() > 400);
         let conventions = super::conventions().unwrap();

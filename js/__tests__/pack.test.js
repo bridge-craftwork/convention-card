@@ -1,107 +1,28 @@
 import { describe, it, expect } from 'vitest'
 import PACK from '../../spec/pack.json' with { type: 'json' }
-import FIELDS_DOC from '../../spec/fields.json' with { type: 'json' }
-import CONVENTIONS_DOC from '../../spec/conventions.json' with { type: 'json' }
-import LEVELS_DOC from '../../spec/levels.json' with { type: 'json' }
-import ALERTS_DOC from '../../spec/alerts.json' with { type: 'json' }
-import MIGRATION_1_TO_2 from '../../spec/migrations/1-to-2.json' with { type: 'json' }
 import { schema2Fields, schema2Alerts, addressMaps } from '../pack.js'
 import { FIELDS, CONVENTIONS, field } from '../spec.js'
 
-// Until the cut-over this repository still holds the vocabulary it used to
-// own (spec/fields.toml and the files built from it). The library reads the
-// pack instead; these tests hold the two together, so nothing is lost or
-// changed by the move.
-const { schema: _s, generated_from: _g, ...SECTIONS } = FIELDS_DOC
-const OLD = Object.fromEntries(
-  Object.entries(SECTIONS).flatMap(([section, fields]) =>
-    Object.entries(fields).map(([key, def]) => [`${section}.${key}`, def])
-  )
-)
-// Text the pack has corrected since (bridge-common-conventions Phase 5):
-// "<path or ID> <attribute>". Each is a deliberate difference from the files
-// this repository still carries.
-const CORRECTED = new Set([
-  // Reverse Flannery is responder's jump over one of a minor, not an opening.
-  'two_level.reverse_flannery.play desc',
-  'bidding_conventions/reverse_flannery summary',
-  'bidding_conventions/reverse_flannery desc',
-  'bidding_conventions/reverse_flannery contexts',
-  // Its 2♦ treatment was left from that opening: retired, name kept.
-  'two_level.reverse_flannery.two_d retired',
-  // Phase 6: a second box for the same agreement is now a spelling of the
-  // convention's own switch (SAME_BOX below).
-  'preempts.namyats.play aliases',
-  'competitive.cue_bid_raise.play aliases',
-  'competitive.unusual_2nt.play aliases',
-])
-// Boxes the pack reads as another box's agreement (Rick Wilson, 2026-11-14):
-// the 4♣/4♦ transfer is Namyats, the support cuebid is the cue-bid raise,
-// and the jump 2NT for the two lowest unbid is the Unusual 2NT.
-const SAME_BOX = {
-  'preempts.transfer_4_minor': 'preempts.namyats.play',
-  'overcalls.responses.support_cuebid': 'competitive.cue_bid_raise.play',
-  'nt_overcalls.jump_2nt_lowest_unbid': 'competitive.unusual_2nt.play',
-}
-const without = (name, def) =>
-  Object.fromEntries(Object.entries(def).filter(([k]) => !CORRECTED.has(`${name} ${k}`)))
-const tidy = def => ({
-  ...def,
-  ...(def.skill !== undefined ? { skill: [def.skill].flat() } : {}),
-  ...(def.aliases ? { aliases: [...def.aliases].sort() } : {}),
-})
-
+// The library works in card schema 2's paths, rebuilt from the pack
+// (js/pack.js). The field list this repository used to own is gone; until
+// it went, these tests held the two together field by field.
 describe('the pack, read as card schema 2', () => {
   const got = schema2Fields(PACK)
 
-  it('gives every field spec/fields.toml had, in the same order', () => {
-    expect(Object.keys(got)).toEqual(Object.keys(OLD).filter(p => !(p in SAME_BOX)))
-    for (const [box, same] of Object.entries(SAME_BOX)) expect(got[same].aliases).toContain(box)
-  })
-
-  it('gives each field the same attributes', () => {
-    for (const [path, def] of Object.entries(OLD)) {
-      if (path in SAME_BOX) continue
-      expect([path, without(path, tidy(got[path]))]).toEqual([path, without(path, tidy(def))])
-    }
-  })
-
-  it('gives the same alert rules, levels and schema 1 migration', () => {
+  it('gives the fields, alert rules, levels and schema 1 migration', () => {
+    expect(Object.keys(got).length).toBeGreaterThan(600)
+    expect(got['notrump.stayman.play'].kind).toBe('bool')
     const alerts = schema2Alerts(PACK)
-    // Every alert rule this repository had, in order; the pack has added
-    // some since (Reverse Flannery's jumps over one of a minor) and dropped
-    // the three for the 2♦ opening Reverse Flannery never was.
-    // A rule that named a box and its twin (SAME_BOX) names the one left.
-    const one = a => ({ ...a, fields: [...new Set(a.fields.map(f => SAME_BOX[f] ?? f))] })
-    const was = ALERTS_DOC.alert.map(one)
-    const had = new Set(was.map(a => JSON.stringify(a)))
-    const kept = was.filter(a => a.fields[0] !== 'two_level.reverse_flannery.two_d')
-    expect(was.length - kept.length).toBe(3)
-    expect(alerts.alert.filter(a => had.has(JSON.stringify(a)))).toEqual(kept)
-    const added = alerts.alert.filter(a => !had.has(JSON.stringify(a)))
-    expect(added.map(a => a.fields[0]).sort()).toEqual([
-      'two_level.reverse_flannery.two_h',
-      'two_level.reverse_flannery.two_h',
-      'two_level.reverse_flannery.two_s',
-    ])
-    expect(alerts.regulators).toEqual(ALERTS_DOC.regulators)
-    expect(PACK.levels.band).toEqual(LEVELS_DOC.band)
-    const { schema: _ms, generated_from: _mg, ...migration } = MIGRATION_1_TO_2
-    expect(PACK.migrations['1-to-2']).toEqual(migration)
+    expect(alerts.alert.length).toBeGreaterThan(150)
+    for (const a of alerts.alert) for (const f of a.fields) expect([f, f in got]).toEqual([f, true])
+    expect(Object.keys(alerts.regulators).sort()).toEqual(['acbl', 'ebu', 'wbf'])
+    expect(PACK.levels.band.length).toBeGreaterThan(0)
+    expect(PACK.migrations['1-to-2'].to).toBe('2.0')
   })
 
   it('gives every convention its definition', () => {
-    expect(Object.keys(CONVENTIONS)).toEqual(Object.keys(CONVENTIONS_DOC.conventions))
-    for (const [id, def] of Object.entries(CONVENTIONS_DOC.conventions)) {
-      // Sources may have been added to `see` since; none is dropped.
-      // Robert S. Todd's site is named as it is today; this repository's
-      // older list has its former name.
-      const renamed = e => (e.site === 'Advancing in Bridge' ? { ...e, site: 'Adventures in Bridge' } : e)
-      const { see: older = [], ...rest } = without(id, def)
-      const see = older.map(renamed)
-      expect([id, CONVENTIONS[id]]).toEqual([id, expect.objectContaining(rest)])
-      expect([id, CONVENTIONS[id].see ?? []]).toEqual([id, expect.arrayContaining(see)])
-    }
+    expect(Object.keys(CONVENTIONS).length).toBeGreaterThan(150)
+    expect(CONVENTIONS['bidding_conventions/stayman'].name).toBe('Stayman')
   })
 
   it('maps every address to one path and back', () => {
