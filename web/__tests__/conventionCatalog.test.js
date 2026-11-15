@@ -7,6 +7,8 @@ import { CONVENTION_CATALOG } from '../src/editor/conventionCatalog.js'
 // or a place a convention is played, are now drawn from its definition in
 // the pack. The fixture is the hand-written list as it was (2026-11-14):
 // the rows the editor shows must not change by being drawn another way.
+// Changed on purpose since: Reverse Flannery's row for a 2♦ opening gave way
+// to rows for its two jumps over one of a minor (Rick Wilson, 2026-11-14).
 describe('the convention catalogue', () => {
   it('has the rows it had, in the same order, word for word', () => {
     expect(CONVENTION_CATALOG).toEqual(BEFORE)

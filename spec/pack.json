@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "9a5a8971ef19c6c3478a3054e9600a7b09d6f32a",
+ "source_commit": "aaca1ce723eceb00ea1263b7531ea0d80033c62a",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -1853,11 +1853,13 @@
    "treatments": {
     "two_d": {
      "kind": "bool",
+     "retired": "2026-11-14",
      "label": "Reverse Flannery 2♦",
      "level": 8
     },
     "two_h": {
      "kind": "bool",
+     "brief": "1m-2♥ = 5 ♠ and 4-5 ♥, 5-8 HCP",
      "implements": [
       "jump_to_major_over_minor.2h"
      ],
@@ -1866,6 +1868,7 @@
     },
     "two_s": {
      "kind": "bool",
+     "brief": "1m-2♠ = 5 ♠ and 4 ♥, 9-10 HCP",
      "implements": [
       "jump_to_major_over_minor.2s"
      ],
@@ -8910,36 +8913,6 @@
     "by": "responder",
     "rule": "alert",
     "note": "Pass-or-correct response. Listed by the EBU; the ACBL and WBF alert a call that does not promise the suit."
-   },
-   {
-    "fields": [
-     "bidding_conventions/reverse_flannery:two_d"
-    ],
-    "call": "2♦",
-    "after": "opening",
-    "by": "opener",
-    "rule": "alert",
-    "note": "Two-suiter in the majors."
-   },
-   {
-    "fields": [
-     "bidding_conventions/reverse_flannery:two_d"
-    ],
-    "call": "2♥/2♠/3♥/3♠",
-    "after": "2♦",
-    "by": "responder",
-    "rule": "none",
-    "note": "Natural choice of major."
-   },
-   {
-    "fields": [
-     "bidding_conventions/reverse_flannery:two_d"
-    ],
-    "call": "2NT",
-    "after": "2♦",
-    "by": "responder",
-    "rule": "alert",
-    "note": "Asking bid; the ACBL 2NT exemption covers only weak preempts."
    },
    {
     "fields": [

@@ -494,7 +494,7 @@ export const STRUCTURED_FIELDS = {
  *   - (play)     The convention's switch, when the row is one of its
  *                styles or boxes: checked only while it is on, and checking
  *                the row turns it on (RKCB 1430: slam.rkcb.play with style
- *                1430; Reverse Flannery 2♦)
+ *                1430; Reverse Flannery 2♥)
  *   - (alertsFrom) The field whose alerts the row shows, when not cardPath
  *   - skillPath: Underlying skill in BAKER_BRIDGE_TAXONOMY (or null if
  *                this convention has no corresponding lesson yet)
@@ -593,6 +593,14 @@ const ROWS = [
     desc: '1♦ → ♥, 1♥ → ♠ (or similar)',
     cardPath: 'minor_openings.one_club.transfer_resp', skillPath: null
   },
+  {
+    id: 'reverse_flannery_2h', section: 'minor_openings', of: 'bidding_conventions/reverse_flannery:two_h',
+    play: 'two_level.reverse_flannery.play', skillPath: null
+  },
+  {
+    id: 'reverse_flannery_2s', section: 'minor_openings', of: 'bidding_conventions/reverse_flannery:two_s',
+    play: 'two_level.reverse_flannery.play', skillPath: null
+  },
 
   // ─── Two-level openings ───
   {
@@ -629,11 +637,6 @@ const ROWS = [
   {
     id: 'mini_roman_2d', section: 'two_level', of: 'bidding_conventions/mini_roman_2d',
     cardPath: 'two_level.mini_roman.play', skillPath: null
-  },
-  {
-    id: 'reverse_flannery_2d', section: 'two_level', name: 'Reverse Flannery 2♦',
-    desc: '5+ ♥ and 4+ ♠, 11-15 HCP',
-    cardPath: 'two_level.reverse_flannery.two_d', play: 'two_level.reverse_flannery.play', skillPath: null
   },
   {
     id: 'kokish', section: 'two_level', of: 'bidding_conventions/kokish',

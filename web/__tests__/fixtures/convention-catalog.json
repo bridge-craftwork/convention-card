@@ -20,16 +20,16 @@
   "section": "notrump",
   "name": "Texas transfers",
   "desc": "4♦/4♥ at game level",
-  "cardPath": "notrump.texas.play",
-  "skillPath": "bidding_conventions/jacoby_transfers"
+  "skillPath": "bidding_conventions/jacoby_transfers",
+  "cardPath": "notrump.texas.play"
  },
  {
   "id": "smolen",
   "section": "notrump",
   "name": "Smolen",
   "desc": "Show 5-4 majors after Stayman",
-  "cardPath": "notrump.smolen.play",
-  "skillPath": "bidding_conventions/stayman"
+  "skillPath": "bidding_conventions/stayman",
+  "cardPath": "notrump.smolen.play"
  },
  {
   "id": "puppet_stayman",
@@ -68,16 +68,16 @@
   "section": "major_openings",
   "name": "Jacoby 2NT",
   "desc": "GF raise of major",
-  "cardPath": "major_openings.jacoby_2nt.play",
-  "skillPath": "bidding_conventions/jacoby_2nt_splinters"
+  "skillPath": "bidding_conventions/jacoby_2nt_splinters",
+  "cardPath": "major_openings.jacoby_2nt.play"
  },
  {
   "id": "modified_jacoby_2nt",
   "section": "major_openings",
   "name": "Modified Jacoby 2NT",
   "desc": "Variant response structure (showing controls/HCP first)",
-  "cardPath": "major_openings.jacoby_2nt.modified",
-  "skillPath": "bidding_conventions/jacoby_2nt_splinters"
+  "skillPath": "bidding_conventions/jacoby_2nt_splinters",
+  "cardPath": "major_openings.jacoby_2nt.modified"
  },
  {
   "id": "bergen_raises",
@@ -100,16 +100,16 @@
   "section": "major_openings",
   "name": "Splinters",
   "desc": "Double-jump shows shortness",
-  "cardPath": "major_openings.splinters.play",
-  "skillPath": "bidding_conventions/jacoby_2nt_splinters"
+  "skillPath": "bidding_conventions/jacoby_2nt_splinters",
+  "cardPath": "major_openings.splinters.play"
  },
  {
   "id": "drury",
   "section": "major_openings",
   "name": "Drury",
   "desc": "2♣ by passed hand = limit raise",
-  "cardPath": "major_openings.drury.play",
-  "skillPath": "bidding_conventions/reverse_drury"
+  "skillPath": "bidding_conventions/reverse_drury",
+  "cardPath": "major_openings.drury.play"
  },
  {
   "id": "reverse_drury",
@@ -158,6 +158,24 @@
   "desc": "1♦ → ♥, 1♥ → ♠ (or similar)",
   "cardPath": "minor_openings.one_club.transfer_resp",
   "skillPath": null
+ },
+ {
+  "id": "reverse_flannery_2h",
+  "section": "minor_openings",
+  "name": "Reverse Flannery 2♥",
+  "desc": "1m-2♥ = 5 ♠ and 4-5 ♥, 5-8 HCP",
+  "play": "two_level.reverse_flannery.play",
+  "skillPath": null,
+  "cardPath": "two_level.reverse_flannery.two_h"
+ },
+ {
+  "id": "reverse_flannery_2s",
+  "section": "minor_openings",
+  "name": "Reverse Flannery 2♠",
+  "desc": "1m-2♠ = 5 ♠ and 4 ♥, 9-10 HCP",
+  "play": "two_level.reverse_flannery.play",
+  "skillPath": null,
+  "cardPath": "two_level.reverse_flannery.two_s"
  },
  {
   "id": "strong_2c",
@@ -220,15 +238,6 @@
   "name": "Mini-Roman 2♦",
   "desc": "3-suited hand, short in a specified suit",
   "cardPath": "two_level.mini_roman.play",
-  "skillPath": null
- },
- {
-  "id": "reverse_flannery_2d",
-  "section": "two_level",
-  "name": "Reverse Flannery 2♦",
-  "desc": "5+ ♥ and 4+ ♠, 11-15 HCP",
-  "cardPath": "two_level.reverse_flannery.two_d",
-  "play": "two_level.reverse_flannery.play",
   "skillPath": null
  },
  {
@@ -323,16 +332,16 @@
   "section": "slam",
   "name": "Minorwood",
   "desc": "4 of the agreed minor = RKCB",
-  "cardPath": "slam.minorwood.play",
-  "skillPath": "bidding_conventions/roman_keycard"
+  "skillPath": "bidding_conventions/roman_keycard",
+  "cardPath": "slam.minorwood.play"
  },
  {
   "id": "exclusion_blackwood",
   "section": "slam",
   "name": "Exclusion Blackwood",
   "desc": "Jump in a void suit asks for keycards excluding that suit",
-  "cardPath": "slam.exclusion_blackwood.play",
-  "skillPath": "bidding_conventions/roman_keycard"
+  "skillPath": "bidding_conventions/roman_keycard",
+  "cardPath": "slam.exclusion_blackwood.play"
  },
  {
   "id": "pick_a_slam_5nt",
@@ -408,24 +417,24 @@
   "section": "doubles",
   "name": "Support doubles",
   "desc": "Double after interference = exactly 3-card support",
-  "cardPath": "doubles.support.play",
-  "skillPath": "competitive_bidding/support_cuebids"
+  "skillPath": "competitive_bidding/support_cuebids",
+  "cardPath": "doubles.support.play"
  },
  {
   "id": "michaels",
   "section": "competitive",
   "name": "Michaels cue bid",
   "desc": "Cue = two-suited overcall",
-  "cardPath": "competitive.michaels.play",
-  "skillPath": "competitive_bidding/michaels_unusual"
+  "skillPath": "competitive_bidding/michaels_unusual",
+  "cardPath": "competitive.michaels.play"
  },
  {
   "id": "unusual_2nt",
   "section": "competitive",
   "name": "Unusual 2NT",
   "desc": "2NT = two lowest unbid suits",
-  "cardPath": "competitive.unusual_2nt.play",
-  "skillPath": "competitive_bidding/michaels_unusual"
+  "skillPath": "competitive_bidding/michaels_unusual",
+  "cardPath": "competitive.unusual_2nt.play"
  },
  {
   "id": "dont",

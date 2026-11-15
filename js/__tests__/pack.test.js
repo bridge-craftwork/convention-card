@@ -27,6 +27,8 @@ const CORRECTED = new Set([
   'bidding_conventions/reverse_flannery summary',
   'bidding_conventions/reverse_flannery desc',
   'bidding_conventions/reverse_flannery contexts',
+  // Its 2♦ treatment was left from that opening: retired, name kept.
+  'two_level.reverse_flannery.two_d retired',
 ])
 const without = (name, def) =>
   Object.fromEntries(Object.entries(def).filter(([k]) => !CORRECTED.has(`${name} ${k}`)))
@@ -52,9 +54,12 @@ describe('the pack, read as card schema 2', () => {
   it('gives the same alert rules, levels and schema 1 migration', () => {
     const alerts = schema2Alerts(PACK)
     // Every alert rule this repository had, in order; the pack has added
-    // some since (Reverse Flannery's jumps over one of a minor).
+    // some since (Reverse Flannery's jumps over one of a minor) and dropped
+    // the three for the 2♦ opening Reverse Flannery never was.
     const had = new Set(ALERTS_DOC.alert.map(a => JSON.stringify(a)))
-    expect(alerts.alert.filter(a => had.has(JSON.stringify(a)))).toEqual(ALERTS_DOC.alert)
+    const kept = ALERTS_DOC.alert.filter(a => a.fields[0] !== 'two_level.reverse_flannery.two_d')
+    expect(ALERTS_DOC.alert.length - kept.length).toBe(3)
+    expect(alerts.alert.filter(a => had.has(JSON.stringify(a)))).toEqual(kept)
     const added = alerts.alert.filter(a => !had.has(JSON.stringify(a)))
     expect(added.map(a => a.fields[0]).sort()).toEqual([
       'two_level.reverse_flannery.two_h',
