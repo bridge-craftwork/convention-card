@@ -103,6 +103,17 @@ pub struct Migration3 {
     pub alias: BTreeMap<String, String>,
     #[serde(default)]
     pub yields: Vec<Yield>,
+    #[serde(default)]
+    pub stood_for: Vec<StoodFor>,
+}
+
+/// `[[stood_for]]`: a yes/no treatment that, on, turns on the treatments in
+/// `means` that the card left unset. Addresses are `ID:treatment`, all of
+/// one convention.
+#[derive(Debug, Clone, Deserialize)]
+pub struct StoodFor {
+    pub treatment: String,
+    pub means: Vec<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -761,6 +772,20 @@ impl Pack {
                     }
                 }
                 None => crate::card::write_path(&mut settings, &path, value),
+            }
+        }
+
+        // A box that stood for more than it said.
+        for sf in &self.migration.stood_for {
+            let Some((id, t)) = sf.treatment.split_once(':') else { continue };
+            let Some(e) = entries.get_mut(id) else { continue };
+            if e.treatments.get(t).and_then(Json::as_bool) != Some(true) {
+                continue;
+            }
+            for m in &sf.means {
+                if let Some((_, name)) = m.split_once(':') {
+                    e.treatments.entry(name.to_string()).or_insert(Json::Bool(true));
+                }
             }
         }
 

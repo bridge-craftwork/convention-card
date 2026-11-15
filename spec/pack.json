@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "aaca1ce723eceb00ea1263b7531ea0d80033c62a",
+ "source_commit": "e0569b9b4fa066a9b5269277778492b07aa43305",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -11160,6 +11160,15 @@
       "notrump.stayman.puppet_2nt": "over_2nt"
      },
      "also_plays": "bidding_conventions/stayman"
+    }
+   ],
+   "stood_for": [
+    {
+     "treatment": "bidding_conventions/reverse_flannery:two_d",
+     "means": [
+      "bidding_conventions/reverse_flannery:two_h",
+      "bidding_conventions/reverse_flannery:two_s"
+     ]
     }
    ],
    "yields": [

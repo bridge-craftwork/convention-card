@@ -217,6 +217,17 @@ export function toSchema3(data, pack = PACK_DOC) {
     }
   }
 
+  // A box that stood for more than it said.
+  for (const sf of mig.stood_for || []) {
+    const [id, t] = sf.treatment.split(':')
+    const e = entries.get(id)
+    if (e?.treatments[t] !== true) continue
+    for (const m of sf.means) {
+      const name = m.split(':')[1]
+      if (!(name in e.treatments)) e.treatments[name] = true
+    }
+  }
+
   // A place that is on also plays the convention its boxes sat under.
   for (const p of mig.place || []) {
     if (p.also_plays && Object.values(entries.get(p.convention)?.places || {}).some(Boolean)) entry(p.also_plays).implied = true

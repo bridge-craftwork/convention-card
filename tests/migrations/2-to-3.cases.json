@@ -820,6 +820,53 @@
      }
     }
    }
+  },
+  {
+   "name": "Reverse Flannery's old 2♦ box stood for both jumps",
+   "before": {
+    "schema_version": "2.0",
+    "two_level": {
+     "reverse_flannery": {
+      "play": true,
+      "two_d": true
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/reverse_flannery": {
+      "two_d": true,
+      "two_h": true,
+      "two_s": true
+     }
+    },
+    "settings": {}
+   }
+  },
+  {
+   "name": "the old 2♦ box leaves a jump the card says it does not play",
+   "before": {
+    "schema_version": "2.0",
+    "two_level": {
+     "reverse_flannery": {
+      "play": true,
+      "two_d": true,
+      "two_s": false
+     }
+    }
+   },
+   "after": {
+    "schema_version": "3.0",
+    "conventions": {
+     "bidding_conventions/reverse_flannery": {
+      "two_d": true,
+      "two_h": true,
+      "two_s": false
+     }
+    },
+    "settings": {}
+   }
   }
  ]
 }
