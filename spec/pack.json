@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "def3372c0d77588c4f86b39abee44c50be9717fa",
+ "source_commit": "5aa5e962d30837d409c3c59029f4864da9992b26",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -23,6 +23,7 @@
   "basic_bidding/hand_evaluation": {
    "id": "basic_bidding/hand_evaluation",
    "name": "Hand Evaluation",
+   "kind": "skill",
    "source": "lessons",
    "level": 1,
    "contexts": [
@@ -32,6 +33,7 @@
   "basic_bidding/major_suit_openings": {
    "id": "basic_bidding/major_suit_openings",
    "name": "Major Suit Openings",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
@@ -41,6 +43,7 @@
   "basic_bidding/minor_suit_openings": {
    "id": "basic_bidding/minor_suit_openings",
    "name": "Minor Suit Openings",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
@@ -50,6 +53,7 @@
   "basic_bidding/notrump_openings": {
    "id": "basic_bidding/notrump_openings",
    "name": "Notrump Openings",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
@@ -923,6 +927,7 @@
   "bidding_conventions/jacoby_2nt_splinters": {
    "id": "bidding_conventions/jacoby_2nt_splinters",
    "name": "Jacoby 2NT & Splinters",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 4,
    "contexts": [
@@ -1772,6 +1777,7 @@
   "bidding_conventions/preemptive_bids": {
    "id": "bidding_conventions/preemptive_bids",
    "name": "Preemptive Bids",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 3,
    "contexts": [
@@ -1889,6 +1895,7 @@
   "bidding_conventions/reverse_bids": {
    "id": "bidding_conventions/reverse_bids",
    "name": "Reverse Bids",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 4,
    "contexts": [
@@ -3091,6 +3098,7 @@
   "competitive_bidding/advancing_overcalls": {
    "id": "competitive_bidding/advancing_overcalls",
    "name": "Responding to Overcalls",
+   "kind": "skill",
    "source": "lessons",
    "level": 3,
    "contexts": [
@@ -3122,6 +3130,7 @@
   "competitive_bidding/balancing": {
    "id": "competitive_bidding/balancing",
    "name": "Balancing",
+   "kind": "skill",
    "source": "lessons",
    "level": 4,
    "contexts": [
@@ -3221,6 +3230,7 @@
   "competitive_bidding/defense_vs_1nt": {
    "id": "competitive_bidding/defense_vs_1nt",
    "name": "Defending against 1NT",
+   "kind": "skill",
    "source": "proposed",
    "level": 5,
    "contexts": [
@@ -3236,6 +3246,7 @@
   "competitive_bidding/defense_vs_preempts": {
    "id": "competitive_bidding/defense_vs_preempts",
    "name": "Defending against Preempts",
+   "kind": "skill",
    "source": "proposed",
    "level": 4,
    "contexts": [
@@ -3493,6 +3504,7 @@
   "competitive_bidding/law_of_total_tricks": {
    "id": "competitive_bidding/law_of_total_tricks",
    "name": "The Law of Total Tricks",
+   "kind": "skill",
    "source": "proposed",
    "level": 4,
    "contexts": [
@@ -3806,6 +3818,7 @@
   "competitive_bidding/michaels_unusual": {
    "id": "competitive_bidding/michaels_unusual",
    "name": "Michaels & Unusual 2NT",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 4,
    "contexts": [
@@ -4007,6 +4020,7 @@
   "competitive_bidding/overcalls": {
    "id": "competitive_bidding/overcalls",
    "name": "Overcalls",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4413,6 +4427,7 @@
   "competitive_bidding/takeout_doubles": {
    "id": "competitive_bidding/takeout_doubles",
    "name": "Takeout Doubles",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4586,18 +4601,21 @@
   "declarer_play/elimination_plays": {
    "id": "declarer_play/elimination_plays",
    "name": "Elimination Plays",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 7
   },
   "declarer_play/entry_management": {
    "id": "declarer_play/entry_management",
    "name": "Entry Management",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 4
   },
   "declarer_play/finessing": {
    "id": "declarer_play/finessing",
    "name": "Finessing",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 2,
    "confirm": true
@@ -4605,30 +4623,35 @@
   "declarer_play/holdup_plays": {
    "id": "declarer_play/holdup_plays",
    "name": "Holdup Plays",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 3
   },
   "declarer_play/squeeze_plays": {
    "id": "declarer_play/squeeze_plays",
    "name": "Squeeze Plays",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 7
   },
   "declarer_play/suit_establishment": {
    "id": "declarer_play/suit_establishment",
    "name": "Suit Establishment",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 2
   },
   "declarer_play/trump_management": {
    "id": "declarer_play/trump_management",
    "name": "Trump Management",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 3
   },
   "defense/defensive_signals": {
    "id": "defense/defensive_signals",
    "name": "Defensive Signals",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4723,6 +4746,7 @@
   "defense/opening_leads": {
    "id": "defense/opening_leads",
    "name": "Opening Leads",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4796,6 +4820,7 @@
   "defense/second_hand_play": {
    "id": "defense/second_hand_play",
    "name": "Second Hand Play",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 4
   },
@@ -4844,6 +4869,7 @@
   "defense/third_hand_play": {
    "id": "defense/third_hand_play",
    "name": "Third Hand Play",
+   "kind": "skill",
    "source": "taxonomy",
    "level": 3
   },
@@ -4932,12 +4958,14 @@
   "partnership_bidding/advanced_forcing": {
    "id": "partnership_bidding/advanced_forcing",
    "name": "Advanced Forcing (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 6
   },
   "partnership_bidding/basic_bidding": {
    "id": "partnership_bidding/basic_bidding",
    "name": "Basic Bidding (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
@@ -4947,6 +4975,7 @@
   "partnership_bidding/basic_major": {
    "id": "partnership_bidding/basic_major",
    "name": "Basic Major (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
@@ -4956,6 +4985,7 @@
   "partnership_bidding/basic_notrump": {
    "id": "partnership_bidding/basic_notrump",
    "name": "Basic Notrump (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4965,6 +4995,7 @@
   "partnership_bidding/blackwood": {
    "id": "partnership_bidding/blackwood",
    "name": "Blackwood (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4974,6 +5005,7 @@
   "partnership_bidding/jacoby_2nt": {
    "id": "partnership_bidding/jacoby_2nt",
    "name": "Jacoby 2NT (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 4,
    "contexts": [
@@ -4983,12 +5015,14 @@
   "partnership_bidding/miscellaneous": {
    "id": "partnership_bidding/miscellaneous",
    "name": "Miscellaneous Auctions",
+   "kind": "lesson",
    "source": "lessons",
    "level": 4
   },
   "partnership_bidding/negative_doubles": {
    "id": "partnership_bidding/negative_doubles",
    "name": "Negative Doubles (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 3,
    "contexts": [
@@ -4998,6 +5032,7 @@
   "partnership_bidding/overcalls": {
    "id": "partnership_bidding/overcalls",
    "name": "Overcalls (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -5007,12 +5042,14 @@
   "partnership_bidding/passed_hand_bidding": {
    "id": "partnership_bidding/passed_hand_bidding",
    "name": "Passed Hand Bidding",
+   "kind": "lesson",
    "source": "lessons",
    "level": 6
   },
   "partnership_bidding/rebids": {
    "id": "partnership_bidding/rebids",
    "name": "Rebids by Opener or Responder",
+   "kind": "lesson",
    "source": "lessons",
    "level": 3,
    "contexts": [
@@ -5022,6 +5059,7 @@
   "partnership_bidding/responders_rebid": {
    "id": "partnership_bidding/responders_rebid",
    "name": "Responder's Rebid",
+   "kind": "lesson",
    "source": "lessons",
    "level": 5,
    "contexts": [
@@ -5031,6 +5069,7 @@
   "partnership_bidding/roman_key_card": {
    "id": "partnership_bidding/roman_key_card",
    "name": "Roman Key Card (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 4,
    "contexts": [
@@ -5040,6 +5079,7 @@
   "partnership_bidding/slam_bidding": {
    "id": "partnership_bidding/slam_bidding",
    "name": "Slam Bidding",
+   "kind": "lesson",
    "source": "lessons",
    "level": 5,
    "contexts": [
@@ -5049,6 +5089,7 @@
   "partnership_bidding/stayman_transfers": {
    "id": "partnership_bidding/stayman_transfers",
    "name": "Stayman & Transfers (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 3,
    "contexts": [
@@ -5058,6 +5099,7 @@
   "partnership_bidding/two_club": {
    "id": "partnership_bidding/two_club",
    "name": "Two Club (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 3,
    "contexts": [
@@ -5067,6 +5109,7 @@
   "partnership_bidding/weak_twos": {
    "id": "partnership_bidding/weak_twos",
    "name": "Weak Twos (Partnership)",
+   "kind": "lesson",
    "source": "taxonomy",
    "level": 3,
    "contexts": [
@@ -5076,28 +5119,33 @@
   "practice_deals/100_miscellaneous": {
    "id": "practice_deals/100_miscellaneous",
    "name": "100 Miscellaneous Deals",
+   "kind": "lesson",
    "source": "taxonomy"
   },
   "practice_deals/100_notrump": {
    "id": "practice_deals/100_notrump",
    "name": "100 Notrump Deals",
+   "kind": "lesson",
    "source": "taxonomy"
   },
   "precision/1c_mixed": {
    "id": "precision/1c_mixed",
    "name": "Precision 1♣ (Mixed)",
+   "kind": "lesson",
    "source": "lessons",
    "level": 7
   },
   "precision/1c_opener": {
    "id": "precision/1c_opener",
    "name": "Precision 1♣ (Opener)",
+   "kind": "lesson",
    "source": "lessons",
    "level": 7
   },
   "precision/1c_responder": {
    "id": "precision/1c_responder",
    "name": "Precision 1♣ (Responder)",
+   "kind": "lesson",
    "source": "lessons",
    "level": 7
   }
