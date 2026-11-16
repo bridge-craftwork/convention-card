@@ -91,7 +91,7 @@ impl Vocabulary {
                 }
             }
         }
-        for sub in ["conventions", "settings", "migrations"] {
+        for sub in ["conventions", "skills", "settings", "migrations"] {
             walk(&dir.join(sub), &mut files);
         }
         files.push(dir.join("functions.toml"));

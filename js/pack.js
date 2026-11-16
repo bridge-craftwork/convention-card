@@ -17,6 +17,18 @@ const asList = v => (v === undefined || v === null ? [] : Array.isArray(v) ? v :
  * Every address in the pack and the schema 2 path that named it:
  * `{ path: Map(address → path), address: Map(path → address) }`.
  */
+/**
+ * Every definition of the pack, by ID: its conventions and natural methods
+ * (`conventions`) and its skills and judgement entries (`skills`, a list of
+ * their own in the same namespace of IDs; a snapshot from before that split
+ * has them all under `conventions`).
+ */
+export function definitions(pack) {
+  if (!pack.skills) return pack.conventions
+  // In ID order, as one list was: the order fields and rows are derived in.
+  return Object.fromEntries(Object.entries({ ...pack.conventions, ...pack.skills }).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
+}
+
 export function addressMaps(pack) {
   const mig = pack.migrations['2-to-3']
   const path = new Map()
@@ -63,7 +75,7 @@ export function conventionPaths(pack) {
  */
 export function schema2Fields(pack) {
   const mig = pack.migrations['2-to-3']
-  const defs = pack.conventions
+  const defs = definitions(pack)
   const { path: back } = addressMaps(pack)
   const isNew = new Set(mig.new_ids || [])
   const pathOf = (id, a) => back.get(a) ?? back.get(`${id}:${a}`) ?? a

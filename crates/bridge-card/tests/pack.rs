@@ -532,3 +532,58 @@ fn a_function_part_names_the_setting_it_replaced() {
         "two_level.two_hearts.meaning".to_string()
     )));
 }
+
+/// Skills and judgement entries have a list of their own in the snapshot
+/// (`skills`). An ID is read from either list, and a snapshot from before
+/// the split, with everything under `conventions`, reads the same.
+#[test]
+fn an_id_is_read_from_either_list() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..");
+    let text = std::fs::read_to_string(root.join("spec/pack.json")).unwrap();
+    let mut doc: serde_json::Value = serde_json::from_str(&text).unwrap();
+    assert!(doc["skills"]["defense/opening_leads"].is_object());
+    assert!(doc["conventions"]["defense/opening_leads"].is_null());
+
+    let ids = |text: &str| -> Vec<String> {
+        let known = bridge_card::Skills::from_snapshot(text).expect("the definitions load");
+        let mut ids: Vec<String> = known.iter().map(|s| s.path.clone()).collect();
+        ids.sort();
+        ids
+    };
+    let split = ids(&text);
+    for id in [
+        "bidding_conventions/stayman",
+        "competitive_bidding/takeout_doubles",
+        "defense/opening_leads",
+        "basic_bidding/hand_evaluation",
+    ] {
+        assert!(split.iter().any(|i| i == id), "{id}");
+    }
+    let fields = |text: &str| -> Vec<String> {
+        let pack = bridge_card::Pack::from_snapshot(text).expect("the snapshot loads");
+        let mut f: Vec<String> = pack
+            .registry()
+            .fields()
+            .iter()
+            .map(|f| f.path.clone())
+            .collect();
+        f.sort();
+        f
+    };
+    let split_fields = fields(&text);
+
+    // The same snapshot as it was before the split.
+    let skills = doc["skills"].as_object().unwrap().clone();
+    doc.as_object_mut().unwrap().remove("skills");
+    doc["conventions"].as_object_mut().unwrap().extend(skills);
+    let before = doc.to_string();
+    assert_eq!(ids(&before), split);
+    assert_eq!(fields(&before), split_fields);
+
+    // And the source tree, where a checkout is beside this one.
+    if let Some(dir) = pack_dir() {
+        let tree = bridge_card::Skills::load_pack(&dir).expect("the pack's definitions load");
+        assert!(tree.get("defense/opening_leads").is_some());
+        assert!(tree.get("bidding_conventions/stayman").is_some());
+    }
+}

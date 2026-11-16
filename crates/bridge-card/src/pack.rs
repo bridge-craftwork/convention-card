@@ -221,7 +221,7 @@ impl Pack {
                 .map_err(|e| Error::new(e.to_string()).in_file(&p.display().to_string()))?;
             files.push((top.to_string(), text));
         }
-        for sub in ["conventions", "settings", "migrations"] {
+        for sub in ["conventions", "skills", "settings", "migrations"] {
             if dir.join(sub).is_dir() {
                 walk(&dir.join(sub), dir, &mut files)?;
             }
@@ -255,6 +255,19 @@ impl Pack {
             } else if name == "migrations/2-to-3.toml" {
                 migration =
                     toml::from_str(text).map_err(|e| Error::toml(&e, text).in_file(name))?;
+            } else if let Some(id) = name
+                .strip_prefix("skills/")
+                .and_then(|rest| rest.strip_suffix("/skill.toml"))
+            {
+                // A skill or a judgement entry: its own list, in the same
+                // namespace of IDs as the definitions.
+                let t = parse(name, text)?;
+                if t.get("id").and_then(toml::Value::as_str) != Some(id) {
+                    return Err(
+                        Error::new(format!("id must be {id:?}, the file's path")).in_file(name)
+                    );
+                }
+                defs.push((id.to_string(), t));
             } else if let Some(rest) = name.strip_prefix("conventions/") {
                 if let Some(id) = rest.strip_suffix("/convention.toml") {
                     let t = parse(name, text)?;
@@ -322,10 +335,11 @@ impl Pack {
             None => Migration3::default(),
         };
         let mut defs = Vec::new();
-        for (id, d) in doc
-            .get("conventions")
-            .and_then(Json::as_object)
-            .into_iter()
+        // `skills` holds the skills and judgement entries since the pack
+        // gave them a list of their own; before, they were in `conventions`.
+        for (id, d) in ["conventions", "skills"]
+            .iter()
+            .filter_map(|key| doc.get(*key).and_then(Json::as_object))
             .flatten()
         {
             let t = table(Some(d));

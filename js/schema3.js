@@ -33,7 +33,7 @@
 //   it stays listed, or keeps its treatments with `play: false`.
 
 import PACK_DOC from '../spec/pack.json' with { type: 'json' }
-import { addressMaps } from './pack.js'
+import { addressMaps, definitions } from './pack.js'
 
 /** The version a stored card records. */
 export const STORED_SCHEMA_VERSION = '3.0'
@@ -114,7 +114,7 @@ function index(pack) {
     if (!part) whole.add(`${f} ${id}`)
   }
   const whole = new Set()
-  for (const [id, def] of sortedEntries(pack.conventions)) {
+  for (const [id, def] of sortedEntries(definitions(pack))) {
     for (const name of [def.implements ?? []].flat()) claim(id, name, whole)
     // A treatment may say what its convention fills while it is on.
     for (const [t, attrs] of sortedEntries(def.treatments || {})) {
@@ -312,7 +312,7 @@ export function toSchema3(data, pack = PACK_DOC) {
         if (p.convention !== id) continue
         for (const t of Object.values(p.switches)) {
           if (t in e.places) out[t] = e.places[t]
-          else if (pack.conventions[id]?.treatments?.[t]?.default !== undefined) out[t] = false
+          else if (definitions(pack)[id]?.treatments?.[t]?.default !== undefined) out[t] = false
         }
       }
     }
@@ -380,7 +380,7 @@ export function fromSchema3(card, pack = PACK_DOC) {
   for (const [id, e] of sortedEntries(card.conventions || {})) {
     if (!isObject(e)) continue
     const played = e.play !== false
-    const treatments = pack.conventions[id]?.treatments || {}
+    const treatments = definitions(pack)[id]?.treatments || {}
     const places = placeSwitches.get(id)
     const extra = {}
     for (const [k, v] of Object.entries(e)) {

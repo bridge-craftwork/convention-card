@@ -24,7 +24,10 @@ export const DISMISSED_PATH = 'metadata.dismissed_conventions'
 // is found before "Blackwood" and "Ingberman 2NT" before "Ingberman".
 const generic = (c, name) => c.confirm === true
   || (c.confirm_names || []).some(n => n.toLowerCase() === name.toLowerCase())
+// A judgement entry (hand evaluation, penalty doubles) is how a bidder
+// decides, which no card records: a note that uses its name is not naming it.
 const NAMES = Object.entries(CONVENTIONS)
+  .filter(([, c]) => c.kind !== 'judgement')
   .flatMap(([id, c]) => [...new Set([c.name, ...(c.names || [])].filter(Boolean))].map(name => ({ id, name, confirm: generic(c, name) })))
   .filter(n => n.name.trim().length >= 3)
   .sort((a, b) => b.name.length - a.name.length)

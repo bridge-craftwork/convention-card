@@ -185,9 +185,14 @@ impl Skills {
                 doc["schema"]
             )));
         }
-        let entries = doc["conventions"]
+        let conventions = doc["conventions"]
             .as_object()
             .ok_or_else(|| Error::new("conventions: expected an object"))?;
+        // Skills and judgement entries have a key of their own since the
+        // pack gave them a list of their own; IDs are one namespace.
+        let entries = conventions
+            .iter()
+            .chain(doc["skills"].as_object().into_iter().flatten());
         const ENTRY: [&str; 9] = [
             "id",
             "name",
@@ -230,6 +235,56 @@ impl Skills {
             skills.push(Skills::parse_entry(id, &text).map_err(|e| e.in_file(id))?);
         }
         Ok(Skills::from_entries(skills))
+    }
+
+    /// The definitions of the convention pack in `dir`, read from its
+    /// source tree: `conventions/<category>/<name>/convention.toml` and
+    /// `skills/<category>/<name>/skill.toml`. What [`Skills::from_snapshot`]
+    /// gives for the same pack once published.
+    pub fn load_pack(dir: &Path) -> Result<Skills, Error> {
+        let io = |e: std::io::Error, p: &Path| {
+            Error::new(e.to_string()).in_file(&p.display().to_string())
+        };
+        let mut lists = [serde_json::Map::new(), serde_json::Map::new()];
+        for (list, (folder, file)) in lists
+            .iter_mut()
+            .zip([("conventions", "convention.toml"), ("skills", "skill.toml")])
+        {
+            let root = dir.join(folder);
+            let categories = match std::fs::read_dir(&root) {
+                Ok(d) => d,
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => continue,
+                Err(e) => return Err(io(e, &root)),
+            };
+            for category in categories.flatten().map(|c| c.path()) {
+                if !category.is_dir() {
+                    continue;
+                }
+                let names = std::fs::read_dir(&category).map_err(|e| io(e, &category))?;
+                for name in names.flatten().map(|n| n.path()) {
+                    let path = name.join(file);
+                    let text = match std::fs::read_to_string(&path) {
+                        Ok(t) => t,
+                        Err(e) if e.kind() == std::io::ErrorKind::NotFound => continue,
+                        Err(e) => return Err(io(e, &path)),
+                    };
+                    let table: toml::Table = toml::from_str(&text)
+                        .map_err(|e| Error::toml(&e, &text).in_file(&path.display().to_string()))?;
+                    let id = format!(
+                        "{}/{}",
+                        category.file_name().unwrap().to_string_lossy(),
+                        name.file_name().unwrap().to_string_lossy()
+                    );
+                    let entry = serde_json::to_value(&table).map_err(|e| {
+                        Error::new(e.to_string()).in_file(&path.display().to_string())
+                    })?;
+                    list.insert(id, entry);
+                }
+            }
+        }
+        let [conventions, skills] = lists;
+        let doc = serde_json::json!({ "schema": "pack/v1", "conventions": conventions, "skills": skills });
+        Skills::from_snapshot(&doc.to_string())
     }
 
     /// Collect parsed entries into a list.

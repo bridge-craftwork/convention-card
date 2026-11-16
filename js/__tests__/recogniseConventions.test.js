@@ -36,7 +36,8 @@ describe('findConventions', () => {
 
   it('knows every convention by its own name', () => {
     for (const [id, c] of Object.entries(CONVENTIONS)) {
-      if (!c.name || c.name.length < 3) continue
+      // A judgement entry is not something a note names (recogniseConventions.js).
+      if (!c.name || c.name.length < 3 || c.kind === 'judgement') continue
       expect(findConventions(c.name).map(f => f.id), id).toContain(id)
     }
   })
