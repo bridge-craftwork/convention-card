@@ -17,6 +17,7 @@
 
 import { FIELDS, CONVENTIONS } from './spec.js'
 import { cardValues } from './checkCard.js'
+import { upgradeCardData } from './migrate.js'
 
 // Choice groups: id → member paths, in spec order.
 const CHOICES = new Map()
@@ -184,7 +185,9 @@ function agreementsOf(card_data) {
 }
 
 function unwrap(card, i) {
-  const data = card?.card_data && typeof card.card_data === 'object' ? card.card_data : card || {}
+  // In the working form, whatever schema the card was saved in: its other
+  // agreements are read from there, as its fields are.
+  const data = upgradeCardData(card?.card_data && typeof card.card_data === 'object' ? card.card_data : card || {})
   const meta = data.metadata || {}
   const name = card?.name || meta.name || `Card ${i + 1}`
   const names = typeof meta.partner_names === 'string' ? meta.partner_names.trim() : ''
