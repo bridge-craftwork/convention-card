@@ -47,11 +47,33 @@ pub struct Function {
     pub parts: Vec<String>,
     /// Each convention that implements it, with the parts it fills.
     pub implementers: Vec<(String, Vec<String>)>,
+    /// For a convention that fills the function through its treatments
+    /// (Weak jump shifts through `two_level`): each such treatment's address
+    /// and the parts the convention fills while it is on. Absent for a
+    /// convention whose definition implements the function outright.
+    pub when: BTreeMap<String, Vec<(String, Vec<String>)>>,
     /// Schema 2's option words: word to ID.
     pub option: BTreeMap<String, String>,
+    /// Words of the schema 2 setting that named no convention and left the
+    /// choice to the card's entries (`other`, `conventional`).
+    pub defers: Vec<String>,
 }
 
 impl Function {
+    /// Whether convention `id`, played, fills `part` (empty for a function
+    /// with none): always, for one that implements the function outright;
+    /// for one that fills it through treatments, while one of those is on
+    /// (`holds` says whether the treatment at an address is).
+    pub fn fills(&self, id: &str, part: &str, holds: &dyn Fn(&str) -> bool) -> bool {
+        match self.when.get(id) {
+            None => true,
+            Some(list) => list.iter().any(|(treatment, parts)| {
+                (parts.is_empty() || part.is_empty() || parts.iter().any(|p| p == part))
+                    && holds(treatment)
+            }),
+        }
+    }
+
     /// The addresses of this function's parts (`defence_to_1nt.strong`), or
     /// its own name when it has none.
     pub fn addresses(&self) -> Vec<String> {
@@ -79,12 +101,39 @@ pub struct Migration3 {
     pub function: Vec<FunctionMove>,
     #[serde(default)]
     pub alias: BTreeMap<String, String>,
+    #[serde(default)]
+    pub yields: Vec<Yield>,
+    #[serde(default)]
+    pub stood_for: Vec<StoodFor>,
+}
+
+/// `[[stood_for]]`: a yes/no treatment that, on, turns on the treatments in
+/// `means` that the card left unset. Addresses are `ID:treatment`, all of
+/// one convention.
+#[derive(Debug, Clone, Deserialize)]
+pub struct StoodFor {
+    pub treatment: String,
+    pub means: Vec<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct PlaceMove {
     pub convention: String,
     pub switches: BTreeMap<String, String>,
+    /// A convention the card was read as playing when one of these places
+    /// was on, its own switch being unset (Puppet Stayman's boxes sat under
+    /// Stayman).
+    #[serde(default)]
+    pub also_plays: Option<String>,
+}
+
+/// `[[yields]]`: where both are played and `to` fills a part of
+/// `function`, `convention`'s entry is written `for` the parts left.
+#[derive(Debug, Clone, Deserialize)]
+pub struct Yield {
+    pub function: String,
+    pub convention: String,
+    pub to: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -118,6 +167,9 @@ pub struct Pack {
     pub functions: Vec<Function>,
     pub migration: Migration3,
     targets: HashMap<String, Target>,
+    /// Treatments marked `independent`: read whatever the convention's own
+    /// switch says (another place the convention is played).
+    independent: std::collections::HashSet<String>,
     /// Spellings of the schema 2 function settings' options, folded.
     option_words: HashMap<(String, String), HashMap<String, String>>,
 }
@@ -221,6 +273,90 @@ impl Pack {
                 }
             }
         }
+        Pack::build(manifest, functions_doc, migration, defs, settings)
+    }
+
+    /// Build a pack from its published snapshot (`pack.json`, as
+    /// bridge-common-conventions' `published` branch carries it): the same
+    /// files, already parsed. What a reader without the source tree has.
+    pub fn from_snapshot(text: &str) -> Result<Pack, Error> {
+        let in_file = |e: Error| e.in_file("pack.json");
+        let doc: Json =
+            serde_json::from_str(text).map_err(|e| in_file(Error::new(e.to_string())))?;
+        fn table(v: Option<&Json>) -> toml::Table {
+            match v.map(to_toml) {
+                Some(Some(toml::Value::Table(t))) => t,
+                _ => toml::Table::new(),
+            }
+        }
+        /// JSON as the TOML it was parsed from; a null (TOML has none) is
+        /// left out.
+        fn to_toml(v: &Json) -> Option<toml::Value> {
+            Some(match v {
+                Json::Null => return None,
+                Json::Bool(b) => toml::Value::Boolean(*b),
+                Json::Number(n) => match n.as_i64() {
+                    Some(i) => toml::Value::Integer(i),
+                    None => toml::Value::Float(n.as_f64()?),
+                },
+                Json::String(s) => toml::Value::String(s.clone()),
+                Json::Array(a) => toml::Value::Array(a.iter().filter_map(to_toml).collect()),
+                Json::Object(o) => toml::Value::Table(
+                    o.iter()
+                        .filter_map(|(k, v)| Some((k.clone(), to_toml(v)?)))
+                        .collect(),
+                ),
+            })
+        }
+        if doc.get("schema").and_then(Json::as_str) != Some("pack/v1") {
+            return Err(in_file(Error::new(
+                "not a pack snapshot (`schema` is not \"pack/v1\")",
+            )));
+        }
+        let manifest = table(doc.get("pack"));
+        let functions_doc = table(doc.get("functions"));
+        let migration: Migration3 = match doc.get("migrations").and_then(|m| m.get("2-to-3")) {
+            Some(m) => toml::Value::Table(table(Some(m)))
+                .try_into()
+                .map_err(|e: toml::de::Error| in_file(Error::new(e.to_string())))?,
+            None => Migration3::default(),
+        };
+        let mut defs = Vec::new();
+        for (id, d) in doc
+            .get("conventions")
+            .and_then(Json::as_object)
+            .into_iter()
+            .flatten()
+        {
+            let t = table(Some(d));
+            if t.get("id").and_then(toml::Value::as_str) != Some(id.as_str()) {
+                return Err(in_file(Error::new(format!(
+                    "{id}: its `id` does not match"
+                ))));
+            }
+            defs.push((id.clone(), t));
+        }
+        let mut settings = Vec::new();
+        for (section, fields) in doc
+            .get("settings")
+            .and_then(Json::as_object)
+            .into_iter()
+            .flatten()
+        {
+            settings.push((section.clone(), table(Some(fields))));
+        }
+        // As a directory is read: sorted by file name.
+        settings.sort_by(|a, b| a.0.cmp(&b.0));
+        Pack::build(manifest, functions_doc, migration, defs, settings)
+    }
+
+    fn build(
+        manifest: toml::Table,
+        functions_doc: toml::Table,
+        migration: Migration3,
+        mut defs: Vec<(String, toml::Table)>,
+        settings: Vec<(String, toml::Table)>,
+    ) -> Result<Pack, Error> {
         let schema = manifest
             .get("card_schema_version")
             .and_then(toml::Value::as_integer);
@@ -289,7 +425,11 @@ impl Pack {
         }
 
         let mut fields: Vec<FieldDef> = Vec::new();
+        let mut independent = std::collections::HashSet::new();
         let mut implementers: BTreeMap<String, Vec<(String, Vec<String>)>> = BTreeMap::new();
+        // function → convention → [(treatment address, parts)]
+        type When = BTreeMap<String, Vec<(String, Vec<String>)>>;
+        let mut when: BTreeMap<String, When> = BTreeMap::new();
         for (id, def) in &defs {
             let name = def
                 .get("name")
@@ -365,6 +505,29 @@ impl Pack {
                     }
                 };
                 attrs.remove("taught_under");
+                if attrs.remove("independent") == Some(toml::Value::Boolean(true)) {
+                    independent.insert(address.clone());
+                }
+                // What the convention fills while this treatment is on.
+                for f in strings(attrs.remove("implements").as_ref()) {
+                    let (function, part) = match f.split_once('.') {
+                        Some((a, b)) => (a.to_string(), vec![b.to_string()]),
+                        None => (f.clone(), Vec::new()),
+                    };
+                    let list = implementers.entry(function.clone()).or_default();
+                    match list.iter_mut().find(|(i, _)| i == id) {
+                        Some((_, parts)) if !parts.is_empty() && !part.is_empty() => {
+                            parts.extend(part.clone())
+                        }
+                        Some((_, parts)) => parts.clear(),
+                        None => list.push((id.clone(), part.clone())),
+                    }
+                    when.entry(function)
+                        .or_default()
+                        .entry(id.clone())
+                        .or_default()
+                        .push((address.clone(), part));
+                }
                 let mut field: FieldDef = toml::Value::Table(attrs)
                     .try_into()
                     .map_err(|e| Error::new(format!("{address}: {e}")))?;
@@ -399,7 +562,9 @@ impl Pack {
                     .unwrap_or(fname)
                     .to_string(),
                 parts: strings(doc.get("parts")),
+                defers: strings(doc.get("defers")),
                 implementers: implementers.remove(fname).unwrap_or_default(),
+                when: when.remove(fname).unwrap_or_default(),
                 option: doc
                     .get("option")
                     .and_then(toml::Value::as_table)
@@ -421,11 +586,20 @@ impl Pack {
                 } else {
                     format!("{fname}.{part}")
                 };
+                // What a rule may compare it with: the conventions that
+                // can fill this part, and `none`.
+                let mut can_fill: Vec<String> = f
+                    .implementers
+                    .iter()
+                    .filter(|(_, ps)| ps.is_empty() || part.is_empty() || ps.contains(part))
+                    .map(|(id, _)| id.clone())
+                    .collect();
+                can_fill.push("none".into());
                 fields.push(FieldDef {
                     path: address.clone(),
                     kind: FieldKind::Text,
                     label: f.label.clone(),
-                    options: Vec::new(),
+                    options: can_fill,
                     min: None,
                     max: None,
                     many: false,
@@ -519,6 +693,7 @@ impl Pack {
             functions,
             migration,
             targets,
+            independent,
             option_words,
         })
     }
@@ -542,6 +717,29 @@ impl Pack {
             id.to_string(),
             p.switches.values().map(|x| format!("{id}:{x}")).collect(),
         ))
+    }
+
+    /// The card schema 2 setting each part of a function replaced, as
+    /// (the part's address, the setting's path): `defence_to_1nt.strong`
+    /// and `competitive.vs_1nt_strong.system`. A card read from an older
+    /// form still lists the setting; a rule reads the part.
+    pub fn function_settings(&self) -> Vec<(String, String)> {
+        self.migration
+            .function
+            .iter()
+            .flat_map(|f| {
+                f.settings
+                    .iter()
+                    .map(|(part, path)| (format!("{}.{part}", f.function), path.clone()))
+            })
+            .collect()
+    }
+
+    /// Whether the treatment at `address` reads whatever its convention's
+    /// switch says: a place the convention is played (section 7 of the
+    /// contract), or one its definition marks `independent`.
+    pub fn stands_alone(&self, address: &str) -> bool {
+        self.independent.contains(address) || self.place_of(address).is_some()
     }
 
     pub fn function(&self, name: &str) -> Option<&Function> {
@@ -587,6 +785,7 @@ impl Pack {
         let mut leaves = Vec::new();
         let mut ignored = Vec::new();
         let mut listed_fn: Vec<(String, Json)> = Vec::new();
+        let mut wording: BTreeMap<(String, String), Json> = BTreeMap::new();
         let mut listed_rest: Vec<Json> = Vec::new();
         for (key, value) in old {
             match key.as_str() {
@@ -653,10 +852,57 @@ impl Pack {
                             .and_then(|w| w.get(&fold(word)))
                             .cloned()
                             .unwrap_or_else(|| word.to_string());
+                        // The card's own wording is kept for the tools
+                        // that print it: on the entry of the convention it
+                        // chose (below), or, when it chose none (`natural`,
+                        // a name no option covers), as the setting.
+                        let names_one = self
+                            .function(f)
+                            .is_some_and(|func| func.option.contains_key(&word));
+                        if !names_one {
+                            crate::card::write_path(&mut settings, &path, value.clone());
+                        } else if value.as_str() != Some(word.as_str()) {
+                            wording
+                                .entry((f.clone(), part.clone()))
+                                .or_insert_with(|| value.clone());
+                        }
                         chosen.entry((f.clone(), part.clone())).or_insert(word);
+                    } else {
+                        crate::card::write_path(&mut settings, &path, value);
                     }
                 }
                 None => crate::card::write_path(&mut settings, &path, value),
+            }
+        }
+
+        // A box that stood for more than it said.
+        for sf in &self.migration.stood_for {
+            let Some((id, t)) = sf.treatment.split_once(':') else {
+                continue;
+            };
+            let Some(e) = entries.get_mut(id) else {
+                continue;
+            };
+            if e.treatments.get(t).and_then(Json::as_bool) != Some(true) {
+                continue;
+            }
+            for m in &sf.means {
+                if let Some((_, name)) = m.split_once(':') {
+                    e.treatments
+                        .entry(name.to_string())
+                        .or_insert(Json::Bool(true));
+                }
+            }
+        }
+
+        // A place that is on also plays the convention its boxes sat under.
+        for p in &self.migration.place {
+            let Some(also) = &p.also_plays else { continue };
+            let on = entries
+                .get(&p.convention)
+                .is_some_and(|e| e.places.values().any(|on| *on));
+            if on {
+                entries.entry(also.clone()).or_default().implied = true;
             }
         }
 
@@ -673,6 +919,18 @@ impl Pack {
                     .and_then(|w| m.options.get(w))
                 {
                     fills.entry(id.clone()).or_default().push(part.clone());
+                    // The wording goes on the entry; a second part worded
+                    // differently ("Strong - Suction", "Weak - Suction")
+                    // keeps its own as the setting.
+                    if let Some(text) = wording.get(&(m.function.clone(), part.clone())) {
+                        let e = entries.entry(id.clone()).or_default();
+                        let kept = e.extra.entry("text").or_insert_with(|| text.clone());
+                        if kept != text {
+                            if let Some(path) = m.settings.get(part) {
+                                crate::card::write_path(&mut settings, path, text.clone());
+                            }
+                        }
+                    }
                 }
             }
             for (switch, part) in &m.unless_chosen {
@@ -681,7 +939,10 @@ impl Pack {
                 };
                 let on = entries.get(id).and_then(|e| e.play) == Some(true);
                 let word = chosen.get(&(m.function.clone(), part.clone()));
-                let free = word.is_none_or(|w| w == "other");
+                let free = word.is_none_or(|w| {
+                    self.function(&m.function)
+                        .is_some_and(|f| f.defers.contains(w))
+                });
                 if on && free {
                     fills.entry(id.clone()).or_default().push(part.clone());
                 } else if on && !fills.contains_key(id) {
@@ -693,9 +954,17 @@ impl Pack {
             for (id, mut parts) in fills {
                 parts.sort();
                 parts.dedup();
+                // `for` narrows what the convention can fill: every part of
+                // the function, or the ones its definition names.
+                let can_fill: Vec<String> = self
+                    .function(&m.function)
+                    .and_then(|f| f.implementers.iter().find(|(i, _)| *i == id))
+                    .map(|(_, own)| own.clone())
+                    .filter(|own| !own.is_empty())
+                    .unwrap_or_else(|| all_parts.clone());
                 let e = entries.entry(id).or_default();
                 e.play = Some(true);
-                if !all_parts.is_empty() && all_parts.iter().any(|p| !parts.contains(p)) {
+                if !can_fill.is_empty() && can_fill.iter().any(|p| !parts.contains(p)) {
                     e.extra.insert(
                         "for".into(),
                         Json::Array(
@@ -756,7 +1025,22 @@ impl Pack {
                 && !e.listed
                 && filled
                 && matches!(unset, Unset::Played)
-                && self.contends(&id, &ticked)
+                && !e.implied
+                && self.contends(
+                    &id,
+                    // One it gives way to is not a rival: both are played.
+                    &ticked
+                        .iter()
+                        .filter(|t| {
+                            !self
+                                .migration
+                                .yields
+                                .iter()
+                                .any(|y| y.convention == id && y.to == **t)
+                        })
+                        .cloned()
+                        .collect::<Vec<_>>(),
+                )
             {
                 e.play = Some(false);
             }
@@ -764,7 +1048,7 @@ impl Pack {
             let play = if e.places.is_empty() {
                 match (e.play, unset) {
                     (Some(p), _) => Some(p),
-                    (None, _) if e.listed => Some(true),
+                    (None, _) if e.listed || e.implied => Some(true),
                     (None, Unset::Played) if filled => Some(true),
                     (None, Unset::Played) => None,
                     // As schema 2 read it: the bidder's default for the
@@ -786,12 +1070,21 @@ impl Pack {
                 out.insert("play".into(), Json::Bool(false));
             }
             if !e.places.is_empty() {
-                // Every place is written, so none falls back on a default.
+                // A place the card is silent on is written as off where the
+                // definition gives it a default, so it does not fall back on
+                // that; one with no default stays silent.
                 for p in &self.migration.place {
                     if p.convention == id {
                         for t in p.switches.values() {
-                            let on = e.places.get(t).copied().unwrap_or(false);
-                            out.insert(t.clone(), Json::Bool(on));
+                            let has_default = self
+                                .registry
+                                .get(&format!("{id}:{t}"))
+                                .is_some_and(|f| f.default.is_some());
+                            match e.places.get(t) {
+                                Some(on) => out.insert(t.clone(), Json::Bool(*on)),
+                                None if has_default => out.insert(t.clone(), Json::Bool(false)),
+                                None => None,
+                            };
                         }
                     }
                 }
@@ -803,6 +1096,67 @@ impl Pack {
                 out.insert(k, v);
             }
             conventions.insert(id, Json::Object(out));
+        }
+
+        // A convention that gives way to another keeps its entry, `for` the
+        // parts the other does not fill.
+        let played = |c: &Map<String, Json>, id: &str| {
+            c.get(id)
+                .is_some_and(|e| e.get("play") != Some(&Json::Bool(false)))
+        };
+        for y in &self.migration.yields {
+            let Some(f) = self.function(&y.function) else {
+                continue;
+            };
+            if !played(&conventions, &y.convention) || !played(&conventions, &y.to) {
+                continue;
+            }
+            let fills = |id: &str, part: &str| {
+                let entry = &conventions[id];
+                let address = if part.is_empty() {
+                    f.name.clone()
+                } else {
+                    format!("{}.{part}", f.name)
+                };
+                f.implementers.iter().any(|(i, own)| {
+                    i == id && (own.is_empty() || part.is_empty() || own.iter().any(|p| p == part))
+                }) && f.fills(id, part, &|t| {
+                    t.split_once(':')
+                        .is_some_and(|(_, name)| entry.get(name) == Some(&Json::Bool(true)))
+                }) && entry.get("for").and_then(Json::as_array).is_none_or(|l| {
+                    l.iter()
+                        .any(|a| a.as_str() == Some(&address) || a.as_str() == Some(&f.name))
+                })
+            };
+            let parts: Vec<String> = if f.parts.is_empty() {
+                vec![String::new()]
+            } else {
+                f.parts.clone()
+            };
+            let mine: Vec<&String> = parts.iter().filter(|p| fills(&y.convention, p)).collect();
+            let left: Vec<&String> = mine.iter().copied().filter(|p| !fills(&y.to, p)).collect();
+            if left.len() == mine.len() {
+                continue;
+            }
+            // What the entry was `for` in other functions stays.
+            let mut list: Vec<Json> = conventions[&y.convention]
+                .get("for")
+                .and_then(Json::as_array)
+                .map(|l| {
+                    l.iter()
+                        .filter(|a| {
+                            a.as_str().is_some_and(|a| {
+                                a != f.name && !a.starts_with(&format!("{}.", f.name))
+                            })
+                        })
+                        .cloned()
+                        .collect()
+                })
+                .unwrap_or_default();
+            list.extend(left.iter().map(|p| Json::String(format!("{}.{p}", f.name))));
+            if let Some(Json::Object(e)) = conventions.get_mut(&y.convention) {
+                e.insert("for".into(), Json::Array(list));
+            }
         }
         top.insert("schema_version".into(), Json::from(CARD_SCHEMA_VERSION));
         top.insert("conventions".into(), Json::Object(conventions));
@@ -849,6 +1203,9 @@ struct Entry {
     extra: Map<String, Json>,
     /// Came from `other_agreements`: the card lists it, so it plays it.
     listed: bool,
+    /// Read as played because a place of another convention is on
+    /// (`also_plays`).
+    implied: bool,
 }
 
 /// A treatment that is on or filled in.
@@ -869,6 +1226,7 @@ pub(crate) fn derive(
     derived: &Derived,
     on: &dyn Fn(&str) -> bool,
     limited: &dyn Fn(&str) -> Option<Vec<String>>,
+    holds: &dyn Fn(&str) -> bool,
 ) -> Option<Value> {
     let (function, part, as_option) = match derived {
         Derived::FunctionId { function, part } => (function, part, false),
@@ -883,6 +1241,7 @@ pub(crate) fn derive(
     let mut playing = f.implementers.iter().filter(|(id, parts)| {
         (parts.is_empty() || part.is_empty() || parts.contains(part))
             && on(id)
+            && f.fills(id, part, holds)
             && limited(id).is_none_or(|l| l.contains(&address) || l.contains(function))
     });
     let (id, _) = playing.next()?;

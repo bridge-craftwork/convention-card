@@ -274,6 +274,8 @@ function settingsOf(cardData) {
  * box it came with, changed only where its fields have changed.
  */
 export function exportBridgodexJson(cardData) {
+  // A card saved in another schema is read in the working form.
+  cardData = upgradeCardData(cardData)
   const raw = cardData?._bridgeodex_raw || {}
   const before = Object.keys(raw).length ? importBridgeodexJson({ settings: raw }).card_data : {}
   const get = settingsOf(cardData)

@@ -1,5 +1,10 @@
 # ADR-0002 — A Convention Is a Group With a `play` Switch
 
+> **2026-11-15:** the convention files, the field list (`spec/fields.toml`),
+> the levels, the alert rules and `spec/migrations/` named below now live in
+> [bridge-common-conventions](https://github.com/bridge-craftwork/bridge-common-conventions). This repo reads a copy of its
+> published snapshot, `spec/pack.json`. The record below is left as written.
+
 **Status:** Accepted 2026-10-30 (Rick Wilson).
 
 **Affects:** `spec/fields.toml` and the generated JSON, the format maps

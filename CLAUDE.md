@@ -2,10 +2,16 @@
 
 ## What this repo is
 
-The bridge convention card: the **spec** (every field a card can hold, format
-maps, the skill vocabulary), a **JavaScript library** (converters, PDF), the
+The bridge convention card: the **spec** (a copy of the convention pack's
+snapshot, and the format maps), a **JavaScript library** (converters, PDF), the
 **editor** (Vue 3, served at `bridge-craftwork.com/card/`), and the **Rust
 `bridge-card` crate**.
+
+The conventions, the names of card settings, the levels, the alert rules and
+the card migrations are not kept here. They are in
+[bridge-common-conventions](https://github.com/bridge-craftwork/bridge-common-conventions); `spec/pack.json` is a copy of its
+published snapshot, refreshed with `scripts/sync_pack.mjs`. A change to a
+name or a convention is made there.
 
 **Read [docs/DESIGN.md](docs/DESIGN.md) first**, then
 [docs/DECISIONS.md](docs/DECISIONS.md) for what's settled and what's open, and
@@ -14,21 +20,24 @@ IDs) shapes every tool that names a convention.
 [docs/MIGRATION.md](docs/MIGRATION.md) tracks the move from Bridge-Classroom and
 rusty-bidding-bot. **As of 2026-10-02**, Phases 0–4 are done: the editor is live at
 `bridge-craftwork.com/card/` and embedded in Bridge Classroom.
-rusty-bidding-bot depends on `v0.1.0` and Bridge Classroom on `v0.5.0`. Next
-is the editor's level filter (decision 12), then Phase 5. A change here reaches a
-consumer by a new tag here and a pin bump there.
+A change here reaches a consumer by a new tag here and a pin bump there. The
+pins are in each consumer: Bridge Classroom's and the Better BBO extension's
+`package.json`, rusty-bidding-bot's `Cargo.toml`.
 
 ## Ground rules
 
 - **Saved cards must keep loading.** The interchange format is Bridge
   Classroom's nested `card_data` JSON, and real cards live in its database. A
   rename migrates saved cards by schema version, not by an alias (ADR-0002 §5,
-  Rick 2026-10-30): bump the card schema version, add the rename to a
-  `spec/migrations/<from>-to-<to>.toml` that the JS library and the crate
-  apply on read, and never delete a migration. Keep and write back fields you
+  Rick 2026-10-30): the card schema version is bumped and the rename added to
+  a migration in bridge-common-conventions (`migrations/<from>-to-<to>.toml`,
+  in the snapshot under `migrations`), which the JS library and the crate
+  apply on read. A migration is never deleted. Keep and write back fields you
   don't recognise.
-- **The spec is the single source.** Don't add a field list, an enum, or a skill
-  list to JS or Rust code; add it to `spec/` and read it from there.
+- **The pack is the single source.** Don't add a field list, an enum, or a skill
+  list to JS or Rust code, or to `spec/`; add it to bridge-common-conventions
+  and sync the snapshot. Only the format maps (`spec/formats/`) are edited
+  here.
 - **The card records agreements, not bid meanings.** "We play Smolen" belongs
   here; what Smolen's bids mean belongs to whatever reads the card (e.g. the
   bot's rules).
@@ -77,8 +86,10 @@ alongside it.
 - `Bridge-Classroom` — the code's current home; keeps saved cards and the API.
   At `/Users/rick/Development/GitHub/Bridge-Classroom`: it stays on the
   internal SSD for now.
-- `rusty-bidding-bot` — the Rust crate's current home; a consumer.
-- `lesson-studio` — validates against the taxonomy (its Contract 4).
+- `bridge-common-conventions` — the convention pack: definitions, setting
+  names, levels, alerts, migrations and the bidding rules.
+- `rusty-bidding-bot` — where the Rust crate came from; a consumer.
+- `lesson-studio` — validates lesson tags against the convention IDs.
 - `Baker-Bridge`, `Practice-Bidding-Scenarios` — lesson collections that tag
   boards with skills.
 - `Better-BBO-Convention-Card` — browser extension; will use the library.

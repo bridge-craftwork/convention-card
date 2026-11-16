@@ -1,11 +1,11 @@
 name: Test
 
-# The spec, the Rust crate and the JS library: the crate's tests load and
-# check every spec file (fields, the .bbsa map, one file per convention); the
-# JS tests check the converters against the spec and the crate's golden files. On pull requests the
-# generator also runs, to catch a convention file that does not parse or whose
-# id does not match its path. A PR need not update the generated files:
-# build-spec.yml regenerates them after the merge.
+# The Rust crate and the JS library: the crate's tests load the bundled
+# convention pack (spec/pack.json) and the .bbsa map; the JS tests check the
+# converters against the pack and the crate's golden files. On pull requests
+# the generator also runs, to catch a format map that does not parse. A PR
+# need not update the generated files: build-spec.yml regenerates them after
+# the merge.
 
 on:
   pull_request:
@@ -37,7 +37,7 @@ jobs:
       - run: npm test
       - run: npm run build
 
-  conventions-json:
+  format-maps:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -45,5 +45,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Every convention file parses and its id matches its path
-        run: python3 scripts/build_spec.py >/dev/null && git checkout -- spec/conventions.json spec/taxonomy.json spec/fields.json spec/levels.json spec/alerts.json spec/formats/bbsa-map.json spec/migrations/
+      - name: Every format map parses
+        run: python3 scripts/build_spec.py >/dev/null && git checkout -- spec/formats/

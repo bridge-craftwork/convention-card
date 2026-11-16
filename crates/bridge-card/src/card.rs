@@ -87,6 +87,8 @@ pub struct Card {
     /// Values worked out from the rest of the card (a function's
     /// convention), by address. Kept current by every change.
     derived: BTreeMap<String, Value>,
+    /// Conventions a stored schema 2 function setting names (`refresh`).
+    named_by_setting: std::collections::BTreeSet<String>,
 }
 
 /// What happened while loading a card.
@@ -121,6 +123,9 @@ impl LoadReport {
     }
 }
 
+/// What a convention reads as when a stored schema 2 setting names it.
+static ON: Value = Value::Bool(true);
+
 impl Card {
     /// An empty card in `vocab`.
     pub fn new(vocab: &Vocabulary) -> Card {
@@ -134,6 +139,7 @@ impl Card {
             entries: BTreeMap::new(),
             unknown_entries: BTreeMap::new(),
             derived: BTreeMap::new(),
+            named_by_setting: Default::default(),
         }
     }
 
@@ -186,6 +192,30 @@ impl Card {
                 .get(&field.path)
                 .or_else(|| self.derived.get(&field.path));
         }
+        // A convention a stored schema 2 setting names is played, whatever
+        // its own switch says: the setting chose it.
+        if self.named_by_setting.contains(&field.path) {
+            return Some(&ON);
+        }
+        // A treatment means nothing while its convention is off: where the
+        // card says it does not play the convention, the treatment reads as
+        // unset, whatever it holds. (Silent on the convention, a treatment
+        // the card sets still reads: the card is then taken to play it.)
+        // A place (Lebensohl after a weak two, strong jump shifts at the
+        // two level) is not gated: it is the switch itself, and one that
+        // says no must read as no.
+        if let Some(c) = &field.convention {
+            let is_place = self
+                .vocab
+                .pack()
+                .is_some_and(|p| p.stands_alone(&field.path));
+            if !is_place
+                && self.values.get(c) == Some(&Value::Bool(false))
+                && !self.named_by_setting.contains(c)
+            {
+                return None;
+            }
+        }
         self.values
             .get(&field.path)
             .or_else(|| match &field.convention {
@@ -217,10 +247,12 @@ impl Card {
             return;
         };
         let mut derived = BTreeMap::new();
+        let mut named = std::collections::BTreeSet::new();
         for f in self.vocab.registry().fields() {
             let Some(d) = &f.derived else { continue };
             let on = |id: &str| matches!(self.values.get(id), Some(Value::Bool(true)));
             let limited = |id: &str| self.limited_to(id);
+            let holds = |t: &str| matches!(self.values.get(t), Some(Value::Bool(true)));
             // A schema 2 setting stored on the card (a `.bbsa` import, a
             // change by its old path) says which convention fills the
             // part, as it did in schema 2: its option's convention;
@@ -233,21 +265,33 @@ impl Card {
                             _ => None,
                         });
                 if let Some(word) = word {
-                    let option = pack.function(function).and_then(|f| f.option.get(&word));
-                    if let Some(id) = option {
+                    let func = pack.function(function);
+                    if let Some(id) = func.and_then(|f| f.option.get(&word)) {
                         derived.insert(f.path.clone(), Value::Text(id.clone()));
+                        named.insert(id.clone());
                         continue;
                     }
-                    if word != "other" {
-                        continue;
-                    }
+                    // The setting is filled in and names no convention. A
+                    // word that defers (`other`, `conventional`) leaves it
+                    // to the entries; any other (`natural`) says none. Either
+                    // way the card has spoken: where nothing fills the
+                    // part it reads `none`, not a rule's default.
+                    let none = Value::Text("none".into());
+                    let v = if func.is_some_and(|f| f.defers.contains(&word)) {
+                        crate::pack::derive(pack, d, &on, &limited, &holds).unwrap_or(none)
+                    } else {
+                        none
+                    };
+                    derived.insert(f.path.clone(), v);
+                    continue;
                 }
             }
-            if let Some(v) = crate::pack::derive(pack, d, &on, &limited) {
+            if let Some(v) = crate::pack::derive(pack, d, &on, &limited, &holds) {
                 derived.insert(f.path.clone(), v);
             }
         }
         self.derived = derived;
+        self.named_by_setting = named;
     }
 
     /// The schema 2 setting that chose the convention for a function's
@@ -307,8 +351,18 @@ impl Card {
         if let Some(old) = self.legacy_setting(&function, &part) {
             self.values.remove(&old);
         }
-        let all = f.addresses();
-        for (id, _) in &f.implementers {
+        let every = f.addresses();
+        for (id, own) in &f.implementers {
+            // What this convention can fill: every part, or the ones its
+            // definition names.
+            let all: Vec<String> = if own.is_empty() {
+                every.clone()
+            } else {
+                own.iter().map(|p| format!("{function}.{p}")).collect()
+            };
+            if Some(id) == chosen.as_ref() && !all.contains(&address) {
+                return Err(Error::new(format!("{id} does not fill {address}")));
+            }
             let on = matches!(self.values.get(id), Some(Value::Bool(true)));
             if Some(id) == chosen.as_ref() {
                 let mut parts = if on {
@@ -703,8 +757,17 @@ impl Card {
                 continue;
             }
             let field = match vocab.registry().get(&path) {
+                // A setting, or the schema 2 setting that named a function's
+                // convention: a card keeps that one when its wording named
+                // none (`natural`, `conventional`).
                 Some(f)
-                    if f.derived.is_none() && f.convention.is_none() && !f.path.contains('/') =>
+                    if (f.derived.is_none()
+                        || matches!(
+                            f.derived,
+                            Some(crate::pack::Derived::FunctionOption { .. })
+                        ))
+                        && f.convention.is_none()
+                        && !f.path.contains('/') =>
                 {
                     f
                 }
@@ -741,6 +804,9 @@ impl Card {
                         .filter(|(id, parts)| {
                             (parts.is_empty() || part.is_empty() || parts.iter().any(|p| p == part))
                                 && matches!(self.values.get(id), Some(Value::Bool(true)))
+                                && f.fills(id, part, &|t| {
+                                    matches!(self.values.get(t), Some(Value::Bool(true)))
+                                })
                                 && self
                                     .limited_to(id)
                                     .is_none_or(|l| l.contains(&address) || l.contains(&f.name))
@@ -787,7 +853,24 @@ impl Card {
                 };
                 let _ = folded.set(address, chosen);
             }
-            return folded.to_json_schema_3();
+            let mut json = folded.to_json_schema_3();
+            // Wording that named no convention (`natural`, a name no option
+            // covers) has no entry to live on: it stays the setting.
+            for (path, address) in &stored {
+                let function = address.split('.').next().unwrap_or(address);
+                let names_one = match self.values.get(path) {
+                    Some(Value::Text(w)) => self
+                        .vocab
+                        .pack()
+                        .and_then(|p| p.function(function))
+                        .is_some_and(|f| f.option.contains_key(w)),
+                    _ => true,
+                };
+                if let (false, Some(v)) = (names_one, self.values.get(path)) {
+                    write_path(&mut json["settings"], path, v.to_json());
+                }
+            }
+            return json;
         }
         let mut top = Map::new();
         top.insert(

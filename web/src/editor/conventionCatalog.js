@@ -18,6 +18,11 @@
  */
 
 import { bandOf, levelOfPath } from './levels.js'
+import { readPath, writePath } from '../../../js/paths.js'
+import PACK from '../../../spec/pack.json' with { type: 'json' }
+import { addressMaps } from '../../../js/pack.js'
+
+const PATH_OF = addressMaps(PACK).path
 
 /**
  * Top-level sections in display order. `icon` is a key into ICON_SVG
@@ -489,7 +494,7 @@ export const STRUCTURED_FIELDS = {
  *   - (play)     The convention's switch, when the row is one of its
  *                styles or boxes: checked only while it is on, and checking
  *                the row turns it on (RKCB 1430: slam.rkcb.play with style
- *                1430; Reverse Flannery 2♦)
+ *                1430; Reverse Flannery 2♥)
  *   - (alertsFrom) The field whose alerts the row shows, when not cardPath
  *   - skillPath: Underlying skill in BAKER_BRIDGE_TAXONOMY (or null if
  *                this convention has no corresponding lesson yet)
@@ -498,7 +503,7 @@ export const STRUCTURED_FIELDS = {
  *   - (alerts)   Not set here: which calls are alerted or announced is in
  *                the spec (spec/alerts.toml), per regulator.
  */
-export const CONVENTION_CATALOG = [
+const ROWS = [
   // ─── NT openings ───
   {
     id: 'stayman', section: 'notrump', name: 'Stayman',
@@ -506,29 +511,22 @@ export const CONVENTION_CATALOG = [
     cardPath: 'notrump.stayman.forcing', skillPath: 'bidding_conventions/stayman'
   },
   {
-    id: 'jacoby_transfers', section: 'notrump', name: 'Jacoby transfers',
-    desc: '2♦ → 2♥, 2♥ → 2♠',
-    cardPath: 'notrump.jacoby_transfers.play', skillPath: 'bidding_conventions/jacoby_transfers'
+    id: 'jacoby_transfers', section: 'notrump', of: 'bidding_conventions/jacoby_transfers'
   },
   {
-    id: 'texas_transfers', section: 'notrump', name: 'Texas transfers',
-    desc: '4♦/4♥ at game level',
-    cardPath: 'notrump.texas.play', skillPath: 'bidding_conventions/jacoby_transfers'
+    id: 'texas_transfers', section: 'notrump', of: 'bidding_conventions/texas:over_1nt',
+    skillPath: 'bidding_conventions/jacoby_transfers'
   },
   {
-    id: 'smolen', section: 'notrump', name: 'Smolen',
-    desc: 'Show 5-4 majors after Stayman',
-    cardPath: 'notrump.smolen.play', skillPath: 'bidding_conventions/stayman'
+    id: 'smolen', section: 'notrump', of: 'bidding_conventions/smolen',
+    skillPath: 'bidding_conventions/stayman'
   },
   {
-    id: 'puppet_stayman', section: 'notrump', name: 'Puppet Stayman',
-    desc: 'Over 2NT, asks for 5-card major',
+    id: 'puppet_stayman', section: 'notrump', of: 'bidding_conventions/puppet_stayman:over_1nt', name: 'Puppet Stayman',
     cardPath: 'notrump.stayman.puppet', skillPath: 'bidding_conventions/stayman'
   },
   {
-    id: 'lebensohl_interference', section: 'notrump', name: 'Lebensohl (over interference)',
-    desc: '2NT relay after interference to 1NT',
-    cardPath: 'notrump.lebensohl.play', skillPath: 'competitive_bidding/lebensohl'
+    id: 'lebensohl_interference', section: 'notrump', of: 'competitive_bidding/lebensohl:over_1nt_interference', name: 'Lebensohl (over interference)'
   },
   {
     id: 'garbage_stayman', section: 'notrump', name: 'Garbage Stayman',
@@ -538,23 +536,18 @@ export const CONVENTION_CATALOG = [
 
   // ─── Major openings ───
   {
-    id: 'two_over_one', section: 'major_openings', name: 'Two-over-one game force',
-    desc: '2♣/2♦/2♥ response = GF',
-    cardPath: 'major_openings.two_over_one.play', skillPath: 'bidding_conventions/two_over_one'
+    id: 'two_over_one', section: 'major_openings', of: 'bidding_conventions/two_over_one', name: 'Two-over-one game force'
   },
   {
-    id: 'jacoby_2nt', section: 'major_openings', name: 'Jacoby 2NT',
-    desc: 'GF raise of major',
-    cardPath: 'major_openings.jacoby_2nt.play', skillPath: 'bidding_conventions/jacoby_2nt_splinters'
+    id: 'jacoby_2nt', section: 'major_openings', of: 'bidding_conventions/jacoby_2nt',
+    skillPath: 'bidding_conventions/jacoby_2nt_splinters'
   },
   {
-    id: 'modified_jacoby_2nt', section: 'major_openings', name: 'Modified Jacoby 2NT',
-    desc: 'Variant response structure (showing controls/HCP first)',
-    cardPath: 'major_openings.jacoby_2nt.modified', skillPath: 'bidding_conventions/jacoby_2nt_splinters'
+    id: 'modified_jacoby_2nt', section: 'major_openings', of: 'bidding_conventions/modified_jacoby_2nt',
+    skillPath: 'bidding_conventions/jacoby_2nt_splinters'
   },
   {
-    id: 'bergen_raises', section: 'major_openings', name: 'Bergen raises',
-    desc: '3♣ = 7-9 pts, 3♦ = 10-12 pts (or similar)',
+    id: 'bergen_raises', section: 'major_openings', of: 'bidding_conventions/bergen_raises',
     cardPath: 'major_openings.bergen_raises.play', skillPath: null
   },
   {
@@ -563,14 +556,12 @@ export const CONVENTION_CATALOG = [
     cardPath: 'major_openings.jump_raise.mixed', skillPath: null
   },
   {
-    id: 'splinters', section: 'major_openings', name: 'Splinters',
-    desc: 'Double-jump shows shortness',
-    cardPath: 'major_openings.splinters.play', skillPath: 'bidding_conventions/jacoby_2nt_splinters'
+    id: 'splinters', section: 'major_openings', of: 'bidding_conventions/splinters',
+    skillPath: 'bidding_conventions/jacoby_2nt_splinters'
   },
   {
-    id: 'drury', section: 'major_openings', name: 'Drury',
-    desc: '2♣ by passed hand = limit raise',
-    cardPath: 'major_openings.drury.play', skillPath: 'bidding_conventions/reverse_drury'
+    id: 'drury', section: 'major_openings', of: 'bidding_conventions/drury',
+    skillPath: 'bidding_conventions/reverse_drury'
   },
   {
     id: 'reverse_drury', section: 'major_openings', name: 'Reverse Drury',
@@ -590,19 +581,25 @@ export const CONVENTION_CATALOG = [
 
   // ─── Minor openings ───
   {
-    id: 'inverted_minors', section: 'minor_openings', name: 'Inverted minors',
-    desc: 'Single raise = strong, jump = weak',
+    id: 'inverted_minors', section: 'minor_openings', of: 'bidding_conventions/inverted_minors',
     cardPath: 'minor_openings.inverted_minors.play', skillPath: null
   },
   {
-    id: 'walsh', section: 'minor_openings', name: 'Walsh responses',
-    desc: 'After 1♣, bypass 4-card ♦ to show 4-card major',
+    id: 'walsh', section: 'minor_openings', of: 'bidding_conventions/walsh', name: 'Walsh responses',
     cardPath: 'minor_openings.walsh.play', skillPath: null
   },
   {
     id: 'transfer_responses_1c', section: 'minor_openings', name: 'Transfer responses to 1♣',
     desc: '1♦ → ♥, 1♥ → ♠ (or similar)',
     cardPath: 'minor_openings.one_club.transfer_resp', skillPath: null
+  },
+  {
+    id: 'reverse_flannery_2h', section: 'minor_openings', of: 'bidding_conventions/reverse_flannery:two_h',
+    play: 'two_level.reverse_flannery.play', skillPath: null
+  },
+  {
+    id: 'reverse_flannery_2s', section: 'minor_openings', of: 'bidding_conventions/reverse_flannery:two_s',
+    play: 'two_level.reverse_flannery.play', skillPath: null
   },
 
   // ─── Two-level openings ───
@@ -631,28 +628,18 @@ export const CONVENTION_CATALOG = [
     truthy: 'weak'
   },
   {
-    id: 'ogust', section: 'two_level', name: 'Ogust',
-    desc: '2NT over weak two asks suit + hand quality',
-    cardPath: 'two_level.ogust.play', skillPath: 'bidding_conventions/ogust'
+    id: 'ogust', section: 'two_level', of: 'bidding_conventions/ogust'
   },
   {
-    id: 'multi_2d', section: 'two_level', name: 'Multi 2♦',
-    desc: 'Weak 2 in a major (or strong variants)',
+    id: 'multi_2d', section: 'two_level', of: 'bidding_conventions/multi_2d',
     cardPath: 'two_level.multi.play', skillPath: null
   },
   {
-    id: 'mini_roman_2d', section: 'two_level', name: 'Mini-Roman 2♦',
-    desc: '3-suited hand, short in a specified suit',
+    id: 'mini_roman_2d', section: 'two_level', of: 'bidding_conventions/mini_roman_2d',
     cardPath: 'two_level.mini_roman.play', skillPath: null
   },
   {
-    id: 'reverse_flannery_2d', section: 'two_level', name: 'Reverse Flannery 2♦',
-    desc: '5+ ♥ and 4+ ♠, 11-15 HCP',
-    cardPath: 'two_level.reverse_flannery.two_d', play: 'two_level.reverse_flannery.play', skillPath: null
-  },
-  {
-    id: 'kokish', section: 'two_level', name: 'Kokish relay',
-    desc: 'After 2♣–2♦, 2♥ asks; rebid shows hearts',
+    id: 'kokish', section: 'two_level', of: 'bidding_conventions/kokish',
     cardPath: 'two_level.kokish.play', skillPath: null
   },
   {
@@ -661,13 +648,11 @@ export const CONVENTION_CATALOG = [
     cardPath: 'two_level.parrish_bust.relay', alertsFrom: 'two_level.parrish_bust.play', skillPath: 'bidding_conventions/parrish_relay'
   },
   {
-    id: 'parrish_2h_bust', section: 'two_level', name: 'Parrish 2♥ bust',
-    desc: 'After 2♣, 2♥ shows a flat 0-3 HCP',
+    id: 'parrish_2h_bust', section: 'two_level', of: 'bidding_conventions/two_heart_bust',
     cardPath: 'two_level.parrish_bust.play', skillPath: null
   },
   {
-    id: 'mccabe', section: 'two_level', name: 'McCabe adjunct',
-    desc: 'After weak two doubled: 2NT = lead-directing raise',
+    id: 'mccabe', section: 'two_level', of: 'bidding_conventions/mccabe',
     cardPath: 'two_level.mccabe.play', skillPath: null
   },
 
@@ -675,9 +660,7 @@ export const CONVENTION_CATALOG = [
   // RKCB is one convention (`slam.rkcb.play`) with a style; each of its two
   // rows is the switch on with that style (`play` below).
   {
-    id: 'standard_blackwood', section: 'slam', name: 'Standard Blackwood',
-    desc: '4NT asks for aces (4 / 5 / 6 / 7 = 0–3 aces)',
-    cardPath: 'slam.blackwood.play', skillPath: 'bidding_conventions/blackwood'
+    id: 'standard_blackwood', section: 'slam', of: 'bidding_conventions/blackwood'
   },
   {
     id: 'rkcb_1430', section: 'slam', name: 'RKCB 1430',
@@ -695,48 +678,38 @@ export const CONVENTION_CATALOG = [
     cardPath: 'slam.rkcb.queen_ask', skillPath: 'bidding_conventions/roman_keycard'
   },
   {
-    id: 'gerber', section: 'slam', name: 'Gerber',
-    desc: '4♣ ace ask over 1NT/2NT',
+    id: 'gerber', section: 'slam', of: 'bidding_conventions/gerber',
     cardPath: 'other_conventions.gerber.play', skillPath: 'bidding_conventions/blackwood'
   },
   {
-    id: 'kickback', section: 'slam', name: 'Kickback',
-    desc: 'Suit-above-trump = keycard ask',
+    id: 'kickback', section: 'slam', of: 'bidding_conventions/kickback',
     cardPath: 'other_conventions.kickback.play', skillPath: 'bidding_conventions/roman_keycard'
   },
   {
-    id: 'minorwood', section: 'slam', name: 'Minorwood',
-    desc: '4 of the agreed minor = RKCB',
-    cardPath: 'slam.minorwood.play', skillPath: 'bidding_conventions/roman_keycard'
+    id: 'minorwood', section: 'slam', of: 'bidding_conventions/minorwood',
+    skillPath: 'bidding_conventions/roman_keycard'
   },
   {
-    id: 'exclusion_blackwood', section: 'slam', name: 'Exclusion Blackwood',
-    desc: 'Jump in a void suit asks for keycards excluding that suit',
-    cardPath: 'slam.exclusion_blackwood.play', skillPath: 'bidding_conventions/roman_keycard'
+    id: 'exclusion_blackwood', section: 'slam', of: 'bidding_conventions/exclusion_blackwood',
+    skillPath: 'bidding_conventions/roman_keycard'
   },
   {
-    id: 'pick_a_slam_5nt', section: 'slam', name: 'Pick-a-slam 5NT',
-    desc: '5NT after a fit suggests slam, lets partner pick the strain',
+    id: 'pick_a_slam_5nt', section: 'slam', of: 'bidding_conventions/pick_a_slam_5nt',
     cardPath: 'slam.pick_a_slam_5nt.play', skillPath: null
   },
   {
-    id: 'western_cuebid', section: 'slam', name: 'Western cuebid',
-    desc: '4 of an opponent\'s suit asks for a stopper for 3NT',
+    id: 'western_cuebid', section: 'slam', of: 'bidding_conventions/western_cuebid',
     cardPath: 'slam.western_cuebid.play', skillPath: null
   },
   {
-    id: 'control_bids', section: 'slam', name: 'Control (cue) bids',
-    desc: 'With a trump suit agreed, bid a control below game on the way to slam',
-    cardPath: 'slam.cue_bids.play', skillPath: 'bidding_conventions/control_bids'
+    id: 'control_bids', section: 'slam', of: 'bidding_conventions/control_bids'
   },
   {
-    id: 'spiral_cuebids', section: 'slam', name: 'Spiral cuebids',
-    desc: 'Step-wise control showing (1st-round controls in order)',
+    id: 'spiral_cuebids', section: 'slam', of: 'bidding_conventions/spiral',
     cardPath: 'slam.spiral_cuebids.play', skillPath: null
   },
   {
-    id: 'non_serious_3nt', section: 'slam', name: 'Non-serious 3NT',
-    desc: 'In a 2/1 auction, 3NT denies slam interest',
+    id: 'non_serious_3nt', section: 'slam', of: 'bidding_conventions/serious_3nt',
     cardPath: 'slam.non_serious_3nt.play', skillPath: null
   },
 
@@ -748,58 +721,43 @@ export const CONVENTION_CATALOG = [
     truthy: ['moderate', 'aggressive', 'conservative']
   },
   {
-    id: 'negative_doubles', section: 'doubles', name: 'Negative doubles',
-    desc: 'Takeout-style double after overcall',
-    cardPath: 'doubles.negative.play', skillPath: 'competitive_bidding/negative_doubles'
+    id: 'negative_doubles', section: 'doubles', of: 'competitive_bidding/negative_doubles'
   },
   {
-    id: 'responsive_doubles', section: 'doubles', name: 'Responsive doubles',
-    desc: 'Double after partner double + opp raise = takeout',
+    id: 'responsive_doubles', section: 'doubles', of: 'competitive_bidding/responsive_doubles',
     cardPath: 'doubles.responsive.play', skillPath: null
   },
   {
-    id: 'support_doubles', section: 'doubles', name: 'Support doubles',
-    desc: 'Double after interference = exactly 3-card support',
-    cardPath: 'doubles.support.play', skillPath: 'competitive_bidding/support_cuebids'
+    id: 'support_doubles', section: 'doubles', of: 'competitive_bidding/support_doubles',
+    skillPath: 'competitive_bidding/support_cuebids'
   },
   {
-    id: 'michaels', section: 'competitive', name: 'Michaels cue bid',
-    desc: 'Cue = two-suited overcall',
-    cardPath: 'competitive.michaels.play', skillPath: 'competitive_bidding/michaels_unusual'
+    id: 'michaels', section: 'competitive', of: 'competitive_bidding/michaels', name: 'Michaels cue bid',
+    skillPath: 'competitive_bidding/michaels_unusual'
   },
   {
-    id: 'unusual_2nt', section: 'competitive', name: 'Unusual 2NT',
-    desc: '2NT = two lowest unbid suits',
-    cardPath: 'competitive.unusual_2nt.play', skillPath: 'competitive_bidding/michaels_unusual'
+    id: 'unusual_2nt', section: 'competitive', of: 'competitive_bidding/unusual_notrump:at_2nt',
+    skillPath: 'competitive_bidding/michaels_unusual'
   },
   {
-    id: 'dont', section: 'competitive', name: 'DONT',
-    desc: 'Disturbing Opponents NT — double = single-suited',
-    cardPath: 'competitive.dont.play', skillPath: 'competitive_bidding/dont'
+    id: 'dont', section: 'competitive', of: 'competitive_bidding/dont'
   },
   {
-    id: 'cue_bid_raise', section: 'competitive', name: 'Cue-bid raise',
-    desc: 'Cue of opp\'s suit = 3+ card limit raise',
-    cardPath: 'competitive.cue_bid_raise.play', skillPath: 'competitive_bidding/support_cuebids'
+    id: 'cue_bid_raise', section: 'competitive', of: 'competitive_bidding/support_cuebids'
   },
   {
-    id: 'lead_directing_double', section: 'competitive', name: 'Lead-directing doubles',
-    desc: 'Double of artificial bid suggests opening lead',
+    id: 'lead_directing_double', section: 'competitive', of: 'competitive_bidding/lead_directing_doubles',
     cardPath: 'competitive.lead_directing_double.play', skillPath: null
   },
   {
-    id: 'lebensohl_weak_twos', section: 'competitive', name: 'Lebensohl (over weak twos)',
-    desc: '2NT relay after partner doubles a weak two',
-    cardPath: 'competitive.lebensohl_weak_twos.play', skillPath: 'competitive_bidding/lebensohl'
+    id: 'lebensohl_weak_twos', section: 'competitive', of: 'competitive_bidding/lebensohl:after_weak_two_double', name: 'Lebensohl (over weak twos)'
   },
   {
-    id: 'sandwich_nt', section: 'competitive', name: 'Sandwich NT',
-    desc: '1NT in 4th seat after two suits bid = unusual NT',
+    id: 'sandwich_nt', section: 'competitive', of: 'competitive_bidding/sandwich_nt',
     cardPath: 'competitive.sandwich_nt.play', skillPath: null
   },
   {
-    id: 'snapdragon', section: 'competitive', name: 'Snapdragon doubles',
-    desc: 'After 3 suits bid, double = 4+ in 4th suit + tolerance for partner',
+    id: 'snapdragon', section: 'competitive', of: 'competitive_bidding/snapdragon',
     cardPath: 'competitive.snapdragon.play', skillPath: null
   },
   {
@@ -808,13 +766,11 @@ export const CONVENTION_CATALOG = [
     cardPath: 'doubles.maximal', skillPath: null
   },
   {
-    id: 'unusual_vs_unusual', section: 'competitive', name: 'Unusual vs Unusual',
-    desc: 'Defenses to opponents\' Unusual 2NT',
+    id: 'unusual_vs_unusual', section: 'competitive', of: 'competitive_bidding/unusual_vs_unusual',
     cardPath: 'competitive.unusual_vs_unusual.play', skillPath: null
   },
   {
-    id: 'leaping_michaels', section: 'competitive', name: 'Leaping Michaels',
-    desc: '4♣/4♦ over weak two = good 5+ in that minor + 5+ major',
+    id: 'leaping_michaels', section: 'competitive', of: 'competitive_bidding/leaping_michaels',
     cardPath: 'competitive.leaping_michaels.play', skillPath: null
   },
 
@@ -832,9 +788,7 @@ export const CONVENTION_CATALOG = [
     skillPath: 'bidding_conventions/fourth_suit_forcing'
   },
   {
-    id: 'help_suit_game_tries', section: 'other_conventions', name: 'Help suit game tries',
-    desc: 'Sub-game bid asks help in that suit',
-    cardPath: 'other_conventions.help_suit_game_tries.play', skillPath: 'bidding_conventions/help_suit_game_try'
+    id: 'help_suit_game_tries', section: 'other_conventions', of: 'bidding_conventions/help_suit_game_try'
   },
   {
     id: 'reverse_bids', section: 'other_conventions', name: 'Reverse bids',
@@ -842,8 +796,7 @@ export const CONVENTION_CATALOG = [
     cardPath: 'other_conventions.reverse_bids.forcing', skillPath: 'bidding_conventions/reverse_bids'
   },
   {
-    id: 'nmf', section: 'other_conventions', name: 'New minor forcing',
-    desc: 'After 1m-1M-1NT, 2 of other minor = forcing inquiry',
+    id: 'nmf', section: 'other_conventions', of: 'bidding_conventions/new_minor_forcing',
     cardPath: 'other_conventions.new_minor_forcing.play',
     skillPath: 'bidding_conventions/new_minor_forcing'
   },
@@ -858,16 +811,48 @@ export const CONVENTION_CATALOG = [
     cardPath: 'other_conventions.xyz', skillPath: null
   },
   {
-    id: 'sos_redouble', section: 'other_conventions', name: 'SOS redouble',
-    desc: 'Redouble asking partner to pick another suit',
+    id: 'sos_redouble', section: 'other_conventions', of: 'competitive_bidding/sos_redouble',
     cardPath: 'other_conventions.sos_redouble.play', skillPath: null
   },
   {
-    id: 'ingberman_2nt', section: 'other_conventions', name: 'Ingberman 2NT',
-    desc: 'After 1♣-1♥-1♠, 2NT = forcing minor-suit inquiry',
+    id: 'ingberman_2nt', section: 'other_conventions', of: 'bidding_conventions/ingberman',
     cardPath: 'other_conventions.ingberman_2nt.play', skillPath: null
   }
 ]
+
+/**
+ * A row drawn from the pack (`of` is a convention's ID, or the address of
+ * one of the places it is played): its name is the definition's, its
+ * caption the definition's `brief`, its card path the path that address
+ * has in the working form, and its skill the convention itself. A row
+ * keeps any of those it writes out here (a shorter name, the lesson it is
+ * taught under, an older spelling of the path some cards hold).
+ */
+function fromPack(row) {
+  const { of, ...own } = row
+  const [id, place] = of.split(':')
+  const def = PACK.conventions[id]
+  const from = place ? def.treatments[place] : def
+  return {
+    id: own.id,
+    section: own.section,
+    name: own.name ?? (place ? from.label : def.label ?? def.name),
+    // The place a convention is mainly played takes the convention's caption.
+    desc: from.brief ?? def.brief,
+    ...own,
+    cardPath: own.cardPath ?? PATH_OF.get(of),
+    // A row may say it has no skill (`skillPath: null`).
+    skillPath: 'skillPath' in own ? own.skillPath : id,
+  }
+}
+
+/**
+ * The editor's rows, in display order. A row with `of` is drawn from the
+ * convention's definition in the pack; the others (a treatment shown as a
+ * row of its own, a setting, one value of a choice) are written out above
+ * until the pack can describe them too.
+ */
+export const CONVENTION_CATALOG = ROWS.map(row => (row.of ? fromPack(row) : row))
 
 /** Entries for a single section. */
 export function getCatalogEntries(sectionId) {
@@ -906,39 +891,9 @@ export function getLevelForStructuredField(f) {
   return f.filterByLevel ? bandOf(levelOfPath(structuredPath(f))) : null
 }
 
-/**
- * Read a dotted path out of an object. Returns undefined if any
- * intermediate step is missing.
- */
-export function readPath(obj, dotted) {
-  if (!obj || !dotted) return undefined
-  const parts = dotted.split('.')
-  let cur = obj
-  for (const p of parts) {
-    if (cur == null || typeof cur !== 'object') return undefined
-    cur = cur[p]
-  }
-  return cur
-}
-
-/**
- * Write a value at a dotted path, creating intermediate objects as
- * needed. Mutates the target object. Used by the editor to flip a
- * convention on/off.
- */
-export function writePath(obj, dotted, value) {
-  if (!obj || !dotted) return
-  const parts = dotted.split('.')
-  let cur = obj
-  for (let i = 0; i < parts.length - 1; i++) {
-    const key = parts[i]
-    if (cur[key] == null || typeof cur[key] !== 'object') {
-      cur[key] = {}
-    }
-    cur = cur[key]
-  }
-  cur[parts[parts.length - 1]] = value
-}
+// The library's path helpers: a read finds a field under any of its
+// spellings, and a write keeps it under one (js/paths.js).
+export { readPath, writePath }
 
 /**
  * Apply a checked/unchecked toggle for a catalog entry to `cardData`.

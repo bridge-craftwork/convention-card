@@ -10,7 +10,7 @@
 // implements (`skills`: Rusty's `conventions` modules name theirs), a
 // convention it implements counts as played, whatever it ignores of it.
 
-import { FIELDS, CONVENTIONS, levelBand } from './spec.js'
+import { FIELDS, CONVENTIONS, levelBand, field } from './spec.js'
 
 const tail = s => s.slice(s.lastIndexOf('/') + 1)
 const humanise = s => s.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())
@@ -18,7 +18,8 @@ const humanise = s => s.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())
 /**
  * The bot's coverage of `card_data` by convention. `coverage` is the bot's
  * answer for this card: `{ read: [path], ignored: [path], other?: [path],
- * skills?: [skillId] }`, `skills` the conventions it implements.
+ * skills?: [skillId] }`, `skills` the conventions it implements. A path may
+ * be given as the pack's address for it (`bidding_conventions/stayman`).
  * Returns `{ read, total, score, other, tiles }`: `read` of `total` bidding
  * settings, `other` the cardplay and notes the bot leaves to people, and
  * `tiles`, one per convention (or, for settings of no convention, per card
@@ -31,9 +32,12 @@ const humanise = s => s.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())
  * and one it doesn't is never 'plays'.
  */
 export function botReport(card_data, coverage) {
-  const read = new Set(coverage?.read || [])
+  // A bot may name a setting by its path or by its address in the pack
+  // (`bidding_conventions/stayman`): either way it is the same field.
+  const canonical = p => field(p)?.path ?? p
+  const read = new Set((coverage?.read || []).map(canonical))
   const implemented = coverage?.skills ? new Set(coverage.skills) : null
-  const paths = [...read, ...(coverage?.ignored || [])]
+  const paths = [...new Set([...read, ...(coverage?.ignored || []).map(canonical)])]
   const tiles = new Map()
   const tile = (id, convention) => {
     if (!tiles.has(id)) {

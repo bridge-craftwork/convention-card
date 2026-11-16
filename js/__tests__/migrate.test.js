@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import path from 'path'
-import { upgradeCardData, upgradeCard, needsUpgrade, CARD_SCHEMA_VERSION } from '../migrate.js'
+import { upgradeCardData, upgradeCard, migrateCardData, needsUpgrade, CARD_SCHEMA_VERSION } from '../migrate.js'
 import { field } from '../spec.js'
-import MIGRATION from '../../spec/migrations/1-to-2.json' with { type: 'json' }
+import PACK from '../../spec/pack.json' with { type: 'json' }
+
+// The pack's schema 1 to 2 migration (its migrations/1-to-2.toml).
+const MIGRATION = PACK.migrations['1-to-2']
 
 // The same cases the crate checks (crates/bridge-card/tests/migrations.rs),
 // so the two readers of spec/migrations/ agree.
@@ -15,7 +18,7 @@ describe('upgrading a card from schema 1.x', () => {
   for (const c of CASES) {
     it(c.name, () => {
       const before = JSON.stringify(c.before)
-      expect(upgradeCardData(c.before)).toEqual(c.after)
+      expect(migrateCardData(c.before)).toEqual(c.after)
       // The card given is not changed.
       expect(JSON.stringify(c.before)).toBe(before)
     })

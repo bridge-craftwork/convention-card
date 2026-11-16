@@ -172,6 +172,66 @@ impl Skills {
         Ok(Skills::from_entries(skills))
     }
 
+    /// The definitions of a convention pack's snapshot (`pack.json`): its
+    /// `conventions`, by ID. What a definition holds beyond a skill entry
+    /// (treatments, contexts, functions) is the pack's to read
+    /// ([`crate::Pack`]).
+    pub fn from_snapshot(text: &str) -> Result<Skills, Error> {
+        let doc: serde_json::Value =
+            serde_json::from_str(text).map_err(|e| Error::new(e.to_string()))?;
+        if doc["schema"] != "pack/v1" {
+            return Err(Error::new(format!(
+                "schema {}: expected \"pack/v1\"",
+                doc["schema"]
+            )));
+        }
+        let entries = doc["conventions"]
+            .as_object()
+            .ok_or_else(|| Error::new("conventions: expected an object"))?;
+        const ENTRY: [&str; 9] = [
+            "id",
+            "name",
+            "source",
+            "level",
+            "names",
+            "confirm",
+            "confirm_names",
+            "summary",
+            "see",
+        ];
+        const CITATION: [&str; 6] = ["title", "by", "site", "url", "kind", "chapter"];
+        let mut skills = Vec::new();
+        for (id, entry) in entries {
+            let mut kept = serde_json::Map::new();
+            for (k, v) in entry.as_object().into_iter().flatten() {
+                if !ENTRY.contains(&k.as_str()) {
+                    continue;
+                }
+                let v = match (k.as_str(), v.as_array()) {
+                    ("see", Some(list)) => serde_json::Value::Array(
+                        list.iter()
+                            .map(|c| {
+                                serde_json::Value::Object(
+                                    c.as_object()
+                                        .into_iter()
+                                        .flatten()
+                                        .filter(|(k, _)| CITATION.contains(&k.as_str()))
+                                        .map(|(k, v)| (k.clone(), v.clone()))
+                                        .collect(),
+                                )
+                            })
+                            .collect(),
+                    ),
+                    _ => v.clone(),
+                };
+                kept.insert(k.clone(), v);
+            }
+            let text = toml::to_string(&kept).map_err(|e| Error::new(format!("{id}: {e}")))?;
+            skills.push(Skills::parse_entry(id, &text).map_err(|e| e.in_file(id))?);
+        }
+        Ok(Skills::from_entries(skills))
+    }
+
     /// Collect parsed entries into a list.
     pub fn from_entries(entries: impl IntoIterator<Item = Skill>) -> Skills {
         Skills {
@@ -264,15 +324,12 @@ mod tests {
         );
     }
 
-    /// `spec/conventions/` loads, every `skill` a field of `fields.toml`
+    /// The pack's definitions load, every `skill` a schema 2 field
     /// names is in it, and a convention's level is the lowest level among
     /// the fields that belong to it (their first `skill`).
     #[test]
     fn the_spec_list_covers_the_fields() {
-        let spec = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../spec");
-        let skills = Skills::load(&spec)
-            .expect("spec/conventions/ is valid")
-            .expect("spec/conventions/ exists");
+        let skills = crate::standard::conventions().expect("spec/pack.json is valid");
         assert!(
             skills
                 .iter()
@@ -287,7 +344,7 @@ mod tests {
                 tagged += 1;
                 assert!(
                     skills.get(s).is_some(),
-                    "{}: skill {s} is not in spec/conventions/",
+                    "{}: skill {s} is not a definition of the pack",
                     f.path
                 );
             }

@@ -361,12 +361,32 @@
  "1M-3M inviting": "major_openings.jump_raise.inv",
  "Mixed raise": "overcalls.responses.jump_cuebid_mixed",
  "Jacoby 2NT": "major_openings.jacoby_2nt.play",
- "Bergen": "major_openings.bergen_raises.play",
- "Reverse Bergen": "major_openings.bergen_raises.reverse",
+ "Bergen": {
+  "set": {
+   "major_openings.bergen_raises.play": true,
+   "major_openings.bergen_raises.reverse": false
+  }
+ },
+ "Reverse Bergen": {
+  "set": {
+   "major_openings.bergen_raises.play": true,
+   "major_openings.bergen_raises.reverse": true
+  }
+ },
  "Splinter": "major_openings.splinters.play",
  "Mini Splinter": "major_openings.mini_splinters.play",
- "Drury": "major_openings.drury.play",
- "Reverse drury": "major_openings.drury.reverse",
+ "Drury": {
+  "set": {
+   "major_openings.drury.play": true,
+   "major_openings.drury.reverse": false
+  }
+ },
+ "Reverse drury": {
+  "set": {
+   "major_openings.drury.play": true,
+   "major_openings.drury.reverse": true
+  }
+ },
  "Gazzilli": "major_openings.gazzilli.play",
  "Imposible 2S": "major_openings.impossible_2s.play",
  "1D opening with 4 cards": {
@@ -603,6 +623,38 @@
    },
    "set": {
     "two_level.reverse_flannery.play": true
+   }
+  },
+  {
+   "when": {
+    "other_conventions.fourth_suit_forcing.one_round": true
+   },
+   "set": {
+    "other_conventions.fourth_suit_forcing.play": true
+   }
+  },
+  {
+   "when": {
+    "other_conventions.fourth_suit_forcing.game_force": true
+   },
+   "set": {
+    "other_conventions.fourth_suit_forcing.play": true
+   }
+  },
+  {
+   "when": {
+    "slam.kickback.rkcb_1430": true
+   },
+   "set": {
+    "slam.kickback.play": true
+   }
+  },
+  {
+   "when": {
+    "slam.kickback.rkcb_0314": true
+   },
+   "set": {
+    "slam.kickback.play": true
    }
   },
   {

@@ -86,7 +86,7 @@
   },
   "major_openings": {
     "bergen_raises": {
-      "play": false,
+      "play": true,
       "reverse": true
     },
     "drury": {
@@ -193,7 +193,8 @@
     },
     "fourth_suit_forcing": {
       "game_force": false,
-      "one_round": true
+      "one_round": true,
+      "play": true
     },
     "new_minor_forcing": {
       "play": false

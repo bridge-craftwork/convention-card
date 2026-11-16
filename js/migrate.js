@@ -1,14 +1,27 @@
-// Card schema upgrades (spec/migrations/, ADR-0002). A card records its
-// `schema_version` at the top of card_data; one whose version is missing or
-// older than CARD_SCHEMA_VERSION is upgraded once, when it is read, by the
-// migration files in order. The rules and their order are the TOML file's
-// header (spec/migrations/1-to-2.toml); this module and the bridge-card
-// crate's migrate.rs both follow it.
+// Bringing a card to the form the library works in (ADR-0002). A card
+// records its `schema_version` at the top of card_data. Whatever version it
+// was stored in, it is read into the working form: schema 2's dotted paths,
+// holding what the card means in schema 3.
+//
+// - A schema 1 card is first brought to schema 2 by the pack's migration
+//   (migrations/1-to-2.toml; its header gives the rules and their order).
+// - A schema 2 card is normalised: taken to schema 3 and back (js/schema3.js),
+//   so a convention the card shows only by its treatments or in a note reads
+//   as played, as it does in schema 3.
+// - A schema 3 card is converted to the working form.
+//
+// The bridge-card crate's migrate.rs and pack.rs follow the same rules.
 
-import MIGRATION_1_TO_2 from '../spec/migrations/1-to-2.json' with { type: 'json' }
+import PACK_DOC from '../spec/pack.json' with { type: 'json' }
+
+const MIGRATION_1_TO_2 = PACK_DOC.migrations['1-to-2']
 import { readPath, writePath } from './paths.js'
+import { fromSchema3, normalise } from './schema3.js'
 
-/** The schema version every card this library writes records. */
+/**
+ * The version the working form records: schema 2's paths. A card is stored
+ * as STORED_SCHEMA_VERSION (js/schema3.js).
+ */
 export const CARD_SCHEMA_VERSION = '2.0'
 
 const MIGRATIONS = [MIGRATION_1_TO_2]
@@ -94,13 +107,22 @@ function apply(migration, card, original) {
   }
 }
 
+const canonical = v =>
+  Array.isArray(v) ? v.map(canonical)
+  : isObject(v) ? Object.fromEntries(Object.keys(v).sort().map(k => [k, canonical(v[k])]))
+  : v
+const same = (a, b) => JSON.stringify(canonical(a)) === JSON.stringify(canonical(b))
+
 /**
- * Upgrade bare card_data to CARD_SCHEMA_VERSION: a copy with every rename
- * and value change of the migrations it needs, recording the new version.
- * A card already at the current version comes back as it was (the same
- * object); anything that is not an object comes back unchanged.
+ * Bare card_data with schema 2's paths, as the card itself has them: a
+ * schema 1 card with its renames and value changes applied, a schema 3 card
+ * converted. Nothing is inferred (see upgradeCardData). A schema 2 card
+ * comes back as it was (the same object), as does anything that is not an
+ * object.
  */
-export function upgradeCardData(cardData) {
+export function migrateCardData(cardData) {
+  if (!isObject(cardData)) return cardData
+  if (major(cardData.schema_version) >= 3) return first(fromSchema3(cardData))
   if (!needsUpgrade(cardData)) return cardData
   const card = JSON.parse(JSON.stringify(cardData))
   for (const m of MIGRATIONS) {
@@ -108,13 +130,30 @@ export function upgradeCardData(cardData) {
     apply(m, card, JSON.parse(JSON.stringify(card)))
     card.schema_version = m.to
   }
-  // `schema_version` first, as the library writes it.
-  const { schema_version, ...rest } = card
-  return { schema_version, ...rest }
+  return first(card)
 }
 
-/** A record `{ name, description, card_data, … }` with its card_data upgraded (upgradeCardData). */
+// `schema_version` first, as the library writes it.
+const first = ({ schema_version, ...rest }) => ({ schema_version, ...rest })
+
+/**
+ * Bare card_data in the working form, whatever version it was stored in:
+ * migrated (migrateCardData), then normalised so it reads as it does in
+ * schema 3. A card already in the working form comes back as it was (the
+ * same object); anything that is not an object comes back unchanged.
+ */
+export function upgradeCardData(cardData) {
+  if (!isObject(cardData)) return cardData
+  const migrated = migrateCardData(cardData)
+  if (major(cardData.schema_version) >= 3) return migrated
+  const card = normalise(migrated)
+  if (migrated === cardData && same(card, { ...cardData, schema_version: CARD_SCHEMA_VERSION })) return cardData
+  return first(card)
+}
+
+/** A record `{ name, description, card_data, … }` with its card_data in the working form (upgradeCardData). */
 export function upgradeCard(record) {
-  if (!record || typeof record !== 'object' || !isObject(record.card_data) || !needsUpgrade(record.card_data)) return record
-  return { ...record, card_data: upgradeCardData(record.card_data) }
+  if (!record || typeof record !== 'object' || !isObject(record.card_data)) return record
+  const card_data = upgradeCardData(record.card_data)
+  return card_data === record.card_data ? record : { ...record, card_data }
 }

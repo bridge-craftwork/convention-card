@@ -5,6 +5,7 @@ import { createTool, OUTPUTS } from '../src/tool.js'
 import { decodeCardFromUrl } from '../../js/handoff.js'
 import { setAssetLoader, TEMPLATE_FILES, FONT_FILE } from '../../js/assets.js'
 import { upgradeCardData } from '../../js/migrate.js'
+import { toSchema3 } from '../../js/schema3.js'
 
 // window.card, the bridge-craftwork tool contract, driven as the page drives
 // it but with a stand-in editor: `current` is the open card, `open` records
@@ -69,7 +70,7 @@ describe('window.card', () => {
     expect(pdf.output).toBeInstanceOf(Uint8Array)
     const back = await t.run(pdf.output, { to: 'card_data' })
     expect(back).toMatchObject({ ok: true, from: 'pdf', name: 'Open card' })
-    expect(back.output).toEqual(SEED_2)
+    expect(toSchema3(back.output)).toEqual(toSchema3(SEED_2))
   })
 
   it('makes the drawn PDF', async () => {
@@ -82,11 +83,11 @@ describe('window.card', () => {
     const { t } = tool()
     const link = await t.getOutput({ to: 'link' })
     expect(link.output).toMatch(/^https:\/\/bridge-craftwork\.com\/card\/#import=v1\./)
-    expect((await decodeCardFromUrl(link.output.split('#import=')[1])).card_data).toEqual(SEED_2)
+    expect((await decodeCardFromUrl(link.output.split('#import=')[1])).card_data).toEqual(toSchema3(SEED_2))
     const bc = await t.getOutput({ to: 'bridge-classroom' })
     expect(bc.output).toMatch(/^https:\/\/bridge-classroom\.com\/solo-practice-app\/#\/convention-card\?import=v1\./)
     // A link reads straight back in.
-    expect((await t.run(link.output, { to: 'card_data' })).output).toEqual(SEED_2)
+    expect(toSchema3((await t.run(link.output, { to: 'card_data' })).output)).toEqual(toSchema3(SEED_2))
   })
 
   it('setInput opens the card it read', async () => {

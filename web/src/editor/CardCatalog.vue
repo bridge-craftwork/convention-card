@@ -191,6 +191,7 @@ import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportAll } from '../../../js/cardBundle.js'
 import { mergeImported } from './importMerge.js'
+import { schema3Storage } from './storedForm.js'
 import { importReportNotes } from './importReport.js'
 import { askInDialog, tellMatched } from './importDialogs.js'
 import ChoiceDialog from './ChoiceDialog.vue'
@@ -299,7 +300,6 @@ const unsorted = computed(() => cards.value.map(c => ({
   shared: c.shared,
   readOnly: !!c.readOnly,
   common: commonKind(c),
-  data: c.card_data || {},
 })))
 
 // The sort: clicking a column makes it the first key and keeps the earlier
@@ -402,7 +402,7 @@ async function onFile(event) {
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
     const input = isPdf ? await file.arrayBuffer() : await file.text()
     const records = await importCards(input, { name: file.name.replace(/\.[^.]*$/, '') })
-    const merged = await mergeImported(records, props.storage, askInDialog(dialog.value))
+    const merged = await mergeImported(records, schema3Storage(props.storage), askInDialog(dialog.value))
     // What the import ticked on its own, shown above the card it opens.
     cc.importNotes.value = importReportNotes(records)
     cc.importNotesFor.value = merged.lastId || null

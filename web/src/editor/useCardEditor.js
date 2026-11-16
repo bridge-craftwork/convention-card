@@ -2,6 +2,7 @@ import { field as specField, FIELDS } from '../../../js/spec.js'
 import { ref, computed, watch } from 'vue'
 import { alertSummary, alertsFor } from '../../../js/spec.js'
 import { upgradeCard, upgradeCardData } from '../../../js/migrate.js'
+import { schema3Storage } from './storedForm.js'
 import { mergeCards, resolveConflicts } from '../../../js/mergeCards.js'
 import {
   CONVENTION_CATALOG,
@@ -115,7 +116,9 @@ export function tierToProf(tier) {
   return 'none'
 }
 
-function createState(storage, overlays) {
+function createState(hostStorage, overlays) {
+  // Cards are kept in schema 3; the editor works in schema 2's paths.
+  const storage = schema3Storage(hostStorage)
   const currentCard = ref(null)        // { id, name, description, owner_id, card_data, ... }
   const editedCardData = ref(null)     // Mutable clone of currentCard.card_data
   const cardLoading = ref(false)

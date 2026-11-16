@@ -70,6 +70,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { compareCards } from '../../../js/compareCards.js'
+import { upgradeCardData } from '../../../js/migrate.js'
 import { cardLevel } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { SECTION_META } from './conventionCatalog.js'
@@ -120,7 +121,8 @@ async function load() {
 watch(() => props.ids.join(','), load, { immediate: true })
 
 const result = computed(() => (cards.value.length >= 2 ? compareCards(cards.value) : null))
-const levels = computed(() => cards.value.map(c => cardLevel(c.card_data || {})))
+// A card saved in another schema is read as the working form, as the list's level is.
+const levels = computed(() => cards.value.map(c => cardLevel(upgradeCardData(c.card_data || {}))))
 
 const counts = computed(() => {
   const rows = result.value?.rows || []

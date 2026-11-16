@@ -1,17 +1,22 @@
-// The spec (spec/ in this repository), as the library reads it: the JSON
-// that scripts/build_spec.py generates from the TOML sources. Plain data,
-// so a page, an extension and Node all read it the same way.
+// The vocabulary, as the library reads it. The conventions, card fields,
+// levels and alert rules come from a convention pack (spec/pack.json, a
+// copy of bridge-common-conventions' published snapshot: scripts/
+// sync_pack.mjs). The format maps are this repository's own (spec/formats/,
+// built by scripts/build_spec.py). Plain data, so a page, an extension and
+// Node all read it the same way.
 
-import FIELDS_DOC from '../spec/fields.json' with { type: 'json' }
+import PACK_DOC from '../spec/pack.json' with { type: 'json' }
+import { schema2Fields, schema2Alerts, addressMaps, conventionPaths } from './pack.js'
 import BBSA_MAP_DOC from '../spec/formats/bbsa-map.json' with { type: 'json' }
 import BBO_MAP_DOC from '../spec/formats/bbo-map.json' with { type: 'json' }
 import BBO_SLOTS_DOC from '../spec/formats/bbo-slots.json' with { type: 'json' }
 import BRIDGODEX_MAP_DOC from '../spec/formats/bridgodex-map.json' with { type: 'json' }
-import CONVENTIONS_DOC from '../spec/conventions.json' with { type: 'json' }
-import LEVELS_DOC from '../spec/levels.json' with { type: 'json' }
-import ALERTS_DOC from '../spec/alerts.json' with { type: 'json' }
 
-const { schema: _fs, generated_from: _ff, ...SECTIONS } = FIELDS_DOC
+/** The pack the vocabulary was read from (its name, format numbers and the commit it was built from). */
+export const PACK = { ...PACK_DOC.pack, source_commit: PACK_DOC.source_commit }
+
+const LEVELS_DOC = PACK_DOC.levels
+const ALERTS_DOC = schema2Alerts(PACK_DOC)
 const { schema: _bs, generated_from: _bf, layout: BBSA_LAYOUT, ...BBSA_MAP } = BBSA_MAP_DOC
 const { schema: _bos, generated_from: _bof, ...BBO_MAP } = BBO_MAP_DOC
 const { schema: _bss, generated_from: _bsf, ...BBO_SLOTS } = BBO_SLOTS_DOC
@@ -19,14 +24,10 @@ const { schema: _bds, generated_from: _bdf, ...BRIDGODEX_MAP } = BRIDGODEX_MAP_D
 
 /**
  * Every card field, by canonical path (`notrump.stayman.play`): its kind,
- * label, options, bounds, default, aliases, skill, level and choice group,
- * as spec/fields.toml declares them.
+ * label, options, bounds, default, aliases, skill, level and choice group.
+ * These are card schema 2's paths, rebuilt from the pack (js/pack.js).
  */
-export const FIELDS = Object.fromEntries(
-  Object.entries(SECTIONS).flatMap(([section, fields]) =>
-    Object.entries(fields).map(([key, def]) => [`${section}.${key}`, def])
-  )
-)
+export const FIELDS = schema2Fields(PACK_DOC)
 
 /** Canonical path for every path and alias. */
 const CANONICAL = new Map(
@@ -36,9 +37,29 @@ const CANONICAL = new Map(
   ])
 )
 
-/** The field at `path` or one of its aliases, with its canonical `path`; or undefined. */
-export function field(path) {
+/**
+ * Every path that names the same field as `path`: its canonical path first,
+ * then its aliases. Undefined when `path` names no field.
+ */
+export function spellings(path) {
   const canonical = CANONICAL.get(path)
+  return canonical && [canonical, ...(FIELDS[canonical].aliases || [])]
+}
+
+/** The pack's address for each field (`bidding_conventions/stayman`, `<id>:<treatment>`), to its path. */
+const BY_ADDRESS = addressMaps(PACK_DOC).path
+/** For a convention with no single box (several places, or chosen by a setting), the path that stands for it. */
+const BY_CONVENTION = conventionPaths(PACK_DOC)
+
+/**
+ * The field at `path`, one of its aliases, or its address in the pack
+ * (`bidding_conventions/stayman`, which a bidding engine reports), with its
+ * canonical `path`; or undefined. A convention with no single box (Texas,
+ * played over 1NT and over 2NT; Meckwell, chosen as the defence to 1NT)
+ * reads as the box that best stands for it.
+ */
+export function field(path) {
+  const canonical = CANONICAL.get(path) ?? CANONICAL.get(BY_ADDRESS.get(path)) ?? CANONICAL.get(BY_CONVENTION.get(path))
   return canonical && { path: canonical, ...FIELDS[canonical] }
 }
 
@@ -57,8 +78,17 @@ export { BRIDGODEX_MAP }
 /** BBA's `.bbsa` file layout (spec/formats/bbsa-layout.txt): every key, in the order an export writes them. */
 export { BBSA_LAYOUT }
 
-/** Every standard convention and skill, by ID (spec/conventions/). */
-export const CONVENTIONS = CONVENTIONS_DOC.conventions
+/**
+ * Every standard convention and skill, by ID (the pack's definitions). The
+ * IDs the pack added for what card schema 2 held as a bare switch (Texas,
+ * Michaels...) are left out until cards are stored in schema 3.
+ */
+const NEW_IDS = new Set(PACK_DOC.migrations['2-to-3'].new_ids || [])
+export const CONVENTIONS = Object.fromEntries(
+  Object.entries(PACK_DOC.conventions)
+    .filter(([id]) => !NEW_IDS.has(id))
+    .map(([id, d]) => [id, 'summary' in d ? { ...d, summary: d.summary.trim() } : d])
+)
 
 /**
  * The named level bands, in order: `{ name, label, max }`, each covering the
