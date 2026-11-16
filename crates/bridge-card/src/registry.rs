@@ -145,6 +145,15 @@ pub struct FieldDef {
     /// kept as written.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub bid: bool,
+    /// In a pack's vocabulary: the convention this treatment belongs to.
+    /// Its `default` then applies only while the card plays that
+    /// convention ([`crate::Card::effective`]).
+    #[serde(skip)]
+    pub convention: Option<String>,
+    /// In a pack's vocabulary: a field worked out from the rest of the
+    /// card (the convention that fills a function), never stored.
+    #[serde(skip)]
+    pub derived: Option<crate::pack::Derived>,
 }
 
 /// A string or a list of strings.
@@ -240,7 +249,7 @@ impl FieldDef {
 }
 
 /// All card fields, in declaration order.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Registry {
     fields: Vec<FieldDef>,
     /// Canonical paths and aliases, to an index into `fields`.
@@ -314,6 +323,32 @@ impl Registry {
             }
         }
         Ok(registry)
+    }
+
+    /// A registry of fields already built (a pack's, named by address).
+    /// Each field's default is checked against it; a name declared twice is
+    /// an error.
+    pub fn from_fields(mut fields: Vec<FieldDef>) -> Result<Registry, Error> {
+        let mut index = HashMap::new();
+        for (i, field) in fields.iter_mut().enumerate() {
+            let path = field.path.clone();
+            if let Some(d) = field.default.take() {
+                field.default = Some(
+                    field
+                        .normalize(d)
+                        .map_err(|e| Error::new(format!("{path} default: {e}")))?,
+                );
+            }
+            if field.kind == FieldKind::Enum && field.options.is_empty() {
+                return Err(Error::new(format!("{path}: enum without options")));
+            }
+            for name in std::iter::once(&path).chain(&field.aliases) {
+                if index.insert(name.clone(), i).is_some() {
+                    return Err(Error::new(format!("{name} is declared twice")));
+                }
+            }
+        }
+        Ok(Registry { fields, index })
     }
 
     /// Look up a field by canonical path or alias.

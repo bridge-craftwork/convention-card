@@ -1,25 +1,17 @@
 #!/usr/bin/env python3
-"""Build the spec's generated JSON from its TOML sources.
+"""Build the format maps' JSON from their TOML sources.
 
-- spec/conventions.json: every entry of spec/conventions/<category>/<name>.toml
-  (one file per convention) in one file.
-- spec/taxonomy.json: lesson-studio's Contract 4 (taxonomy/v1), the skill
-  vocabulary with a four-band level.
-- spec/fields.json, spec/levels.json, spec/alerts.json and
-  spec/formats/{bbsa,bbo,bridgodex}-map.json and bbo-slots.json: fields.toml,
-  levels.toml, alerts.toml, the three format maps and BBO's slot list as JSON, for readers with no TOML parser (the JS library).
-  alerts.toml is checked first: every field it names exists, and every rule
-  is one the format allows.
-  bbsa-map.json also carries BBA's file layout (bbsa-layout.txt) as
-  `layout`, the key order an export writes.
-- spec/migrations/<from>-to-<to>.json: each card-schema migration as JSON,
-  checked first: every path it writes is a field of fields.toml, and no path
-  it takes off a card still is one.
+spec/formats/{bbsa,bbo,bridgodex}-map.json and bbo-slots.json: the three
+format maps and BBO's slot list as JSON, for readers with no TOML parser (the
+JS library). bbsa-map.json also carries BBA's file layout (bbsa-layout.txt) as
+`layout`, the key order an export writes.
 
-One file per convention is the source (spec/conventions/README.md); readers
-that cannot list a directory (the JS library in a browser, lesson-studio) read
-the combined file. CI runs this on every push to main that changes the source
-and commits the result (.github/workflows/build-spec.yml).
+The conventions, card fields, levels, alert rules and migrations are not
+built here: they are bridge-common-conventions', and spec/pack.json is a copy
+of its published snapshot (scripts/sync_pack.mjs).
+
+CI runs this on every push to main that changes a source and commits the
+result (.github/workflows/build-spec.yml).
 
     python3 scripts/build_spec.py           # write every generated file
     python3 scripts/build_spec.py --check   # exit 1 if any is out of date
@@ -27,18 +19,12 @@ and commits the result (.github/workflows/build-spec.yml).
 Standard library only (Python 3.11+, for tomllib).
 """
 
-import datetime
 import json
 import pathlib
 import sys
 import tomllib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "spec" / "conventions"
-OUT = ROOT / "spec" / "conventions.json"
-TAXONOMY = ROOT / "spec" / "taxonomy.json"
-FIELDS_TOML = ROOT / "spec" / "fields.toml"
-FIELDS_JSON = ROOT / "spec" / "fields.json"
 BBSA_TOML = ROOT / "spec" / "formats" / "bbsa-map.toml"
 BBSA_JSON = ROOT / "spec" / "formats" / "bbsa-map.json"
 BBSA_LAYOUT = ROOT / "spec" / "formats" / "bbsa-layout.txt"
@@ -48,132 +34,6 @@ BBO_SLOTS_TOML = ROOT / "spec" / "formats" / "bbo-slots.toml"
 BBO_SLOTS_JSON = ROOT / "spec" / "formats" / "bbo-slots.json"
 BRIDGODEX_TOML = ROOT / "spec" / "formats" / "bridgodex-map.toml"
 BRIDGODEX_JSON = ROOT / "spec" / "formats" / "bridgodex-map.json"
-CATEGORIES = SOURCE / "categories.toml"
-LEVELS_TOML = ROOT / "spec" / "levels.toml"
-LEVELS_JSON = ROOT / "spec" / "levels.json"
-ALERTS_TOML = ROOT / "spec" / "alerts.toml"
-ALERTS_JSON = ROOT / "spec" / "alerts.json"
-ALERT_RULES = {"alert", "announce", "delayed", "none"}
-MIGRATIONS = ROOT / "spec" / "migrations"
-
-# DECISIONS.md, 12: the named bands are ranges of the 1-10 level
-# (spec/levels.toml).
-BANDS = [(b["max"], b["name"]) for b in tomllib.loads(LEVELS_TOML.read_text(encoding="utf-8"))["band"]]
-if [top for top, _ in BANDS] != sorted(top for top, _ in BANDS) or BANDS[-1][0] != 10:
-    sys.exit("spec/levels.toml: bands must be in order and end at 10")
-
-
-def band(level: int) -> str:
-    return next(name for top, name in BANDS if level <= top)
-
-
-def version() -> str:
-    cargo = tomllib.loads((ROOT / "Cargo.toml").read_text(encoding="utf-8"))
-    return cargo["workspace"]["package"]["version"]
-
-
-def load() -> dict:
-    conventions = {}
-    for path in sorted(SOURCE.glob("*/*.toml")):
-        entry = tomllib.loads(path.read_text(encoding="utf-8"))
-        expected = f"{path.parent.name}/{path.stem}"
-        if entry.get("id") != expected:
-            sys.exit(f"{path.relative_to(ROOT)}: id is {entry.get('id')!r}, expected {expected!r}")
-        if "summary" in entry:
-            entry["summary"] = entry["summary"].strip()
-        conventions[expected] = entry
-    return conventions
-
-
-def build(conventions: dict) -> str:
-    doc = {
-        "schema": "conventions/v1",
-        "generated_from": "spec/conventions/ (do not edit: see spec/conventions/README.md)",
-        "conventions": conventions,
-    }
-    return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
-
-
-def build_taxonomy(conventions: dict) -> str:
-    """Contract 4's taxonomy/v1. Entries without a level (practice_deals: content,
-    not skills) are left out, and so is any category left with no entries."""
-    names = tomllib.loads(CATEGORIES.read_text(encoding="utf-8"))
-    paths = [
-        {"path": id, "name": e["name"], "category": id.split("/")[0], "level": band(e["level"])}
-        for id, e in conventions.items()
-        if "level" in e
-    ]
-    used = {p["category"] for p in paths}
-    missing = used - names.keys()
-    if missing:
-        sys.exit(f"spec/conventions/categories.toml has no name for {sorted(missing)}")
-    categories = [{"id": c, "name": names[c]} for c in sorted(used)]
-    body = {"schema": "taxonomy/v1", "version": version(), "categories": categories, "paths": paths}
-    # `generated` changes only when the content does, so a rebuild with nothing
-    # new leaves the file (and CI's commit-back) alone.
-    generated = datetime.date.today().isoformat()
-    if TAXONOMY.exists():
-        old = json.loads(TAXONOMY.read_text(encoding="utf-8"))
-        if {k: v for k, v in old.items() if k != "generated"} == body:
-            generated = old["generated"]
-    doc = {"schema": body["schema"], "version": body["version"], "generated": generated,
-           "categories": categories, "paths": paths}
-    return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
-
-
-def field_paths() -> set:
-    """Every field path in fields.toml, canonical and alias."""
-    paths = set()
-    for section, entries in tomllib.loads(FIELDS_TOML.read_text(encoding="utf-8")).items():
-        for key, f in entries.items():
-            paths.add(f"{section}.{key}")
-            paths.update(f.get("aliases", []))
-    return paths
-
-
-def check_alerts() -> None:
-    """alerts.toml: known regulators, allowed rules, fields that exist."""
-    doc = tomllib.loads(ALERTS_TOML.read_text(encoding="utf-8"))
-    regulators = set(doc.get("regulators", {}))
-    paths = field_paths()
-    problems = []
-    for n, a in enumerate(doc.get("alert", []), 1):
-        where = f"alert {n} ({a.get('call', '?')} after {a.get('after', '-')})"
-        for key in ("fields", "call", "rule"):
-            if key not in a:
-                problems.append(f"{where}: no {key}")
-        if a.get("rule") not in ALERT_RULES:
-            problems.append(f"{where}: rule {a.get('rule')!r} is not one of {sorted(ALERT_RULES)}")
-        for r in regulators & a.keys():
-            if a[r] not in ALERT_RULES:
-                problems.append(f"{where}: {r} = {a[r]!r} is not one of {sorted(ALERT_RULES)}")
-            if a[r] == a.get("rule"):
-                problems.append(f"{where}: {r} repeats the rule; give a regulator only where it differs")
-        for path in a.get("fields", []):
-            if path not in paths:
-                problems.append(f"{where}: no field {path!r} in fields.toml")
-    if problems:
-        sys.exit("spec/alerts.toml:\n  " + "\n  ".join(problems))
-
-
-def check_migration(path: pathlib.Path) -> None:
-    """A migration writes only fields that exist and takes off only paths that
-    are no longer fields (else the upgrade would move a current value)."""
-    doc = tomllib.loads(path.read_text(encoding="utf-8"))
-    fields = field_paths()
-    taken, written = list(doc.get("rename", {})), list(doc.get("rename", {}).values())
-    for s in doc.get("split", []):
-        taken.append(s["from"])
-        written += [s["play"], s["style"]]
-    for s in doc.get("select", []):
-        taken += [o["box"] for o in s["options"]]
-        written += [p for p in (s.get("play"), s["style"]) if p]
-    for a in doc.get("any", []):
-        written.append(a["set"])
-    problems = [f"writes {p!r}, which is not a field" for p in written if p not in fields]
-    problems += [f"takes {p!r} off a card, but it is still a field" for p in taken if p in fields]
-    if problems:
-        sys.exit(f"{path.relative_to(ROOT)}:\n  " + "\n  ".join(problems))
 
 
 def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str:
@@ -184,23 +44,12 @@ def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str
 
 
 def main() -> None:
-    conventions = load()
-    check_alerts()
-    migrations = sorted(MIGRATIONS.glob("*.toml"))
-    for m in migrations:
-        check_migration(m)
     outputs = {
-        OUT: build(conventions),
-        TAXONOMY: build_taxonomy(conventions),
-        FIELDS_JSON: as_json(FIELDS_TOML, "fields/v1"),
-        LEVELS_JSON: as_json(LEVELS_TOML, "levels/v1"),
-        ALERTS_JSON: as_json(ALERTS_TOML, "alerts/v1"),
         BBSA_JSON: as_json(BBSA_TOML, "bbsa-map/v1",
                            {"layout": BBSA_LAYOUT.read_text(encoding="utf-8").splitlines()}),
         BBO_JSON: as_json(BBO_TOML, "bbo-map/v1"),
         BBO_SLOTS_JSON: as_json(BBO_SLOTS_TOML, "bbo-slots/v1"),
         BRIDGODEX_JSON: as_json(BRIDGODEX_TOML, "bridgodex-map/v1"),
-        **{m.with_suffix(".json"): as_json(m, "migration/v1") for m in migrations},
     }
     if "--check" in sys.argv[1:]:
         stale = [p.name for p, text in outputs.items()

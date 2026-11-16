@@ -159,7 +159,9 @@ export function exportBbsa(cardData) {
 
 function exportValue(card, m) {
   if (m.toggle) return card.isOn(m.toggle) ? 1 : 0
-  if (m.set) return m.set.every(([p, v]) => card.get(p) === v) ? 1 : 0
+  // A value of `false` holds for a box the card left unset too: "Drury, not
+  // reversed" is a card that ticks Drury and says nothing more.
+  if (m.set) return m.set.every(([p, v]) => (v === false ? (card.get(p) ?? false) === false : card.get(p) === v)) ? 1 : 0
   const v = card.effective(m.index)
   const i = typeof v === 'string' ? m.values.indexOf(v) : -1
   return i < 0 ? 0 : i

@@ -10,6 +10,7 @@
 
 import { EXPORT_SCHEMA } from './checkCard.js'
 import { upgradeCardData } from './migrate.js'
+import { toSchema3 } from './schema3.js'
 import { withoutSavedDate } from './bbo.js'
 
 /** The `schema` of an "Export all" file: `{ schema, exportedAt, cards: [<card export>] }`. */
@@ -17,7 +18,8 @@ export const BUNDLE_SCHEMA = 'bridge-classroom/cards@v1'
 
 /**
  * A card ({ id, name, description, card_data, updated_at }) as the editor's
- * export: `{ schema, id, name, description, updatedAt, exportedAt, card_data }`.
+ * export: `{ schema, id, name, description, updatedAt, exportedAt, card_data }`,
+ * its card_data stored as schema 3.
  */
 export function exportRecord(card, exportedAt = new Date().toISOString()) {
   return {
@@ -27,7 +29,7 @@ export function exportRecord(card, exportedAt = new Date().toISOString()) {
     description: card.description || null,
     updatedAt: card.updated_at || card.updatedAt || null,
     exportedAt,
-    card_data: upgradeCardData(card.card_data || {}),
+    card_data: toSchema3(upgradeCardData(card.card_data || {})),
   }
 }
 

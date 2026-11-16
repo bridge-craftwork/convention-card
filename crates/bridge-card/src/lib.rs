@@ -15,6 +15,7 @@ pub mod bbsa;
 mod card;
 mod error;
 pub mod migrate;
+pub mod pack;
 mod registry;
 pub mod schema;
 pub mod skills;
@@ -23,20 +24,22 @@ mod vocabulary;
 
 pub use card::{Card, CardMetadata, LoadReport, OtherAgreement, EXPORT_SCHEMA};
 pub use error::Error;
+pub use pack::Pack;
 pub use registry::{FieldDef, FieldKind, Registry, Value};
 pub use skills::{Skill, SkillSource, Skills};
 pub use vocabulary::Vocabulary;
 
-/// This repository's vocabulary (`spec/`), for the unit tests
-/// only: the crate itself has no built-in vocabulary.
+/// Card schema 2's field list, frozen (`tests/fixtures/schema2/`), with
+/// this repository's `.bbsa` map: a vocabulary given as a field list, for
+/// the unit tests only. The crate itself has no built-in vocabulary.
 #[cfg(test)]
 pub(crate) fn test_vocabulary() -> &'static Vocabulary {
     static V: std::sync::OnceLock<Vocabulary> = std::sync::OnceLock::new();
     V.get_or_init(|| {
         Vocabulary::parse(
-            include_str!("../../../spec/fields.toml"),
+            include_str!("../tests/fixtures/schema2/fields.toml"),
             include_str!("../../../spec/formats/bbsa-map.toml"),
         )
-        .expect("spec/ is valid")
+        .expect("the schema 2 fixture is valid")
     })
 }

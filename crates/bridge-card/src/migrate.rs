@@ -18,9 +18,6 @@ use serde_json::{Map, Value as Json};
 /// The schema version every card this crate writes records.
 pub const CARD_SCHEMA_VERSION: &str = "2.0";
 
-/// `spec/migrations/1-to-2.toml`: schema 1.x to 2.0.
-pub const MIGRATION_1_TO_2: &str = include_str!("../../../spec/migrations/1-to-2.toml");
-
 #[derive(Debug, Deserialize)]
 struct Migration {
     to: String,
@@ -71,11 +68,15 @@ struct Any {
 fn migrations() -> &'static [Migration] {
     static M: OnceLock<Vec<Migration>> = OnceLock::new();
     M.get_or_init(|| {
-        vec![toml::from_str(MIGRATION_1_TO_2).expect("spec/migrations/1-to-2.toml is valid")]
+        // Schema 1.x to 2.0: the convention pack's `migrations/1-to-2.toml`,
+        // from this repository's copy of its snapshot.
+        let pack: Json = serde_json::from_str(crate::standard::PACK).expect("spec/pack.json");
+        vec![serde_json::from_value(pack["migrations"]["1-to-2"].clone())
+            .expect("the pack's 1-to-2 migration is valid")]
     })
 }
 
-fn major(version: Option<&Json>) -> u64 {
+pub(crate) fn major(version: Option<&Json>) -> u64 {
     let text = match version {
         None | Some(Json::Null) => return 1,
         Some(Json::String(s)) => s.clone(),

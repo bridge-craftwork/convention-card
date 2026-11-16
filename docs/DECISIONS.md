@@ -2,6 +2,13 @@
 
 What's settled, and what's still open. Newest first within each list.
 
+> **2026-11-15:** the convention files (`spec/conventions/`,
+> `conventions.json`, `taxonomy.json`), the field list (`spec/fields.toml`),
+> `spec/levels.toml`, the alert rules and the migrations named in the entries
+> below now live in [bridge-common-conventions](https://github.com/bridge-craftwork/bridge-common-conventions); this repo reads a copy
+> of its published snapshot, `spec/pack.json`. The entries are left as
+> written.
+
 ## Decided
 
 **2026-11-13: conventions and card settings move out** (Rick Wilson)

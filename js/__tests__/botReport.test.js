@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { field } from '../spec.js'
 import { botReport } from '../botReport.js'
 
 const byId = (r, id) => r.tiles.find(t => t.id === id)
@@ -49,4 +50,19 @@ describe('botReport with the conventions the bot implements', () => {
   it('does not play one it has no module for', () => {
     expect(byId(r, 'bidding_conventions/bergen_raises')).toMatchObject({ status: 'gap', module: false })
   })
+
+  it('reads a setting named by its address in the pack as the same field', () => {
+    const byPath = { read: ['notrump.stayman.play'], ignored: ['competitive.michaels.play'] }
+    const byAddress = { read: ['bidding_conventions/stayman'], ignored: ['competitive_bidding/michaels'] }
+    expect(botReport({}, byAddress)).toEqual(botReport({}, byPath))
+  })
+
+  it('reads a convention with no single box as the box that stands for it', () => {
+    expect(field('bidding_conventions/texas').path).toBe('notrump.texas.play')
+    expect(field('competitive_bidding/meckwell').path).toBe('competitive.vs_1nt_strong.system')
+    expect(field('bidding_conventions/weak_2s').path).toMatch(/^two_level\.two_\w+\.meaning$/)
+    // The exact pairs are untouched.
+    expect(field('bidding_conventions/texas:over_2nt').path).toBe('notrump.texas.over_2nt')
+  })
 })
+

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { exportRecord, exportAll, isBundle, planImport } from '../cardBundle.js'
 import { importCards, importCard } from '../importCard.js'
+import { toSchema3 } from '../schema3.js'
 import { importBboJson, bboFileCards } from '../bbo.js'
 
 const A = { id: 'a', name: 'With Pat', description: null, updated_at: '2026-10-01T10:00:00Z', card_data: { notrump: { one_nt: { range_min: 15 } } } }
@@ -24,7 +25,9 @@ describe('Export all', () => {
   it('carries each card with its id and last change, and reads back', async () => {
     const bundle = exportAll([A, B], '2026-10-03T00:00:00Z')
     expect(isBundle(bundle)).toBe(true)
-    expect(bundle.cards[0]).toMatchObject({ id: 'a', name: 'With Pat', updatedAt: A.updated_at, card_data: A.card_data })
+    // A card is stored as schema 3.
+    expect(bundle.cards[0]).toMatchObject({ id: 'a', name: 'With Pat', updatedAt: A.updated_at, card_data: toSchema3(A.card_data) })
+    expect(bundle.cards[0].card_data.schema_version).toBe('3.0')
     const read = await importCards(JSON.stringify(bundle))
     expect(read.map(r => [r.id, r.name, r.updatedAt])).toEqual([['a', 'With Pat', A.updated_at], ['b', 'With Lee', B.updated_at]])
     await expect(importCard(bundle)).rejects.toThrow(/Export all/)

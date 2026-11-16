@@ -7,7 +7,7 @@
 
 import { FIELDS, field } from './spec.js'
 import { bidOf } from './suits.js'
-import { needsUpgrade, upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
+import { needsUpgrade, upgradeCardData, migrateCardData, CARD_SCHEMA_VERSION } from './migrate.js'
 
 /** The `schema` of the editor's "Export content" file: `{schema, name, description, exportedAt, card_data}`. */
 export const EXPORT_SCHEMA = 'bridge-classroom/card_data@v1'
@@ -125,10 +125,9 @@ export function checkCard(input) {
     name = text(input.name)
     description = text(input.description)
   }
-  if (needsUpgrade(card_data)) {
-    report.migrated = String(card_data.schema_version ?? '1.0')
-    card_data = upgradeCardData(card_data)
-  }
+  // The card as it is written: its own paths and values, nothing inferred.
+  if (needsUpgrade(card_data)) report.migrated = String(card_data.schema_version ?? '1.0')
+  card_data = migrateCardData(card_data)
   name ??= card_data.metadata?.name ?? null
   description ??= card_data.metadata?.description ?? null
 

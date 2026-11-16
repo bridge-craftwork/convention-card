@@ -23,6 +23,7 @@ import { readPath } from './paths.js'
 import { ntHeadingText, NT_STRONG_INCLUDES } from './ntDefenses.js'
 import { cardValues } from './checkCard.js'
 import { upgradeCard, upgradeCardData } from './migrate.js'
+import { toSchema3 } from './schema3.js'
 import { ledCards } from './leads.js'
 import { TEMPLATE_INK } from './acblTemplateInk.js'
 import { loadTemplate, loadFont } from './assets.js'
@@ -2098,7 +2099,8 @@ function embedCardDataInPdf(pdf, card, pdfFields = null) {
       description: card.description || null,
       updatedAt: card.updated_at || card.updatedAt || null,
       exportedAt: new Date().toISOString(),
-      card_data: card.card_data,
+      // As a card is stored: card schema 3.
+      card_data: toSchema3(upgradeCardData(card.card_data)),
       // What the export wrote into each box, so an import can find edits
       // made in a PDF editor afterwards. Readers of the export wrapper
       // ignore keys they don't know.

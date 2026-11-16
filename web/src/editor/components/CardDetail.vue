@@ -247,6 +247,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { SECTION_META, STRUCTURED_FIELDS, getCatalogEntries, getLevelForStructuredField } from '../conventionCatalog.js'
 import { colorizeSuits } from '../suits.js'
 import { field as specField } from '../../../../js/spec.js'
+import { readPath } from '../../../../js/paths.js'
 import ConventionRow from './ConventionRow.vue'
 import VsNtDefense from './VsNtDefense.vue'
 import DirectCuebidsMatrix from './DirectCuebidsMatrix.vue'
@@ -527,17 +528,6 @@ const hiddenCount = computed(() => {
     return n + (filtered && !status.checked ? 1 : 0)
   }, 0)
 })
-
-function readPath(obj, dotted) {
-  if (!obj || !dotted) return undefined
-  const parts = dotted.split('.')
-  let cur = obj
-  for (const p of parts) {
-    if (cur == null || typeof cur !== 'object') return undefined
-    cur = cur[p]
-  }
-  return cur
-}
 
 function renderField(field) {
   const data = props.card?.card_data

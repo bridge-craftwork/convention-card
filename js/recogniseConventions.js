@@ -16,6 +16,7 @@
 import { FIELDS, CONVENTIONS } from './spec.js'
 import { cardValues } from './checkCard.js'
 import { readPath, writePath } from './paths.js'
+import { upgradeCardData } from './migrate.js'
 
 export const DISMISSED_PATH = 'metadata.dismissed_conventions'
 
@@ -93,6 +94,8 @@ const tail = id => id.slice(id.lastIndexOf('/') + 1)
  * named after it (Suction as the defence to 1NT).
  */
 export function playsConvention(card_data, id, values = cardValues(card_data)) {
+  // A card saved in another schema is read in the working form.
+  card_data = upgradeCardData(card_data)
   if ((BOOL_FIELDS.get(id) || []).some(p => isOn(values, p))) return true
   const agreements = Array.isArray(card_data?.other_agreements) ? card_data.other_agreements : []
   if (agreements.some(a => a?.id === id)) return true
@@ -138,6 +141,8 @@ const excerptOf = q => `${q.before}${q.match}${q.after}`
  * `suggestions`.
  */
 export function suggestConventions(card_data) {
+  // A card saved in another schema is read in the working form.
+  card_data = upgradeCardData(card_data)
   const values = cardValues(card_data)
   const dismissed = dismissedOf(card_data)
   const byKey = new Map()

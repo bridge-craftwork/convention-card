@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { compareCards } from '../compareCards.js'
 import { writePath } from '../paths.js'
+import { toSchema3 } from '../schema3.js'
 import { FIELDS } from '../spec.js'
 
 const ROOT = path.resolve(__dirname, '../..')
@@ -60,6 +61,18 @@ describe('compareCards', () => {
     ])
     expect(row(r, 'slam.ace_ask').status).toBe('same')
     expect(row(r, 'slam.rkcb.style').status).toBe('same')
+  })
+
+  it('compares a card saved in schema 3 with itself in the working form', () => {
+    const working = card({ 'notrump.stayman.play': true }, {
+      schema_version: '2.0',
+      other_agreements: [{ id: 'competitive_bidding/overcalls', from: 'notes.competitive_notes', text: 'overcalls' }],
+    })
+    const saved = toSchema3(working)
+    expect(saved.other_agreements).toBeUndefined()
+    const r = compareCards([working, saved])
+    expect(r.rows.filter(x => x.status === 'differs')).toEqual([])
+    expect(texts(row(r, 'other_agreements.id:competitive_bidding/overcalls'))).toEqual(['overcalls', 'overcalls'])
   })
 
   it('folds a range and its plus and minus into one row', () => {
@@ -161,10 +174,13 @@ describe('compareCards', () => {
       card({}, { other_agreements: [{ text: 'kokish  relay' }] }),
     ])
     const others = r.rows.filter(x => x.section === 'other_agreements')
+    // In the order the working form lists them: free text, then by ID.
     expect(others.map(x => [x.label, x.status])).toEqual([
-      ['XYZ', 'differs'],
       ['Kokish relay', 'same'],
+      ['XYZ', 'differs'],
     ])
+    // A listed convention with a box of its own also reads as played.
+    expect(row(r, 'other_conventions.xyz').status).toBe('differs')
   })
 
   it('keeps the spec order, and every field in at most one row', () => {

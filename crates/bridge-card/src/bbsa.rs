@@ -398,7 +398,12 @@ pub fn export(card: &Card) -> (String, ExportReport) {
 fn export_value(card: &Card, mapping: &Mapping) -> i64 {
     match mapping {
         Mapping::Toggle(path) => card.is_on(path) as i64,
-        Mapping::Set(pairs) => pairs.iter().all(|(p, v)| card.get(p) == Some(v)) as i64,
+        // A value of `false` holds for a box the card left unset too: "Drury,
+        // not reversed" is a card that ticks Drury and says nothing more.
+        Mapping::Set(pairs) => pairs.iter().all(|(p, v)| match (card.get(p), v) {
+            (None, Value::Bool(false)) => true,
+            (got, v) => got == Some(v),
+        }) as i64,
         Mapping::Index { path, values } => match card.effective(path) {
             Some(Value::Text(v)) => values.iter().position(|o| o == v).unwrap_or(0) as i64,
             _ => 0,

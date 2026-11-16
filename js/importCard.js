@@ -67,6 +67,8 @@ export function detectFormat(input) {
   if (input.card_data && typeof input.card_data === 'object') return 'card'
   if (isBundle(input)) return 'card'
   if (isBboCard(input)) return 'bbo'
+  // A schema 3 card has `settings` too, beside its `conventions`.
+  if (input.conventions && typeof input.conventions === 'object' && Object.hasOwn(input, 'schema_version')) return 'card'
   if (input.settings && typeof input.settings === 'object') return 'bridgeodex'
   if (looksLikeCardData(input)) return 'card'
   return null
