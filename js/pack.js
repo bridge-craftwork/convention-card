@@ -77,7 +77,6 @@ export function schema2Fields(pack) {
   const mig = pack.migrations['2-to-3']
   const defs = definitions(pack)
   const { path: back } = addressMaps(pack)
-  const isNew = new Set(mig.new_ids || [])
   const pathOf = (id, a) => back.get(a) ?? back.get(`${id}:${a}`) ?? a
   const repoint = (def, of) => {
     for (const k of ['explains', 'requires']) if (k in def) def[k] = of(def[k])
@@ -101,7 +100,7 @@ export function schema2Fields(pack) {
     }
   }
   // A convention's switch.
-  const switchSkill = id => [...(isNew.has(id) ? [] : [id]), ...asList(defs[id].taught_under)]
+  const switchSkill = id => [id, ...asList(defs[id].taught_under)]
   const switched = new Set()
   for (const [p, id] of Object.entries(mig.convention || {})) {
     const d = defs[id]
