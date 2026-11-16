@@ -390,16 +390,23 @@ mod tests {
                 .iter()
                 .filter(|s| s.source == SkillSource::Taxonomy)
                 .count()
-                >= 50
+                >= 30 // 34 since the lesson sets left the pack (they were 16 of 50)
         );
+        // Schema 2's field list is frozen as it was, and names lesson sets
+        // the pack has since stopped defining: those are in its record of
+        // what left (`migrations/lesson-sets.toml`).
+        let doc: serde_json::Value = serde_json::from_str(crate::standard::PACK).unwrap();
+        let left = doc["migrations"]["lesson-sets"]["left"]
+            .as_object()
+            .expect("the pack records the lesson sets that left");
         let mut tagged = 0;
         let mut lowest: BTreeMap<&str, u8> = BTreeMap::new();
         for f in crate::test_vocabulary().registry().fields() {
             for s in &f.skill {
                 tagged += 1;
                 assert!(
-                    skills.get(s).is_some(),
-                    "{}: skill {s} is not a definition of the pack",
+                    skills.get(s).is_some() || left.contains_key(s),
+                    "{}: skill {s} is not a definition of the pack, nor a lesson set that left it",
                     f.path
                 );
             }
@@ -410,7 +417,7 @@ mod tests {
         }
         assert!(tagged > 20);
         for (s, l) in lowest {
-            if let Some(level) = skills.get(s).unwrap().level {
+            if let Some(level) = skills.get(s).and_then(|d| d.level) {
                 assert_eq!(level, l, "{s}: level {level}, but its lowest field is {l}");
             }
         }

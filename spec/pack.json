@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "deaa520a20242d10be91b01cd526cb53d3bb1146",
+ "source_commit": "6c571816c88b54ae043299957f1dc546249bcf3a",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -15,9 +15,7 @@
   "competitive_bidding": "Competitive Bidding",
   "declarer_play": "Declarer Play",
   "defense": "Defense",
-  "partnership_bidding": "Partnership Bidding",
-  "practice_deals": "Practice Deals",
-  "precision": "Precision"
+  "partnership_bidding": "Partnership Bidding"
  },
  "conventions": {
   "basic_bidding/major_suit_openings": {
@@ -896,9 +894,6 @@
    "contexts": [
     "major_openings"
    ],
-   "taught_under": [
-    "bidding_conventions/jacoby_2nt_splinters"
-   ],
    "implements": [
     "two_nt_response_to_major"
    ],
@@ -925,16 +920,6 @@
     }
    ]
   },
-  "bidding_conventions/jacoby_2nt_splinters": {
-   "id": "bidding_conventions/jacoby_2nt_splinters",
-   "name": "Jacoby 2NT & Splinters",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 4,
-   "contexts": [
-    "major_openings"
-   ]
-  },
   "bidding_conventions/jacoby_transfers": {
    "id": "bidding_conventions/jacoby_transfers",
    "name": "Jacoby Transfers",
@@ -948,10 +933,7 @@
    "names": [
     "Jacoby transfers",
     "Jacoby",
-    "transfers",
-    "Texas",
-    "Texas transfers",
-    "4-level transfers"
+    "transfers"
    ],
    "confirm_names": [
     "Jacoby",
@@ -1405,9 +1387,6 @@
    "contexts": [
     "major_openings"
    ],
-   "taught_under": [
-    "bidding_conventions/jacoby_2nt_splinters"
-   ],
    "implements": [
     "two_nt_response_to_major"
    ],
@@ -1727,6 +1706,25 @@
      "url": "https://en.wikipedia.org/wiki/Polish_Club"
     }
    ]
+  },
+  "bidding_conventions/precision_1c": {
+   "id": "bidding_conventions/precision_1c",
+   "name": "Precision 1♣",
+   "source": "proposed",
+   "level": 7,
+   "contexts": [
+    "minor_openings"
+   ],
+   "names": [
+    "Precision 1♣",
+    "Precision 1C",
+    "Strong club",
+    "Strong 1♣"
+   ],
+   "confirm_names": [
+    "Strong club"
+   ],
+   "summary": "In Precision, an opening 1♣ is artificial and forcing: it shows a strong\nhand, 16 points or more, and says nothing about clubs. Responder's 1♦ is\nthe negative, and other responses are positive and forcing to game.\n"
   },
   "bidding_conventions/precision_2d": {
    "id": "bidding_conventions/precision_2d",
@@ -2258,9 +2256,6 @@
    "contexts": [
     "major_openings"
    ],
-   "taught_under": [
-    "bidding_conventions/jacoby_2nt_splinters"
-   ],
    "names": [
     "Splinters",
     "Splinter",
@@ -2510,6 +2505,11 @@
    ],
    "taught_under": [
     "bidding_conventions/jacoby_transfers"
+   ],
+   "names": [
+    "Texas",
+    "Texas transfers",
+    "4-level transfers"
    ],
    "treatments": {
     "over_1nt": {
@@ -3730,10 +3730,29 @@
    "contexts": [
     "overcalls"
    ],
-   "taught_under": [
-    "competitive_bidding/michaels_unusual"
+   "names": [
+    "Michaels",
+    "Michaels cue bid",
+    "Michaels cuebid"
    ],
+   "summary": "A cue bid of their suit as a two-suited overcall: five-five in two other\nsuits. Over a minor, the majors; over a major, the other major and a minor.\n",
    "see": [
+    {
+     "title": "Michaels Cuebid",
+     "site": "Bridge Bum",
+     "url": "https://www.bridgebum.com/michaels_cuebid.php"
+    },
+    {
+     "title": "25 Bridge Conventions You Should Know",
+     "kind": "book",
+     "chapter": 17
+    },
+    {
+     "title": "Competitive Bidding: Michaels Cuebid",
+     "by": "Robert S. Todd",
+     "site": "Adventures in Bridge",
+     "url": "https://www.advinbridge.com/this-week-in-bridge/480"
+    },
     {
      "title": "Michaels Cue Bid",
      "by": "Larry Cohen",
@@ -3790,49 +3809,6 @@
      "level": 4
     }
    }
-  },
-  "competitive_bidding/michaels_unusual": {
-   "id": "competitive_bidding/michaels_unusual",
-   "name": "Michaels & Unusual 2NT",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 4,
-   "contexts": [
-    "overcalls"
-   ],
-   "names": [
-    "Michaels",
-    "Michaels cue bid",
-    "Michaels cuebid",
-    "Unusual 2NT",
-    "Unusual notrump",
-    "Unusual NT"
-   ],
-   "summary": "Two-suited overcalls. A cue bid of their suit shows five-five in two other\nsuits (over a minor, the majors; over a major, the other major and a minor);\na jump to 2NT shows the two lowest unbid suits.\n",
-   "see": [
-    {
-     "title": "Michaels Cuebid",
-     "site": "Bridge Bum",
-     "url": "https://www.bridgebum.com/michaels_cuebid.php"
-    },
-    {
-     "title": "25 Bridge Conventions You Should Know",
-     "kind": "book",
-     "chapter": 17
-    },
-    {
-     "title": "Competitive Bidding: Michaels Cuebid",
-     "by": "Robert S. Todd",
-     "site": "Adventures in Bridge",
-     "url": "https://www.advinbridge.com/this-week-in-bridge/480"
-    },
-    {
-     "title": "Competitive Bidding: Unusual 2NT",
-     "by": "Robert S. Todd",
-     "site": "Adventures in Bridge",
-     "url": "https://www.advinbridge.com/this-week-in-bridge/481"
-    }
-   ]
   },
   "competitive_bidding/mitchell_stayman": {
    "id": "competitive_bidding/mitchell_stayman",
@@ -4525,7 +4501,24 @@
    "contexts": [
     "overcalls"
    ],
+   "names": [
+    "Unusual 2NT",
+    "Unusual notrump",
+    "Unusual NT"
+   ],
+   "summary": "A jump to 2NT over their opening as a two-suited overcall: five-five in the\ntwo lowest unbid suits.\n",
    "see": [
+    {
+     "title": "25 Bridge Conventions You Should Know",
+     "kind": "book",
+     "chapter": 17
+    },
+    {
+     "title": "Competitive Bidding: Unusual 2NT",
+     "by": "Robert S. Todd",
+     "site": "Adventures in Bridge",
+     "url": "https://www.advinbridge.com/this-week-in-bridge/481"
+    },
     {
      "title": "Unusual 2NT",
      "site": "Bridge Bum",
@@ -4541,16 +4534,14 @@
     "at_1nt": {
      "kind": "bool",
      "label": "Unusual 1NT",
-     "level": 6,
-     "skill": "competitive_bidding/michaels_unusual"
+     "level": 6
     },
     "at_2nt": {
      "kind": "bool",
      "brief": "2NT = two lowest unbid suits",
      "label": "Unusual 2NT",
      "default": true,
-     "level": 4,
-     "skill": "competitive_bidding/michaels_unusual"
+     "level": 4
     },
     "shows": {
      "kind": "text",
@@ -4560,14 +4551,12 @@
     "at_3nt": {
      "kind": "bool",
      "label": "Unusual 3NT",
-     "level": 6,
-     "skill": "competitive_bidding/michaels_unusual"
+     "level": 6
     },
     "at_4nt": {
      "kind": "bool",
      "label": "Unusual 4NT",
-     "level": 5,
-     "skill": "competitive_bidding/michaels_unusual"
+     "level": 5
     }
    }
   },
@@ -4831,90 +4820,6 @@
     }
    }
   },
-  "partnership_bidding/advanced_forcing": {
-   "id": "partnership_bidding/advanced_forcing",
-   "name": "Advanced Forcing (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 6
-  },
-  "partnership_bidding/basic_bidding": {
-   "id": "partnership_bidding/basic_bidding",
-   "name": "Basic Bidding (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 1,
-   "contexts": [
-    "general"
-   ]
-  },
-  "partnership_bidding/basic_major": {
-   "id": "partnership_bidding/basic_major",
-   "name": "Basic Major (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 1,
-   "contexts": [
-    "major_openings"
-   ]
-  },
-  "partnership_bidding/basic_notrump": {
-   "id": "partnership_bidding/basic_notrump",
-   "name": "Basic Notrump (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 2,
-   "contexts": [
-    "notrump_openings"
-   ]
-  },
-  "partnership_bidding/blackwood": {
-   "id": "partnership_bidding/blackwood",
-   "name": "Blackwood (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 2,
-   "contexts": [
-    "slam"
-   ]
-  },
-  "partnership_bidding/jacoby_2nt": {
-   "id": "partnership_bidding/jacoby_2nt",
-   "name": "Jacoby 2NT (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 4,
-   "contexts": [
-    "major_openings"
-   ]
-  },
-  "partnership_bidding/miscellaneous": {
-   "id": "partnership_bidding/miscellaneous",
-   "name": "Miscellaneous Auctions",
-   "kind": "lesson",
-   "source": "lessons",
-   "level": 4
-  },
-  "partnership_bidding/negative_doubles": {
-   "id": "partnership_bidding/negative_doubles",
-   "name": "Negative Doubles (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 3,
-   "contexts": [
-    "doubles"
-   ]
-  },
-  "partnership_bidding/overcalls": {
-   "id": "partnership_bidding/overcalls",
-   "name": "Overcalls (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 2,
-   "contexts": [
-    "overcalls"
-   ]
-  },
   "partnership_bidding/passed_hand_bidding": {
    "id": "partnership_bidding/passed_hand_bidding",
    "name": "Passed Hand Bidding",
@@ -4941,79 +4846,6 @@
    "contexts": [
     "responses_rebids"
    ]
-  },
-  "partnership_bidding/roman_key_card": {
-   "id": "partnership_bidding/roman_key_card",
-   "name": "Roman Key Card (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 4,
-   "contexts": [
-    "slam"
-   ]
-  },
-  "partnership_bidding/stayman_transfers": {
-   "id": "partnership_bidding/stayman_transfers",
-   "name": "Stayman & Transfers (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 3,
-   "contexts": [
-    "notrump_openings"
-   ]
-  },
-  "partnership_bidding/two_club": {
-   "id": "partnership_bidding/two_club",
-   "name": "Two Club (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 3,
-   "contexts": [
-    "preemptive_openings"
-   ]
-  },
-  "partnership_bidding/weak_twos": {
-   "id": "partnership_bidding/weak_twos",
-   "name": "Weak Twos (Partnership)",
-   "kind": "lesson",
-   "source": "taxonomy",
-   "level": 3,
-   "contexts": [
-    "preemptive_openings"
-   ]
-  },
-  "practice_deals/100_miscellaneous": {
-   "id": "practice_deals/100_miscellaneous",
-   "name": "100 Miscellaneous Deals",
-   "kind": "lesson",
-   "source": "taxonomy"
-  },
-  "practice_deals/100_notrump": {
-   "id": "practice_deals/100_notrump",
-   "name": "100 Notrump Deals",
-   "kind": "lesson",
-   "source": "taxonomy"
-  },
-  "precision/1c_mixed": {
-   "id": "precision/1c_mixed",
-   "name": "Precision 1♣ (Mixed)",
-   "kind": "lesson",
-   "source": "lessons",
-   "level": 7
-  },
-  "precision/1c_opener": {
-   "id": "precision/1c_opener",
-   "name": "Precision 1♣ (Opener)",
-   "kind": "lesson",
-   "source": "lessons",
-   "level": 7
-  },
-  "precision/1c_responder": {
-   "id": "precision/1c_responder",
-   "name": "Precision 1♣ (Responder)",
-   "kind": "lesson",
-   "source": "lessons",
-   "level": 7
   }
  },
  "skills": {
@@ -11666,6 +11498,168 @@
     "other_conventions.kickback.play": "bidding_conventions/kickback",
     "vs_preempts.lebensohl_response": "competitive_bidding/lebensohl:after_weak_two_double",
     "vs_to_double.two_nt_raise_majors.limit_plus": "competitive_bidding/jordan_2nt:over_major"
+   }
+  },
+  "lesson-sets": {
+   "left": {
+    "bidding_conventions/jacoby_2nt_splinters": {
+     "name": "Jacoby 2NT & Splinters",
+     "to": "Baker-Bridge",
+     "lesson": "Jacoby",
+     "covers": [
+      "bidding_conventions/jacoby_2nt",
+      "bidding_conventions/splinters"
+     ]
+    },
+    "competitive_bidding/michaels_unusual": {
+     "name": "Michaels & Unusual 2NT",
+     "to": "Baker-Bridge",
+     "lesson": "Michaels",
+     "covers": [
+      "competitive_bidding/michaels",
+      "competitive_bidding/unusual_notrump"
+     ]
+    },
+    "partnership_bidding/advanced_forcing": {
+     "name": "Advanced Forcing (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-AdvancedForcing",
+     "covers": []
+    },
+    "partnership_bidding/basic_bidding": {
+     "name": "Basic Bidding (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-BasicBidding",
+     "covers": [
+      "basic_bidding/major_suit_openings",
+      "basic_bidding/minor_suit_openings",
+      "basic_bidding/responses_to_suit_openings"
+     ]
+    },
+    "partnership_bidding/basic_major": {
+     "name": "Basic Major (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-BasicMajor",
+     "covers": [
+      "basic_bidding/major_suit_openings",
+      "basic_bidding/responses_to_suit_openings"
+     ]
+    },
+    "partnership_bidding/basic_notrump": {
+     "name": "Basic Notrump (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-BasicNotrump",
+     "covers": [
+      "basic_bidding/notrump_openings",
+      "bidding_conventions/stayman",
+      "bidding_conventions/jacoby_transfers"
+     ]
+    },
+    "partnership_bidding/blackwood": {
+     "name": "Blackwood (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-Blackwood",
+     "covers": [
+      "bidding_conventions/blackwood"
+     ]
+    },
+    "partnership_bidding/jacoby_2nt": {
+     "name": "Jacoby 2NT (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-Jacoby2NT",
+     "covers": [
+      "bidding_conventions/jacoby_2nt"
+     ]
+    },
+    "partnership_bidding/miscellaneous": {
+     "name": "Miscellaneous Auctions",
+     "to": "nowhere: no lesson, scenario or rule used it",
+     "covers": []
+    },
+    "partnership_bidding/negative_doubles": {
+     "name": "Negative Doubles (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-NegativeDoubles",
+     "covers": [
+      "competitive_bidding/negative_doubles",
+      "competitive_bidding/after_their_overcall"
+     ]
+    },
+    "partnership_bidding/overcalls": {
+     "name": "Overcalls (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-Overcalls",
+     "covers": [
+      "competitive_bidding/overcalls",
+      "competitive_bidding/notrump_overcalls"
+     ]
+    },
+    "partnership_bidding/roman_key_card": {
+     "name": "Roman Key Card (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-RomanKeyCard",
+     "covers": [
+      "bidding_conventions/roman_keycard"
+     ]
+    },
+    "partnership_bidding/stayman_transfers": {
+     "name": "Stayman & Transfers (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-StaymanTransfers",
+     "covers": [
+      "bidding_conventions/stayman",
+      "bidding_conventions/jacoby_transfers"
+     ]
+    },
+    "partnership_bidding/two_club": {
+     "name": "Two Club (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-TwoClub",
+     "covers": [
+      "bidding_conventions/strong_2c"
+     ]
+    },
+    "partnership_bidding/weak_twos": {
+     "name": "Weak Twos (Partnership)",
+     "to": "Baker-Bridge",
+     "lesson": "Partnership-WeakTwos",
+     "covers": [
+      "bidding_conventions/weak_2s"
+     ]
+    },
+    "practice_deals/100_miscellaneous": {
+     "name": "100 Miscellaneous Deals",
+     "to": "Baker-Bridge",
+     "lesson": "100Deals",
+     "covers": []
+    },
+    "practice_deals/100_notrump": {
+     "name": "100 Notrump Deals",
+     "to": "Baker-Bridge",
+     "lesson": "100NT",
+     "covers": []
+    },
+    "precision/1c_mixed": {
+     "name": "Precision 1♣ (Mixed)",
+     "to": "a retired lesson collection",
+     "covers": [
+      "bidding_conventions/precision_1c"
+     ]
+    },
+    "precision/1c_opener": {
+     "name": "Precision 1♣ (Opener)",
+     "to": "a retired lesson collection",
+     "covers": [
+      "bidding_conventions/precision_1c"
+     ]
+    },
+    "precision/1c_responder": {
+     "name": "Precision 1♣ (Responder)",
+     "to": "a retired lesson collection",
+     "covers": [
+      "bidding_conventions/precision_1c"
+     ]
+    }
    }
   }
  }

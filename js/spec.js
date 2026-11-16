@@ -79,14 +79,13 @@ export { BRIDGODEX_MAP }
 export { BBSA_LAYOUT }
 
 /**
- * Every standard convention and skill, by ID (the pack's definitions). The
- * IDs the pack added for what card schema 2 held as a bare switch (Texas,
- * Michaels...) are left out until cards are stored in schema 3.
+ * Every standard convention and skill, by ID (the pack's definitions),
+ * among them the IDs the pack added for what card schema 2 held as a bare
+ * switch (Texas, Michaels...): cards are stored in schema 3, which names
+ * them.
  */
-const NEW_IDS = new Set(PACK_DOC.migrations['2-to-3'].new_ids || [])
 export const CONVENTIONS = Object.fromEntries(
   Object.entries(definitions(PACK_DOC))
-    .filter(([id]) => !NEW_IDS.has(id))
     .map(([id, d]) => [id, 'summary' in d ? { ...d, summary: d.summary.trim() } : d])
 )
 
