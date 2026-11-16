@@ -1,12 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import ALERTS from '../../spec/alerts.json' with { type: 'json' }
+import PACK from '../../spec/pack.json' with { type: 'json' }
+import { schema2Alerts } from '../../js/pack.js'
 import { alertsFor, alertBadge, alertSummary, REGULATORS, field } from '../../js/spec.js'
 import { CONVENTION_CATALOG, alertPathOf } from '../src/editor/conventionCatalog.js'
 
 const row = id => CONVENTION_CATALOG.find(e => e.id === id)
 const RULES = ['alert', 'announce', 'delayed', 'none']
+// The pack's alert rules, by card schema 2's paths, as the library reads them.
+const ALERTS = schema2Alerts(PACK)
 
-describe('spec/alerts.toml', () => {
+describe('the pack\'s alert rules', () => {
   it('covers the ACBL, the EBU and the WBF, each with its source', () => {
     expect(Object.keys(REGULATORS).sort()).toEqual(['acbl', 'ebu', 'wbf'])
     for (const r of Object.values(REGULATORS)) expect(r.source?.url).toMatch(/^https:\/\//)

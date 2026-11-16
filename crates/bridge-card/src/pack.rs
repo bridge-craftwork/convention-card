@@ -719,6 +719,22 @@ impl Pack {
         ))
     }
 
+    /// The card schema 2 setting each part of a function replaced, as
+    /// (the part's address, the setting's path): `defence_to_1nt.strong`
+    /// and `competitive.vs_1nt_strong.system`. A card read from an older
+    /// form still lists the setting; a rule reads the part.
+    pub fn function_settings(&self) -> Vec<(String, String)> {
+        self.migration
+            .function
+            .iter()
+            .flat_map(|f| {
+                f.settings
+                    .iter()
+                    .map(|(part, path)| (format!("{}.{part}", f.function), path.clone()))
+            })
+            .collect()
+    }
+
     /// Whether the treatment at `address` reads whatever its convention's
     /// switch says: a place the convention is played (section 7 of the
     /// contract), or one its definition marks `independent`.

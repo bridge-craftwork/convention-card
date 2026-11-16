@@ -3,7 +3,10 @@ import fs from 'fs'
 import path from 'path'
 import { upgradeCardData, upgradeCard, migrateCardData, needsUpgrade, CARD_SCHEMA_VERSION } from '../migrate.js'
 import { field } from '../spec.js'
-import MIGRATION from '../../spec/migrations/1-to-2.json' with { type: 'json' }
+import PACK from '../../spec/pack.json' with { type: 'json' }
+
+// The pack's schema 1 to 2 migration (its migrations/1-to-2.toml).
+const MIGRATION = PACK.migrations['1-to-2']
 
 // The same cases the crate checks (crates/bridge-card/tests/migrations.rs),
 // so the two readers of spec/migrations/ agree.

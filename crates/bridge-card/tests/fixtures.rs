@@ -6,11 +6,16 @@ use std::path::{Path, PathBuf};
 
 use bridge_card::{bbsa, Card, Value, Vocabulary};
 
-/// This repository's vocabulary (`spec/`).
+/// Card schema 2's field list, frozen (`tests/fixtures/schema2/`), with this
+/// repository's `.bbsa` map.
 fn vocab() -> Vocabulary {
-    let spec = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../spec");
-    let read = |rel: &str| fs::read_to_string(spec.join(rel)).unwrap();
-    Vocabulary::parse(&read("fields.toml"), &read("formats/bbsa-map.toml")).expect("spec/ loads")
+    let here = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let read = |rel: &str| fs::read_to_string(here.join(rel)).unwrap();
+    Vocabulary::parse(
+        &read("tests/fixtures/schema2/fields.toml"),
+        &read("../../spec/formats/bbsa-map.toml"),
+    )
+    .expect("the schema 2 fixture loads")
 }
 
 fn bbsa_fixtures() -> Vec<PathBuf> {

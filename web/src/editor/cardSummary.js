@@ -164,6 +164,8 @@ export function summarize(card) {
     levels: levelsOf(data),
     cardLevel: cardLevel(data),
     updated: card.updated_at || null,
+    // The working form, for the columns that tell cards apart.
+    data,
   }
 }
 

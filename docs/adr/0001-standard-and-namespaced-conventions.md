@@ -1,5 +1,10 @@
 # ADR-0001 — A Standard Convention List, Plus Namespaced Conventions Anyone Can Publish
 
+> **2026-11-15:** the convention files, the field list (`spec/fields.toml`),
+> the levels, the alert rules and `spec/migrations/` named below now live in
+> [bridge-common-conventions](https://github.com/bridge-craftwork/bridge-common-conventions). This repo reads a copy of its
+> published snapshot, `spec/pack.json`. The record below is left as written.
+
 **Status:** Accepted 2026-09-30 (Rick Wilson); D3 amended the same day (see
 [Amendment 1](#amendment-1-2026-09-30-the-standard-list-starts-large)). Resolves open question 1 in
 [DECISIONS.md](../DECISIONS.md) ("who owns the field vocabulary").

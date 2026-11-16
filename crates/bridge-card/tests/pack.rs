@@ -289,7 +289,14 @@ fn a_schema_2_card_migrates() {
 #[test]
 fn every_stock_card_migrates_and_reads_as_schema_2_did() {
     let Some(v) = vocab() else { return };
-    let old = bridge_card::standard::vocabulary().unwrap();
+    // Card schema 2's field list, frozen (`tests/fixtures/schema2/`).
+    let fields =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/schema2/fields.toml");
+    let old = Vocabulary::parse(
+        &std::fs::read_to_string(fields).unwrap(),
+        bridge_card::standard::BBSA_MAP,
+    )
+    .unwrap();
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/bbsa");
     let mut seen = 0;
     for entry in std::fs::read_dir(dir).into_iter().flatten().flatten() {
@@ -510,4 +517,18 @@ fn the_shared_schema_3_cases() {
             case["name"]
         );
     }
+}
+
+#[test]
+fn a_function_part_names_the_setting_it_replaced() {
+    let v = bridge_card::standard::vocabulary().unwrap();
+    let moved = v.pack().unwrap().function_settings();
+    assert!(moved.contains(&(
+        "defence_to_1nt.strong".to_string(),
+        "competitive.vs_1nt_strong.system".to_string()
+    )));
+    assert!(moved.contains(&(
+        "opening.2h".to_string(),
+        "two_level.two_hearts.meaning".to_string()
+    )));
 }

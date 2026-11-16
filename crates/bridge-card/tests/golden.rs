@@ -12,7 +12,14 @@
 use std::fs;
 use std::path::Path;
 
-use bridge_card::{bbsa, standard};
+use bridge_card::{bbsa, standard, Vocabulary};
+
+/// Card schema 2's field list, frozen (`tests/fixtures/schema2/`), with this
+/// repository's `.bbsa` map: the form the JS library works in.
+fn schema2() -> Vocabulary {
+    let fields = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/schema2/fields.toml");
+    Vocabulary::parse(&fs::read_to_string(fields).unwrap(), standard::BBSA_MAP).unwrap()
+}
 
 #[test]
 fn bbsa_goldens_match_the_crate() {
@@ -23,7 +30,7 @@ fn bbsa_goldens_match_the_crate() {
     if bless {
         fs::create_dir_all(&golden).unwrap();
     }
-    let vocab = standard::vocabulary().unwrap();
+    let vocab = schema2();
     let mut names: Vec<_> = fs::read_dir(&cards)
         .unwrap()
         .map(|e| e.unwrap().path())

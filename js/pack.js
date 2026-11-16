@@ -36,6 +36,27 @@ export function addressMaps(pack) {
 }
 
 /**
+ * For a convention a card has no single box for, the card path that best
+ * stands for it: `{ id: path }`. A convention played in several places
+ * (Texas: over 1NT, over 2NT) gets its first place's box; one chosen
+ * through a function's setting (Meckwell, as the defence to 1NT) gets that
+ * setting. Used to read what a bidding engine reports by convention ID;
+ * `addressMaps` holds the exact, one-to-one pairs.
+ */
+export function conventionPaths(pack) {
+  const mig = pack.migrations['2-to-3']
+  const exact = addressMaps(pack).path
+  const out = new Map()
+  const add = (id, p) => { if (p && !exact.has(id) && !out.has(id)) out.set(id, p) }
+  for (const place of mig.place || []) add(place.convention, Object.keys(place.switches)[0])
+  for (const f of mig.function || []) {
+    const setting = Object.values(f.settings || {})[0]
+    for (const id of Object.values(f.options || {})) add(id, setting)
+  }
+  return out
+}
+
+/**
  * Card schema 2's fields, rebuilt from the pack: `{ path: definition }` with
  * the attributes spec/fields.toml gave each (kind, label, options, bounds,
  * default, aliases, skill, level, choice...).
