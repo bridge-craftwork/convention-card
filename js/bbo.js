@@ -396,6 +396,8 @@ function settings(cardData) {
  * card's title on BBO (default: the imported title, else the card's name).
  */
 export function exportBboCard(cardData, { name } = {}) {
+  // A card saved in another schema is read in the working form.
+  cardData = upgradeCardData(cardData)
   const raw = cardData?._bbo_raw || {}
   const before = raw.fields || raw.conventions || raw.leads ? importBboJson({ cards: [raw] }).card_data : {}
   const get = settings(cardData)

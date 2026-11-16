@@ -10,6 +10,7 @@ import { rgb } from 'pdf-lib'
 import { FIELDS, CONVENTIONS } from './spec.js'
 import { readPath } from './paths.js'
 import { drawMark, markWidth } from './pdfMark.js'
+import { upgradeCardData } from './migrate.js'
 
 const text = v => (typeof v === 'string' ? v.trim() : '')
 const sectionOf = path => path.split('.')[0]
@@ -22,7 +23,7 @@ const sectionOf = path => path.split('.')[0]
  * paths whose values the card page set too small to read.
  */
 export function notesPageContent(card, { small = [] } = {}) {
-  const data = card?.card_data || {}
+  const data = upgradeCardData(card?.card_data || {})
   const notePaths = Object.keys(FIELDS).filter(p => p.startsWith('notes.'))
   const home = new Map() // section → the [notes] field it prints under
   for (const p of notePaths) for (const s of FIELDS[p].about || []) home.set(s, p)

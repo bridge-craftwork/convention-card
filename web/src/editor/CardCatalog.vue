@@ -300,7 +300,6 @@ const unsorted = computed(() => cards.value.map(c => ({
   shared: c.shared,
   readOnly: !!c.readOnly,
   common: commonKind(c),
-  data: c.card_data || {},
 })))
 
 // The sort: clicking a column makes it the first key and keeps the earlier

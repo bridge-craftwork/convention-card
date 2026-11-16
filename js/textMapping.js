@@ -30,6 +30,7 @@ import { writePath } from './paths.js'
 import { findConventions, playsConvention } from './recogniseConventions.js'
 import { KNOWN_NT_DEFENSES } from './ntDefenses.js'
 import { bidOf } from './suits.js'
+import { upgradeCardData } from './migrate.js'
 
 const isOn = (values, path) => (values.has(path) ? values.get(path) : FIELDS[path]?.default) === true
 const isSet = (values, path) => FIELDS[path]?.kind === 'bool' ? isOn(values, path) : values.has(path)
@@ -68,6 +69,8 @@ function standardBid(values, explains, path) {
  * is set on a field meant to hold a bid (`bid`) that holds words instead.
  */
 export function textMapping(card_data) {
+  // A card saved in another schema is read in the working form.
+  card_data = upgradeCardData(card_data)
   const values = cardValues(card_data)
   const out = new Map()
   for (const [path, value] of values) {
