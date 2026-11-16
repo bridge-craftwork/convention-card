@@ -4,6 +4,13 @@ Moving the convention card here from Bridge-Classroom and rusty-bidding-bot.
 Each phase leaves every consumer working; nothing is switched off before its
 replacement is running.
 
+> **2026-11-15:** this is the record of the move *into* this repo. Since
+> then the definitions have moved on: `spec/fields.toml`, `spec/conventions/`,
+> `conventions.json`, `taxonomy.json`, the levels, the alert rules and the
+> migrations are in [bridge-common-conventions](https://github.com/bridge-craftwork/bridge-common-conventions), and this repo reads
+> a copy of its published snapshot, `spec/pack.json`. The phases below are
+> left as written.
+
 **Keep the history.** Move files with `git filter-repo --path …` on a fresh
 clone of the source repo, then merge that history in here
 (`git merge --allow-unrelated-histories`), so `git log` and `git blame` still
