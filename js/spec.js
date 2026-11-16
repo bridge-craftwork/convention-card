@@ -6,7 +6,7 @@
 // Node all read it the same way.
 
 import PACK_DOC from '../spec/pack.json' with { type: 'json' }
-import { schema2Fields, schema2Alerts, addressMaps, conventionPaths } from './pack.js'
+import { schema2Fields, schema2Alerts, addressMaps, conventionPaths, definitions } from './pack.js'
 import BBSA_MAP_DOC from '../spec/formats/bbsa-map.json' with { type: 'json' }
 import BBO_MAP_DOC from '../spec/formats/bbo-map.json' with { type: 'json' }
 import BBO_SLOTS_DOC from '../spec/formats/bbo-slots.json' with { type: 'json' }
@@ -85,7 +85,7 @@ export { BBSA_LAYOUT }
  */
 const NEW_IDS = new Set(PACK_DOC.migrations['2-to-3'].new_ids || [])
 export const CONVENTIONS = Object.fromEntries(
-  Object.entries(PACK_DOC.conventions)
+  Object.entries(definitions(PACK_DOC))
     .filter(([id]) => !NEW_IDS.has(id))
     .map(([id, d]) => [id, 'summary' in d ? { ...d, summary: d.summary.trim() } : d])
 )

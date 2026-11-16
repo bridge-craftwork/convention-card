@@ -26,4 +26,4 @@ const out = {
 }
 const target = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'spec', 'pack.json')
 fs.writeFileSync(target, JSON.stringify(out, null, 1) + '\n')
-console.log(`spec/pack.json: ${Object.keys(pack.conventions).length} definitions from ${manifest.source_commit}`)
+console.log(`spec/pack.json: ${Object.keys(pack.conventions).length} definitions and ${Object.keys(pack.skills || {}).length} skills from ${manifest.source_commit}`)

@@ -1,6 +1,6 @@
 {
  "generated_from": "bridge-common-conventions pack.json (do not edit: node scripts/sync_pack.mjs)",
- "source_commit": "fff139d102e4496dc79bc43e746b2fa613fa1713",
+ "source_commit": "deaa520a20242d10be91b01cd526cb53d3bb1146",
  "schema": "pack/v1",
  "pack": {
   "name": "bridge-common-conventions",
@@ -20,20 +20,10 @@
   "precision": "Precision"
  },
  "conventions": {
-  "basic_bidding/hand_evaluation": {
-   "id": "basic_bidding/hand_evaluation",
-   "name": "Hand Evaluation",
-   "kind": "judgement",
-   "source": "lessons",
-   "level": 1,
-   "contexts": [
-    "general"
-   ]
-  },
   "basic_bidding/major_suit_openings": {
    "id": "basic_bidding/major_suit_openings",
    "name": "Major Suit Openings",
-   "kind": "skill",
+   "kind": "natural",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
@@ -43,7 +33,7 @@
   "basic_bidding/minor_suit_openings": {
    "id": "basic_bidding/minor_suit_openings",
    "name": "Minor Suit Openings",
-   "kind": "skill",
+   "kind": "natural",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
@@ -53,12 +43,23 @@
   "basic_bidding/notrump_openings": {
    "id": "basic_bidding/notrump_openings",
    "name": "Notrump Openings",
-   "kind": "skill",
+   "kind": "natural",
    "source": "taxonomy",
    "level": 1,
    "contexts": [
     "notrump_openings"
    ]
+  },
+  "basic_bidding/responses_to_suit_openings": {
+   "id": "basic_bidding/responses_to_suit_openings",
+   "name": "Responses to Suit Openings",
+   "kind": "natural",
+   "source": "proposed",
+   "level": 1,
+   "contexts": [
+    "responses_rebids"
+   ],
+   "summary": "Responder's first call when partner opens one of a suit and the next hand\npasses: a raise, a new suit at the one level, 1NT, a new suit at the two\nlevel, and how strong each is in the system played.\n"
   },
   "bidding_conventions/bart": {
    "id": "bidding_conventions/bart",
@@ -1777,7 +1778,7 @@
   "bidding_conventions/preemptive_bids": {
    "id": "bidding_conventions/preemptive_bids",
    "name": "Preemptive Bids",
-   "kind": "skill",
+   "kind": "natural",
    "source": "taxonomy",
    "level": 3,
    "contexts": [
@@ -1895,7 +1896,7 @@
   "bidding_conventions/reverse_bids": {
    "id": "bidding_conventions/reverse_bids",
    "name": "Reverse Bids",
-   "kind": "skill",
+   "kind": "natural",
    "source": "taxonomy",
    "level": 4,
    "contexts": [
@@ -3098,12 +3099,23 @@
   "competitive_bidding/advancing_overcalls": {
    "id": "competitive_bidding/advancing_overcalls",
    "name": "Responding to Overcalls",
-   "kind": "skill",
+   "kind": "natural",
    "source": "lessons",
    "level": 3,
    "contexts": [
     "overcalls"
    ]
+  },
+  "competitive_bidding/after_their_overcall": {
+   "id": "competitive_bidding/after_their_overcall",
+   "name": "Bidding after Their Overcall",
+   "kind": "natural",
+   "source": "proposed",
+   "level": 3,
+   "contexts": [
+    "after_interference"
+   ],
+   "summary": "Our side's calls once an opponent overcalls partner's opening: raises, new\nsuits and notrump bids freely made, and what a pass says.\n"
   },
   "competitive_bidding/anti_lead_directing_doubles": {
    "id": "competitive_bidding/anti_lead_directing_doubles",
@@ -3130,7 +3142,7 @@
   "competitive_bidding/balancing": {
    "id": "competitive_bidding/balancing",
    "name": "Balancing",
-   "kind": "skill",
+   "kind": "natural",
    "source": "lessons",
    "level": 4,
    "contexts": [
@@ -3225,32 +3237,6 @@
      "site": "Bridge Bum",
      "url": "https://www.bridgebum.com/crash.php"
     }
-   ]
-  },
-  "competitive_bidding/defense_vs_1nt": {
-   "id": "competitive_bidding/defense_vs_1nt",
-   "name": "Defending against 1NT",
-   "kind": "skill",
-   "source": "proposed",
-   "level": 5,
-   "contexts": [
-    "vs_notrump"
-   ],
-   "names": [
-    "Defense to 1NT",
-    "Defence to 1NT",
-    "Conventional defense to 1NT"
-   ],
-   "summary": "An agreement on what overcalls and doubles of the opponents' 1NT mean,\nusually a system that shows two-suited hands at the two level. The card\nnames which one, against strong and weak notrumps.\n"
-  },
-  "competitive_bidding/defense_vs_preempts": {
-   "id": "competitive_bidding/defense_vs_preempts",
-   "name": "Defending against Preempts",
-   "kind": "skill",
-   "source": "proposed",
-   "level": 4,
-   "contexts": [
-    "vs_openings"
    ]
   },
   "competitive_bidding/dont": {
@@ -3500,16 +3486,6 @@
     "Landy"
    ],
    "summary": "Over their 1NT, 2♣ shows both majors; other overcalls are natural.\n"
-  },
-  "competitive_bidding/law_of_total_tricks": {
-   "id": "competitive_bidding/law_of_total_tricks",
-   "name": "The Law of Total Tricks",
-   "kind": "judgement",
-   "source": "proposed",
-   "level": 4,
-   "contexts": [
-    "general"
-   ]
   },
   "competitive_bidding/lead_directing_doubles": {
    "id": "competitive_bidding/lead_directing_doubles",
@@ -4017,10 +3993,43 @@
     }
    ]
   },
+  "competitive_bidding/notrump_interference": {
+   "id": "competitive_bidding/notrump_interference",
+   "name": "Our 1NT after Interference",
+   "kind": "natural",
+   "source": "proposed",
+   "level": 4,
+   "contexts": [
+    "notrump_openings"
+   ],
+   "summary": "Responder's calls when partner opens 1NT and the next hand doubles or\nbids: which of the usual responses still apply, and what a double shows.\n"
+  },
+  "competitive_bidding/notrump_overcalls": {
+   "id": "competitive_bidding/notrump_overcalls",
+   "name": "The 1NT Overcall",
+   "kind": "natural",
+   "source": "proposed",
+   "level": 3,
+   "contexts": [
+    "overcalls"
+   ],
+   "summary": "A 1NT overcall of their opening, direct or in the balancing seat, shows a\nbalanced hand with a stopper in their suit; and the other side's calls\nonce 1NT has been overcalled.\n"
+  },
+  "competitive_bidding/over_their_takeout_double": {
+   "id": "competitive_bidding/over_their_takeout_double",
+   "name": "Bidding over Their Takeout Double",
+   "kind": "natural",
+   "source": "proposed",
+   "level": 3,
+   "contexts": [
+    "after_interference"
+   ],
+   "summary": "Responder's calls when partner's opening is doubled for takeout: the\nredouble, raises, and what a new suit shows.\n"
+  },
   "competitive_bidding/overcalls": {
    "id": "competitive_bidding/overcalls",
    "name": "Overcalls",
-   "kind": "skill",
+   "kind": "natural",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4427,7 +4436,7 @@
   "competitive_bidding/takeout_doubles": {
    "id": "competitive_bidding/takeout_doubles",
    "name": "Takeout Doubles",
-   "kind": "skill",
+   "kind": "natural",
    "source": "taxonomy",
    "level": 2,
    "contexts": [
@@ -4598,95 +4607,6 @@
     }
    ]
   },
-  "declarer_play/elimination_plays": {
-   "id": "declarer_play/elimination_plays",
-   "name": "Elimination Plays",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 7
-  },
-  "declarer_play/entry_management": {
-   "id": "declarer_play/entry_management",
-   "name": "Entry Management",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 4
-  },
-  "declarer_play/finessing": {
-   "id": "declarer_play/finessing",
-   "name": "Finessing",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 2,
-   "confirm": true
-  },
-  "declarer_play/holdup_plays": {
-   "id": "declarer_play/holdup_plays",
-   "name": "Holdup Plays",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 3
-  },
-  "declarer_play/squeeze_plays": {
-   "id": "declarer_play/squeeze_plays",
-   "name": "Squeeze Plays",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 7
-  },
-  "declarer_play/suit_establishment": {
-   "id": "declarer_play/suit_establishment",
-   "name": "Suit Establishment",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 2
-  },
-  "declarer_play/trump_management": {
-   "id": "declarer_play/trump_management",
-   "name": "Trump Management",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 3
-  },
-  "defense/defensive_signals": {
-   "id": "defense/defensive_signals",
-   "name": "Defensive Signals",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 2,
-   "contexts": [
-    "signals"
-   ],
-   "names": [
-    "Standard signals",
-    "Attitude",
-    "Count",
-    "Suit preference",
-    "High encourages"
-   ],
-   "confirm": true,
-   "summary": "Defenders' agreements on what their cards say: attitude (like this suit or\nnot), count (odd or even length) and suit preference (which other suit to\nplay), and which applies when.\n",
-   "see": [
-    {
-     "title": "Defensive Carding: Attitude Signals",
-     "by": "Robert S. Todd",
-     "site": "Adventures in Bridge",
-     "url": "https://www.advinbridge.com/this-week-in-bridge/471"
-    },
-    {
-     "title": "Defensive Carding: Count Signals",
-     "by": "Robert S. Todd",
-     "site": "Adventures in Bridge",
-     "url": "https://www.advinbridge.com/this-week-in-bridge/472"
-    },
-    {
-     "title": "Defensive Carding: Suit Preference Signals",
-     "by": "Robert S. Todd",
-     "site": "Adventures in Bridge",
-     "url": "https://www.advinbridge.com/this-week-in-bridge/476"
-    }
-   ]
-  },
   "defense/lavinthal": {
    "id": "defense/lavinthal",
    "name": "Lavinthal",
@@ -4743,36 +4663,6 @@
     }
    }
   },
-  "defense/opening_leads": {
-   "id": "defense/opening_leads",
-   "name": "Opening Leads",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 2,
-   "contexts": [
-    "leads"
-   ],
-   "names": [
-    "Opening leads",
-    "Fourth best",
-    "Top of a sequence"
-   ],
-   "summary": "The partnership's choice of card from each kind of holding on opening lead,\nsuch as fourth best from length and the top of a sequence, so partner can\nread the lead.\n",
-   "see": [
-    {
-     "title": "Fundamentals of Trick Taking – 4th Best Leads (Attitude)",
-     "by": "Robert S. Todd",
-     "site": "Adventures in Bridge",
-     "url": "https://www.advinbridge.com/this-week-in-bridge/627"
-    },
-    {
-     "title": "Opening Leads: Card Combinations",
-     "by": "Robert S. Todd",
-     "site": "Adventures in Bridge",
-     "url": "https://www.advinbridge.com/this-week-in-bridge/394"
-    }
-   ]
-  },
   "defense/reverse_smith_echo": {
    "id": "defense/reverse_smith_echo",
    "name": "Reverse Smith echo",
@@ -4817,13 +4707,6 @@
     }
    ]
   },
-  "defense/second_hand_play": {
-   "id": "defense/second_hand_play",
-   "name": "Second Hand Play",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 4
-  },
   "defense/smith_echo": {
    "id": "defense/smith_echo",
    "name": "Smith echo",
@@ -4865,13 +4748,6 @@
      "level": 8
     }
    }
-  },
-  "defense/third_hand_play": {
-   "id": "defense/third_hand_play",
-   "name": "Third Hand Play",
-   "kind": "skill",
-   "source": "taxonomy",
-   "level": 3
   },
   "defense/trump_suit_preference": {
    "id": "defense/trump_suit_preference",
@@ -5042,14 +4918,14 @@
   "partnership_bidding/passed_hand_bidding": {
    "id": "partnership_bidding/passed_hand_bidding",
    "name": "Passed Hand Bidding",
-   "kind": "lesson",
+   "kind": "natural",
    "source": "lessons",
    "level": 6
   },
   "partnership_bidding/rebids": {
    "id": "partnership_bidding/rebids",
    "name": "Rebids by Opener or Responder",
-   "kind": "lesson",
+   "kind": "natural",
    "source": "lessons",
    "level": 3,
    "contexts": [
@@ -5059,7 +4935,7 @@
   "partnership_bidding/responders_rebid": {
    "id": "partnership_bidding/responders_rebid",
    "name": "Responder's Rebid",
-   "kind": "lesson",
+   "kind": "natural",
    "source": "lessons",
    "level": 5,
    "contexts": [
@@ -5072,16 +4948,6 @@
    "kind": "lesson",
    "source": "taxonomy",
    "level": 4,
-   "contexts": [
-    "slam"
-   ]
-  },
-  "partnership_bidding/slam_bidding": {
-   "id": "partnership_bidding/slam_bidding",
-   "name": "Slam Bidding",
-   "kind": "lesson",
-   "source": "lessons",
-   "level": 5,
    "contexts": [
     "slam"
    ]
@@ -5148,6 +5014,219 @@
    "kind": "lesson",
    "source": "lessons",
    "level": 7
+  }
+ },
+ "skills": {
+  "basic_bidding/fit_and_level": {
+   "id": "basic_bidding/fit_and_level",
+   "name": "Fit and Level Decisions",
+   "kind": "judgement",
+   "source": "proposed",
+   "level": 3,
+   "contexts": [
+    "general"
+   ],
+   "summary": "Recognising that the partnership has a trump fit, and deciding between a\npart score, game and a slam try once it has.\n"
+  },
+  "basic_bidding/hand_evaluation": {
+   "id": "basic_bidding/hand_evaluation",
+   "name": "Hand Evaluation",
+   "kind": "judgement",
+   "source": "lessons",
+   "level": 1,
+   "contexts": [
+    "general"
+   ]
+  },
+  "competitive_bidding/defense_vs_1nt": {
+   "id": "competitive_bidding/defense_vs_1nt",
+   "name": "Defending against 1NT",
+   "kind": "skill",
+   "source": "proposed",
+   "level": 5,
+   "contexts": [
+    "vs_notrump"
+   ],
+   "names": [
+    "Defense to 1NT",
+    "Defence to 1NT",
+    "Conventional defense to 1NT"
+   ],
+   "summary": "An agreement on what overcalls and doubles of the opponents' 1NT mean,\nusually a system that shows two-suited hands at the two level. The card\nnames which one, against strong and weak notrumps.\n"
+  },
+  "competitive_bidding/defense_vs_preempts": {
+   "id": "competitive_bidding/defense_vs_preempts",
+   "name": "Defending against Preempts",
+   "kind": "skill",
+   "source": "proposed",
+   "level": 4,
+   "contexts": [
+    "vs_openings"
+   ]
+  },
+  "competitive_bidding/law_of_total_tricks": {
+   "id": "competitive_bidding/law_of_total_tricks",
+   "name": "The Law of Total Tricks",
+   "kind": "judgement",
+   "source": "proposed",
+   "level": 4,
+   "contexts": [
+    "general"
+   ]
+  },
+  "competitive_bidding/penalty_doubles": {
+   "id": "competitive_bidding/penalty_doubles",
+   "name": "Penalty Doubles",
+   "kind": "judgement",
+   "source": "proposed",
+   "level": 4,
+   "contexts": [
+    "doubles"
+   ],
+   "summary": "Deciding that the opponents have bid too high and doubling to say so:\nwhat the hand, the auction and the vulnerability must show.\n"
+  },
+  "declarer_play/elimination_plays": {
+   "id": "declarer_play/elimination_plays",
+   "name": "Elimination Plays",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 7
+  },
+  "declarer_play/entry_management": {
+   "id": "declarer_play/entry_management",
+   "name": "Entry Management",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 4
+  },
+  "declarer_play/finessing": {
+   "id": "declarer_play/finessing",
+   "name": "Finessing",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 2,
+   "confirm": true
+  },
+  "declarer_play/holdup_plays": {
+   "id": "declarer_play/holdup_plays",
+   "name": "Holdup Plays",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 3
+  },
+  "declarer_play/squeeze_plays": {
+   "id": "declarer_play/squeeze_plays",
+   "name": "Squeeze Plays",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 7
+  },
+  "declarer_play/suit_establishment": {
+   "id": "declarer_play/suit_establishment",
+   "name": "Suit Establishment",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 2
+  },
+  "declarer_play/trump_management": {
+   "id": "declarer_play/trump_management",
+   "name": "Trump Management",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 3
+  },
+  "defense/defensive_signals": {
+   "id": "defense/defensive_signals",
+   "name": "Defensive Signals",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 2,
+   "contexts": [
+    "signals"
+   ],
+   "names": [
+    "Standard signals",
+    "Attitude",
+    "Count",
+    "Suit preference",
+    "High encourages"
+   ],
+   "confirm": true,
+   "summary": "Defenders' agreements on what their cards say: attitude (like this suit or\nnot), count (odd or even length) and suit preference (which other suit to\nplay), and which applies when.\n",
+   "see": [
+    {
+     "title": "Defensive Carding: Attitude Signals",
+     "by": "Robert S. Todd",
+     "site": "Adventures in Bridge",
+     "url": "https://www.advinbridge.com/this-week-in-bridge/471"
+    },
+    {
+     "title": "Defensive Carding: Count Signals",
+     "by": "Robert S. Todd",
+     "site": "Adventures in Bridge",
+     "url": "https://www.advinbridge.com/this-week-in-bridge/472"
+    },
+    {
+     "title": "Defensive Carding: Suit Preference Signals",
+     "by": "Robert S. Todd",
+     "site": "Adventures in Bridge",
+     "url": "https://www.advinbridge.com/this-week-in-bridge/476"
+    }
+   ]
+  },
+  "defense/opening_leads": {
+   "id": "defense/opening_leads",
+   "name": "Opening Leads",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 2,
+   "contexts": [
+    "leads"
+   ],
+   "names": [
+    "Opening leads",
+    "Fourth best",
+    "Top of a sequence"
+   ],
+   "summary": "The partnership's choice of card from each kind of holding on opening lead,\nsuch as fourth best from length and the top of a sequence, so partner can\nread the lead.\n",
+   "see": [
+    {
+     "title": "Fundamentals of Trick Taking – 4th Best Leads (Attitude)",
+     "by": "Robert S. Todd",
+     "site": "Adventures in Bridge",
+     "url": "https://www.advinbridge.com/this-week-in-bridge/627"
+    },
+    {
+     "title": "Opening Leads: Card Combinations",
+     "by": "Robert S. Todd",
+     "site": "Adventures in Bridge",
+     "url": "https://www.advinbridge.com/this-week-in-bridge/394"
+    }
+   ]
+  },
+  "defense/second_hand_play": {
+   "id": "defense/second_hand_play",
+   "name": "Second Hand Play",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 4
+  },
+  "defense/third_hand_play": {
+   "id": "defense/third_hand_play",
+   "name": "Third Hand Play",
+   "kind": "skill",
+   "source": "taxonomy",
+   "level": 3
+  },
+  "partnership_bidding/slam_bidding": {
+   "id": "partnership_bidding/slam_bidding",
+   "name": "Slam Bidding",
+   "kind": "skill",
+   "source": "lessons",
+   "level": 5,
+   "contexts": [
+    "slam"
+   ]
   }
  },
  "settings": {
