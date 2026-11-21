@@ -28,7 +28,7 @@ export const INPUT = [
 
 /** What `run` can produce, by `params.to`. */
 export const OUTPUTS = {
-  card: `The editor's export, as an object: { schema: "${EXPORT_SCHEMA}", name, description, exportedAt, card_data }. What Export Content saves, and what Import reads back.`,
+  card: `The editor's export, as an object: { schema: "${EXPORT_SCHEMA}", name, description, exportedAt, card_data }. What Export… saves as this editor's own file, and what Import reads back.`,
   card_data: 'card_data alone, the nested settings object.',
   bbsa: "BBA's .bbsa convention file, as text.",
   bbo: "A BBO file ({ schema_version, exported_at, source, cards }), as the Better BBO Convention Card extension writes and reads it, as an object.",
