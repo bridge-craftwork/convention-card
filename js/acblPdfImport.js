@@ -198,11 +198,36 @@ export async function readCardFromPdf(bytes) {
     carriers.get(owner).push(box)
   }
   for (const group of ACBL_SPLIT_GROUPS[template] || []) carriers.set(group.fields[0], [...group.fields])
+  // A box the export gave a value with no box of its own (the overflow) is
+  // that value's, not its usual owner's.
+  const overflow = written.overflow || {}
+  for (const [owner, list] of carriers) carriers.set(owner, list.filter(b => b === owner || !(b in overflow)))
   const ownerOf = new Map()
   for (const [owner, list] of carriers) for (const b of list) ownerOf.set(b, owner)
 
+  for (const [box, { paths, prefix = '' }] of Object.entries(overflow)) {
+    // With the boxes holding its moved lines
+    const list = [box, ...Object.keys(moved).filter(b => moved[b] === box)]
+    if (!list.some(b => changed.has(b))) continue
+    const all = list.map(b => boxes[b] || '').join(' ')
+    if (paths.length !== 1) {
+      skip(box, all.trim(), `this line holds ${paths.join(', ')}, which the card had no box for`)
+      continue
+    }
+    const now = all.startsWith(prefix) ? all.slice(prefix.length) : all
+    const current = readPath(cardData, paths[0])
+    const original = current == null ? '' : String(current)
+    const text = embedded ? mergeTyped(original, now) : now.trim()
+    if (embedded && words(text).join(' ') === words(original).join(' ')) continue
+    set(box, paths[0], text.trim() || undefined)
+  }
+
   const textOwners = new Set()
-  for (const box of changed) if (typeof boxes[box] === 'string') textOwners.add(ownerOf.get(box) || box)
+  for (const box of changed) {
+    if (typeof boxes[box] !== 'string') continue
+    const owner = ownerOf.get(box) || box
+    if (!(owner in overflow)) textOwners.add(owner)
+  }
   for (const owner of textOwners) {
     const list = carriers.get(owner) || [owner]
     const now = list.map(b => boxes[b] || '').join(' ')
@@ -279,6 +304,9 @@ export async function readCardFromPdf(bytes) {
         continue
       }
       set(box, path, on.length > 0 ? true : (current == null ? undefined : false))
+      // A box that also stands for other fields (Classic Texas: the 4♦ and
+      // 4♥ bids) is off only when they are all off.
+      if (!on.length) for (const p of entries[0].any || []) if (readPath(cardData, p) === true) set(box, p, false)
       continue
     }
     // A choice: each box is one value of the field.

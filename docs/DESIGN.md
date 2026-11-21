@@ -783,6 +783,15 @@ Bridgodex already offers).
   `notes.supplementary`, free text whose `# ` lines are headings. Two
   columns, as many pages as it takes, suit symbols drawn in the card's
   colours. Numbered footnotes are still to come.
+  **Overflow (Classic):** a text value the Classic has no box for (the 2NT
+  notes, a 1NT seat/vulnerability, the leads exceptions) is not left off.
+  It goes on a free line in its own section; else on the two write-in lines
+  at the bottom right (OTHER CONV. CALLS), labelled and sharing a line while
+  they fit; else on the notes page, which is then added even if not asked
+  for (third page after the scoresheet). Rick, 2026-11-20. The section
+  lines are `OVERFLOW_LINES` in `js/acblClassicFillPdf.js`; the export
+  records which value each line holds, so an edit there reads back into
+  that value.
 - **The mark.** Every ACBL PDF the library makes carries bridge-craftwork's
   wrench and `bridge-craftwork.com` at the right end of the NAMES line
   (the templates have no free space; Bridge Winners puts its logo there),
