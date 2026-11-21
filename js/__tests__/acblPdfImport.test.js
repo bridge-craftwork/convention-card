@@ -158,6 +158,10 @@ describe('readCardFromPdf', () => {
     const bytes = await edit(exported[template].dense, (form, pdf) => {
       const key = PDFName.of('BridgeClassroomCard')
       const payload = JSON.parse(pdf.getInfoDict().get(key).decodeText())
+      // Older exports left the card's boxless values off (no overflow lines)
+      const { overflow = {}, moved } = payload.pdf_fields
+      for (const box of Object.keys(overflow)) form.getTextField(box).setText('')
+      for (const [box, owner] of Object.entries(moved)) if (owner in overflow) form.getTextField(box).setText('')
       delete payload.pdf_fields
       payload.card_data = DENSE.card_data
       pdf.getInfoDict().set(key, PDFHexString.fromText(JSON.stringify(payload)))

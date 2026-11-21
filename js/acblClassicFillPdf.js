@@ -29,6 +29,7 @@ import { TEMPLATE_INK } from './acblTemplateInk.js'
 import { loadTemplate, loadFont } from './assets.js'
 import { drawMark, markWidth } from './pdfMark.js'
 import { addNotesPages } from './notesPage.js'
+import { FIELDS, spellings } from './spec.js'
 
 // Custom Info-dict key under which we embed the source card_data as
 // JSON, so a generated PDF can be re-imported into the editor with
@@ -190,7 +191,10 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Puppet',             card: 'notrump.stayman.puppet',          kind: 'check' },
   { pdf: '2d Transfer to h',   card: 'notrump.jacoby_transfers.play',        kind: 'check' },
   { pdf: '2h Transfer to s',   card: 'notrump.jacoby_transfers.play',        kind: 'check' },
-  { pdf: '4d  4h  Transfer',   card: 'notrump.texas.play',         kind: 'check' },
+  // The Classic's one Texas box. The editor ticks the bids (4♦, 4♥, as the
+  // New card's boxes are), so either bid ticks it too, not only the switch.
+  { pdf: '4d  4h  Transfer',   card: 'notrump.texas.play',         kind: 'check',
+    any: ['notrump.texas.bid_4d', 'notrump.texas.bid_4h'] },
   { pdf: 'Forcing Stayman',    card: 'notrump.stayman.garbage',         kind: 'check' },
   { pdf: 'Smolen',             card: 'notrump.smolen.play',             kind: 'check' },
   { pdf: 'Lebensohl',          card: 'notrump.lebensohl.play', kind: 'check' },
@@ -1495,7 +1499,7 @@ function growWidget(box, boxes, wanted, opts) {
  * explicit size, wrapped across up to `TYPO.maxLines` lines, growing
  * the box where the content needs it and the space exists.
  */
-function applyTypography(pdf, form, narrow, templateName, cardData) {
+function applyTypography(pdf, form, narrow, templateName, cardData, overflow = null) {
   // The size each value ends at, by field and by split group's card path
   const sizes = new Map(), groups = new Map()
   zeroTextFieldBorders(form)
@@ -1550,6 +1554,10 @@ function applyTypography(pdf, form, narrow, templateName, cardData) {
     // Any box beyond the text simply stays empty.
     for (let i = groupBoxes.length; i < group.fields.length; i++) handled.add(group.fields[i])
   }
+
+  // ── The values with no box of their own, on the lines left free. The
+  // single-box pass below sets them like any other value.
+  if (overflow) for (const name of placeOverflow(form, overflow, templateName, narrow, byName)) handled.delete(name)
 
   // ── Everything else: one box, up to TYPO.maxLines lines.
   for (const field of form.getFields()) {
@@ -1820,24 +1828,160 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
   }
   if (droppedPaths.length) {
     console.warn(`ACBL fill (${templateName}): ${droppedPaths.length} value(s) had no destination field`, droppedPaths)
-    await drawDiagnosticFooter(pdf, templateName, droppedPaths, card)
   }
   const markFont = await pdf.embedFont(StandardFonts.Helvetica)
   makeRoomForMark(pdf, form, templateName, markFont)
   drawLastEdit(pdf, form, templateName, card, narrow || markFont, markFont)
+  // The card's words with no box of their own on this card
+  const overflow = { items: overflowItems(card?.card_data, templateName, fieldMap), placed: new Map(), rest: [] }
   let small = []
+  let typeset = false
   if (narrow) {
     try {
-      small = smallPaths(applyTypography(pdf, form, narrow, templateName, card?.card_data), fieldMap, templateName)
+      small = smallPaths(applyTypography(pdf, form, narrow, templateName, card?.card_data, overflow), fieldMap, templateName)
+      typeset = true
     } catch (err) {
       console.warn('Typography pass failed; values keep the template default:', err)
     }
   }
-  embedCardDataInPdf(pdf, card, writtenFields(form, templateName, MOVED_BY_DOC.get(pdf)))
-  if (secondPage === 'notes') {
-    addNotesPages(pdf, card, { font: narrow || markFont, markFont, small, plain: !narrow })
+  if (!typeset && !overflow.placed.size && !overflow.rest.length) placeOverflow(form, overflow, templateName, markFont, null)
+  // After the overflow: the diagnostic gives way to anything on its lines
+  if (droppedPaths.length) await drawDiagnosticFooter(pdf, form, templateName, droppedPaths)
+  forViewers(form)
+  embedCardDataInPdf(pdf, card, writtenFields(form, templateName, MOVED_BY_DOC.get(pdf), overflow.placed))
+  // What found no line on the card goes on a notes page: the second page,
+  // or the third when the second is the scoresheet.
+  if (secondPage === 'notes' || overflow.rest.length) {
+    addNotesPages(pdf, card, { font: narrow || markFont, markFont, small: [...small, ...overflow.rest], plain: !narrow })
   }
   return pdf
+}
+
+// Acrobat redraws every text field itself when it opens the form, and
+// measures our condensed font wider than it is. A field that scrolls (the
+// template's default) and fails that measure is drawn as a lone "+" with
+// its text hidden: Tomasz's "1-8 NV 1st 3rd seat" in a box it fits by
+// 3.5pt. A smaller size or a wider box did not help; a field that does not
+// scroll is drawn with its text (Rick's tests in Acrobat, 2026-11-21).
+// The fields stay editable; typing stops at the box's end.
+//
+// Preview redraws the fields too, and reads a field's font and size from
+// its widget only. A widget with none of its own (the Classic's 2♦
+// describe box, and the boxes we add) came out at Helvetica 12, shrunk to
+// fit: a tiny "1-8 NV 1st 3rd seat". So each widget gets its field's.
+function forViewers(form) {
+  const DA = PDFName.of('DA')
+  for (const field of form.getFields()) {
+    if (!(field instanceof PDFTextField)) continue
+    field.disableScrolling()
+    const da = field.acroField.dict.get(DA)
+    if (da) for (const widget of field.acroField.getWidgets()) widget.dict.set(DA, da)
+  }
+}
+
+// ─── Overflow ─────────────────────────────────────────────────
+//
+// A value the card has no box for (the Classic has no line for the 2NT
+// notes; the New card has one) is not left out. It goes, in this order
+// (Rick, 2026-11-20):
+//   1. a free line in its own section (`sections`, most specific first);
+//   2. the free lines at the bottom right of the card (`extras`: the
+//      Classic's two OTHER CONV. CALLS write-in lines);
+//   3. the notes page, added as the next page if it was not asked for.
+// A line is free when the export left it empty: a split group's later
+// lines are free when the group's value didn't need them. Outside its own
+// section a value is labelled ("2NT notes: …"), and several share an
+// extras line while they fit.
+const OVERFLOW_LINES = {
+  classic: {
+    sections: [
+      // The 2NT box: the second line under 3♠. The notes need no label there.
+      { under: 'notrump.two_nt.', fields: ['3s'], bare: ['notrump.two_nt.notes'] },
+      // 1NT: the two unlabelled lines under the 3♠ response
+      { under: 'notrump.', fields: ['3s 1', '3s 2'] },
+    ],
+    extras: ['1_5', '2_5'],
+  },
+}
+
+// Text fields that are an importer's copy of a line the card already shows
+// in its structured form: shown twice if they overflowed.
+const NOT_OVERFLOW = new Set([
+  'general.forcing_opening',
+  'other_conventions.jump_shift_response',
+])
+
+// The smallest size a value may need on one line to take a free line
+const OVERFLOW_MIN_SIZE = 7
+const OVERFLOW_JOIN = '; '
+
+/**
+ * The card's text values this template has no box for, in the spec's
+ * order: `[{ path, label, text }]`. The [notes] section is the notes
+ * page's own and is left out.
+ */
+function overflowItems(cardData, templateName, fieldMap) {
+  if (!OVERFLOW_LINES[templateName] || !cardData) return []
+  const mapped = new Set(fieldMap.map(e => (spellings(e.card) || [e.card])[0]))
+  const items = []
+  for (const [path, def] of Object.entries(FIELDS)) {
+    if (def.kind !== 'text' || path.startsWith('notes.') || mapped.has(path) || NOT_OVERFLOW.has(path)) continue
+    const value = readPath(cardData, path)
+    if (value == null || String(value).trim() === '') continue
+    items.push({ path, label: def.label || path, text: String(value).trim() })
+  }
+  return items
+}
+
+/**
+ * Put each overflow item on a free line (see OVERFLOW_LINES), recording
+ * `overflow.placed` (box → { paths, prefix }) and `overflow.rest` (the
+ * paths left for the notes page). `font` measures; `boxes`, when given,
+ * are the typography pass's (grown) boxes by name, else the widgets'.
+ */
+function placeOverflow(form, overflow, templateName, font, boxes) {
+  const lines = OVERFLOW_LINES[templateName]
+  if (!lines || !overflow.items.length) return []
+  const widthOf = name => {
+    const box = boxes?.get(name)
+    if (box) return box.w
+    try { return form.getTextField(name).acroField.getWidgets()[0].getRectangle().width } catch { return 0 }
+  }
+  const isFree = name => {
+    try { return !(form.getTextField(name).getText() || '').trim() } catch { return false }
+  }
+  const fits = (name, text) => font.widthOfTextAtSize(sanitizeForWinAnsi(text), OVERFLOW_MIN_SIZE) <= usableWidth(widthOf(name))
+  const write = (name, text, paths, prefix) => {
+    form.getTextField(name).setText(sanitizeForWinAnsi(text))
+    overflow.placed.set(name, { paths, ...(prefix && { prefix: sanitizeForWinAnsi(prefix) }) })
+  }
+  const labelled = item => `${item.label}: `
+
+  const pending = []
+  for (const item of overflow.items) {
+    const section = lines.sections.find(s => item.path.startsWith(s.under))
+    const prefix = section?.bare?.includes(item.path) ? '' : labelled(item)
+    const line = section?.fields.find(f => isFree(f) && fits(f, prefix + item.text))
+    if (line) write(line, prefix + item.text, [item.path], prefix)
+    else pending.push(item)
+  }
+
+  // The extras lines: fill one, then the next
+  let current = null // { name, text, paths }
+  for (const item of pending) {
+    const piece = labelled(item) + item.text
+    if (current && fits(current.name, current.text + OVERFLOW_JOIN + piece)) {
+      current.text += OVERFLOW_JOIN + piece
+      current.paths.push(item.path)
+      write(current.name, current.text, current.paths)
+      continue
+    }
+    const name = lines.extras.find(f => isFree(f) && fits(f, piece))
+    if (!name) { overflow.rest.push(item.path); continue }
+    current = { name, text: piece, paths: [item.path] }
+    write(name, piece, current.paths, current.paths.length === 1 ? labelled(item) : '')
+  }
+  return [...overflow.placed.keys()]
 }
 
 // The partnership's names field on each template: the mark takes the
@@ -1956,7 +2100,7 @@ const MOVED_BY_DOC = new WeakMap()
  * can tell what was typed by hand afterwards from what the export wrote
  * (acblPdfImport.js), whatever the typography pass did to the layout.
  */
-function writtenFields(form, templateName, moved) {
+function writtenFields(form, templateName, moved, overflow) {
   const values = {}
   for (const field of form.getFields()) {
     const name = field.getName()
@@ -1969,7 +2113,10 @@ function writtenFields(form, templateName, moved) {
       }
     } catch { /* a field pdf-lib cannot read is one we did not write */ }
   }
-  return { template: templateName, values, moved: Object.fromEntries(moved || []) }
+  return {
+    template: templateName, values, moved: Object.fromEntries(moved || []),
+    ...(overflow?.size && { overflow: Object.fromEntries(overflow) }),
+  }
 }
 
 /**
@@ -1997,6 +2144,9 @@ const CLASSIC_DIAG_LINES = [
 // OTHER CONVENTIONS section). These hold the imported notes_line_1/2 if
 // present; in practice they're usually empty, and the diagnostic only
 // fires when a value was dropped, so an overlap is rare and acceptable.
+// The form fields on those lines
+const DIAG_FIELDS = { classic: ['1_5', '2_5'], new: ['O.t.8', 'O.t.9'] }
+
 const NEW_DIAG_LINES = [
   { x: 305, y: 18, maxWidth: 262 },
   { x: 305, y: 6,  maxWidth: 262 }
@@ -2013,14 +2163,16 @@ const NEW_DIAG_LINES = [
  * rather than raw PDF field names, since the card path names the
  * convention that was lost — far more actionable than `to_1_2`.
  */
-async function drawDiagnosticFooter(pdf, templateName, droppedPaths, card) {
+async function drawDiagnosticFooter(pdf, form, templateName, droppedPaths) {
   try {
-    // These footer lines double as the OTHER-section overflow-note lines.
-    // When the card actually has those notes, they win — the diagnostic
-    // would overwrite real content. The drops are still logged to console.
-    const oc = card?.card_data?.other_conventions || {}
-    if ((oc.notes_line_1 && String(oc.notes_line_1).trim()) ||
-        (oc.notes_line_2 && String(oc.notes_line_2).trim())) return
+    // These footer lines are the OTHER section's write-in lines, which hold
+    // the card's notes lines and its overflow (placeOverflow). Whatever is
+    // on them wins: the diagnostic would overwrite real content. The drops
+    // are still logged to console.
+    const onLines = DIAG_FIELDS[templateName].some(name => {
+      try { return !!(form.getTextField(name).getText() || '').trim() } catch { return false }
+    })
+    if (onLines) return
     const page = pdf.getPages()[0]
     const font = await pdf.embedFont(StandardFonts.Helvetica)
     const color = rgb(0.0, 0.25, 0.75) // blue — clearly an app annotation, not card ink
@@ -2236,6 +2388,8 @@ function entryValue(entry, cardData) {
     })
     return filled || undefined
   }
+  // A box that also stands for other fields (`any`): on when any of them is
+  if (entry.any) return readPath(cardData, entry.card) === true || entry.any.some(p => readPath(cardData, p) === true)
   if (entry.ntHeading) return ntHeadingText(entry.ntHeading, readPath(cardData, entry.card), readPath(cardData, NT_STRONG_INCLUDES))
   return readPath(cardData, entry.card)
 }
@@ -2683,6 +2837,8 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
     try {
       form.acroForm.dict.set(PDFName.of('NeedAppearances'), PDFBool.False)
     } catch { /* template without a writable AcroForm dict — ignore */ }
+    // Again: regenerating the appearances rewrote fonts and sizes
+    forViewers(form)
   } catch (err) {
     console.warn('Form finalize failed (saving as-is):', err)
   }
