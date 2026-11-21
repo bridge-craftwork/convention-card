@@ -355,7 +355,7 @@ async function exportPdf(id, layout) {
   exporting.value = id
   try {
     const { downloadAcblPdf } = await import('../../../js/acblClassicFillPdf.js')
-    await downloadAcblPdf({ id: card.id, name: card.name, description: card.description || null, updated_at: card.updated_at || null, card_data: card.card_data || {} }, layout)
+    await downloadAcblPdf({ id: card.id, name: card.name, description: card.description || null, updated_at: card.updated_at || null, card_data: card.card_data || {} }, layout, { flatten: true })
   } catch (err) {
     const stale = /dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(err?.message || '')
     Object.assign(notice, {

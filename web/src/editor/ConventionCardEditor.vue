@@ -204,8 +204,19 @@
         <p class="dialog-desc">
           {{ exportDebug
             ? 'Debug mode — every field will be filled with its own name (overrides card data). Useful for identifying which field is which when authoring or debugging a template.'
-            : 'Pick which fillable PDF format to generate.' }}
+            : 'Pick which ACBL card to make. The card travels inside the PDF, so Import reads it back.' }}
         </p>
+        <!-- Flat by default: it looks as designed in every viewer. A fillable
+             card keeps its font in Acrobat and Chrome, but Preview and Safari
+             draw its boxes in Helvetica, shrinking long values (Rick Wilson,
+             2026-11-21; #129). -->
+        <label v-if="!exportDebug" class="fillable-choice">
+          <input type="checkbox" v-model="exportFillable" />
+          <span>
+            Fillable, to edit in a PDF app
+            <small>Edit it in Acrobat or Chrome. On a Mac, Preview and Safari show its boxes in a plain font, and shrink long entries.</small>
+          </span>
+        </label>
         <!-- After the card: nothing by default (a team scoresheet may join these) -->
         <label v-if="!exportDebug" class="second-page-choice">
           Second page
@@ -555,6 +566,8 @@ const SECOND_PAGE_CHOICES = [
   { id: 'acbl', name: 'ACBL scoresheet (ACBL Classic)' },
 ]
 const exportSecondPage = ref('none')
+// A flat card unless asked for a fillable one (see the dialog)
+const exportFillable = ref(false)
 
 const availableFormats = computed(() => EXPORT_FORMATS)
 
@@ -572,7 +585,7 @@ async function doExport(formatId) {
     if (debug) {
       await mod.downloadAcblFieldDebugPdf(formatId)
     } else {
-      await mod.downloadAcblPdf(currentCard.value, formatId, { secondPage: exportSecondPage.value })
+      await mod.downloadAcblPdf(currentCard.value, formatId, { secondPage: exportSecondPage.value, flatten: !exportFillable.value })
     }
   } catch (err) {
     console.error('PDF export failed:', err)
@@ -604,7 +617,9 @@ async function onPreviewPdf(layout) {
   try {
     const mod = await loadAcblPdf()
     const card = isDirty.value ? { ...editorCard.value, updated_at: new Date().toISOString() } : editorCard.value
-    const bytes = await mod.renderAcblPdfBytes(card, layout, { secondPage: exportSecondPage.value })
+    // Flat, as it prints: Safari's viewer would draw a fillable card's
+    // boxes in Helvetica
+    const bytes = await mod.renderAcblPdfBytes(card, layout, { secondPage: exportSecondPage.value, flatten: true })
     const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
     // Shown where the browser saves a PDF instead of displaying it
     tab.document.body.textContent = 'Your browser saved the preview as a download. You can close this tab.'
@@ -1227,6 +1242,16 @@ watch(() => currentUser.value?.id, async (uid) => {
   margin: 0 0 12px;
 }
 .second-page-choice select { font: inherit; font-size: 13px; padding: 4px 6px; }
+.fillable-choice {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0 0 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.fillable-choice input { margin-top: 2px; }
+.fillable-choice small { display: block; color: var(--text-secondary, #6b7280); font-size: 12px; margin-top: 2px; }
 .modal-content.export-dialog {
   background: white;
   border-radius: var(--radius-card, 10px);
