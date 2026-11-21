@@ -58,8 +58,9 @@
                 <tr><td><a href="https://sites.google.com/view/bbaenglish" target="_blank" rel="noopener">BBA</a> (<code>.bbsa</code>)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
               </tbody>
             </table>
-            <p class="flag">A PDF read in is a fillable ACBL Classic or New card; a printed one (as most
-              Bridgodex PDFs are) has no boxes to read. BBO cards go through the Better BBO extension, Bridgodex cards through its own import.</p>
+            <p class="flag">Our PDFs are flat, so they look the same in every PDF viewer, or fillable when you
+              ask; either way the card travels inside, and Import reads it back. Import also reads a fillable ACBL Classic or New card filled in
+              elsewhere. BBO cards go through the Better BBO extension, Bridgodex cards through its own import.</p>
           </div>
           <div class="fact">
             <h2>On BBO</h2>
