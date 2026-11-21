@@ -106,7 +106,7 @@ export function renderReferenceText(version) {
   parts.push(wrap(
     `A saved or exported card wraps it: {"schema": "${EXPORT_SCHEMA}", "name", ` +
     '"description", "exportedAt", "card_data"}. That is what the editor\'s ' +
-    'Export Content writes and Import reads.'))
+    'Export… writes as this editor\'s own file, and Import reads.'))
   parts.push(wrap(
     'Readers keep what they do not know. A path that is not a field, or a key ' +
     'starting with `_` (a raw import record), is kept and written back as it ' +
