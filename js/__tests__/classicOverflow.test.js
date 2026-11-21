@@ -114,3 +114,24 @@ describe('the text fields in Acrobat', () => {
     expect(missing).toEqual([])
   })
 })
+
+// Acrobat and Chrome type with the embedded font, and leave a letter it
+// lacks blank (Rick's test in Chrome, 2026-11-21): a fillable card carries
+// the whole font, a flattened one only the letters it uses.
+describe('the embedded font', () => {
+  const fontBytes = async opts => {
+    const pdf = await PDFDocument.load(await renderAcblPdfBytes({ name: 'Test', card_data: SEED }, 'classic', opts))
+    const { PDFDict, PDFRawStream, decodePDFRawStream } = await import('pdf-lib')
+    const programs = [...pdf.context.enumerateIndirectObjects()]
+      .filter(([, o]) => o instanceof PDFDict && /Barlow/.test(String(o.get(PDFName.of('FontName')))))
+      .map(([, o]) => o.lookup(PDFName.of('FontFile2')))
+      .filter(s => s instanceof PDFRawStream)
+      .map(s => decodePDFRawStream(s).decode().length)
+    return Math.max(...programs)
+  }
+  it('is whole on a fillable card, and a subset on a flattened one', async () => {
+    const whole = fs.statSync(path.join(ROOT, 'assets/fonts', FONT_FILE)).size
+    expect(await fontBytes()).toBeGreaterThan(whole * 0.9)
+    expect(await fontBytes({ flatten: true })).toBeLessThan(whole / 4)
+  })
+})

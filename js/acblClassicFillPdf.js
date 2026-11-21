@@ -1779,7 +1779,11 @@ function addMissingFields(pdf, form) {
  */
 export const SECOND_PAGES = ['none', 'acbl', 'notes']
 
-export async function buildAcblPdf(card, templateName = 'classic', { secondPage = 'none' } = {}) {
+// `subsetFont`: embed only the letters the card uses (a flattened card,
+// which no one types into), or the whole font (a fillable one: Acrobat and
+// Chrome type with it, and leave a letter the subset lacks blank; Rick's
+// test in Chrome, 2026-11-21). The whole font adds about 50 KB.
+export async function buildAcblPdf(card, templateName = 'classic', { secondPage = 'none', subsetFont = false } = {}) {
   card = upgradeCard(card)
   if (!SECOND_PAGES.includes(secondPage)) throw new Error(`No second page "${secondPage}" (${SECOND_PAGES.join(', ')})`)
   const bytes = await loadTemplateBytes(templateName)
@@ -1797,7 +1801,7 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
   let narrow = null
   try {
     pdf.registerFontkit(fontkit)
-    narrow = await pdf.embedFont(await loadNarrowFontBytes(), { subset: true })
+    narrow = await pdf.embedFont(await loadNarrowFontBytes(), { subset: subsetFont })
     useInkMetrics(narrow)
     NARROW_BY_DOC.set(pdf, narrow)
     registerFontInAcroFormResources(pdf, narrow)
@@ -2425,7 +2429,7 @@ function isCheckOn(entry, value) {
  */
 export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false, secondPage = 'none' } = {}) {
   card = upgradeCard(card)
-  const pdf = await buildAcblPdf(card, templateName, { secondPage })
+  const pdf = await buildAcblPdf(card, templateName, { secondPage, subsetFont: flatten })
   finalizeForm(pdf, templateName, { flatten })
   pdf.setTitle(pdfTitle(card, templateName), { showInWindowTitleBar: true })
   // Red ellipses around the card led from each holding: both templates

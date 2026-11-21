@@ -792,6 +792,13 @@ Bridgodex already offers).
   lines are `OVERFLOW_LINES` in `js/acblClassicFillPdf.js`; the export
   records which value each line holds, so an edit there reads back into
   that value.
+  **The font, by viewer:** a fillable card embeds the whole of Barlow
+  Condensed (about 50 KB more), a flattened one only the letters it uses.
+  Acrobat and Chrome draw and type the boxes in the embedded font, and
+  leave a typed letter the subset lacks blank. Preview and Safari (PDFKit)
+  draw and type every box in Helvetica whatever the file says, shrinking
+  what does not fit; only a flattened card looks as designed there.
+  Rick's tests, 2026-11-21; convention-card#129.
 - **The mark.** Every ACBL PDF the library makes carries bridge-craftwork's
   wrench and `bridge-craftwork.com` at the right end of the NAMES line
   (the templates have no free space; Bridge Winners puts its logo there),
