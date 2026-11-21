@@ -87,32 +87,34 @@
           :disabled="saving"
         >Duplicate</button>
         <button
-          v-if="canShareCard"
+          v-if="canMakePrimary"
           class="btn"
-          @click="shareDialog.show()"
+          @click="onMakePrimary"
           :disabled="saving || cardLoading"
-          title="Invite your partner, see who has this card, or get a link to its PDF"
-        >Share</button>
-        <span v-if="moreActions.length" class="menu-wrap">
-          <button
-            class="btn"
-            aria-haspopup="menu"
-            :aria-expanded="openMenu === 'more'"
-            :disabled="saving"
-            @click="toggleMenu('more')"
-            @keydown.esc="openMenu = null"
-          >More ▾</button>
-          <span v-if="openMenu === 'more'" class="menu-choices" role="menu" @keydown.esc="openMenu = null">
-            <button
-              v-for="a in moreActions"
-              :key="a.id"
-              role="menuitem"
-              :class="{ danger: a.danger }"
-              :title="a.title"
-              @click="openMenu = null; a.run()"
-            >{{ a.label }}</button>
-          </span>
-        </span>
+          title="Open this card first from now on"
+        >Make primary</button>
+        <button
+          v-if="canEdit && !isSystemCard"
+          class="btn"
+          @click="onRename"
+          :disabled="saving || cardLoading"
+          title="Give this card a new name"
+        >Rename</button>
+        <button
+          v-if="canRemoveFromList"
+          class="btn"
+          @click="onRemoveFromList"
+          :disabled="saving"
+          title="Take this card off your list; it isn't deleted"
+        >Remove from my list</button>
+        <!-- A built-in or public card shows Delete only to an admin (canEdit),
+             behind a stronger warning (onDelete). -->
+        <button
+          v-if="cc.canDelete.value"
+          class="btn btn-danger"
+          @click="onDelete"
+          :disabled="saving"
+        >Delete</button>
       </div>
       <div class="tool-group" role="group" aria-label="Print and files">
         <button
@@ -139,6 +141,13 @@
           :title="isDirty ? SAVE_FIRST : 'Save the card for another app: BBO, Bridgodex, BBA, or this editor\'s own file'"
           @click="onExportContent"
         >Export…</button>
+        <button
+          v-if="canShareCard"
+          class="btn"
+          @click="shareDialog.show()"
+          :disabled="saving || cardLoading"
+          title="Invite your partner, see who has this card, or get a link to its PDF"
+        >Share</button>
         <button
           v-if="isAuthed"
           class="btn"
@@ -318,7 +327,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, watch, ref } from 'vue'
+import { computed, nextTick, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportRecord } from '../../../js/cardBundle.js'
@@ -565,14 +574,6 @@ async function onExportPdf(event) {
   }
 }
 
-// The toolbar's menu (More ▾). A click anywhere outside it closes it.
-const openMenu = ref(null)
-function toggleMenu(name) { openMenu.value = openMenu.value === name ? null : name }
-function closeMenus(event) {
-  if (openMenu.value && !event.target.closest?.('.menu-wrap')) openMenu.value = null
-}
-onMounted(() => document.addEventListener('click', closeMenus))
-onBeforeUnmount(() => document.removeEventListener('click', closeMenus))
 
 const CONTENT_FORMATS = [
   {
@@ -821,15 +822,6 @@ const MODE_TEXT = {
   unsaved: { label: 'Editing · unsaved changes', text: 'Save to keep your changes, or Revert to drop them.' },
 }
 
-// What the More menu holds: the card's less common actions
-const moreActions = computed(() => [
-  canMakePrimary.value && { id: 'primary', label: 'Make primary', title: 'Open this card first from now on', run: onMakePrimary },
-  canEdit.value && !isSystemCard.value && { id: 'rename', label: 'Rename', title: 'Give this card a new name', run: onRename },
-  canRemoveFromList.value && { id: 'unlist', label: 'Remove from my list', title: 'Take this card off your list; it isn\'t deleted', run: onRemoveFromList },
-  // A built-in or public card shows Delete only to an admin (canEdit),
-  // behind a stronger warning (onDelete).
-  cc.canDelete.value && { id: 'delete', label: 'Delete', danger: true, run: onDelete },
-].filter(Boolean))
 
 // Local ref bridging the composable's Set with v-model on SkillPills
 const visibleLevelsLocal = ref(visibleLevels.value)
@@ -939,36 +931,6 @@ watch(() => currentUser.value?.id, async (uid) => {
 @media (max-width: 720px) {
   .tool-group + .tool-group { padding-left: 0; border-left: none; }
 }
-
-.menu-wrap {
-  position: relative;
-  display: inline-flex;
-}
-.menu-choices {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 2px);
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  min-width: 170px;
-  background: white;
-  border: 1px solid var(--card-border, #e0ddd7);
-  border-radius: 6px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
-}
-.menu-choices button {
-  font: inherit;
-  font-size: 13px;
-  text-align: left;
-  padding: 8px 12px;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-.menu-choices button:hover { background: #f6faf7; }
-.menu-choices button.danger { color: #b91c1c; }
-.menu-choices button.danger:hover { background: #fef2f2; }
 
 /* Viewing or editing, across the card (see the template) */
 .mode-banner {

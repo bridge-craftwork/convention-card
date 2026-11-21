@@ -120,7 +120,7 @@
                 {{ c.label }}<span v-if="sortMark(c)" class="sort-mark" :class="{ then: sort[0].key !== c.key }" aria-hidden="true">{{ sortMark(c) }}</span>
               </button>
             </th>
-            <th class="pdf-col"><span class="sr-only">PDF</span></th>
+            <th class="pdf-col"><span class="sr-only">Print or PDF</span></th>
           </tr>
         </thead>
         <tbody>
@@ -159,17 +159,15 @@
             <td v-for="d in columns" :key="d.key" class="nowrap" :title="d.title?.(row.data) || undefined">{{ d.value(row.data) || '—' }}</td>
             <td class="nowrap" :title="row.updated ? new Date(row.updated).toLocaleString() : undefined">{{ lastEdit(row.updated) || '—' }}</td>
             <td class="pdf-col" @click.stop>
-              <button class="pdf-btn" :title="`Print ${row.name}, or open or download its PDF`" :aria-label="`Print or download ${row.name}`"
-                      :disabled="exporting === row.id" @click="pdfMenu = pdfMenu === row.id ? null : row.id">
-                <span v-if="exporting === row.id">Preparing…</span>
+              <span class="pdf-actions" role="group" :aria-label="`${row.name}: print or PDF`">
+                <span v-if="exporting === row.id" class="muted">Preparing…</span>
                 <template v-else>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
-                <span>Print · PDF</span>
+                  <button v-for="a in PDF_ACTIONS" :key="a.id" class="pdf-btn" :title="a.title(row.name)" :aria-label="a.title(row.name)"
+                          @click="pdfAction(row.id, a.id)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" v-html="a.icon" />
+                  </button>
                 </template>
-              </button>
-              <div v-if="pdfMenu === row.id" class="pdf-menu" role="menu">
-                <button v-for="a in PDF_ACTIONS" :key="a.id" role="menuitem" @click="pdfAction(row.id, a.id)">{{ a.name }}</button>
-              </div>
+              </span>
             </td>
           </tr>
         </tbody>
@@ -186,7 +184,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { summarize, distinguishing, lastEdit, SORT_BEFORE, SORT_AFTER, nextSort, sortRows } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { useCardEditor } from './useCardEditor.js'
@@ -347,16 +345,18 @@ function ariaSort(column) {
 // Print, preview or download a card from the table, asking what the
 // editor's buttons ask (PdfDialog.vue). Needs the host to have told the
 // library where its templates are (setAssetLoader).
+// Icon paths, in the style of the old PDF button's (Lucide's shapes)
 const PDF_ACTIONS = [
-  { id: 'print', name: 'Print' },
-  { id: 'preview', name: 'Preview PDF' },
-  { id: 'export', name: 'Download PDF' },
+  { id: 'print', title: name => `Print ${name}`,
+    icon: '<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>' },
+  { id: 'export', title: name => `Download ${name} as a PDF`,
+    icon: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>' },
+  { id: 'preview', title: name => `Preview ${name}'s PDF in a new tab`,
+    icon: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>' },
 ]
 const pdfDialog = ref(null)
-const pdfMenu = ref(null)
 const exporting = ref(null)
 async function pdfAction(id, action) {
-  pdfMenu.value = null
   const row = cards.value.find(c => c.id === id)
   if (!row) return
   const card = { id: row.id, name: row.name, description: row.description || null, updated_at: row.updated_at || null, card_data: row.card_data || {} }
@@ -456,15 +456,7 @@ function onExportAll() {
   URL.revokeObjectURL(url)
 }
 
-// A click anywhere outside a row's PDF button closes its menu.
-function closeMenu(event) {
-  if (pdfMenu.value && !event.target.closest?.('.pdf-col')) pdfMenu.value = null
-}
-onMounted(() => {
-  load()
-  document.addEventListener('click', closeMenu)
-})
-onBeforeUnmount(() => document.removeEventListener('click', closeMenu))
+onMounted(load)
 defineExpose({ reload: load })
 </script>
 
@@ -533,11 +525,9 @@ code { font-size: 13px; }
 .pick-col { width: 1%; padding-right: 0; }
 .pick-col input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--green-dark); }
 .pdf-col { position: relative; width: 1%; white-space: nowrap; text-align: right; }
-.pdf-btn { font: inherit; font-size: 12px; display: inline-flex; gap: 4px; align-items: center; padding: 4px 8px; border: 1px solid var(--card-border); border-radius: var(--radius-button); background: #fff; color: var(--text-secondary); cursor: pointer; }
+.pdf-actions { display: inline-flex; gap: 4px; }
+.pdf-btn { font: inherit; font-size: 12px; display: inline-flex; gap: 4px; align-items: center; padding: 5px 6px; border: 1px solid var(--card-border); border-radius: var(--radius-button); background: #fff; color: var(--text-secondary); cursor: pointer; }
 .pdf-btn:hover { color: var(--green-dark); border-color: var(--green-mid); }
-.pdf-menu { position: absolute; right: 8px; top: calc(100% - 6px); z-index: 5; background: #fff; border: 1px solid var(--card-border); border-radius: var(--radius-button); box-shadow: 0 4px 14px rgba(0,0,0,.12); display: flex; flex-direction: column; min-width: 140px; }
-.pdf-menu button { font: inherit; font-size: 13px; text-align: left; padding: 8px 12px; border: none; background: none; cursor: pointer; }
-.pdf-menu button:hover { background: #f6faf7; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .muted { color: var(--text-secondary); font-size: 14px; }
 .error { color: #b91c1c; }
