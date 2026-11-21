@@ -135,3 +135,17 @@ describe('the embedded font', () => {
     expect(await fontBytes({ flatten: true })).toBeLessThan(whole / 4)
   })
 })
+
+// Chrome grows a short entry to fill a size-to-fit box (Rick's test,
+// 2026-11-21): an empty box gets a size, in our font.
+describe('the empty boxes of a fillable card', () => {
+  it.each(['classic', 'new'])('have a size and our font on the %s card', async template => {
+    const pdf = await PDFDocument.load(await renderAcblPdfBytes({ name: 'Test', card_data: SEED }, template))
+    const DA = PDFName.of('DA')
+    const empty = pdf.getForm().getFields().filter(f => f.constructor.name === 'PDFTextField' && !f.getText())
+    expect(empty.length).toBeGreaterThan(20)
+    const da = f => String(f.acroField.dict.get(DA)).match(/\/(\S+) ([\d.]+) Tf/)
+    expect(empty.filter(f => !/Barlow/.test(da(f)?.[1]) || !(Number(da(f)[2]) > 0)).map(f => f.getName())).toEqual([])
+    expect(Math.max(...empty.map(f => Number(da(f)[2])))).toBe(9)
+  })
+})

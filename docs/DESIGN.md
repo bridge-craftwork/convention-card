@@ -797,7 +797,9 @@ Bridgodex already offers).
   Acrobat and Chrome draw and type the boxes in the embedded font, and
   leave a typed letter the subset lacks blank. Preview and Safari (PDFKit)
   draw and type every box in Helvetica whatever the file says, shrinking
-  what does not fit; only a flattened card looks as designed there.
+  what does not fit; only a flattened card looks as designed there. A box the card leaves empty
+  gets our font at a filled box's size, not the template's size-to-fit,
+  which Chrome grows to fill a box with a short entry.
   Rick's tests, 2026-11-21; convention-card#129.
 - **The mark.** Every ACBL PDF the library makes carries bridge-craftwork's
   wrench and `bridge-craftwork.com` at the right end of the NAMES line

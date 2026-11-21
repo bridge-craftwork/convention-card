@@ -17,7 +17,7 @@
  * user clicks Export (no impact on initial page load).
  */
 
-import { ParseSpeeds, PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFArray, PDFRef, PDFHexString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
+import { ParseSpeeds, PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFArray, PDFRef, PDFHexString, PDFString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
 import { ntHeadingText, NT_STRONG_INCLUDES } from './ntDefenses.js'
@@ -1873,14 +1873,33 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
 // its widget only. A widget with none of its own (the Classic's 2♦
 // describe box, and the boxes we add) came out at Helvetica 12, shrunk to
 // fit: a tiny "1-8 NV 1st 3rd seat". So each widget gets its field's.
+//
+// A box the card left empty kept the template's font and size, mostly
+// size-to-fit (0), which Chrome takes both ways: a long entry shrinks, a
+// short one grows to fill the box's height ("test" bigger than the line
+// under it; Rick's test, 2026-11-21). It gets our font, at the size a
+// filled box aims for, or lower if the box's height needs it.
 function forViewers(form) {
   const DA = PDFName.of('DA')
+  const narrow = NARROW_BY_DOC.get(form.doc)
   for (const field of form.getFields()) {
     if (!(field instanceof PDFTextField)) continue
     field.disableScrolling()
+    if (narrow && !field.getText()) {
+      field.acroField.dict.set(DA, PDFString.of(`0 g /${narrow.name} ${emptyBoxSize(field, narrow)} Tf`))
+    }
     const da = field.acroField.dict.get(DA)
     if (da) for (const widget of field.acroField.getWidgets()) widget.dict.set(DA, da)
   }
+}
+
+/** The size typed text takes in an empty box: the target, or what the box's height holds. */
+function emptyBoxSize(field, font) {
+  const height = Math.min(...field.acroField.getWidgets().map(w => w.getRectangle().height))
+  let size = TYPO.targetSize
+  // One line, measured as fitTextToBox measures a filled box's
+  while (size > TYPO.minSize && inkHeight(font, size) > usableHeight(height)) size -= 0.5
+  return size
 }
 
 // ─── Overflow ─────────────────────────────────────────────────
