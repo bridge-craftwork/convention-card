@@ -1,6 +1,7 @@
 // Import and export of BridgeWinners cards in their "Swan" JSON: the file
 // BridgeWinners' card editor exports, and reads back with "Import from
-// Swan".
+// Swan" (with its "New ACBL CC format" box unticked: ticked, the import
+// fails with a server error, even on BridgeWinners' own file).
 //
 //   { Convention_Card: { General: { forcing_openings: { one_club: true, … },
 //                                   name: { names: "Pat and Sam", … } },

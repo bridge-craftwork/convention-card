@@ -607,7 +607,7 @@ const CONTENT_FORMATS = [
   {
     id: 'swan',
     name: 'BridgeWinners (Swan)',
-    desc: 'For BridgeWinners: its card editor\'s "Import from Swan" reads this file. A card imported from BridgeWinners goes back with every box it came with.',
+    desc: 'For BridgeWinners: its card editor\'s "Import From Swan" reads this file, with "New ACBL CC format" unticked (ticked, the import fails). BridgeWinners names the card after the file. A card imported from BridgeWinners goes back with every box it came with.',
     ready: true,
     ext: 'swan.json',
     mime: 'application/json'

@@ -62,7 +62,7 @@
             </table>
             <p class="flag">Our PDFs are flat, so they look the same in every PDF viewer, or fillable when you
               ask; either way the card travels inside, and Import reads it back. Import also reads a fillable ACBL Classic or New card filled in
-              elsewhere. BBO cards go through the Better BBO extension, Bridgodex cards through its own import, and BridgeWinners cards through its card editor's Import from Swan.</p>
+              elsewhere. BBO cards go through the Better BBO extension, Bridgodex cards through its own import, and BridgeWinners cards through its card editor's Import From Swan, with "New ACBL CC format" unticked.</p>
           </div>
           <div class="fact">
             <h2>On BBO</h2>
