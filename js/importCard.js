@@ -1,6 +1,6 @@
 // Read a card from any format the library knows, telling them apart by
 // their content: the editor's own JSON (its export, or bare card_data),
-// BBO's and Bridgodex's JSON, BBA's .bbsa text, a PDF this library wrote
+// BBO's, Bridgodex's and BridgeWinners' (Swan) JSON, BBA's .bbsa text, a PDF this library wrote
 // or Bridgodex made, and the URL hand-off (js/handoff.js). The editor's Import button and the
 // standalone page's window.card both read through here, so they agree.
 //
@@ -9,6 +9,7 @@
 
 import { isBboCard, isBboFile, bboFileCards, importBboJson } from './bbo.js'
 import { importBridgeodexJson } from './bridgodex.js'
+import { isSwanCard, importSwanJson } from './swan.js'
 import { decodeCardFromUrl } from './handoff.js'
 import { isBundle } from './cardBundle.js'
 import { applyImplied } from './textMapping.js'
@@ -20,6 +21,7 @@ export const IMPORT_FORMATS = {
   card: "the editor's own JSON: its export ({ schema, name, description, card_data }) or bare card_data",
   bbo: "BBO's ACBL card export (JSON): one card, or a file of them",
   bridgeodex: "Bridgodex's card export (JSON, with a settings block)",
+  swan: "a BridgeWinners card in its Swan JSON (its export, with a Convention_Card block)",
   bbsa: "BBA's .bbsa convention file (Key = value lines)",
   pdf: 'an ACBL PDF: one this editor exported (the card travels inside it, and boxes changed since are read too), or any filled-in ACBL Classic or New card; or a card PDF Bridgodex made',
   handoff: 'a hand-off string, v1.<data>, or a URL ending #import=v1.<data>',
@@ -67,6 +69,7 @@ export function detectFormat(input) {
   if (input.card_data && typeof input.card_data === 'object') return 'card'
   if (isBundle(input)) return 'card'
   if (isBboCard(input)) return 'bbo'
+  if (isSwanCard(input)) return 'swan'
   // A schema 3 card has `settings` too, beside its `conventions`.
   if (input.conventions && typeof input.conventions === 'object' && Object.hasOwn(input, 'schema_version')) return 'card'
   if (input.settings && typeof input.settings === 'object') return 'bridgeodex'
@@ -87,7 +90,7 @@ export function detectFormat(input) {
  * is not a card.
  */
 // Formats another tool writes, whose text may name what a box means.
-const FOREIGN = new Set(['bbo', 'bridgeodex', 'bbsa', 'pdf'])
+const FOREIGN = new Set(['bbo', 'bridgeodex', 'swan', 'bbsa', 'pdf'])
 
 export async function importCard(input, { from = null, name = null } = {}) {
   // 'bridgodex' is the site's own spelling; 'bridgeodex' is the format's
@@ -140,6 +143,8 @@ export async function importCard(input, { from = null, name = null } = {}) {
     }
     case 'bridgeodex':
       return card(importBridgeodexJson(json()))
+    case 'swan':
+      return card(importSwanJson(json()))
     case 'bbsa': {
       const { importBbsa } = await import('./bbsa.js')
       const { card_data, report } = importBbsa(text(), name || undefined)

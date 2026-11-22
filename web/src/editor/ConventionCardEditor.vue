@@ -371,6 +371,7 @@ const currentUser = computed(() => props.storage.user?.value || null)
 /** The .bbsa converter, loaded only when it is needed (it brings the spec's JSON). */
 const loadBbsa = () => import('../../../js/bbsa.js')
 const loadBridgodex = () => import('../../../js/bridgodex.js')
+const loadSwan = () => import('../../../js/swan.js')
 const loadBbo = () => import('../../../js/bbo.js')
 
 const currentCard = cc.currentCard
@@ -606,9 +607,9 @@ const CONTENT_FORMATS = [
   {
     id: 'swan',
     name: 'BridgeWinners (Swan)',
-    desc: 'For BridgeWinners: its card import reads Swan files.',
-    ready: false,
-    ext: 'json',
+    desc: 'For BridgeWinners: its card editor\'s "Import From Swan" reads this file, with "New ACBL CC format" unticked (ticked, the import fails). BridgeWinners names the card after the file. A card imported from BridgeWinners goes back with every box it came with.',
+    ready: true,
+    ext: 'swan.json',
     mime: 'application/json'
   },
   {
@@ -663,6 +664,9 @@ async function doContentExport(formatId) {
     } else if (formatId === 'bridgeodex') {
       const { exportBridgodexJson } = await loadBridgodex()
       payload = JSON.stringify(exportBridgodexJson(card.card_data || {}), null, 2)
+    } else if (formatId === 'swan') {
+      const { exportSwanJson } = await loadSwan()
+      payload = JSON.stringify(exportSwanJson(card.card_data || {}), null, 2)
     } else {
       throw new Error(`No exporter wired up for "${fmt.name}" yet`)
     }

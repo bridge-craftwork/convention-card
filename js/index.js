@@ -1,5 +1,5 @@
 // @bridge-craftwork/convention-card: read and write convention cards
-// against the spec, convert BBO, Bridgodex and .bbsa cards, fill the ACBL
+// against the spec, convert BBO, Bridgodex, BridgeWinners (Swan) and .bbsa cards, fill the ACBL
 // PDFs and read them back. No framework and no network access; see
 // docs/DESIGN.md, "The JavaScript library".
 
@@ -21,6 +21,7 @@ export { exportRecord, exportAll, isBundle, planImport, BUNDLE_SCHEMA } from './
 
 export { isBboCard, isBboFile, bboFileCards, importBboJson, exportBboCard, exportBboFile } from './bbo.js'
 export { importBridgeodexJson, exportBridgodexJson } from './bridgodex.js'
+export { importSwanJson, exportSwanJson, blankSwanCard } from './swan.js'
 export { importBbsa, exportBbsa, parseBbsa } from './bbsa.js'
 export { NT_DEFENSE_BIDS, KNOWN_NT_DEFENSES, findKnownDefense } from './ntDefenses.js'
 

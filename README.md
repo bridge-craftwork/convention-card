@@ -14,8 +14,8 @@ already use.
 
 | Part | What it is | Used by |
 |---|---|---|
-| **The card spec** (`spec/`) | `pack.json`, a copy of the published snapshot of [bridge-common-conventions](https://github.com/bridge-craftwork/bridge-common-conventions): every convention and every setting a card can hold (its type, label, allowed values, default). And the format maps: how BBO, Bridgodex and BBA files map onto those names. | Everything below |
-| **JavaScript library** (`js/`) | Read and write cards; import and export BBO, Bridgodex and BBA `.bbsa` cards; fill the official ACBL convention card PDFs and read them back. | The editor, Bridge Classroom, the Better BBO Convention Card browser extension |
+| **The card spec** (`spec/`) | `pack.json`, a copy of the published snapshot of [bridge-common-conventions](https://github.com/bridge-craftwork/bridge-common-conventions): every convention and every setting a card can hold (its type, label, allowed values, default). And the format maps: how BBO, BridgeWinners (Swan), Bridgodex and BBA files map onto those names. | Everything below |
+| **JavaScript library** (`js/`) | Read and write cards; import and export BBO, BridgeWinners (Swan), Bridgodex and BBA `.bbsa` cards; fill the official ACBL convention card PDFs and read them back. | The editor, Bridge Classroom, the Better BBO Convention Card browser extension |
 | **The editor** (`web/`) | A browser app for building and editing a card, at [bridge-craftwork.com/card](https://bridge-craftwork.com/card/). No account needed. | Anyone; also embedded in Bridge Classroom |
 | **Rust crate** (`crates/bridge-card`) | The same card model for Rust programs: load, check and convert cards. | rusty-bidding-bot |
 
