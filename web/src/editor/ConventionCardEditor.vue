@@ -8,7 +8,9 @@
       <h1>Convention card</h1>
     </header>
 
-    <!-- Title row + actions -->
+    <PdfDialog ref="pdfDialog" />
+
+    <!-- Title row -->
     <div class="card-header">
       <div class="card-title">
         <!-- The page heading says it already; embedded (no heading), this is the title. -->
@@ -34,42 +36,44 @@
               :class="'lvl-' + cardLevelNow.band"
               :title="cardLevelNow.why"
             >{{ bandLabel(cardLevelNow.band) }} · {{ cardLevelNow.level }}</span>
-            <span v-if="!canEdit" class="read-only-pill">read-only</span>
-            <span v-else-if="viewMode" class="view-pill">Viewing</span>
-            <span v-else class="editing-pill">Editing</span>
-            <span v-if="isDirty" class="dirty-pill">unsaved</span>
           </template>
         </div>
       </div>
-      <div class="card-actions">
-        <!-- View-mode actions -->
-        <!-- Outlined with a glow, not filled: a filled Edit read as "already
-             editing" (Rick, 2026-10-03). Save is the filled button. -->
+    </div>
+
+    <!-- Viewing or editing, across the card: a pill beside the name was easy
+         to miss, and an Edit button alone read as "editing already" (Rick
+         Wilson, 2026-11-21). The switch between them lives here. -->
+    <div v-if="currentCard && !cardLoading" class="mode-banner" :class="'mode-' + mode" role="status">
+      <span class="mode-label">{{ MODE_TEXT[mode].label }}</span>
+      <span class="mode-text">{{ MODE_TEXT[mode].text }}</span>
+      <span class="mode-actions">
         <button
-          v-if="canEdit && viewMode"
-          class="btn btn-edit"
+          v-if="mode === 'view'"
+          class="btn btn-primary"
           @click="cc.enterEditMode"
           :disabled="saving"
-          title="Switch to edit mode"
-        >Edit</button>
+        >Edit card</button>
+        <template v-if="mode === 'edit' || mode === 'unsaved'">
+          <button
+            class="btn"
+            @click="onRevert"
+            :disabled="saving"
+            :title="isDirty ? 'Discard your changes' : 'Stop editing'"
+          >{{ isDirty ? 'Revert' : 'Done' }}</button>
+          <button
+            class="btn btn-primary"
+            :disabled="!isDirty || saving"
+            :title="saveTitle"
+            @click="onSave"
+          >{{ saving ? 'Saving…' : 'Save' }}</button>
+        </template>
+      </span>
+    </div>
 
-        <!-- Edit-mode actions -->
-        <button
-          v-if="!viewMode"
-          class="btn"
-          @click="onRevert"
-          :disabled="saving"
-          :title="isDirty ? 'Discard changes' : 'Exit edit mode'"
-        >{{ isDirty ? 'Revert' : 'Cancel' }}</button>
-        <button
-          v-if="!viewMode"
-          class="btn btn-primary"
-          :disabled="!isDirty || saving"
-          :title="saveTitle"
-          @click="onSave"
-        >{{ saving ? 'Saving…' : 'Save' }}</button>
-
-        <!-- Always-visible -->
+    <!-- The toolbar: the cards themselves, then printing and files -->
+    <div class="card-toolbar">
+      <div class="tool-group" role="group" aria-label="Cards">
         <button
           v-if="isAuthed"
           class="btn"
@@ -77,33 +81,11 @@
           :disabled="saving"
         >New</button>
         <button
-          v-if="isAuthed"
-          class="btn"
-          @click="onImportClick"
-          :disabled="saving"
-          title="Import a card: this editor's JSON, BBO or Bridgodex JSON, a BBA .bbsa file, or a PDF exported from this editor"
-        >Import</button>
-        <!-- No accept filter: a file picker greys out a card whose file lacks the
-             extension it expects. importCard tells the format from the bytes. -->
-        <input
-          ref="importInput"
-          type="file"
-          style="display:none"
-          @change="onImportFile"
-        />
-        <button
           v-if="isAuthed && currentCard"
           class="btn"
           @click="onDuplicate"
           :disabled="saving"
         >Duplicate</button>
-        <button
-          v-if="canShareCard"
-          class="btn"
-          @click="shareDialog.show()"
-          :disabled="saving || cardLoading"
-          title="Invite your partner, see who has this card, or get a link to its PDF"
-        >Share</button>
         <button
           v-if="canMakePrimary"
           class="btn"
@@ -133,38 +115,54 @@
           @click="onDelete"
           :disabled="saving"
         >Delete</button>
-        <span class="preview-menu">
-          <button
-            class="btn"
-            :disabled="!currentCard || cardLoading"
-            title="Open the card as a PDF in a new tab, unsaved edits included"
-            aria-haspopup="menu"
-            :aria-expanded="previewMenuOpen"
-            @click="previewMenuOpen = !previewMenuOpen"
-            @keydown.esc="previewMenuOpen = false"
-          >Preview PDF ▾</button>
-          <span v-if="previewMenuOpen" class="preview-choices" role="menu" @keydown.esc="previewMenuOpen = false">
-            <button v-for="fmt in availableFormats" :key="fmt.id" role="menuitem" @click="onPreviewPdf(fmt.id)">{{ fmt.name }}</button>
-          </span>
-        </span>
+      </div>
+      <div class="tool-group" role="group" aria-label="Print and files">
+        <button
+          class="btn"
+          :disabled="!currentCard || cardLoading"
+          title="Print the card, unsaved edits included"
+          @click="onPrint"
+        >Print</button>
+        <button
+          class="btn"
+          :disabled="!currentCard || cardLoading"
+          title="Open the card as a PDF in a new tab, unsaved edits included"
+          @click="onPreviewPdf"
+        >Preview PDF</button>
         <button
           class="btn"
           :disabled="!canExport"
-          :title="isDirty ? SAVE_FIRST : 'Download as a fillable convention-card PDF. Alt+click: debug variants (field-name overlay).'"
+          :title="isDirty ? SAVE_FIRST : 'Download the card as a PDF. Alt+click: a PDF with each box\'s name in it, for template work.'"
           @click="onExportPdf"
         >Export PDF</button>
         <button
           class="btn"
           :disabled="!canExport"
-          :title="isDirty ? SAVE_FIRST : 'Export the card\'s data: this editor\'s JSON, BBO, Bridgodex or a BBA .bbsa file'"
+          :title="isDirty ? SAVE_FIRST : 'Save the card for another app: BBO, Bridgodex, BBA, or this editor\'s own file'"
           @click="onExportContent"
-        >Export Content</button>
+        >Export…</button>
         <button
+          v-if="canShareCard"
           class="btn"
-          :disabled="!canExport"
-          :title="isDirty ? SAVE_FIRST : 'Save the card for Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO'"
-          @click="doContentExport('bbo')"
-        >Export for BBO</button>
+          @click="shareDialog.show()"
+          :disabled="saving || cardLoading"
+          title="Invite your partner, see who has this card, or get a link to its PDF"
+        >Share</button>
+        <button
+          v-if="isAuthed"
+          class="btn"
+          @click="onImportClick"
+          :disabled="saving"
+          title="Import a card: this editor's file, BBO or Bridgodex JSON, a BBA .bbsa file, or a PDF"
+        >Import</button>
+        <!-- No accept filter: a file picker greys out a card whose file lacks the
+             extension it expects. importCard tells the format from the bytes. -->
+        <input
+          ref="importInput"
+          type="file"
+          style="display:none"
+          @change="onImportFile"
+        />
       </div>
     </div>
     <div v-if="saveError" class="save-error">
@@ -197,56 +195,12 @@
     <NoteSuggestions :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
     <TextMapping v-if="showTextMapping" :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
 
-    <!-- Export PDF format picker -->
-    <div v-if="exportDialogOpen" class="modal-overlay" @click.self="exportDialogOpen = false">
-      <div class="modal-content export-dialog">
-        <h2>Export PDF</h2>
-        <p class="dialog-desc">
-          {{ exportDebug
-            ? 'Debug mode — every field will be filled with its own name (overrides card data). Useful for identifying which field is which when authoring or debugging a template.'
-            : 'Pick which ACBL card to make. The card travels inside the PDF, so Import reads it back.' }}
-        </p>
-        <!-- Flat by default: it looks as designed in every viewer. A fillable
-             card keeps its font in Acrobat and Chrome, but Preview and Safari
-             draw its boxes in Helvetica, shrinking long values (Rick Wilson,
-             2026-11-21; #129). -->
-        <label v-if="!exportDebug" class="fillable-choice">
-          <input type="checkbox" v-model="exportFillable" />
-          <span>
-            Fillable, to edit in a PDF app
-            <small>Edit it in Acrobat or Chrome. On a Mac, Preview and Safari show its boxes in a plain font, and shrink long entries.</small>
-          </span>
-        </label>
-        <!-- After the card: nothing by default (a team scoresheet may join these) -->
-        <label v-if="!exportDebug" class="second-page-choice">
-          Second page
-          <select v-model="exportSecondPage">
-            <option v-for="s in SECOND_PAGE_CHOICES" :key="s.id" :value="s.id">{{ s.name }}</option>
-          </select>
-        </label>
-        <div class="format-list">
-          <button
-            v-for="fmt in availableFormats"
-            :key="fmt.id"
-            class="format-row"
-            @click="doExport(fmt.id)"
-          >
-            <span class="format-name">{{ fmt.name }}</span>
-            <span class="format-desc">{{ fmt.desc }}</span>
-          </button>
-        </div>
-        <div class="dialog-actions">
-          <button class="btn btn-secondary" @click="exportDialogOpen = false">Cancel</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Export Content (structured data) picker -->
+    <!-- Export… for another app -->
     <div v-if="contentDialogOpen" class="modal-overlay" @click.self="contentDialogOpen = false">
       <div class="modal-content export-dialog">
-        <h2>Export Content</h2>
+        <h2>Export for another app</h2>
         <p class="dialog-desc">
-          Download the card's structured data. Use this to share between apps or back up your card outside this site.
+          Save the card as a file another app reads, or as this editor's own file to keep a copy.
         </p>
         <div class="format-list">
           <button
@@ -264,6 +218,12 @@
             <span class="format-desc">{{ fmt.desc }}</span>
           </button>
         </div>
+        <!-- Not inside the BBO button: a link can't sit in a button -->
+        <p class="dialog-desc bbo-extension">
+          A BBO file goes into BBO only through the
+          <a href="https://github.com/bridge-craftwork/Better-BBO-Convention-Card" target="_blank" rel="noopener">Better BBO Convention Card</a>
+          browser extension: BBO itself has no way to import a card.
+        </p>
         <div class="dialog-actions">
           <button class="btn btn-secondary" @click="contentDialogOpen = false">Cancel</button>
         </div>
@@ -367,7 +327,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, watch, ref } from 'vue'
+import { computed, nextTick, onMounted, watch, ref } from 'vue'
 import { useCardEditor } from './useCardEditor.js'
 import { importCards } from '../../../js/importCard.js'
 import { exportRecord } from '../../../js/cardBundle.js'
@@ -389,6 +349,8 @@ import TextMapping from './components/TextMapping.vue'
 import PracticeReport from './components/PracticeReport.vue'
 import ConflictDialog from './ConflictDialog.vue'
 import ShareDialog from './ShareDialog.vue'
+import PdfDialog from './PdfDialog.vue'
+import { renderPdf, downloadPdf, openPreviewTab, showInTab, printBytes, printsInFrame } from './pdfActions.js'
 import { importReportNotes } from './importReport.js'
 
 // The convention card editor. Where cards live, and who may edit them, is
@@ -406,8 +368,6 @@ const emit = defineEmits(['deleted'])
 const cc = useCardEditor(props.storage, props.overlays || undefined)
 const currentUser = computed(() => props.storage.user?.value || null)
 
-/** The PDF module, loaded only when it is needed (it brings pdf-lib). */
-const loadAcblPdf = () => import('../../../js/acblClassicFillPdf.js')
 /** The .bbsa converter, loaded only when it is needed (it brings the spec's JSON). */
 const loadBbsa = () => import('../../../js/bbsa.js')
 const loadBridgodex = () => import('../../../js/bridgodex.js')
@@ -552,80 +512,39 @@ async function onSwitchCard(event) {
 const SAVE_FIRST = 'Save first: an export is of the saved card'
 const canExport = computed(() => !!currentCard.value && !cardLoading.value && !isDirty.value)
 
-const EXPORT_FORMATS = [
-  { id: 'classic', name: 'ACBL Classic', desc: 'The familiar SS1 Rev. 4-12 card — what most clubs use.' },
-  { id: 'new',     name: 'ACBL New',     desc: 'The redesigned ACBL card (released a few years ago).' }
-]
+// Print, Preview PDF and Export PDF ask the same questions (PdfDialog.vue:
+// which card, the second page, fillable or flat) and remember the answers.
+// Print and preview show the card on screen, unsaved edits included
+// (Tomasz Pawlowski, 2026-11-03); Export PDF is of the saved card.
+const pdfDialog = ref(null)
+const cardOnScreen = () => (isDirty.value ? { ...editorCard.value, updated_at: new Date().toISOString() } : editorCard.value)
 
-const exportDialogOpen = ref(false)
-const exportDebug = ref(false)
-// The library's SECOND_PAGES, named for people
-const SECOND_PAGE_CHOICES = [
-  { id: 'none', name: 'None: the card only' },
-  { id: 'notes', name: 'Notes: the card\'s notes and supplementary pages' },
-  { id: 'acbl', name: 'ACBL scoresheet (ACBL Classic)' },
-]
-const exportSecondPage = ref('none')
-// A flat card unless asked for a fillable one (see the dialog)
-const exportFillable = ref(false)
-
-const availableFormats = computed(() => EXPORT_FORMATS)
-
-function onExportPdf(event) {
+async function onPrint() {
   saveError.value = null
-  exportDebug.value = !!event?.altKey
-  exportDialogOpen.value = true
-}
-
-async function doExport(formatId) {
-  const debug = exportDebug.value
-  exportDialogOpen.value = false
+  const options = await pdfDialog.value.ask({ action: 'print', card: editorCard.value })
+  if (!options) return
+  // Where a frame can't print a PDF, it opens in a tab, which must open now
+  const tab = printsInFrame() ? null : openPreviewTab()
   try {
-    const mod = await loadAcblPdf()
-    if (debug) {
-      await mod.downloadAcblFieldDebugPdf(formatId)
-    } else {
-      await mod.downloadAcblPdf(currentCard.value, formatId, { secondPage: exportSecondPage.value, flatten: !exportFillable.value })
-    }
+    printBytes(await renderPdf(cardOnScreen(), options), tab)
   } catch (err) {
-    console.error('PDF export failed:', err)
-    saveError.value = explain(err, 'Failed to export PDF')
+    tab?.close()
+    console.error('Print failed:', err)
+    saveError.value = explain(err, 'Failed to make the card to print')
   }
 }
 
-// A quick look at the card as it prints, in a new tab: the card on screen,
-// unsaved edits included (Tomasz Pawlowski, 2026-11-03). The tab is opened
-// here, in the click, since a browser blocks one opened after an await.
-const previewMenuOpen = ref(false)
-// A click anywhere outside the button closes its menu.
-function closePreviewMenu(event) {
-  if (previewMenuOpen.value && !event.target.closest?.('.preview-menu')) previewMenuOpen.value = false
-}
-onMounted(() => document.addEventListener('click', closePreviewMenu))
-onBeforeUnmount(() => document.removeEventListener('click', closePreviewMenu))
-
-async function onPreviewPdf(layout) {
-  previewMenuOpen.value = false
+async function onPreviewPdf() {
   saveError.value = null
-  const tab = window.open('', '_blank')
+  const options = await pdfDialog.value.ask({ action: 'preview', card: editorCard.value })
+  if (!options) return
+  const tab = openPreviewTab()
   if (!tab) {
     saveError.value = 'Your browser blocked the preview\'s new tab. Allow pop-ups for this site and try again.'
     return
   }
-  tab.document.title = 'Preview'
-  tab.document.body.textContent = 'Making the preview…'
   try {
-    const mod = await loadAcblPdf()
-    const card = isDirty.value ? { ...editorCard.value, updated_at: new Date().toISOString() } : editorCard.value
-    // Flat, as it prints: Safari's viewer would draw a fillable card's
-    // boxes in Helvetica
-    const bytes = await mod.renderAcblPdfBytes(card, layout, { secondPage: exportSecondPage.value, flatten: true })
-    const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
-    // Shown where the browser saves a PDF instead of displaying it
-    tab.document.body.textContent = 'Your browser saved the preview as a download. You can close this tab.'
-    tab.location.href = url
-    // Long enough to read it and save it from the tab
-    setTimeout(() => URL.revokeObjectURL(url), 10 * 60_000)
+    showInTab(tab, await renderPdf(cardOnScreen(), options))
   } catch (err) {
     tab.close()
     console.error('PDF preview failed:', err)
@@ -633,12 +552,62 @@ async function onPreviewPdf(layout) {
   }
 }
 
+async function onExportPdf(event) {
+  saveError.value = null
+  const debug = !!event?.altKey
+  const options = await pdfDialog.value.ask({
+    action: 'export',
+    card: currentCard.value,
+    note: debug ? 'Template work: every box is filled with its own name, not the card.' : '',
+  })
+  if (!options) return
+  try {
+    if (debug) {
+      const mod = await import('../../../js/acblClassicFillPdf.js')
+      await mod.downloadAcblFieldDebugPdf(options.template)
+    } else {
+      await downloadPdf(currentCard.value, options)
+    }
+  } catch (err) {
+    console.error('PDF export failed:', err)
+    saveError.value = explain(err, 'Failed to export PDF')
+  }
+}
+
+
 const CONTENT_FORMATS = [
   {
     id: 'bridge-classroom',
-    name: 'Bridge Classroom JSON',
-    desc: 'Our native schema. Round-trips cleanly with Import.',
+    name: 'This editor\'s file (JSON)',
+    desc: 'The whole card, to keep a copy or move it to another browser. Import reads it back exactly.',
     ready: true,
+    ext: 'json',
+    mime: 'application/json'
+  },
+  // The file the Better BBO Convention Card extension writes and reads, with
+  // BBO in the file's name, so a person finds it by name (Rick Wilson,
+  // 2026-10-05). BBO itself reads no card files: the extension is needed.
+  {
+    id: 'bbo',
+    name: 'BBO',
+    desc: 'For Bridge Base Online, through the Better BBO Convention Card browser extension, which loads this file into BBO. BBO can\'t import it without the extension.',
+    ready: true,
+    ext: 'BBO.json',
+    mime: 'application/json'
+  },
+  {
+    id: 'bridgeodex',
+    name: 'Bridgodex',
+    desc: 'For Bridgodex.com: its import reads this file. A card imported from Bridgodex goes back with every box it came with.',
+    ready: true,
+    ext: 'bridgodex.json',
+    mime: 'application/json'
+  },
+  {
+    id: 'swan',
+    name: 'BridgeWinners (Swan)',
+    desc: 'For BridgeWinners: its card import reads Swan files.',
+    ready: false,
     ext: 'json',
     mime: 'application/json'
   },
@@ -650,33 +619,6 @@ const CONTENT_FORMATS = [
     ext: 'bbsa',
     mime: 'text/plain'
   },
-  // The file the Better BBO Convention Card extension writes and reads. It
-  // has its own button and entry, and BBO in the file's name, so a person
-  // finds it by name (Rick Wilson, 2026-10-05).
-  {
-    id: 'bbo',
-    name: 'BBO',
-    desc: 'For Bridge Base Online: the Better BBO Convention Card extension loads this file into BBO.',
-    ready: true,
-    ext: 'BBO.json',
-    mime: 'application/json'
-  },
-  {
-    id: 'bridgeodex',
-    name: 'Bridgodex JSON',
-    desc: 'For Bridgodex.com: its import reads this file. A card imported from Bridgodex goes back with every box it came with.',
-    ready: true,
-    ext: 'bridgodex.json',
-    mime: 'application/json'
-  },
-  {
-    id: 'swan',
-    name: 'Swan',
-    desc: 'The Swan convention-card text format.',
-    ready: false,
-    ext: 'swn',
-    mime: 'text/plain'
-  }
 ]
 
 const contentDialogOpen = ref(false)
@@ -866,6 +808,21 @@ async function onRemoveFromList() {
   emit('deleted', card.id)
 }
 
+// Which mode the banner shows: a card this person can't change, one they
+// can, being looked at, or being edited (with or without unsaved changes).
+const mode = computed(() => {
+  if (!canEdit.value) return 'readonly'
+  if (viewMode.value) return 'view'
+  return isDirty.value ? 'unsaved' : 'edit'
+})
+const MODE_TEXT = {
+  readonly: { label: 'View only', text: 'You can look at this card but not change it. Duplicate it to make a copy of your own.' },
+  view: { label: 'Viewing', text: 'Nothing on the card can change until you edit it.' },
+  edit: { label: 'Editing', text: 'Change anything on the card, then Save.' },
+  unsaved: { label: 'Editing · unsaved changes', text: 'Save to keep your changes, or Revert to drop them.' },
+}
+
+
 // Local ref bridging the composable's Set with v-model on SkillPills
 const visibleLevelsLocal = ref(visibleLevels.value)
 watch(visibleLevelsLocal, (next) => { visibleLevels.value = next })
@@ -955,43 +912,54 @@ watch(() => currentUser.value?.id, async (uid) => {
   margin-top: 2px;
 }
 
-.preview-menu {
-  position: relative;
-  display: inline-flex;
-}
-
-.preview-choices {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 2px);
-  z-index: 5;
+.card-toolbar {
   display: flex;
-  flex-direction: column;
-  min-width: 130px;
-  background: white;
-  border: 1px solid var(--card-border, #e0ddd7);
-  border-radius: 6px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 14px;
+}
+.tool-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+/* The second group sets itself apart: a rule before it */
+.tool-group + .tool-group {
+  padding-left: 20px;
+  border-left: 1px solid var(--card-border, #e0ddd7);
+}
+@media (max-width: 720px) {
+  .tool-group + .tool-group { padding-left: 0; border-left: none; }
 }
 
-.preview-choices button {
-  font: inherit;
-  font-size: 13px;
-  text-align: left;
+/* Viewing or editing, across the card (see the template) */
+.mode-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
   padding: 8px 12px;
-  border: none;
-  background: none;
-  cursor: pointer;
+  margin: 0 0 12px;
+  border-radius: 8px;
+  border: 1px solid;
+  border-left-width: 6px;
+  font-size: 13px;
+  /* Stays in sight while the card scrolls */
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
-
-.preview-choices button:hover {
-  background: #f6faf7;
+.mode-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
-
-.card-actions {
-  display: flex;
-  gap: 8px;
-}
+.mode-text { flex: 1; min-width: 200px; }
+.mode-actions { display: flex; gap: 6px; }
+.mode-readonly { background: #f3f4f6; border-color: #d1d5db; color: #374151; }
+.mode-view { background: #eff6ff; border-color: #93c5fd; color: #1e3a8a; }
+.mode-edit { background: var(--green-pale, #d8f3dc); border-color: var(--green-mid, #40916c); color: var(--green-dark, #2d6a4f); }
+.mode-unsaved { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
 
 .btn {
   font-family: inherit;
@@ -1014,16 +982,6 @@ watch(() => currentUser.value?.id, async (uid) => {
   opacity: 0.6;
 }
 
-.btn-edit {
-  background: #fff;
-  color: var(--green-dark, #2d6a4f);
-  border-color: var(--green-mid, #40916c);
-  font-weight: 600;
-  box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.22), 0 0 10px rgba(64, 145, 108, 0.35);
-}
-.btn-edit:hover:not(:disabled) {
-  background: var(--green-pale, #d8f3dc);
-}
 .btn-primary {
   background: var(--green-mid, #40916c);
   color: white;
@@ -1233,25 +1191,6 @@ watch(() => currentUser.value?.id, async (uid) => {
   padding: 20px;
 }
 
-.second-page-choice {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary, #6b7280);
-  margin: 0 0 12px;
-}
-.second-page-choice select { font: inherit; font-size: 13px; padding: 4px 6px; }
-.fillable-choice {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-  margin: 0 0 12px;
-  font-size: 13px;
-  cursor: pointer;
-}
-.fillable-choice input { margin-top: 2px; }
-.fillable-choice small { display: block; color: var(--text-secondary, #6b7280); font-size: 12px; margin-top: 2px; }
 .modal-content.export-dialog {
   background: white;
   border-radius: var(--radius-card, 10px);

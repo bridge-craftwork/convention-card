@@ -35,7 +35,7 @@
       <div class="card-bar">
         <a class="back" href="#/" @click.prevent="goHome">← All cards</a>
         <div class="local-note" role="note">
-          <span>Kept in this browser. Use <strong>Export Content</strong> to keep a copy.</span>
+          <span>Kept in this browser. Use <strong>Export…</strong> or <strong>Export PDF</strong> to keep a copy.</span>
           <button
             class="handoff"
             :disabled="!currentCard"

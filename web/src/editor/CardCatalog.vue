@@ -1,6 +1,7 @@
 <template>
   <div class="catalog">
     <ChoiceDialog ref="dialog" />
+    <PdfDialog ref="pdfDialog" />
     <p v-if="notice.message" class="notice" :class="{ error: notice.error }" role="status">
       {{ notice.message }}
     </p>
@@ -19,7 +20,7 @@
         <div class="facts">
           <div class="fact">
             <h2>Card layouts</h2>
-            <p>ACBL Classic and ACBL New, as fillable PDFs. Each PDF carries the card inside it, so it
+            <p>ACBL Classic and ACBL New, to print or as PDFs, flat or fillable. Each PDF carries the card inside it, so it
               comes back complete, even after a box was changed by hand.</p>
             <p class="flag">WBF: planned.</p>
           </div>
@@ -30,7 +31,7 @@
                 <span class="avatar" :title="userName">{{ userInitials }}</span>
                 <span>Saved in <strong>{{ userName || 'your' }}</strong>'s Bridge Classroom account.</span>
               </p>
-              <p>You can also keep a copy on your drive: <em>Export Content</em> or <em>Export PDF</em>,
+              <p>You can also keep a copy on your drive: <em>Export PDF</em> or <em>Export…</em>,
                 and <em>Import</em> brings it back.</p>
             </template>
             <template v-else>
@@ -40,7 +41,7 @@
               <p>To keep a card safe:</p>
               <ol class="places">
                 <li><em>Save to Bridge Classroom</em>, if you have an account there: on any device.</li>
-                <li><em>Export Content</em> or <em>Export PDF</em> to a file on your drive;
+                <li><em>Export PDF</em> or <em>Export…</em> to a file on your drive;
                   <em>Import</em> brings it back.</li>
               </ol>
             </template>
@@ -119,7 +120,7 @@
                 {{ c.label }}<span v-if="sortMark(c)" class="sort-mark" :class="{ then: sort[0].key !== c.key }" aria-hidden="true">{{ sortMark(c) }}</span>
               </button>
             </th>
-            <th class="pdf-col"><span class="sr-only">PDF</span></th>
+            <th class="pdf-col"><span class="sr-only">Print or PDF</span></th>
           </tr>
         </thead>
         <tbody>
@@ -158,17 +159,15 @@
             <td v-for="d in columns" :key="d.key" class="nowrap" :title="d.title?.(row.data) || undefined">{{ d.value(row.data) || '—' }}</td>
             <td class="nowrap" :title="row.updated ? new Date(row.updated).toLocaleString() : undefined">{{ lastEdit(row.updated) || '—' }}</td>
             <td class="pdf-col" @click.stop>
-              <button class="pdf-btn" :title="`Export ${row.name} as a PDF`" :aria-label="`Export ${row.name} as a PDF`"
-                      :disabled="exporting === row.id" @click="pdfMenu = pdfMenu === row.id ? null : row.id">
-                <span v-if="exporting === row.id">Preparing…</span>
+              <span class="pdf-actions" role="group" :aria-label="`${row.name}: print or PDF`">
+                <span v-if="exporting === row.id" class="muted">Preparing…</span>
                 <template v-else>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
-                <span>PDF</span>
+                  <button v-for="a in PDF_ACTIONS" :key="a.id" class="pdf-btn" :title="a.title(row.name)" :aria-label="a.title(row.name)"
+                          @click="pdfAction(row.id, a.id)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" v-html="a.icon" />
+                  </button>
                 </template>
-              </button>
-              <div v-if="pdfMenu === row.id" class="pdf-menu" role="menu">
-                <button v-for="t in PDF_LAYOUTS" :key="t.id" role="menuitem" @click="exportPdf(row.id, t.id)">{{ t.name }}</button>
-              </div>
+              </span>
             </td>
           </tr>
         </tbody>
@@ -185,7 +184,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { summarize, distinguishing, lastEdit, SORT_BEFORE, SORT_AFTER, nextSort, sortRows } from './cardSummary.js'
 import { bandLabel } from './levels.js'
 import { useCardEditor } from './useCardEditor.js'
@@ -196,6 +195,8 @@ import { schema3Storage } from './storedForm.js'
 import { importReportNotes } from './importReport.js'
 import { askInDialog, tellMatched } from './importDialogs.js'
 import ChoiceDialog from './ChoiceDialog.vue'
+import PdfDialog from './PdfDialog.vue'
+import { renderPdf, downloadPdf, openPreviewTab, showInTab, printBytes, printsInFrame } from './pdfActions.js'
 import { LEVEL_BANDS } from '../../../js/spec.js'
 
 // The editor's home page: what it does, and a table of the person's cards.
@@ -341,26 +342,42 @@ function ariaSort(column) {
   return first.dir === 'desc' ? 'descending' : 'ascending'
 }
 
-// PDF export from the table: the card layouts the library fills. Needs the
-// host to have told the library where its templates are (setAssetLoader).
-const PDF_LAYOUTS = [
-  { id: 'classic', name: 'ACBL Classic' },
-  { id: 'new', name: 'ACBL New' },
+// Print, preview or download a card from the table, asking what the
+// editor's buttons ask (PdfDialog.vue). Needs the host to have told the
+// library where its templates are (setAssetLoader).
+// Icon paths, in the style of the old PDF button's (Lucide's shapes)
+const PDF_ACTIONS = [
+  { id: 'print', title: name => `Print ${name}`,
+    icon: '<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>' },
+  { id: 'export', title: name => `Download ${name} as a PDF`,
+    icon: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>' },
+  { id: 'preview', title: name => `Preview ${name}'s PDF in a new tab`,
+    icon: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>' },
 ]
-const pdfMenu = ref(null)
+const pdfDialog = ref(null)
 const exporting = ref(null)
-async function exportPdf(id, layout) {
-  pdfMenu.value = null
-  const card = cards.value.find(c => c.id === id)
-  if (!card) return
+async function pdfAction(id, action) {
+  const row = cards.value.find(c => c.id === id)
+  if (!row) return
+  const card = { id: row.id, name: row.name, description: row.description || null, updated_at: row.updated_at || null, card_data: row.card_data || {} }
+  const options = await pdfDialog.value.ask({ action, card })
+  if (!options) return
+  // A tab for the preview (or for printing where a frame can't), opened in the click
+  const tab = action === 'preview' || (action === 'print' && !printsInFrame()) ? openPreviewTab() : null
+  if (action === 'preview' && !tab) {
+    Object.assign(notice, { message: 'Your browser blocked the preview\'s new tab. Allow pop-ups for this site and try again.', error: true })
+    return
+  }
   exporting.value = id
   try {
-    const { downloadAcblPdf } = await import('../../../js/acblClassicFillPdf.js')
-    await downloadAcblPdf({ id: card.id, name: card.name, description: card.description || null, updated_at: card.updated_at || null, card_data: card.card_data || {} }, layout, { flatten: true })
+    if (action === 'export') await downloadPdf(card, options)
+    else if (action === 'preview') showInTab(tab, await renderPdf(card, options))
+    else printBytes(await renderPdf(card, options), tab)
   } catch (err) {
+    tab?.close()
     const stale = /dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(err?.message || '')
     Object.assign(notice, {
-      message: stale ? 'This page is older than the site: reload it and try again.' : `Could not export ${card.name}: ${err.message}`,
+      message: stale ? 'This page is older than the site: reload it and try again.' : `Could not make ${card.name}'s PDF: ${err.message}`,
       error: true,
     })
   } finally {
@@ -439,15 +456,7 @@ function onExportAll() {
   URL.revokeObjectURL(url)
 }
 
-// A click anywhere outside a row's PDF button closes its menu.
-function closeMenu(event) {
-  if (pdfMenu.value && !event.target.closest?.('.pdf-col')) pdfMenu.value = null
-}
-onMounted(() => {
-  load()
-  document.addEventListener('click', closeMenu)
-})
-onBeforeUnmount(() => document.removeEventListener('click', closeMenu))
+onMounted(load)
 defineExpose({ reload: load })
 </script>
 
@@ -516,11 +525,9 @@ code { font-size: 13px; }
 .pick-col { width: 1%; padding-right: 0; }
 .pick-col input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--green-dark); }
 .pdf-col { position: relative; width: 1%; white-space: nowrap; text-align: right; }
-.pdf-btn { font: inherit; font-size: 12px; display: inline-flex; gap: 4px; align-items: center; padding: 4px 8px; border: 1px solid var(--card-border); border-radius: var(--radius-button); background: #fff; color: var(--text-secondary); cursor: pointer; }
+.pdf-actions { display: inline-flex; gap: 4px; }
+.pdf-btn { font: inherit; font-size: 12px; display: inline-flex; gap: 4px; align-items: center; padding: 5px 6px; border: 1px solid var(--card-border); border-radius: var(--radius-button); background: #fff; color: var(--text-secondary); cursor: pointer; }
 .pdf-btn:hover { color: var(--green-dark); border-color: var(--green-mid); }
-.pdf-menu { position: absolute; right: 8px; top: calc(100% - 6px); z-index: 5; background: #fff; border: 1px solid var(--card-border); border-radius: var(--radius-button); box-shadow: 0 4px 14px rgba(0,0,0,.12); display: flex; flex-direction: column; min-width: 130px; }
-.pdf-menu button { font: inherit; font-size: 13px; text-align: left; padding: 8px 12px; border: none; background: none; cursor: pointer; }
-.pdf-menu button:hover { background: #f6faf7; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .muted { color: var(--text-secondary); font-size: 14px; }
 .error { color: #b91c1c; }
