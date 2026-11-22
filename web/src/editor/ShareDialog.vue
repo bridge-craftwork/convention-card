@@ -72,8 +72,11 @@
         </p>
         <div class="share-row">
           <select v-model="template" :disabled="busy" aria-label="Card layout">
-            <option value="classic">ACBL Classic</option>
-            <option value="new">ACBL New</option>
+            <option v-for="t in TEMPLATES" :key="t.id" :value="t.id">{{ t.name }}</option>
+          </select>
+          <select v-model="secondPage" :disabled="busy" aria-label="Second page, for printing on both sides"
+                  title="Second page, for printing on both sides">
+            <option v-for="sp in SECOND_PAGES" :key="sp.id" :value="sp.id">{{ SECOND_PAGE_LABELS[sp.id] || sp.name }}</option>
           </select>
           <button class="choice-btn" :disabled="busy" @click="getPrintLink">{{ printUrl ? 'Update' : 'Get the link' }}</button>
         </div>
@@ -92,6 +95,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { TEMPLATES, SECOND_PAGES, savedPdfOptions } from './pdfActions.js'
 
 // Sharing a saved card (DESIGN.md, "Shared cards"): its members and their
 // roles, invitation links (owners), and the read-only link to its PDF (any
@@ -110,7 +114,11 @@ const open = ref(false)
 const members = ref(null)
 const invitations = ref(null)
 const inviteRole = ref('editor')
+// Short, beside the layout: the page printed on the back
+const SECOND_PAGE_LABELS = { none: 'Card only', notes: 'With notes page', acbl: 'With ACBL scoresheet' }
+
 const template = ref('classic')
+const secondPage = ref('none')
 const printUrl = ref(null)
 const busy = ref(false)
 const error = ref(null)
@@ -146,6 +154,11 @@ async function show() {
   members.value = null
   invitations.value = null
   printUrl.value = null
+  // The link's layout as it is. A card with no link yet: this browser's
+  // last card layout, and the card page only (a site that asks for a card
+  // wants just the card). A viewer may get the link but not change it.
+  template.value = props.card?.print_template || savedPdfOptions().template
+  secondPage.value = props.card?.print_second_page || 'none'
   error.value = null
   copied.value = null
   await run('Could not load who has this card', refresh)
@@ -190,7 +203,10 @@ const revoke = inv => run('Could not revoke the link', async () => {
 
 const getPrintLink = () => run('Could not get the link', async () => {
   copied.value = null
-  printUrl.value = (await props.storage.printLink(props.card.id, template.value)).url
+  const link = await props.storage.printLink(props.card.id, template.value, { secondPage: secondPage.value })
+  printUrl.value = link.url
+  if (link.template) template.value = link.template
+  if (link.second_page) secondPage.value = link.second_page
   await copy(printUrl.value, 'print', { quiet: true })
 })
 

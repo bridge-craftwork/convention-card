@@ -74,8 +74,13 @@ function applyRequires(data, path, on) {
 //   invitations(id) → [{ token, url, role, expires_at }]   owner only
 //   invite(id, role) → { token, url, expires_at }   role 'editor' | 'viewer'
 //   revokeInvitation(id, token)
-//   printLink(id, template) → { url }      template 'classic' | 'new': a
-//                 permanent read-only link to the card's PDF, as it is now
+//   printLink(id, template, { secondPage }) → { url, template, second_page }
+//                 a permanent read-only link to the card's PDF, as it is
+//                 now. template 'classic' | 'new'; secondPage 'none' |
+//                 'acbl' | 'notes' (the page on the back). Owners and
+//                 editors may change them; the answer has the link's own.
+//                 The card's `print_template` and `print_second_page` are
+//                 the link's, once it has one.
 //
 // overlays (optional) — extra information beside each convention:
 //   covered(skillPath) → boolean       whether practice deals exist for it
