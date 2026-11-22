@@ -193,6 +193,8 @@
 
     <!-- Conventions the notes name that the boxes don't (recogniseConventions.js). -->
     <NoteSuggestions :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
+    <!-- Note lines repeating a field, from older imports (noteRepeats.js, #132). -->
+    <NoteRepeats :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
     <TextMapping v-if="showTextMapping" :card-data="cc.editedCardData.value" :can-edit="canEdit" @change="changeCard" />
 
     <!-- Export… for another app -->
@@ -345,6 +347,7 @@ import CardTree from './components/CardTree.vue'
 import CardDetail from './components/CardDetail.vue'
 import CardSearch from './components/CardSearch.vue'
 import NoteSuggestions from './components/NoteSuggestions.vue'
+import NoteRepeats from './components/NoteRepeats.vue'
 import TextMapping from './components/TextMapping.vue'
 import PracticeReport from './components/PracticeReport.vue'
 import ConflictDialog from './ConflictDialog.vue'

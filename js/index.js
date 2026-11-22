@@ -15,6 +15,7 @@ export { checkCard, checkValue, cardValues, EXPORT_SCHEMA } from './checkCard.js
 export { compareCards } from './compareCards.js'
 export { mergeCards, resolveConflicts } from './mergeCards.js'
 export { findConventions, suggestConventions, acceptSuggestion, dismissSuggestion, askAgain, playsConvention, recogniseOnImport } from './recogniseConventions.js'
+export { repeatedNoteLines, removeRepeatedNotes } from './noteRepeats.js'
 export { textMapping, textMappingCounts, applyImplied } from './textMapping.js'
 export { importCard, importCards, detectFormat, IMPORT_FORMATS } from './importCard.js'
 export { exportRecord, exportAll, isBundle, planImport, BUNDLE_SCHEMA } from './cardBundle.js'
