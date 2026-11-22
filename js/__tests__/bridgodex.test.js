@@ -206,7 +206,10 @@ describe('exportBridgodexJson', () => {
     expect(back.notrump.texas.play).toBe(true)
     expect(back.major_openings.two_over_one.play).toBe(true)
     expect(back.leads.vs_nt.honors.lead_choice_kt9x).toBe(2)
-    expect(back.notes.slam_notes).toBe('Exclusion Blackwood')
+    // The slam notes went in Bridgodex's slam "Other" box, which is the
+    // slam section's own notes: they come back there, and only there (#132)
+    expect(back.slam.notes).toBe('Exclusion Blackwood')
+    expect(back.notes?.slam_notes).toBeUndefined()
   })
 
   it('does not copy note lines that repeat a field into the boxes', () => {
@@ -215,6 +218,23 @@ describe('exportBridgodexJson', () => {
       notes: { notrump_notes: 'Lebensohl: fast denies' },
     })
     expect(out.settings['1_no_trump']).toEqual({ lebensohl_desc: 'fast denies' })
+  })
+})
+
+describe('importBridgeodexJson — notes', () => {
+  it('puts a box on the card once: in its field, not in the notes too (#132)', () => {
+    const { card_data: c } = importBridgeodexJson(bdex({
+      '1_no_trump': { more: '2-under Texas', other: 'Smolen after Stayman' },
+      '2_no_trump': { other: '2-under Texas' },
+      two_level: { '2d_desc': '3-suited', '2h_rebids_2nt': 'Ogust' },
+      slams: { other: 'Minorwood' },
+    }))
+    expect(c.notrump.notes).toBe('2-under Texas')
+    expect(c.notrump.two_nt.notes).toBe('2-under Texas')
+    expect(c.two_level.two_diamonds.description).toBe('3-suited')
+    expect(c.slam.notes).toBe('Minorwood')
+    // Only the box the card has no field for is a note
+    expect(c.notes).toEqual({ notrump_notes: 'Other responses: Smolen after Stayman' })
   })
 })
 
@@ -233,6 +253,16 @@ describe('the Bridgodex map', () => {
     ]
     expect(named.length).toBeGreaterThan(300)
     expect(named.filter(k => !has(k))).toEqual([])
+  })
+
+  it('notes only boxes with no field of their own (#132)', () => {
+    const { any, notes, ...blocks } = BRIDGODEX_MAP
+    const filled = new Set(Object.entries(blocks).flatMap(([b, keys]) =>
+      Object.entries(keys).filter(([, s]) => s && typeof s === 'object' && (s.text || s.plain || s.number || s.range)).map(([k]) => `${b}.${k}`)))
+    // other_conventions.notes is the editor's one box for the two Other lines
+    const repeats = notes.filter(n => n.path !== 'other_conventions.notes')
+      .flatMap(n => n.lines.flatMap(l => [l.key].flat()).filter(k => filled.has(k)).map(k => `${n.path} ← ${k}`))
+    expect(repeats).toEqual([])
   })
 
   it('writes lead keys as Bridgodex spells them', () => {

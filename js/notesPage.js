@@ -4,13 +4,15 @@
 // takes), its other_agreements, any value set too small on the card to
 // read, and its supplementary pages. Grouped under the [notes] fields'
 // headings (fields.toml, `about` and `heading`), on as many pages as it
-// takes, in two columns.
+// takes, in two columns. A note line repeating a field is left out: the
+// field is on the card, or on this page (noteRepeats.js, #132).
 
 import { rgb } from 'pdf-lib'
 import { FIELDS, CONVENTIONS } from './spec.js'
 import { readPath } from './paths.js'
 import { drawMark, markWidth } from './pdfMark.js'
 import { upgradeCardData } from './migrate.js'
+import { repeatedNoteLines, withoutRepeats } from './noteRepeats.js'
 
 const text = v => (typeof v === 'string' ? v.trim() : '')
 const sectionOf = path => path.split('.')[0]
@@ -42,10 +44,13 @@ export function notesPageContent(card, { small = [] } = {}) {
     under(a.section).push(name && name !== t ? { label: name, text: t } : { text: t })
   }
 
+  const repeated = new Map()
+  for (const { path, line } of repeatedNoteLines(data)) repeated.set(path, [...(repeated.get(path) || []), line])
   const blocks = []
   for (const p of notePaths) {
     const items = [...extras.get(p)]
-    const own = text(readPath(data, p))
+    const value = readPath(data, p)
+    const own = text(repeated.has(p) ? withoutRepeats(value, repeated.get(p)) : value)
     if (own) items.push(...(p === 'notes.supplementary' ? pagesOf(own) : [{ text: own }]))
     if (items.length) blocks.push({ heading: FIELDS[p].heading || FIELDS[p].label, items })
   }

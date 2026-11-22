@@ -787,6 +787,13 @@ Bridgodex already offers).
   `notes.supplementary`, free text whose `# ` lines are headings. Two
   columns, as many pages as it takes, suit symbols drawn in the card's
   colours. Numbered footnotes are still to come.
+  **No repeats (#132, Rick 2026-11-22):** a box fills its field and
+  nothing else. Older Bridgodex imports also wrote each box as a line of
+  the section's notes ("2NT: 2-under Texas" beside the 2NT notes). The
+  notes page leaves such lines out (a section note line that is a field's
+  text, with or without its label: `js/noteRepeats.js`), and the editor
+  lists them with an offer to remove them. The general notes are the
+  partnership's own words and are never touched.
   **Overflow (Classic):** a text value the Classic has no box for (the 2NT
   notes, a 1NT seat/vulnerability, the leads exceptions) is not left off.
   It goes on a free line in its own section; else on the two write-in lines

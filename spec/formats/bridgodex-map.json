@@ -918,15 +918,8 @@
    "export_to": "1_no_trump.more",
    "lines": [
     {
-     "key": "1_no_trump.more"
-    },
-    {
      "key": "1_no_trump.other",
      "label": "Other responses: "
-    },
-    {
-     "key": "2_no_trump.other",
-     "label": "2NT: "
     }
    ]
   },
@@ -935,19 +928,8 @@
    "export_to": "majors.more",
    "lines": [
     {
-     "key": "majors.art_raises_other",
-     "label": "Artificial raises: "
-    },
-    {
      "key": "majors.drury_other",
      "label": "Drury: "
-    },
-    {
-     "key": "majors.more",
-     "unless_same_as": "majors.other"
-    },
-    {
-     "key": "majors.other"
     }
    ]
   },
@@ -955,10 +937,6 @@
    "path": "notes.minor_notes",
    "export_to": "minors.1c_more",
    "lines": [
-    {
-     "key": "minors.1c_more",
-     "label": "1♣: "
-    },
     {
      "key": "minors.1d_more",
      "label": "1♦: "
@@ -970,132 +948,35 @@
    "export_to": "other.more2",
    "lines": [
     {
-     "key": "two_level.2c_other",
-     "label": "2♣: "
-    },
-    {
      "key": "two_level.2c_range_desc",
      "label": "2♣ alternate: "
-    },
-    {
-     "key": "two_level.2d_desc",
-     "label": "2♦ description: "
-    },
-    {
-     "key": "two_level.2d_other",
-     "label": "2♦: "
-    },
-    {
-     "key": "two_level.2d_rebids_2nt",
-     "label": "2♦ rebid 2NT: "
-    },
-    {
-     "key": "two_level.2h_desc",
-     "label": "2♥ description: "
-    },
-    {
-     "key": "two_level.2h_other",
-     "label": "2♥: "
-    },
-    {
-     "key": "two_level.2h_rebids_2nt",
-     "label": "2♥ rebid 2NT: "
-    },
-    {
-     "key": "two_level.2s_desc",
-     "label": "2♠ description: "
-    },
-    {
-     "key": "two_level.2s_other",
-     "label": "2♠: "
-    },
-    {
-     "key": "two_level.2s_rebids_2nt",
-     "label": "2♠ rebid 2NT: "
     }
    ]
   },
   {
    "path": "notes.slam_notes",
    "export_to": "slams.other",
-   "lines": [
-    {
-     "key": "slams.other"
-    }
-   ]
+   "lines": []
   },
   {
    "path": "notes.competitive_notes",
    "export_to": "other.more2",
-   "lines": [
-    {
-     "key": "vs_to_double.redouble_conv_desc",
-     "label": "Redouble: "
-    },
-    {
-     "key": "vs_to_double.other",
-     "label": "Vs takeout double: "
-    },
-    {
-     "key": "vs_preempts.2nt_overcall",
-     "label": "Vs preempts — 2NT overcall: "
-    },
-    {
-     "key": "vs_preempts.cuebid",
-     "label": "Vs preempts — cuebid: "
-    },
-    {
-     "key": "vs_preempts.jump_overcalls",
-     "label": "Vs preempts — jump overcalls: "
-    },
-    {
-     "key": "vs_preempts.other",
-     "label": "Vs preempts: "
-    },
-    {
-     "key": "direct_cuebids.describe",
-     "label": "Direct cuebids: "
-    }
-   ]
+   "lines": []
   },
   {
    "path": "notes.doubles_notes",
    "export_to": "doubles.other",
-   "lines": [
-    {
-     "key": "doubles.other"
-    }
-   ]
+   "lines": []
   },
   {
    "path": "notes.overcalls_notes",
    "export_to": "overcalls.other",
-   "lines": [
-    {
-     "key": "overcalls.conv_desc",
-     "label": "Convention: "
-    },
-    {
-     "key": "overcalls.cuebids",
-     "label": "Cuebid responses: "
-    },
-    {
-     "key": "overcalls.other"
-    }
-   ]
+   "lines": []
   },
   {
    "path": "notes.nt_overcalls_notes",
    "export_to": "nt_overcalls.other",
-   "lines": [
-    {
-     "key": "nt_overcalls.conv_desc",
-     "label": "Convention: "
-    },
-    {
-     "key": "nt_overcalls.other"
-    }
-   ]
+   "lines": []
   },
   {
    "path": "notes.preempts_notes",
@@ -1104,21 +985,13 @@
     {
      "key": "preempts.3_lvl_more",
      "label": "3-level: "
-    },
-    {
-     "key": "preempts.4_lvl_other",
-     "label": "4♣/4♦: "
     }
    ]
   },
   {
    "path": "notes.carding_notes",
    "export_to": "carding.other",
-   "lines": [
-    {
-     "key": "carding.other"
-    }
-   ]
+   "lines": []
   },
   {
    "path": "carding.first_discard.notes",
@@ -1139,20 +1012,6 @@
     {
      "key": "overview.more",
      "label": "Overview: "
-    },
-    {
-     "key": "other.jump_shift_resp",
-     "label": "Jump-shift response: "
-    },
-    {
-     "key": "other.vs_very_strong",
-     "label": "Vs (very) strong open: "
-    },
-    {
-     "key": "other.more1"
-    },
-    {
-     "key": "other.more2"
     }
    ]
   }
