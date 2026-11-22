@@ -11,6 +11,7 @@ import BBSA_MAP_DOC from '../spec/formats/bbsa-map.json' with { type: 'json' }
 import BBO_MAP_DOC from '../spec/formats/bbo-map.json' with { type: 'json' }
 import BBO_SLOTS_DOC from '../spec/formats/bbo-slots.json' with { type: 'json' }
 import BRIDGODEX_MAP_DOC from '../spec/formats/bridgodex-map.json' with { type: 'json' }
+import SWAN_MAP_DOC from '../spec/formats/swan-map.json' with { type: 'json' }
 
 /** The pack the vocabulary was read from (its name, format numbers and the commit it was built from). */
 export const PACK = { ...PACK_DOC.pack, source_commit: PACK_DOC.source_commit }
@@ -21,6 +22,7 @@ const { schema: _bs, generated_from: _bf, layout: BBSA_LAYOUT, ...BBSA_MAP } = B
 const { schema: _bos, generated_from: _bof, ...BBO_MAP } = BBO_MAP_DOC
 const { schema: _bss, generated_from: _bsf, ...BBO_SLOTS } = BBO_SLOTS_DOC
 const { schema: _bds, generated_from: _bdf, ...BRIDGODEX_MAP } = BRIDGODEX_MAP_DOC
+const { schema: _sws, generated_from: _swf, ...SWAN_MAP } = SWAN_MAP_DOC
 
 /**
  * Every card field, by canonical path (`notrump.stayman.play`): its kind,
@@ -74,6 +76,9 @@ export { BBO_SLOTS }
 
 /** Bridgodex's card map (spec/formats/bridgodex-map.toml): a table per Bridgodex block, plus `any` and `notes`. */
 export { BRIDGODEX_MAP }
+
+/** BridgeWinners' Swan card map (spec/formats/swan-map.toml): a table per Swan section, plus `lead_holdings`, `any` and `left_out`. */
+export { SWAN_MAP }
 
 /** BBA's `.bbsa` file layout (spec/formats/bbsa-layout.txt): every key, in the order an export writes them. */
 export { BBSA_LAYOUT }

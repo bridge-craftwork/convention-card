@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the format maps' JSON from their TOML sources.
 
-spec/formats/{bbsa,bbo,bridgodex}-map.json and bbo-slots.json: the three
+spec/formats/{bbsa,bbo,bridgodex,swan}-map.json and bbo-slots.json: the four
 format maps and BBO's slot list as JSON, for readers with no TOML parser (the
 JS library). bbsa-map.json also carries BBA's file layout (bbsa-layout.txt) as
 `layout`, the key order an export writes.
@@ -34,6 +34,8 @@ BBO_SLOTS_TOML = ROOT / "spec" / "formats" / "bbo-slots.toml"
 BBO_SLOTS_JSON = ROOT / "spec" / "formats" / "bbo-slots.json"
 BRIDGODEX_TOML = ROOT / "spec" / "formats" / "bridgodex-map.toml"
 BRIDGODEX_JSON = ROOT / "spec" / "formats" / "bridgodex-map.json"
+SWAN_TOML = ROOT / "spec" / "formats" / "swan-map.toml"
+SWAN_JSON = ROOT / "spec" / "formats" / "swan-map.json"
 
 
 def as_json(source: pathlib.Path, schema: str, extra: dict | None = None) -> str:
@@ -50,6 +52,7 @@ def main() -> None:
         BBO_JSON: as_json(BBO_TOML, "bbo-map/v1"),
         BBO_SLOTS_JSON: as_json(BBO_SLOTS_TOML, "bbo-slots/v1"),
         BRIDGODEX_JSON: as_json(BRIDGODEX_TOML, "bridgodex-map/v1"),
+        SWAN_JSON: as_json(SWAN_TOML, "swan-map/v1"),
     }
     if "--check" in sys.argv[1:]:
         stale = [p.name for p, text in outputs.items()

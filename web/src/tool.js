@@ -20,7 +20,7 @@ export const HOME = 'https://bridge-craftwork.com/card/'
 
 /** What `input` may be. */
 export const INPUT = [
-  { form: 'object', about: `A card as JSON: the editor's export ({ schema: "${EXPORT_SCHEMA}", name, description, card_data }), a record { name, description, card_data }, bare card_data, BBO's export or Bridgodex's.` },
+  { form: 'object', about: `A card as JSON: the editor's export ({ schema: "${EXPORT_SCHEMA}", name, description, card_data }), a record { name, description, card_data }, bare card_data, BBO's export, Bridgodex's, or a BridgeWinners Swan file.` },
   { form: 'string', about: 'The same JSON as text, a .bbsa file\'s text, or a hand-off (v1.<data>, or a URL ending #import=v1.<data>).' },
   { form: 'ArrayBuffer | Uint8Array', about: 'A file\'s bytes: a PDF this editor exported (the card travels inside it), or any of the text forms.' },
   { form: 'null or omitted', about: 'run, validate: the card open in the editor, unsaved edits included.' },
@@ -33,6 +33,7 @@ export const OUTPUTS = {
   bbsa: "BBA's .bbsa convention file, as text.",
   bbo: "A BBO file ({ schema_version, exported_at, source, cards }), as the Better BBO Convention Card extension writes and reads it, as an object.",
   bridgodex: "A Bridgodex.com card ({ settings, notes }), as Bridgodex's import reads it, as an object.",
+  swan: "A BridgeWinners card in its Swan JSON ({ Convention_Card }), as BridgeWinners' Import from Swan reads it, as an object.",
   'pdf-classic': 'The ACBL Classic card, filled in, as PDF bytes (Uint8Array). The card travels inside it, so Import reads it back.',
   'pdf-new': 'The ACBL New card, filled in, as PDF bytes (Uint8Array). The card travels inside it too.',
   'pdf-drawn': 'A card drawn from scratch in the ACBL layout, as PDF bytes (Uint8Array).',
@@ -98,6 +99,10 @@ async function produce(record, to) {
     case 'bridgodex': {
       const { exportBridgodexJson } = await import('../../js/bridgodex.js')
       return exportBridgodexJson(record.card_data)
+    }
+    case 'swan': {
+      const { exportSwanJson } = await import('../../js/swan.js')
+      return exportSwanJson(record.card_data)
     }
     case 'pdf-classic':
     case 'pdf-new':
