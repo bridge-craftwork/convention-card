@@ -200,7 +200,7 @@ const FIELD_MAP_CLASSIC = [
     any: ['notrump.texas.bid_4d', 'notrump.texas.bid_4h'] },
   // "Forcing Stayman □" (2♦ game-forcing Stayman) has no setting on the
   // card yet, so it stays blank. It once showed Garbage Stayman, which is
-  // the weak end of Stayman, not a forcing one.
+  // the weak end of Stayman, not a forcing one. bridge-common-conventions#137.
   { pdf: 'Smolen',             card: 'notrump.smolen.play',             kind: 'check' },
   { pdf: 'Lebensohl',          card: 'notrump.lebensohl.play', kind: 'check' },
   { pdf: 'Neg Double',         card: 'notrump.dbl.negative',            kind: 'check' },
@@ -307,7 +307,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Weak_7',                 card: 'minor_openings.one_club.jump_raise_after_overcall.weak', kind: 'check' },
   { pdf: 'Double Raise Force_2',   card: 'minor_openings.one_club.jump_raise.force', kind: 'check' },
   { pdf: 'After Overcall Force_2', card: 'minor_openings.one_club.jump_raise_after_overcall.force', kind: 'check' },
-  // "Forcing Raise: J/S in other minor □" has no setting on the card yet (bridge-common-conventions#137),
+  // "Forcing Raise: J/S in other minor □" has no setting on the card yet
+  // (bridge-common-conventions#137),
   // so it stays blank. Inverted minors is the forcing single raise: the
   // "Single raise □" box below.
   // The Minor column's "2NT Forcing □ Inv. □": the 1m–2NT response.
@@ -416,8 +417,9 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'New Suit Forcing',  card: 'overcalls.responses.new_suit', kind: 'check', value: 'forcing' },
   { pdf: 'NFConst',           card: 'overcalls.responses.new_suit', kind: 'check', value: 'nf_constructive' },
   { pdf: 'NF',                card: 'overcalls.responses.new_suit', kind: 'check', value: 'nf' },
-  // "Jump Raise: Forcing □" has no value on the card yet (bridge-common-conventions#137) (weak, mixed or
-  // invitational), so it stays blank. It once copied the Inv. box.
+  // "Jump Raise: Forcing □" has no value on the card yet (only weak, mixed
+  // or invitational), so it stays blank; it once copied the Inv. box.
+  // bridge-common-conventions#137.
   { pdf: 'Inv',               card: 'overcalls.responses.jump_raise', kind: 'check', value: 'invitational' },
   { pdf: 'Weak',              card: 'overcalls.responses.jump_raise', kind: 'check', value: 'weak' },
   { pdf: 'undefined_7',       card: 'overcalls.notes',            kind: 'text' },
