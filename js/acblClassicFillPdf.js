@@ -187,7 +187,10 @@ const FIELD_MAP_CLASSIC = [
   // ─── NOTRUMP OPENING BIDS ───
   { pdf: '5card Major common', card: 'notrump.one_nt.five_card_major', kind: 'check', value: ['sometimes', 'always'] },
   { pdf: 'System on over',     card: 'notrump.one_nt.sys_on_vs',        kind: 'text' },
-  { pdf: '2c Stayman',         card: 'notrump.stayman.forcing',         kind: 'check' },
+  // "2♣ Stayman □": the box every import ticks is `stayman.forcing` (BBO's
+  // 1NStayman, Bridgodex's 2c_stayman); `stayman.play` says the same.
+  { pdf: '2c Stayman',         card: 'notrump.stayman.forcing',         kind: 'check',
+    any: ['notrump.stayman.play'] },
   { pdf: 'Puppet',             card: 'notrump.stayman.puppet',          kind: 'check' },
   { pdf: '2d Transfer to h',   card: 'notrump.jacoby_transfers.play',        kind: 'check' },
   { pdf: '2h Transfer to s',   card: 'notrump.jacoby_transfers.play',        kind: 'check' },
@@ -195,7 +198,9 @@ const FIELD_MAP_CLASSIC = [
   // New card's boxes are), so either bid ticks it too, not only the switch.
   { pdf: '4d  4h  Transfer',   card: 'notrump.texas.play',         kind: 'check',
     any: ['notrump.texas.bid_4d', 'notrump.texas.bid_4h'] },
-  { pdf: 'Forcing Stayman',    card: 'notrump.stayman.garbage',         kind: 'check' },
+  // "Forcing Stayman □" (2♦ game-forcing Stayman) has no setting on the
+  // card yet, so it stays blank. It once showed Garbage Stayman, which is
+  // the weak end of Stayman, not a forcing one.
   { pdf: 'Smolen',             card: 'notrump.smolen.play',             kind: 'check' },
   { pdf: 'Lebensohl',          card: 'notrump.lebensohl.play', kind: 'check' },
   { pdf: 'Neg Double',         card: 'notrump.dbl.negative',            kind: 'check' },
@@ -283,11 +288,13 @@ const FIELD_MAP_CLASSIC = [
   // ─── MINOR OPENING ───
   { pdf: '1c 3',    card: 'minor_openings.one_club.min_length', kind: 'check', value: '3' },
   { pdf: '1c 4',    card: 'minor_openings.one_club.min_length', kind: 'check', value: '4' },
-  { pdf: '1c NF',   card: 'minor_openings.one_club.nf0', kind: 'check' },
+  { pdf: '1c NF',   card: 'minor_openings.one_club.nf0', kind: 'check',
+    any: ['minor_openings.one_club.nf1', 'minor_openings.one_club.nf2', 'minor_openings.one_club.nf2_4432_only'] },
   { pdf: '1c conv', card: 'minor_openings.one_club.art_forcing', kind: 'check' },
   { pdf: '1d 3',    card: 'minor_openings.one_diamond.min_length', kind: 'check', value: '3' },
   { pdf: '1d 4',    card: 'minor_openings.one_diamond.min_length', kind: 'check', value: '4' },
-  { pdf: '1d NF',   card: 'minor_openings.one_diamond.nf2_4432_only', kind: 'check' },
+  { pdf: '1d NF',   card: 'minor_openings.one_diamond.nf2_4432_only', kind: 'check',
+    any: ['minor_openings.one_diamond.nf0', 'minor_openings.one_diamond.nf1'] },
   { pdf: '1d conv', card: 'minor_openings.one_diamond.art_forcing', kind: 'check' },
   // Minor Double Raise = jump raise of opener's minor. Same Force/Inv/Weak
   // structure as Major. Our card_data only has weak/mixed/inv on the
@@ -300,13 +307,18 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'Weak_7',                 card: 'minor_openings.one_club.jump_raise_after_overcall.weak', kind: 'check' },
   { pdf: 'Double Raise Force_2',   card: 'minor_openings.one_club.jump_raise.force', kind: 'check' },
   { pdf: 'After Overcall Force_2', card: 'minor_openings.one_club.jump_raise_after_overcall.force', kind: 'check' },
-  { pdf: 'Forcing Raise JS in other minor', card: 'minor_openings.inverted_minors.play', kind: 'check' },
+  // "Forcing Raise: J/S in other minor □" has no setting on the card yet (bridge-common-conventions#137),
+  // so it stays blank. Inverted minors is the forcing single raise: the
+  // "Single raise □" box below.
   // The Minor column's "2NT Forcing □ Inv. □": the 1m–2NT response.
   { pdf: '2NT Forcing',            card: 'minor_openings.two_nt_response', kind: 'check', value: 'game_forcing' },
   { pdf: 'Inv_8',                  card: 'minor_openings.two_nt_response', kind: 'check', value: 'invitational' },
-  // "Single raise" on ACBL is a single checkbox indicating you play one.
-  // Our data has three booleans (nf/inv/gf); check the ACBL box if any are set.
-  { pdf: 'Single raise', card: 'minor_openings.one_club.single_raise.nf',  kind: 'check' },
+  // "Forcing Raise: Single raise □": the single raise is forcing, which is
+  // inverted minors, or a single raise marked invitational or game forcing.
+  // (A non-forcing single raise is not a forcing raise, and has no box.)
+  { pdf: 'Single raise', card: 'minor_openings.inverted_minors.play', kind: 'check',
+    any: ['minor_openings.one_club.single_raise.inv', 'minor_openings.one_club.single_raise.gf',
+      'minor_openings.one_diamond.single_raise.inv', 'minor_openings.one_diamond.single_raise.gf'] },
   { pdf: 'Other_6',      card: 'minor_openings.one_club.single_raise.other', kind: 'text' },
   // 1♣ length flags. ACBL has "NF 0–2 Conv." — interpret "NF" as
   // covering nf0/nf1/nf2 (any unbalanced 1♣ count is "non-forcing
@@ -404,7 +416,8 @@ const FIELD_MAP_CLASSIC = [
   { pdf: 'New Suit Forcing',  card: 'overcalls.responses.new_suit', kind: 'check', value: 'forcing' },
   { pdf: 'NFConst',           card: 'overcalls.responses.new_suit', kind: 'check', value: 'nf_constructive' },
   { pdf: 'NF',                card: 'overcalls.responses.new_suit', kind: 'check', value: 'nf' },
-  { pdf: 'Jump Raise Forcing', card: 'overcalls.responses.jump_raise', kind: 'check', value: 'invitational' },
+  // "Jump Raise: Forcing □" has no value on the card yet (bridge-common-conventions#137) (weak, mixed or
+  // invitational), so it stays blank. It once copied the Inv. box.
   { pdf: 'Inv',               card: 'overcalls.responses.jump_raise', kind: 'check', value: 'invitational' },
   { pdf: 'Weak',              card: 'overcalls.responses.jump_raise', kind: 'check', value: 'weak' },
   { pdf: 'undefined_7',       card: 'overcalls.notes',            kind: 'text' },
