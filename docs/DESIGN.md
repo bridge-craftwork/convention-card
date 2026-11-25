@@ -797,6 +797,11 @@ Bridgodex already offers).
   (a long line, then one indented to where its text starts, as a
   fixed-width font lines it up) is joined back to its item. An emoji the
   font has no glyph for is left out rather than printed as a box.
+  In the editor's notes boxes, Tab and Shift-Tab move an item (or every
+  line of a selection) a level in or out, and Enter on an item starts the
+  next at its level ("2." after "1."), or ends the list on an empty one
+  (`web/src/editor/outlineKeys.js`). Off an outline line, Tab moves to the
+  next field as usual.
   **No repeats (#132, Rick 2026-11-22):** a box fills its field and
   nothing else. Older Bridgodex imports also wrote each box as a line of
   the section's notes ("2NT: 2-under Texas" beside the 2NT notes). The
