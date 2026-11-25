@@ -304,9 +304,12 @@ in a page, a browser extension or Node.
   every card path the converters and the PDF maps name against it.
 - **Assets from the caller.** The PDF export needs the ACBL template PDFs and
   the Barlow Condensed font (`assets/`). The library never fetches them: the
-  caller says how to get them, once, with `setAssetLoader({ template, font })`
-  (a page fetches them from wherever it serves them; Node reads them from
-  disk).
+  caller says how to get them, once, with `setAssetLoader({ template, font,
+  boldFont })` (a page fetches them from wherever it serves them; Node reads
+  them from disk). `boldFont`, Barlow Condensed SemiBold, is optional: it sets
+  the card's names and general approach in semibold, a size up where the line
+  has room, embedded as a subset (about 8KB) even on a fillable card (Rick,
+  2026-11-25). Without it those lines are regular.
 - **One reader for every format** (`importCard`, `js/importCard.js`): the
   editor's own JSON, BBO, Bridgodex, Swan, `.bbsa`, our PDFs and the URL hand-off,
   told apart by their content. The editor's Import and the standalone page's
@@ -787,6 +790,18 @@ Bridgodex already offers).
   `notes.supplementary`, free text whose `# ` lines are headings. Two
   columns, as many pages as it takes, suit symbols drawn in the card's
   colours. Numbered footnotes are still to come.
+  **Outlines (Rick, 2026-11-25):** notes are kept as plain text, and a note
+  written as a Markdown list prints as an outline: `- `, `* `, `• `, `1. `
+  or `a) ` starts an item, each two spaces before it (a tab is two) is a
+  level, and a long item wraps under its own text. A line wrapped by hand
+  (a long line, then one indented to where its text starts, as a
+  fixed-width font lines it up) is joined back to its item. An emoji the
+  font has no glyph for is left out rather than printed as a box.
+  In the editor's notes boxes, Tab and Shift-Tab move an item (or every
+  line of a selection) a level in or out, and Enter on an item starts the
+  next at its level ("2." after "1."), or ends the list on an empty one
+  (`web/src/editor/outlineKeys.js`). Off an outline line, Tab moves to the
+  next field as usual.
   **No repeats (#132, Rick 2026-11-22):** a box fills its field and
   nothing else. Older Bridgodex imports also wrote each box as a line of
   the section's notes ("2NT: 2-under Texas" beside the 2NT notes). The

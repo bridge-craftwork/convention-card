@@ -46,6 +46,8 @@ import { importBbsa, exportBbsa, importBboJson, exportBridgodexJson, renderAcblP
 setAssetLoader({
   template: name => fetch(`/templates/${name === 'new' ? 'acbl-new.pdf' : 'acbl-classic-2023.pdf'}`).then(r => r.arrayBuffer()),
   font: () => fetch('/fonts/BarlowCondensed-Regular.ttf').then(r => r.arrayBuffer()),
+  // Optional: the names and general approach in semibold
+  boldFont: () => fetch('/fonts/BarlowCondensed-SemiBold.ttf').then(r => r.arrayBuffer()),
 })
 ```
 

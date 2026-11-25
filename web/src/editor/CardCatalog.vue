@@ -45,8 +45,10 @@
                   <em>Import</em> brings it back.</li>
               </ol>
             </template>
-            <p class="flag">Coming to Bridge Classroom: cards shared between partners, which either of
-              you can edit.</p>
+            <p v-if="storagePlace === 'account'">Partners can share a card: <em>Share</em> invites
+              yours, and either of you can edit it.</p>
+            <p v-else>Saved to Bridge Classroom, a card can be shared with your partner, and either
+              of you can edit it.</p>
           </div>
           <div class="fact">
             <h2>Import and export</h2>

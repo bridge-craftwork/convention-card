@@ -24,35 +24,77 @@ export const NT_DEFENSE_BIDS = [
 export const NT_STRONG_INCLUDES = 'competitive.vs_1nt_strong_includes'
 
 /**
- * A heading of the card's defense to 1NT, as BBO's cards write them:
- * `{ includes, system, label }`. `includes`: the 16 of "Strong 16+" and "Weak
- * No 16". `system`: the words naming a defense ("Meckwell" in "Strong 14+
- * (Meckwell)"), or null. `label`: it only says which 1NTs the column is for
- * ("Strong 1NT", "(WEAK)", "strong/weak").
+ * A heading of the card's defense to 1NT, as the cards write them (BBO's,
+ * the ACBL "vs:" lines, or typed): `{ includes, system, label }`.
+ * `includes`: the 16 of "Strong 16+" and "Weak No 16". `system`: the words
+ * naming a defense ("Meckwell" in "Strong 14+ (Meckwell)", "Cappelletti" in
+ * "Strong - Cappelletti"), or null. `label`: it only says which 1NTs the
+ * column is for ("Strong 1NT", "(WEAK)", "strong/weak").
  */
 export function readNtHeading(text) {
   const t = String(text ?? '').trim()
   if (/^\(?\s*(strong|weak|strong\s*\/\s*weak)(\s*1\s*nt)?\s*\)?$/i.test(t)) return { includes: null, system: null, label: true }
+  const rest = s => s.replace(/^[\s:(\-\u2013\u2014]+|[\s)]+$/g, '') || null
   const m = /^\(?\s*(?:strong\s+|weak\s+no\s+)(\d{1,2})(?![\dA-Za-z])\s*\+?\s*\)?/i.exec(t)
-  if (!m) return { includes: null, system: t || null, label: false }
-  const rest = t.slice(m[0].length).replace(/^[\s:(-]+|[\s)]+$/g, '')
-  return { includes: Number(m[1]), system: rest || null, label: false }
+  if (m) return { includes: Number(m[1]), system: rest(t.slice(m[0].length)), label: false }
+  // "Strong: Cappelletti", "weak - natural", "Weak (Natural)", "Strong 1NT: X"
+  const side = /^(strong|weak)(\s*1\s*nt)?\s*[:(\-\u2013\u2014]\s*/i.exec(t)
+  if (side) return { includes: null, system: rest(t.slice(side[0].length)), label: false }
+  return { includes: null, system: t || null, label: false }
 }
 
 const isNatural = system => String(system ?? '').trim().toLowerCase() === 'natural'
 
 /**
- * What a column's heading prints: the defense as written, but with where
- * strong starts when the card says ("Weak No 16: Natural"), and with which
- * 1NTs a natural column is for ("Weak 1NT: Natural"), since the ACBL cards'
- * two columns are otherwise labelled only by what's written here.
+ * How a system is written for people. The card keeps an imported system as
+ * the spec's option (`multi_landy`); that reads as the defense's name
+ * ("Multi-Landy"). `other`, a defense that has no name, reads as null, as
+ * does a label kept from another card ("Strong 1NT"); a whole heading kept
+ * from one ("Strong 14+ (Meckwell)") reads as its defense; anything else
+ * as typed.
  */
-export function ntHeadingText(side, system, includes) {
+export function ntSystemName(system) {
+  if (system == null) return null
+  const t = String(system).trim()
+  if (!t || t.toLowerCase() === 'other') return null
+  if (/^[a-z_]+$/.test(t) && !/^(strong|weak)$/.test(t)) {
+    const key = t.replace(/_/g, '')
+    const known = KNOWN_NT_DEFENSES.find(d => [d.name, ...(d.aliases || [])].some(n => n.toLowerCase().replace(/[^a-z]/g, '') === key))
+    return known ? known.name : t.split('_').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')
+  }
+  const heading = readNtHeading(t)
+  if (heading.label) return null
+  return heading.system && heading.system !== t ? ntSystemName(heading.system) : t
+}
+
+// Shorter names, for a heading too long for its blank
+const SHORT_NAMES = { 'Modified Cappelletti': 'Mod. Capp.', Cappelletti: 'Capp.', 'Multi-Landy': 'M-Landy' }
+// About what the ACBL cards' "vs:" blanks (52pt) hold before the text
+// drops below 6.5pt in the condensed field font.
+const HEADING_FITS = 23
+
+/** A name for a defense written short ("Capp."), as its full name. */
+export const ntSystemFromShort = name =>
+  Object.keys(SHORT_NAMES).find(n => SHORT_NAMES[n].toLowerCase() === String(name ?? '').trim().toLowerCase()) ?? null
+
+/**
+ * What a column's heading prints on the ACBL cards' "vs:" line: which 1NTs
+ * the column is for, first ("Strong", "Weak", or where strong starts,
+ * "Strong 15+" / "Weak No 15"), then the defense by name when it has one
+ * ("Strong: Cappelletti"; "Weak: Natural"). A name that would not fit is
+ * shortened ("Strong 15+: Mod. Capp."); the side never is. `filled`: the
+ * column has anything in it; an empty column with no system and no
+ * starting point prints nothing.
+ */
+export function ntHeadingText(side, system, includes, filled = false) {
   const Side = side === 'strong' ? 'Strong' : 'Weak'
-  const named = system == null || system === '' ? null : isNatural(system) ? 'Natural' : String(system)
-  const start = includes == null || includes === '' ? null : side === 'strong' ? `Strong ${includes}+` : `Weak No ${includes}`
-  if (start) return named ? `${start}: ${named}` : start
-  return named === 'Natural' ? `${Side} 1NT: Natural` : system
+  const own = readNtHeading(system)
+  const n = includes == null || includes === '' ? own.includes : includes
+  const start = n == null || n === '' ? Side : side === 'strong' ? `Strong ${n}+` : `Weak No ${n}`
+  const named = isNatural(system) ? 'Natural' : ntSystemName(system)
+  if (!named) return start !== Side || filled || (system != null && String(system).trim()) ? start : null
+  const full = `${start}: ${named}`
+  return full.length > HEADING_FITS && SHORT_NAMES[named] ? `${start}: ${SHORT_NAMES[named]}` : full
 }
 
 export const KNOWN_NT_DEFENSES = [
@@ -171,3 +213,7 @@ export function findKnownDefense(systemName) {
   }
   return null
 }
+
+/** Whether a column of the defense to 1NT (`competitive.vs_1nt_strong`) has anything in it. */
+export const ntColumnFilled = column =>
+  !!column && typeof column === 'object' && Object.values(column).some(v => v != null && v !== false && String(v).trim() !== '')

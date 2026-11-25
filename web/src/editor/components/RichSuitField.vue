@@ -9,6 +9,7 @@
         :placeholder="placeholder"
         @input="onInput"
         @blur="onBlur"
+        @keydown="onOutlineKey"
       ></textarea>
       <input
         v-else
@@ -38,6 +39,7 @@
 <script setup>
 import { ref, nextTick } from 'vue'
 import { colorizeSuits, normalizeSuitShorthand } from '../suits.js'
+import { outlineEdit } from '../outlineKeys.js'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -65,6 +67,20 @@ function onInput(event) {
   // Normalization is deferred to blur so the user can finish typing
   // a word (e.g. "Spades") without it being mangled mid-word.
   emit('update:modelValue', event.target.value)
+}
+
+// Tab, Shift-Tab and Enter in an outline (outlineKeys.js)
+async function onOutlineKey(event) {
+  if (!['Tab', 'Enter'].includes(event.key) || event.altKey || event.ctrlKey || event.metaKey || event.isComposing) return
+  const el = event.target
+  const edit = outlineEdit(el.value, el.selectionStart, el.selectionEnd, event.key, event.shiftKey)
+  if (!edit) return
+  event.preventDefault()
+  el.value = edit.value
+  el.setSelectionRange(edit.start, edit.end)
+  emit('update:modelValue', edit.value)
+  await nextTick()
+  el.setSelectionRange(edit.start, edit.end)
 }
 
 function onBlur(event) {

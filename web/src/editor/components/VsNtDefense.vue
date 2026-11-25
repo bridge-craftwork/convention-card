@@ -27,7 +27,7 @@
               class="vs-nt-system-input"
               :value="systemName(col.key)"
               :readonly="!editable"
-              placeholder="e.g. Meckwell, Cappelletti"
+              :placeholder="isUnnamed(col.key) ? 'A defense of your own (no name)' : 'e.g. Meckwell, Cappelletti'"
               @input="onSystemInput(col.key, $event.target.value)"
               @blur="onSystemBlur(col.key, $event.target.value)"
             />
@@ -78,7 +78,8 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import {
   KNOWN_NT_DEFENSES,
   NT_DEFENSE_BIDS,
-  findKnownDefense
+  findKnownDefense,
+  ntSystemName
 } from '../../../../js/ntDefenses.js'
 import { colorizeSuits } from '../suits.js'
 import RichSuitField from './RichSuitField.vue'
@@ -121,7 +122,11 @@ const props = defineProps({
 function readBlock(colKey) {
   return props.card?.card_data?.competitive?.[colKey] || {}
 }
-function systemName(colKey) { return readBlock(colKey).system || '' }
+// As people write it: an imported `multi_landy` is "Multi-Landy", and
+// `other` (a defense with no name, or a label such as "Strong 1NT") is
+// blank, with a placeholder saying so.
+function systemName(colKey) { return ntSystemName(readBlock(colKey).system) || '' }
+const isUnnamed = colKey => !!readBlock(colKey).system && !ntSystemName(readBlock(colKey).system)
 function bidValue(colKey, bidKey) { return readBlock(colKey)[bidKey] || '' }
 
 function onSystemInput(colKey, value) {

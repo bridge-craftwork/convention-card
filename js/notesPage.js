@@ -82,6 +82,66 @@ const L = {
   margin: 30, gutter: 18, foot: 26,
   title: 13, heading: 10.5, sub: 9.5, body: 9,
   lead: 1.25, // line advance, in sizes
+  indent: 10, // an outline level
+}
+
+// ─── Outlines ─────────────────────────────────────────────────
+// A note written as an outline, as Markdown lists are: "- " (or "* ",
+// "• ", "1. ", "a) ") starts an item, and each two spaces before it (a tab
+// is two) go one level in. A line with no marker keeps its indent, so the
+// text under an item stays with it.
+
+const MAX_LEVEL = 8
+
+/** `{ level, marker, para }`: `marker` null, 'bullet' or a number's text ("1."). */
+export function outlineLine(line) {
+  const expanded = line.replace(/\t/g, '  ')
+  const lead = expanded.match(/^ */)[0].length
+  const level = Math.min(MAX_LEVEL, Math.floor(lead / 2))
+  const rest = expanded.slice(lead)
+  const m = rest.match(/^(?:([-*\u2022])|(\d{1,3}[.)]|[a-z][.)]))\s+(.*)$/)
+  if (!m) return { level, marker: null, para: rest }
+  return { level, marker: m[1] ? 'bullet' : m[2], para: m[3] }
+}
+
+/**
+ * A note's lines as outline lines, with a line wrapped by hand joined to
+ * the line it continues: one with no marker, indented to where the text of
+ * the item above starts ("- Responder with 3-card support... With" then
+ * "  6-7 HCP, bids 1NT first"), as a fixed-width font lines it up. Only a
+ * long line is taken as wrapped: under a short one ("1♦-1♥" then
+ * "  2♥-?"), the break is the writer's.
+ */
+const WRAPPED_LENGTH = 50
+
+export function outlineLines(text) {
+  const out = []
+  let textCol = null // where the text of the line above starts, in spaces
+  let wrapped = false // the line above was long enough to have been wrapped
+  for (const raw of text.split('\n')) {
+    const line = outlineLine(raw)
+    const lead = raw.replace(/\t/g, '  ').match(/^ */)[0].length
+    const joins = !line.marker && line.para && out.length && lead > 0 && lead === textCol && wrapped
+    wrapped = raw.trimEnd().length >= WRAPPED_LENGTH
+    if (joins) {
+      out.at(-1).para += ` ${line.para}`
+      continue
+    }
+    out.push(line)
+    textCol = line.para ? lead + (line.marker ? (line.marker === 'bullet' ? 1 : line.marker.length) + 1 : 0) : null
+  }
+  return out
+}
+
+const markerWidth = (font, marker, size) =>
+  marker === 'bullet' ? size * 0.8 : font.widthOfTextAtSize(marker, size) + size * 0.35
+
+function drawMarker(page, font, marker, x, y, size) {
+  if (marker === 'bullet') {
+    page.drawCircle({ x: x + size * 0.25, y: y + size * 0.3, size: size * 0.14, color: INK, borderWidth: 0 })
+  } else {
+    drawPiece(page, font, { text: marker, color: INK }, x, y, size)
+  }
 }
 
 /**
@@ -92,7 +152,7 @@ const L = {
  * so text outside Latin-1 is simplified or left out.
  */
 export function addNotesPages(pdf, card, { font, markFont, small = [], plain = false }) {
-  if (plain) font = latin1Only(font)
+  font = plain ? latin1Only(font) : glyphsOnly(font)
   const { title, blocks } = notesPageContent(card, { small })
   const { width: W, height: H } = pdf.getPage(0).getSize()
   const colW = (W - 2 * L.margin - L.gutter) / 2
@@ -138,20 +198,37 @@ export function addNotesPages(pdf, card, { font, markFont, small = [], plain = f
         y -= L.sub * L.lead
         continue
       }
-      for (const [i, para] of item.text.split('\n').entries()) {
+      for (const [i, { level, marker, para }] of outlineLines(item.text).entries()) {
         const runs = [...(i === 0 && item.label ? [{ text: `${item.label}: `, color: GREY }] : []), { text: para, color: INK }]
-        const lines = wrap(font, runs, L.body, colW)
+        // An outline line: its level's indent, its marker, and its text
+        // wrapping under its own first word
+        const indent = level * L.indent
+        const markW = marker ? markerWidth(font, marker, L.body) : 0
+        const lines = wrap(font, runs, L.body, colW - indent - markW)
         if (!lines.length) { y -= L.body * 0.6; continue }
-        for (const line of lines) {
+        for (const [n, line] of lines.entries()) {
           need(L.body * L.lead)
           y -= L.body * L.lead
-          let x = colX()
+          if (n === 0 && marker) drawMarker(page, font, marker, colX() + indent, y + L.body * 0.25, L.body)
+          let x = colX() + indent + markW
           for (const piece of line) x = drawPiece(page, font, piece, x, y + L.body * 0.25, L.body)
         }
       }
       y -= L.body * 0.45
     }
     y -= L.body * 0.6
+  }
+}
+
+// An emoji the font has no glyph for would print as an empty box: it is
+// left out (the suits are drawn, so they never reach the font)
+function glyphsOnly(font) {
+  let has
+  try { has = new Set(font.getCharacterSet()) } catch { return font }
+  const clean = t => [...t].filter(c => has.has(c.codePointAt(0)) || c === ' ').join('')
+  return {
+    widthOfTextAtSize: (t, size) => font.widthOfTextAtSize(clean(t), size),
+    draw: (page, t, opts) => page.drawText(clean(t), { ...opts, font }),
   }
 }
 
@@ -167,13 +244,14 @@ function latin1Only(font) {
 
 // ─── Text with suit symbols ───────────────────────────────────
 
-const SUITS = { '♠': 'S', '♥': 'H', '♦': 'D', '♣': 'C', '♤': 'S', '♡': 'H', '♢': 'D', '♧': 'C' }
-const SUIT_RE = /([♠♥♦♣♤♡♢♧])/u
+const SUITS = { '♠': 'S', '♥': 'H', '♦': 'D', '♣': 'C', '♤': 'S', '♡': 'H', '♢': 'D', '♧': 'C', '❤': 'H' }
+const SUIT_RE = /([♠♥♦♣♤♡♢♧❤])/u
 const suitAdvance = size => size * 0.72
 
 /** `text` as pieces: `{ text }` and `{ suit }`. */
 function splitSuits(str, color) {
-  return str.split(SUIT_RE).filter(Boolean).map(s => (SUITS[s] ? { suit: SUITS[s], color } : { text: s, color }))
+  // "♣️": the emoji form's variation selector has no glyph, and needs none
+  return str.replace(/\uFE0F/g, '').split(SUIT_RE).filter(Boolean).map(s => (SUITS[s] ? { suit: SUITS[s], color } : { text: s, color }))
 }
 
 const pieceWidth = (font, p, size) => (p.suit ? suitAdvance(size) : font.widthOfTextAtSize(p.text, size))

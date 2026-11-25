@@ -40,12 +40,27 @@ describe('ACBL Classic field map', () => {
     ['1♣ after overcall inv', 'Inv_6', { minor_openings: { one_club: { jump_raise_after_overcall: { inv: true } } } }],
     ['1♣ after overcall weak', 'Weak_7', { minor_openings: { one_club: { jump_raise_after_overcall: { weak: true } } } }],
     ['vs takeout double: jump shift weak', 'Weak_3', { vs_to_double: { jump_shift: 'weak' } }],
+    // Forcing Raise: inverted minors is the forcing single raise, not J/S.
+    ['inverted minors', 'Single raise', { minor_openings: { inverted_minors: { play: true } } }],
+    ['1♦ single raise inv', 'Single raise', { minor_openings: { one_diamond: { single_raise: { inv: true } } } }],
+    ['overcall jump raise inv', 'Inv', { overcalls: { responses: { jump_raise: 'invitational' } } }],
+    ['Stayman', '2c Stayman', { notrump: { stayman: { play: true } } }],
+    ['1♣ NF1', '1c NF', { minor_openings: { one_club: { nf1: true } } }],
+    ['1♦ NF0', '1d NF', { minor_openings: { one_diamond: { nf0: true } } }],
   ])('%s ticks %s only', async (_label, box, card_data) => {
     expect(await ticked(card_data)).toEqual([box])
   })
 
   it('a "fit" jump shift does not tick Drury Fit', async () => {
     expect(await ticked({ vs_to_double: { jump_shift: 'fit' } })).toEqual([])
+  })
+
+  it('ticks no box for a setting the Classic card has no box for', async () => {
+    // Non-forcing single raise is not a forcing raise; Garbage Stayman is
+    // not Forcing Stayman.
+    expect(await ticked({ minor_openings: { one_club: { single_raise: { nf: true } } } })).toEqual([])
+    // (Garbage Stayman is still Stayman, so it ticks 2♣ Stayman.)
+    expect(await ticked({ notrump: { stayman: { garbage: true } } })).not.toContain('Forcing Stayman')
   })
 
   it('fills no box from two unrelated card fields', () => {
