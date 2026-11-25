@@ -790,6 +790,13 @@ Bridgodex already offers).
   `notes.supplementary`, free text whose `# ` lines are headings. Two
   columns, as many pages as it takes, suit symbols drawn in the card's
   colours. Numbered footnotes are still to come.
+  **Outlines (Rick, 2026-11-25):** notes are kept as plain text, and a note
+  written as a Markdown list prints as an outline: `- `, `* `, `• `, `1. `
+  or `a) ` starts an item, each two spaces before it (a tab is two) is a
+  level, and a long item wraps under its own text. A line wrapped by hand
+  (a long line, then one indented to where its text starts, as a
+  fixed-width font lines it up) is joined back to its item. An emoji the
+  font has no glyph for is left out rather than printed as a box.
   **No repeats (#132, Rick 2026-11-22):** a box fills its field and
   nothing else. Older Bridgodex imports also wrote each box as a line of
   the section's notes ("2NT: 2-under Texas" beside the 2NT notes). The
