@@ -304,9 +304,12 @@ in a page, a browser extension or Node.
   every card path the converters and the PDF maps name against it.
 - **Assets from the caller.** The PDF export needs the ACBL template PDFs and
   the Barlow Condensed font (`assets/`). The library never fetches them: the
-  caller says how to get them, once, with `setAssetLoader({ template, font })`
-  (a page fetches them from wherever it serves them; Node reads them from
-  disk).
+  caller says how to get them, once, with `setAssetLoader({ template, font,
+  boldFont })` (a page fetches them from wherever it serves them; Node reads
+  them from disk). `boldFont`, Barlow Condensed SemiBold, is optional: it sets
+  the card's names and general approach in semibold, a size up where the line
+  has room, embedded as a subset (about 8KB) even on a fillable card (Rick,
+  2026-11-25). Without it those lines are regular.
 - **One reader for every format** (`importCard`, `js/importCard.js`): the
   editor's own JSON, BBO, Bridgodex, Swan, `.bbsa`, our PDFs and the URL hand-off,
   told apart by their content. The editor's Import and the standalone page's

@@ -26,7 +26,7 @@ import { upgradeCard, upgradeCardData } from './migrate.js'
 import { toSchema3 } from './schema3.js'
 import { ledCards } from './leads.js'
 import { TEMPLATE_INK } from './acblTemplateInk.js'
-import { loadTemplate, loadFont } from './assets.js'
+import { loadTemplate, loadFont, loadBoldFont } from './assets.js'
 import { drawMark, markWidth } from './pdfMark.js'
 import { addNotesPages } from './notesPage.js'
 import { FIELDS, spellings } from './spec.js'
@@ -101,6 +101,19 @@ function useInkMetrics(font) {
 // embeds it and finalizeForm() needs it again to regenerate appearance
 // streams, and the two are separate calls — so hang it off the doc.
 const NARROW_BY_DOC = new WeakMap()
+// The semibold, for the lines that head the card (HEADLINE_FIELDS)
+const BOLD_BY_DOC = new WeakMap()
+// The headline boxes the typography set in it
+const BOLD_SET_BY_DOC = new WeakMap()
+
+// The card's names and its general approach, set in semibold and a size
+// larger than the other boxes where their line has the height: they are
+// what a reader looks for first. Always embedded as a subset (about 8KB,
+// against 53KB for the whole font), even on a fillable card; a name
+// retyped in Acrobat is shown in Acrobat's own font.
+const HEADLINE_FIELDS = { classic: ['NAMES', 'GENERAL APPROACH'], new: ['Name.t.1', 'OV.t.1'] }
+const HEADLINE_SIZE = 10.5
+const isHeadline = (templateName, name) => (HEADLINE_FIELDS[templateName] || []).includes(name)
 
 // Widgets whose rectangle the typography pass enlarged. They must NOT
 // get the white /BG that finalizeForm paints into text fields: that
@@ -1366,10 +1379,10 @@ function wrapToLines(font, size, text, width, maxLines) {
  * up, and never returns a partial value — the last resort is the
  * hard floor with every word still present.
  */
-function fitTextToBox(font, text, width, height, maxLines, { allowHardFloor = false } = {}) {
+function fitTextToBox(font, text, width, height, maxLines, { allowHardFloor = false, start = TYPO.targetSize } = {}) {
   const usableW = usableWidth(width)
   const floor = allowHardFloor ? TYPO.hardMinSize : TYPO.minSize
-  for (let size = TYPO.targetSize; size >= floor; size -= 0.25) {
+  for (let size = start; size >= floor; size -= 0.25) {
     // pdf-lib routes single-line and multiline fields through different
     // layout functions. The multiline one advances by a full
     // `heightAtSize * 1.2` per line — including the first — so applying
@@ -1587,6 +1600,30 @@ function applyTypography(pdf, form, narrow, templateName, cardData, overflow = n
 
     const value = String(text).trim()
     const maxLines = box.w >= TYPO.minMultilineWidth ? TYPO.maxLines : 1
+    // A headline line: semibold, a size up, on one line
+    const bold = isHeadline(templateName, name) ? BOLD_BY_DOC.get(pdf) : null
+    if (bold) {
+      let one = fitTextToBox(bold, value, box.w, box.h, 1, { start: HEADLINE_SIZE })
+      // The line's height caps the size: take free room above or below
+      if (!one || one.size < HEADLINE_SIZE) {
+        const before = { x: box.x, y: box.y, w: box.w, h: box.h }
+        growWidget(box, boxes, stackHeight(bold, HEADLINE_SIZE, 1) + 1)
+        const grown = box.h > before.h ? fitTextToBox(bold, value, box.w, box.h, 1, { start: HEADLINE_SIZE }) : null
+        if (grown && (!one || grown.size > one.size)) one = grown
+        else if (box.h > before.h) {
+          box.widget.setRectangle({ x: before.x, y: before.y, width: before.w, height: before.h })
+          GROWN_WIDGETS.delete(box.widget.dict)
+          Object.assign(box, before)
+        }
+      }
+      if (one) {
+        field.setText(one.lines[0])
+        field.setFontSize(one.size)
+        sizes.set(name, one.size)
+        BOLD_SET_BY_DOC.get(pdf).add(name)
+        continue
+      }
+    }
     let fit = fitTextToBox(narrow, value, box.w, box.h, maxLines)
 
     // Grow whenever the box as-drawn can't hold the value at the target
@@ -1822,6 +1859,20 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
     registerFontInAcroFormResources(pdf, narrow)
   } catch (err) {
     console.warn('Condensed field font unavailable; falling back to Helvetica:', err)
+  }
+  if (narrow) {
+    try {
+      const boldBytes = await loadBoldFont()
+      if (boldBytes) {
+        const bold = await pdf.embedFont(boldBytes, { subset: true })
+        useInkMetrics(bold)
+        BOLD_BY_DOC.set(pdf, bold)
+        BOLD_SET_BY_DOC.set(pdf, new Set())
+        registerFontInAcroFormResources(pdf, bold)
+      }
+    } catch (err) {
+      console.warn('Semibold font unavailable; the names and general approach stay regular:', err)
+    }
   }
 
   MOVED_BY_DOC.set(pdf, new Map())
@@ -2862,6 +2913,13 @@ function finalizeForm(pdf, templateName = 'classic', { flatten = false } = {}) {
       for (const field of form.getFields()) {
         if (!(field instanceof PDFTextField)) continue
         try { field.defaultUpdateAppearances(narrow) } catch { /* leave Helvetica */ }
+      }
+      const bold = BOLD_BY_DOC.get(pdf)
+      for (const name of bold ? HEADLINE_FIELDS[templateName] || [] : []) {
+        const field = form.getTextField(name)
+        if ((field.getText() || '').trim() && BOLD_SET_BY_DOC.get(pdf)?.has(name)) {
+          try { field.defaultUpdateAppearances(bold) } catch { /* leave it regular */ }
+        }
       }
     }
 

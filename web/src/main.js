@@ -3,6 +3,7 @@ import { setAssetLoader, TEMPLATE_FILES } from '../../js/assets.js'
 import classicUrl from '../../assets/templates/acbl-classic-2023.pdf?url'
 import newUrl from '../../assets/templates/acbl-new.pdf?url'
 import fontUrl from '../../assets/fonts/BarlowCondensed-Regular.ttf?url'
+import boldFontUrl from '../../assets/fonts/BarlowCondensed-SemiBold.ttf?url'
 import App from './App.vue'
 import './tokens.css'
 
@@ -16,6 +17,7 @@ async function bytes(url, what) {
 setAssetLoader({
   template: name => bytes(TEMPLATE_URLS[name], `the ACBL ${TEMPLATE_FILES[name]} template`),
   font: () => bytes(fontUrl, 'the condensed field font'),
+  boldFont: () => bytes(boldFontUrl, 'the semibold field font'),
 })
 
 createApp(App).mount('#app')
