@@ -42,17 +42,37 @@ export function readNtHeading(text) {
 const isNatural = system => String(system ?? '').trim().toLowerCase() === 'natural'
 
 /**
- * What a column's heading prints: the defense as written, but with where
+ * How a system is written for people. The card keeps an imported system as
+ * the spec's option (`multi_landy`); that reads as the defense's name
+ * ("Multi-Landy"). `other`, a defense that has no name, reads as null, and
+ * anything typed as typed.
+ */
+export function ntSystemName(system) {
+  if (system == null) return null
+  const t = String(system).trim()
+  if (!t || t.toLowerCase() === 'other') return null
+  if (!/^[a-z_]+$/.test(t)) return t
+  const key = t.replace(/_/g, '')
+  const known = KNOWN_NT_DEFENSES.find(d => [d.name, ...(d.aliases || [])].some(n => n.toLowerCase().replace(/[^a-z]/g, '') === key))
+  return known ? known.name : t.split('_').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')
+}
+
+/**
+ * What a column's heading prints: the defense by name, but with where
  * strong starts when the card says ("Weak No 16: Natural"), and with which
- * 1NTs a natural column is for ("Weak 1NT: Natural"), since the ACBL cards'
- * two columns are otherwise labelled only by what's written here.
+ * 1NTs the column is for when the defense is natural or has no name ("Weak
+ * 1NT: Natural", "Strong 1NT"), since the ACBL cards' two columns are
+ * otherwise labelled only by what's written here.
  */
 export function ntHeadingText(side, system, includes) {
   const Side = side === 'strong' ? 'Strong' : 'Weak'
-  const named = system == null || system === '' ? null : isNatural(system) ? 'Natural' : String(system)
+  const named = isNatural(system) ? 'Natural' : ntSystemName(system)
   const start = includes == null || includes === '' ? null : side === 'strong' ? `Strong ${includes}+` : `Weak No ${includes}`
   if (start) return named ? `${start}: ${named}` : start
-  return named === 'Natural' ? `${Side} 1NT: Natural` : system
+  if (named === 'Natural') return `${Side} 1NT: Natural`
+  if (named) return named
+  // A defense with no name: the heading says which 1NTs it is for
+  return String(system ?? '').trim().toLowerCase() === 'other' ? `${Side} 1NT` : system
 }
 
 export const KNOWN_NT_DEFENSES = [
