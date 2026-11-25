@@ -20,7 +20,7 @@
 import { ParseSpeeds, PDFDocument, PDFCheckBox, PDFRadioGroup, PDFTextField, PDFName, PDFDict, PDFArray, PDFRef, PDFHexString, PDFString, PDFBool, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { readPath } from './paths.js'
-import { ntHeadingText, NT_STRONG_INCLUDES } from './ntDefenses.js'
+import { ntHeadingText, ntColumnFilled, NT_STRONG_INCLUDES } from './ntDefenses.js'
 import { cardValues } from './checkCard.js'
 import { upgradeCard, upgradeCardData } from './migrate.js'
 import { toSchema3 } from './schema3.js'
@@ -2428,7 +2428,10 @@ function entryValue(entry, cardData) {
   }
   // A box that also stands for other fields (`any`): on when any of them is
   if (entry.any) return readPath(cardData, entry.card) === true || entry.any.some(p => readPath(cardData, p) === true)
-  if (entry.ntHeading) return ntHeadingText(entry.ntHeading, readPath(cardData, entry.card), readPath(cardData, NT_STRONG_INCLUDES))
+  if (entry.ntHeading) {
+    const column = readPath(cardData, entry.card.replace(/\.system$/, ''))
+    return ntHeadingText(entry.ntHeading, readPath(cardData, entry.card), readPath(cardData, NT_STRONG_INCLUDES), ntColumnFilled(column))
+  }
   return readPath(cardData, entry.card)
 }
 

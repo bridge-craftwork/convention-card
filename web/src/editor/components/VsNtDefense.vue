@@ -123,9 +123,10 @@ function readBlock(colKey) {
   return props.card?.card_data?.competitive?.[colKey] || {}
 }
 // As people write it: an imported `multi_landy` is "Multi-Landy", and
-// `other` (a defense with no name) is blank, with a placeholder saying so.
+// `other` (a defense with no name, or a label such as "Strong 1NT") is
+// blank, with a placeholder saying so.
 function systemName(colKey) { return ntSystemName(readBlock(colKey).system) || '' }
-const isUnnamed = colKey => String(readBlock(colKey).system || '').toLowerCase() === 'other'
+const isUnnamed = colKey => !!readBlock(colKey).system && !ntSystemName(readBlock(colKey).system)
 function bidValue(colKey, bidKey) { return readBlock(colKey)[bidKey] || '' }
 
 function onSystemInput(colKey, value) {

@@ -31,6 +31,7 @@ import { readPath, writePath } from './paths.js'
 import { field } from './spec.js'
 import { needsUpgrade, upgradeCardData, CARD_SCHEMA_VERSION } from './migrate.js'
 import { checkValue } from './checkCard.js'
+import { readNtHeading, findKnownDefense, ntSystemFromShort, ntSystemName, NT_STRONG_INCLUDES } from './ntDefenses.js'
 
 // The suffix of the box the export adds for a value's second line (trySplitIntoTwoLines).
 const SECOND_LINE = '__bc_line2'
@@ -121,6 +122,34 @@ function parseText(path, text) {
     return checked.problem ? checked : { value: checked.value, plus: m[2] === '+', minus: m[2] === '-' }
   }
   return checkValue(def, t)
+}
+
+/**
+ * A "vs:" heading of the defense to 1NT, read back: which 1NTs the column is
+ * for ("Strong", "Weak No 15") and the defense named after it ("Strong:
+ * Cappelletti", "weak - capp."). A heading that names no defense, over a
+ * column the card had named, is a defense with no name (`other`).
+ */
+function readNtHeadingBox(box, entry, now, cardData, { embedded, set }) {
+  const printed = entryValue(entry, cardData) || ''
+  const text = embedded ? mergeTyped(printed, now).trim() : now.trim()
+  // Retyped in other capitals ("strong" over "Strong") is not a change
+  if (embedded && words(text).join(' ').toLowerCase() === words(printed).join(' ').toLowerCase()) return
+  const { includes, system } = readNtHeading(text)
+  if (includes != null) set(box, NT_STRONG_INCLUDES, includes)
+  const current = readPath(cardData, entry.card)
+  if (!system) {
+    if (ntSystemName(current)) set(box, entry.card, 'other')
+    else if (current == null && text) set(box, entry.card, 'other')
+    return
+  }
+  const def = field(entry.card)
+  const known = findKnownDefense(ntSystemFromShort(system) ?? system)
+  const name = known && known.name.toLowerCase() === (ntSystemFromShort(system) ?? system).trim().toLowerCase() ? known.name : null
+  const option = checkValue(def, name ?? system)
+  // A defense the spec names is kept as its option; any other as typed
+  const value = option.problem ? system : option.value
+  if (ntSystemName(value) !== ntSystemName(current)) set(box, entry.card, value)
 }
 
 /**
@@ -245,6 +274,10 @@ export async function readCardFromPdf(bytes) {
     }
     const entry = entries[0]
     const current = readPath(cardData, entry.card)
+    if (entry.ntHeading) {
+      readNtHeadingBox(owner, entry, now, cardData, { embedded, set })
+      continue
+    }
     const original = current == null ? '' : shaped(entry, current, cardData)
     let text = embedded ? mergeTyped(original, now) : now.trim()
     // A transform shortened the card's text for the box (Lebensohl's
