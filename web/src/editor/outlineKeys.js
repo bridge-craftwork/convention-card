@@ -11,8 +11,10 @@
 // Tab and Shift-Tab act only on an outline line or a selection of several
 // lines; elsewhere Tab moves to the next field, as it always has.
 
+import { BULLET } from '../../../js/outlineBullets.js'
+
 const STEP = '  '
-const ITEM = /^( *)([-*•]|\d{1,3}[.)]|[a-z][.)])( +)(.*)$/
+const ITEM = new RegExp(`^( *)(${BULLET}|\\d{1,3}[.)]|[a-z][.)])( +)(.*)$`)
 
 const lineStart = (text, i) => text.lastIndexOf('\n', i - 1) + 1
 const lineEnd = (text, i) => { const e = text.indexOf('\n', i); return e < 0 ? text.length : e }

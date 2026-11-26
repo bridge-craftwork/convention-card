@@ -13,6 +13,9 @@ describe('outlineLine', () => {
     ['• Red Heart', 0, 'bullet', 'Red Heart'],
     ['  1. first', 1, '1.', 'first'],
     ['b) second', 0, 'b)', 'second'],
+    ['    ◦ 3NT', 2, 'bullet', '3NT'],
+    ['      ▪︎ PASS, to play', 3, 'bullet', 'PASS, to play'],
+    ['  ▪ no selector', 1, 'bullet', 'no selector'],
     ['Plain text', 0, null, 'Plain text'],
     ['-1 is not a bullet', 0, null, '-1 is not a bullet'],
   ])('%j', (line, level, marker, para) => {
@@ -31,6 +34,23 @@ describe('outlineLines', () => {
     expect(outlineLines(text).map(l => l.para)).toEqual([
       '1M opening. Responder with 3-card support and 8-10 HCP bids 2M. With 6-7 HCP, bids 1NT first, and 2M next. Constructive raise only by non-passed hand.',
       'Ogust ON after double',
+    ])
+  })
+
+  it("reads Pandoc's plain-text bullets at every level", () => {
+    const text = [
+      '* 2NT-3♠️/3NT',
+      '  • 3♠️ puppet to 3NT, could be slam try in minors',
+      '    ◦ 3NT',
+      '      ▪︎ PASS, to play',
+      '      ▪︎ 4NT 5-4-2-2',
+    ].join('\n')
+    expect(outlineLines(text).map(l => [l.level, l.marker, l.para])).toEqual([
+      [0, 'bullet', '2NT-3♠️/3NT'],
+      [1, 'bullet', '3♠️ puppet to 3NT, could be slam try in minors'],
+      [2, 'bullet', '3NT'],
+      [3, 'bullet', 'PASS, to play'],
+      [3, 'bullet', '4NT 5-4-2-2'],
     ])
   })
 

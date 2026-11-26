@@ -32,6 +32,7 @@ describe('outline keys', () => {
     expect(press('  - 3♠ puppet|', 'Enter')).toBe('  - 3♠ puppet\n  - |')
     expect(press('1. first|', 'Enter')).toBe('1. first\n2. |')
     expect(press('a) first|', 'Enter')).toBe('a) first\nb) |')
+    expect(press('    ◦ 3NT|', 'Enter')).toBe('    ◦ 3NT\n    ◦ |')
   })
 
   it('Enter on an empty item ends the list', () => {

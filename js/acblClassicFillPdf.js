@@ -338,8 +338,7 @@ const FIELD_MAP_CLASSIC = [
   // covering nf0/nf1/nf2 (any unbalanced 1♣ count is "non-forcing
   // short club"), and "Conv." as art_forcing. The 1♣ "Unbal" concept
   // doesn't have a column on ACBL Classic — it's captured implicitly.
-  { pdf: '1c 5',    card: 'minor_openings.one_club.min_length', kind: 'check', value: '5' },
-  { pdf: '1d 5',    card: 'minor_openings.one_diamond.min_length', kind: 'check', value: '5' },
+  // Classic's minimum-length boxes are 4 and 3 only: no "5" box to tick.
   { pdf: 'Freq bypass 4d',  card: 'minor_openings.bypass_5_plus', kind: 'check' },
   { pdf: 'Transfer Resp_2', card: 'minor_openings.one_club.transfer_resp', kind: 'check' },
   { pdf: 'to_9',         card: 'minor_openings.one_club.one_nt_range_min', kind: 'text' },
