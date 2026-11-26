@@ -13,6 +13,7 @@ import { readPath } from './paths.js'
 import { drawMark, markWidth } from './pdfMark.js'
 import { upgradeCardData } from './migrate.js'
 import { repeatedNoteLines, withoutRepeats } from './noteRepeats.js'
+import { BULLET } from './outlineBullets.js'
 
 const text = v => (typeof v === 'string' ? v.trim() : '')
 const sectionOf = path => path.split('.')[0]
@@ -93,13 +94,15 @@ const L = {
 
 const MAX_LEVEL = 8
 
+const ITEM_RE = new RegExp(`^(?:(${BULLET})|(\\d{1,3}[.)]|[a-z][.)]))\\s+(.*)$`)
+
 /** `{ level, marker, para }`: `marker` null, 'bullet' or a number's text ("1."). */
 export function outlineLine(line) {
   const expanded = line.replace(/\t/g, '  ')
   const lead = expanded.match(/^ */)[0].length
   const level = Math.min(MAX_LEVEL, Math.floor(lead / 2))
   const rest = expanded.slice(lead)
-  const m = rest.match(/^(?:([-*\u2022])|(\d{1,3}[.)]|[a-z][.)]))\s+(.*)$/)
+  const m = rest.match(ITEM_RE)
   if (!m) return { level, marker: null, para: rest }
   return { level, marker: m[1] ? 'bullet' : m[2], para: m[3] }
 }
@@ -225,7 +228,7 @@ export function addNotesPages(pdf, card, { font, markFont, small = [], plain = f
 function glyphsOnly(font) {
   let has
   try { has = new Set(font.getCharacterSet()) } catch { return font }
-  const clean = t => [...t].filter(c => has.has(c.codePointAt(0)) || c === ' ').join('')
+  const clean = t => [...t.replace(/\u203c/g, '!!').replace(/\u2049/g, '!?')].filter(c => has.has(c.codePointAt(0)) || c === ' ').join('')
   return {
     widthOfTextAtSize: (t, size) => font.widthOfTextAtSize(clean(t), size),
     draw: (page, t, opts) => page.drawText(clean(t), { ...opts, font }),
@@ -250,8 +253,8 @@ const suitAdvance = size => size * 0.72
 
 /** `text` as pieces: `{ text }` and `{ suit }`. */
 function splitSuits(str, color) {
-  // "♣️": the emoji form's variation selector has no glyph, and needs none
-  return str.replace(/\uFE0F/g, '').split(SUIT_RE).filter(Boolean).map(s => (SUITS[s] ? { suit: SUITS[s], color } : { text: s, color }))
+  // "♣️", "♣︎": the emoji and text selectors have no glyph, and need none
+  return str.replace(/[\uFE0E\uFE0F]/g, '').split(SUIT_RE).filter(Boolean).map(s => (SUITS[s] ? { suit: SUITS[s], color } : { text: s, color }))
 }
 
 const pieceWidth = (font, p, size) => (p.suit ? suitAdvance(size) : font.widthOfTextAtSize(p.text, size))
