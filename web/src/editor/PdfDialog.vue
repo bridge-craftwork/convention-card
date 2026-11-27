@@ -24,6 +24,16 @@
         </span>
       </label>
 
+      <!-- Green by default, as BBO's card shows a partnership's entries
+           against the black and red form (#140). -->
+      <label class="pdf-choice fillable">
+        <input v-model="options.green" type="checkbox" />
+        <span>
+          What the card says in green
+          <span class="option-desc">As BBO's card shows it: your entries stand out from the printed form. Untick for black.</span>
+        </span>
+      </label>
+
       <!-- Flat unless asked: it looks as designed in every viewer. A fillable
            card keeps its font in Acrobat and Chrome, but Preview and Safari
            draw its boxes in Helvetica (Rick Wilson, 2026-11-21; #129). -->
@@ -50,9 +60,9 @@ import { nextTick, reactive, ref } from 'vue'
 import { TEMPLATES, SECOND_PAGES, savedPdfOptions, savePdfOptions, cardHasNotes } from './pdfActions.js'
 
 // The questions every PDF asks before it is made (Rick Wilson, 2026-11-21):
-// which card, what goes on the second page, and, for one to keep, whether
-// it is fillable. `ask({ action, card, note })` resolves with
-// { template, secondPage, fillable }, or null when cancelled; the answers
+// which card, what goes on the second page, green or black entries, and,
+// for one to keep, whether it is fillable. `ask({ action, card, note })`
+// resolves with { template, secondPage, green, fillable }, or null when cancelled; the answers
 // are remembered in this browser (pdfActions.js).
 const ACTIONS = {
   print: { title: 'Print', go: 'Print' },
@@ -86,7 +96,7 @@ async function ask({ action: what = 'export', card = null, note: extra = '' } = 
 function answer(value) {
   open.value = false
   const chosen = value && { ...value, fillable: action.value === 'print' ? false : value.fillable }
-  if (chosen) savePdfOptions({ ...savedPdfOptions(), template: chosen.template, secondPage: chosen.secondPage, ...(action.value !== 'print' && { fillable: chosen.fillable }) })
+  if (chosen) savePdfOptions({ ...savedPdfOptions(), template: chosen.template, secondPage: chosen.secondPage, green: chosen.green, ...(action.value !== 'print' && { fillable: chosen.fillable }) })
   resolve?.(chosen)
   resolve = null
 }

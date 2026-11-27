@@ -310,6 +310,12 @@ in a page, a browser extension or Node.
   the card's names and general approach in semibold, a size up where the line
   has room, embedded as a subset (about 8KB) even on a fillable card (Rick,
   2026-11-25). Without it those lines are regular.
+- **Green entries.** The export prints what the card says (every text box)
+  in green, `#2e7d32`, as BBO's card shows it, so a partnership's entries
+  stand out from the black and red form (#140). The colour is in each box's
+  default appearance, so a fillable card types in it too; ticks stay as the
+  template draws them. `ink: 'black'` (`INKS`) prints them black; the
+  editor's PDF dialog asks, green unless unticked, and remembers.
 - **One reader for every format** (`importCard`, `js/importCard.js`): the
   editor's own JSON, BBO, Bridgodex, Swan, `.bbsa`, our PDFs and the URL hand-off,
   told apart by their content. The editor's Import and the standalone page's

@@ -13,18 +13,18 @@ describe('the remembered PDF choices', () => {
     })
   })
 
-  it('start as a flat Classic card alone', () => {
-    expect(savedPdfOptions()).toEqual({ template: 'classic', secondPage: 'none', fillable: false })
+  it('start as a flat Classic card alone, in green', () => {
+    expect(savedPdfOptions()).toEqual({ template: 'classic', secondPage: 'none', green: true, fillable: false })
   })
 
   it('come back as saved', () => {
-    savePdfOptions({ template: 'new', secondPage: 'notes', fillable: true })
-    expect(savedPdfOptions()).toEqual({ template: 'new', secondPage: 'notes', fillable: true })
+    savePdfOptions({ template: 'new', secondPage: 'notes', green: false, fillable: true })
+    expect(savedPdfOptions()).toEqual({ template: 'new', secondPage: 'notes', green: false, fillable: true })
   })
 
   it('drop what is not a choice, and survive storage that throws', () => {
     store['convention-card.pdf-options'] = JSON.stringify({ template: 'wbf', secondPage: 'x', fillable: 'yes' })
-    expect(savedPdfOptions()).toEqual({ template: 'classic', secondPage: 'none', fillable: false })
+    expect(savedPdfOptions()).toEqual({ template: 'classic', secondPage: 'none', green: true, fillable: false })
     vi.stubGlobal('localStorage', { getItem: () => { throw new Error('private') }, setItem: () => { throw new Error('private') } })
     expect(savedPdfOptions().template).toBe('classic')
     expect(() => savePdfOptions({ template: 'new' })).not.toThrow()

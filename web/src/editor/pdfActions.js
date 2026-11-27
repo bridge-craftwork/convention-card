@@ -1,6 +1,6 @@
 // Print, preview and download a card's PDF, with the choices PdfDialog.vue
-// asks for: which ACBL card, what goes on the second page, and whether it
-// is fillable. The editor and the card list both go through here, so they
+// asks for: which ACBL card, what goes on the second page, whether the
+// card's entries print in green or black, and whether it is fillable. The editor and the card list both go through here, so they
 // ask the same questions and remember the same answers.
 
 /** The PDF module, loaded only when it is needed (it brings pdf-lib). */
@@ -21,7 +21,7 @@ export const SECOND_PAGES = [
 // This browser's last answers (Rick Wilson, 2026-11-21: remember the
 // template). A convenience: without storage the defaults stand.
 const KEY = 'convention-card.pdf-options'
-const DEFAULTS = { template: 'classic', secondPage: 'none', fillable: false }
+const DEFAULTS = { template: 'classic', secondPage: 'none', green: true, fillable: false }
 
 export function savedPdfOptions() {
   try {
@@ -29,6 +29,7 @@ export function savedPdfOptions() {
     return {
       template: TEMPLATES.some(t => t.id === saved.template) ? saved.template : DEFAULTS.template,
       secondPage: SECOND_PAGES.some(s => s.id === saved.secondPage) ? saved.secondPage : DEFAULTS.secondPage,
+      green: saved.green !== false,
       fillable: saved.fillable === true,
     }
   } catch {
@@ -47,14 +48,18 @@ export async function cardHasNotes(card) {
 }
 
 /** The PDF's bytes. */
-export async function renderPdf(card, { template, secondPage, fillable }) {
+export async function renderPdf(card, { template, secondPage, green = true, fillable }) {
   const { renderAcblPdfBytes } = await loadAcblPdf()
-  return renderAcblPdfBytes(card, template, { secondPage, flatten: !fillable })
+  return renderAcblPdfBytes(card, template, { secondPage, ink: green ? 'green' : 'black', flatten: !fillable })
 }
 
 export async function downloadPdf(card, options) {
   const { downloadAcblPdf } = await loadAcblPdf()
-  return downloadAcblPdf(card, options.template, { secondPage: options.secondPage, flatten: !options.fillable })
+  return downloadAcblPdf(card, options.template, {
+    secondPage: options.secondPage,
+    ink: options.green === false ? 'black' : 'green',
+    flatten: !options.fillable,
+  })
 }
 
 /**

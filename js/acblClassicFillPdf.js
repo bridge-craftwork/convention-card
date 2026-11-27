@@ -1830,17 +1830,33 @@ function addMissingFields(pdf, form) {
  */
 export const SECOND_PAGES = ['none', 'acbl', 'notes']
 
+// The colour of what the card says, against the printed form's black and
+// red: green as BBO's card shows it (#140), so the partnership's entries
+// stand out from the blank form; or black. Ticks stay as the template draws
+// them. The green is dark enough to print and photocopy.
+export const INKS = ['green', 'black']
+const INK_OPS = { green: '0.18 0.49 0.196 rg', black: '0 g' }
+const INK_BY_DOC = new WeakMap()
+
+/** `da` (a field's default appearance) with its colour set to `ink`'s. */
+export function withInk(da, ink) {
+  const rest = String(da || '').replace(/(?:^|\s)(?:[\d.]+\s+){1,4}(?:g|rg|k)(?=\s|$)/g, ' ').trim()
+  return `${INK_OPS[ink] || INK_OPS.black} ${rest}`.trim()
+}
+
 // `subsetFont`: embed only the letters the card uses (a flattened card,
 // which no one types into), or the whole font (a fillable one: Acrobat and
 // Chrome type with it, and leave a letter the subset lacks blank; Rick's
 // test in Chrome, 2026-11-21). The whole font adds about 50 KB.
-export async function buildAcblPdf(card, templateName = 'classic', { secondPage = 'none', subsetFont = false } = {}) {
+export async function buildAcblPdf(card, templateName = 'classic', { secondPage = 'none', subsetFont = false, ink = 'green' } = {}) {
   card = upgradeCard(card)
   if (!SECOND_PAGES.includes(secondPage)) throw new Error(`No second page "${secondPage}" (${SECOND_PAGES.join(', ')})`)
+  if (!INKS.includes(ink)) throw new Error(`No ink "${ink}" (${INKS.join(', ')})`)
   const bytes = await loadTemplateBytes(templateName)
   // No pauses (see renderAcblPdfBytes)
   const pdf = await PDFDocument.load(bytes, { parseSpeed: ParseSpeeds.Fastest })
   if (secondPage !== 'acbl') dropScoresheet(pdf)
+  INK_BY_DOC.set(pdf, ink)
   const form = pdf.getForm()
   const fieldMap = templateName === 'new' ? FIELD_MAP_NEW : FIELD_MAP_CLASSIC
 
@@ -1939,6 +1955,9 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
 // describe box, and the boxes we add) came out at Helvetica 12, shrunk to
 // fit: a tiny "1-8 NV 1st 3rd seat". So each widget gets its field's.
 //
+// Every box gets the card's ink (INKS): what pdf-lib draws, and what a
+// viewer types, is in that colour.
+//
 // A box the card left empty kept the template's font and size, mostly
 // size-to-fit (0), which Chrome takes both ways: a long entry shrinks, a
 // short one grows to fill the box's height ("test" bigger than the line
@@ -1947,12 +1966,15 @@ export async function buildAcblPdf(card, templateName = 'classic', { secondPage 
 function forViewers(form) {
   const DA = PDFName.of('DA')
   const narrow = NARROW_BY_DOC.get(form.doc)
+  const ink = INK_BY_DOC.get(form.doc) || 'black'
   for (const field of form.getFields()) {
     if (!(field instanceof PDFTextField)) continue
     field.disableScrolling()
     if (narrow && !field.getText()) {
-      field.acroField.dict.set(DA, PDFString.of(`0 g /${narrow.name} ${emptyBoxSize(field, narrow)} Tf`))
+      field.acroField.dict.set(DA, PDFString.of(`/${narrow.name} ${emptyBoxSize(field, narrow)} Tf`))
     }
+    const own = field.acroField.getDefaultAppearance()
+    if (own != null) field.acroField.dict.set(DA, PDFString.of(withInk(own, ink)))
     const da = field.acroField.dict.get(DA)
     if (da) for (const widget of field.acroField.getWidgets()) widget.dict.set(DA, da)
   }
@@ -2514,9 +2536,9 @@ function isCheckOn(entry, value) {
  * without a browser download — the export is otherwise only reachable
  * through a click.
  */
-export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false, secondPage = 'none' } = {}) {
+export async function renderAcblPdfBytes(card, templateName = 'classic', { flatten = false, secondPage = 'none', ink = 'green' } = {}) {
   card = upgradeCard(card)
-  const pdf = await buildAcblPdf(card, templateName, { secondPage, subsetFont: flatten })
+  const pdf = await buildAcblPdf(card, templateName, { secondPage, subsetFont: flatten, ink })
   finalizeForm(pdf, templateName, { flatten })
   pdf.setTitle(pdfTitle(card, templateName), { showInWindowTitleBar: true })
   // Red ellipses around the card led from each holding: both templates
@@ -2533,8 +2555,8 @@ export async function renderAcblPdfBytes(card, templateName = 'classic', { flatt
   return pdf.save({ objectsPerTick: Infinity })
 }
 
-export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false, secondPage = 'none' } = {}) {
-  const bytes = await renderAcblPdfBytes(card, templateName, { flatten, secondPage })
+export async function downloadAcblPdf(card, templateName = 'classic', { flatten = false, secondPage = 'none', ink = 'green' } = {}) {
+  const bytes = await renderAcblPdfBytes(card, templateName, { flatten, secondPage, ink })
   triggerDownload(bytes, pdfFilename(card, templateName))
 }
 
