@@ -2097,13 +2097,14 @@ function placeOverflow(form, overflow, templateName, font, boxes) {
 // The partnership's names field on each template: the mark takes the
 // right end of its line
 const NAMES_FIELD = { classic: 'NAMES', new: 'Name.t.1' }
+const MARK_SIZE = 7.5
 
 function makeRoomForMark(pdf, form, templateName, font) {
   const widget = form.getTextField(NAMES_FIELD[templateName]).acroField.getWidgets()[0]
   const r = widget.getRectangle()
-  const w = markWidth(font, r.height)
+  const w = markWidth(font, r.height, MARK_SIZE)
   widget.setRectangle({ ...r, width: r.width - w - 6 })
-  drawMark(pdf.getPage(0), { x: r.x + r.width - w, y: r.y, height: r.height, font })
+  drawMark(pdf.getPage(0), { x: r.x + r.width - w, y: r.y, height: r.height, font, size: MARK_SIZE })
 }
 
 // When the card was last saved, as Bridge Winners and Bridgodex print it.
