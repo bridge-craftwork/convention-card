@@ -704,7 +704,7 @@ view (a convenience).
 - **Lead circles** are spots to click; the export already knows where each
   circle goes.
 
-### Settled (Rick, 2026-11-27)
+### Settled (Rick, 2026-11-27 and 28)
 
 - **Unticking** a box several settings tick (`any:` entries, such as
   "Single raise" from inverted minors or a forcing single raise) clears all
@@ -712,15 +712,26 @@ view (a convenience).
 - **A box with no card setting yet** (bridge-common-conventions#137, the
   boxes no map entry names) shows greyed, "no setting for this yet", and
   takes no typing. Loose text in an overlay can come later if it's missed.
+- **Two kinds of user.** Most people want a card to print, share and have on every device; some want the detailed
+  agreements, for robot play or as the partnership's contract. The first
+  shouldn't be shown choices they didn't ask for; the second should see
+  where there is more to say. As in the guided view, which can show Basic
+  only, a form view follows the same setting:
+  - **Card only:** each box takes what it prints, and nothing more opens.
+  - **Details:** a box with more behind it (levels, alerts, conventions'
+    options) carries a small mark, and clicking it opens the field panel:
+    that field's guided control, its options, alert and notes.
+- **Words beside a number survive.** The 1NT range is four boxes, room for
+  the numbers with their + and -; a "15-17 Vul, 12-14 NV" card keeps
+  "Vul" and "NV" (`seat_vul`), shown beside the range and printed. Classic
+  prints both on spare lines ("Alternate 1NT seat / vulnerability: NV");
+  New prints the first range's and drops the second's, a print bug in its
+  own right.
 
 ### Open
 
-- **The field panel.** A small panel over a box with that field's guided
-  control: its options, alert and notes. Which boxes open it, and how, is
-  for Rick to choose. Proposed: a plain checkbox or text box edits in place;
-  a box whose value comes from a choice, a range or a convention entry
-  opens the panel when clicked; any box opens it on a long press or
-  double-click; on a phone, every tap opens it.
+- **The field panel:** whether a long press or double-click opens it on
+  any box in either mode, and on phones, whether every tap opens it.
 - **Text that doesn't fit** shrinks as the PDF shrinks it, and is marked
   where it carries on to the notes page.
 - **What the form can't show** (levels, alert details, conventions with no
