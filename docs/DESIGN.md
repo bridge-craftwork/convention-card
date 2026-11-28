@@ -736,7 +736,7 @@ view (a convenience).
 2. Editing on Classic: checkboxes and plain text, then the boxes several
    settings feed, the split lines and the lead circles.
 3. ACBL New: mostly data, since its map and import exist.
-4. The two-card form view (Comparing two cards, below).
+4. The two-card form view (Comparing cards, below).
 
 ## Shared cards
 
