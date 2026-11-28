@@ -666,25 +666,77 @@ built-in cards are the same kind of thing, shipped with the editor.
   field name cannot read them; that would need text extraction by
   position.
 
-## Two ways to edit: guided and form
+## Three views: guided, ACBL Classic, ACBL New
 
-*Planned* (Rick Wilson, 2026-10-03). Like a tax program's "walk me
-through it" and "forms" modes, the editor offers two views of the same card:
+*Planned* (Rick Wilson, 2026-10-03; reopened 2026-11-27, #139). Like a tax
+program's "walk me through it" and "forms" modes, the editor shows the same
+card three ways, switched in its toolbar: **Guided | ACBL Classic | ACBL
+New** (later WBF). All three read and write the same card_data through the
+same editor state and undo history, so a person can switch in the middle of
+an edit; none stores anything of its own. The browser remembers the last
+view (a convenience).
 
 - **Guided** (what the editor is today): a section at a time, conventions
   as rows with their level, alerts and notes, filtered by level band. Good
   for building a card and for newer players; the card wizard (above) is its
   first-time form.
-- **Form**: the card laid out as the printed card is, ACBL Classic or New
-  (later WBF), and edited where each box sits, for players who know the
-  card and want to see all of it at once. The layout comes from the same
-  template mapping the PDF uses (above), so a box in the form is a field
-  in the card, and anything a template can print, the form can edit;
-  editing on the PDF page itself is the same idea rendered over the
-  template.
+- **ACBL Classic, ACBL New** (the form views): the card as it prints, edited
+  where each box sits, for players who know the card and want all of it in
+  view. Tomasz's case for it (2026-11-25): in Acrobat he could "copy 1:1
+  his CC without thinking what the editor fields represent". Bridgodex
+  has such a view for the New card.
 
-Both read and write the same card_data through the same editor state, so
-a person can switch at any time; neither stores anything of its own.
+### How a form view works
+
+- **The page:** each template page as an image, made once at build time
+  (no pdf.js in the editor, about 1 MB).
+- **The boxes:** a build script reads each template's form fields (name,
+  rectangle, text or checkbox) into a small JSON file. The editor places an
+  HTML input over each, scaled with the image.
+- **Card to box** is the export's: `entryValue` gives what each box prints,
+  so the view shows the PDF's own text (the "vs:" headings, second lines),
+  in its Barlow Condensed and green ink. Suits show as symbols, which the
+  PDF's boxes can't yet do.
+- **Box to card** is the PDF import's: what `readCardFromPdf` does for a box
+  edited in Acrobat becomes `applyBoxEdit(cardData, template, box, value)`,
+  which the import and the form views share. Typing in a box is then the
+  same as editing it in Acrobat and importing, at once.
+- **Lead circles** are spots to click; the export already knows where each
+  circle goes.
+
+### Settled (Rick, 2026-11-27)
+
+- **Unticking** a box several settings tick (`any:` entries, such as
+  "Single raise" from inverted minors or a forcing single raise) clears all
+  of them. Ticking it sets the entry's own `card` setting.
+- **A box with no card setting yet** (bridge-common-conventions#137, the
+  boxes no map entry names) shows greyed, "no setting for this yet", and
+  takes no typing. Loose text in an overlay can come later if it's missed.
+
+### Open
+
+- **The field panel.** A small panel over a box with that field's guided
+  control: its options, alert and notes. Which boxes open it, and how, is
+  for Rick to choose. Proposed: a plain checkbox or text box edits in place;
+  a box whose value comes from a choice, a range or a convention entry
+  opens the panel when clicked; any box opens it on a long press or
+  double-click; on a phone, every tap opens it.
+- **Text that doesn't fit** shrinks as the PDF shrinks it, and is marked
+  where it carries on to the notes page.
+- **What the form can't show** (levels, alert details, conventions with no
+  box) stays in the guided view; a form view links to it ("9 things on this
+  card aren't on the ACBL form"), as the coverage page would (#122).
+- **Phones:** pinch to zoom and pan, with the field panel for editing.
+
+### Order
+
+1. A read-only Classic view in the editor, live as the guided view edits,
+   where clicking a box goes to its field: useful alone (no Preview PDF
+   round trip), and it proves the page images and box positions.
+2. Editing on Classic: checkboxes and plain text, then the boxes several
+   settings feed, the split lines and the lead circles.
+3. ACBL New: mostly data, since its map and import exist.
+4. The two-card form view (Comparing cards, below).
 
 ## Shared cards
 
